@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  * 
- * @author Stephano
+ * @author Stephano 
  *
  */
 public class Main{
