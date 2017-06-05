@@ -8,6 +8,11 @@ import net.dv8tion.jda.core.events.message.*;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+/**
+ * 
+ * @author Stephano
+ *
+ */
 public class Main{
 	
 	private static JDA jda;
