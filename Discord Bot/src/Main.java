@@ -7,7 +7,6 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.*;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
 /**
  * 
  * @author Stephano
@@ -21,8 +20,8 @@ public class Main{
 		try {
 			jda = new JDABuilder(AccountType.BOT).setToken(Ressources.TOKEN).buildBlocking();
 			jda.addEventListener(new MessageListener());
+			jda.setAutoReconnect(true);
 		} catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
