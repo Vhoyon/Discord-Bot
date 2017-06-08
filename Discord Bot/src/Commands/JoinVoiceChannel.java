@@ -12,6 +12,8 @@ import net.dv8tion.jda.core.managers.GuildManager;
  *<br><br>
  *
  *Classe qui permet au bot de se connecter au serveur local ou se trouve l'utilisateur
+ *
+ *<b>NE FONCTIONNE PAS</b>
  */
 
 public class JoinVoiceChannel {

@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import Commands.Help;
-import Commands.JoinVoiceChannel;
+import Commands.*;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.audio.AudioReceiveHandler;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
@@ -34,6 +33,7 @@ public class MessageListener extends ListenerAdapter{
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
+		AudioCommands audio = new AudioCommands(event);
 		Message msg = event.getMessage();
 		String messageRecu = event.getMessage().getContent();
 		TextChannel textChannel = event.getTextChannel();
@@ -50,15 +50,7 @@ public class MessageListener extends ListenerAdapter{
 				textChannel.sendMessage(playLink).complete();
 
 			} else if (messageRecu.equalsIgnoreCase("!clear")) {
-				List<VoiceChannel> voiceChanel = event.getAuthor().getJDA().getVoiceChannels();
-				for (VoiceChannel voiceChannel : voiceChanel) {
-					List<Member> members = voiceChannel.getMembers();
-					for (Member member : members) {
-					}
-				}
-				// textChannel.deleteMessages((Collection<Message>)
-				// event.getTextChannel().getHistory().getRetrievedHistory().subList(0,
-				// textChannel.getHistory().size() + 1)).complete();
+				Clear clear = new Clear(event);
 
 			}
 		}
