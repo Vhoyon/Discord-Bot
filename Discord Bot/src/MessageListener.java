@@ -50,8 +50,7 @@ public class MessageListener extends ListenerAdapter {
 			} else if (messageRecu.equalsIgnoreCase("!disconnect")) {
 				voiceChannels.LeaveVoiceChannel();
 			} else if (messageRecu.contains("!play ")) {
-				
-
+				audio.play();
 			} else if (messageRecu.equalsIgnoreCase("!clear")) {
 				Clear clear = new Clear(event);
 
