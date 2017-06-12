@@ -53,7 +53,8 @@ public class MessageListener extends ListenerAdapter {
 				audio.play();
 			} else if (messageRecu.equalsIgnoreCase("!clear")) {
 				Clear clear = new Clear(event);
-
+			}else if (messageRecu.equalsIgnoreCase("!spam")) {
+				Spam spam = new Spam(event);
 			}
 		}
 	}
