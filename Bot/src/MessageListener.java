@@ -25,7 +25,6 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 /**
  * 
  * @author Stephano
- *
  *      <br>
  * 		<br>
  * 		Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
