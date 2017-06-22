@@ -2,7 +2,7 @@
  * 
  * @author Stephano
  *
- *Contient les constantes du bot
+ *         Contient les constantes du bot
  *
  */
 public class Ressources {

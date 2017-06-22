@@ -27,8 +27,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  * @author Stephano
  *
  *         <br>
- * 		<br>
- * 		Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
+ *         <br>
+ *         Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
  *         l'utilisateur et appele les classes necessaires
  */
 public class MessageListener extends ListenerAdapter {
@@ -53,7 +53,7 @@ public class MessageListener extends ListenerAdapter {
 				audio.play();
 			} else if (messageRecu.equalsIgnoreCase("!clear")) {
 				Clear clear = new Clear(event);
-			}else if (messageRecu.equalsIgnoreCase("!spam")) {
+			} else if (messageRecu.equalsIgnoreCase("!spam")) {
 				Spam spam = new Spam(event);
 			}
 		}

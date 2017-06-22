@@ -22,22 +22,21 @@ import net.dv8tion.jda.core.managers.impl.AudioManagerImpl;
  * 
  * @author Stephano
  *
- *Classe qui contiens tout les methodes qui font la getion de l'audio
+ *         Classe qui contiens tout les methodes qui font la getion de l'audio
  *
- *<b>NE FONCTIONNE PAS</b>
+ *         <b>NE FONCTIONNE PAS</b>
  */
 public class AudioCommands {
 	private MessageReceivedEvent events;
 	private String link;
+
 	public AudioCommands(MessageReceivedEvent event) {
 		events = event;
-		
+
 	}
-	
-	public void play(){
+
+	public void play() {
 		link = events.getMessage().getContent().substring(6);
-		
-		
 
 	}
 

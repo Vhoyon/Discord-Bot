@@ -14,16 +14,17 @@ import net.dv8tion.jda.core.managers.GuildManager;
 
 /**
  * 
- * @author Stephano
- *<br><br>
+ * @author Stephano <br>
+ * 		<br>
  *
- *Classe qui permet au bot de se connecter et de se deconnecter au serveur local ou se trouve l'utilisateur
+ *         Classe qui permet au bot de se connecter et de se deconnecter au
+ *         serveur local ou se trouve l'utilisateur
  *
  *
  */
 
 public class VoiceChannelInteraction {
-	
+
 	public MessageReceivedEvent event;
 
 	public VoiceChannelInteraction(MessageReceivedEvent event) {
@@ -50,15 +51,16 @@ public class VoiceChannelInteraction {
 
 	public void LeaveVoiceChannel() {
 		for (VoiceChannel channel : event.getGuild().getVoiceChannels()) {
-			
+
 			for (Member usr : channel.getMembers()) {
 				if (usr.getEffectiveName().equalsIgnoreCase("bot")) {
 					AudioManager man = event.getGuild().getAudioManager();
 					man.closeAudioConnection();
 					event.getTextChannel().sendMessage("The bot has disconnected").complete();
 					break;
-				}else{
-					event.getTextChannel().sendMessage("The bot can not be disconnected if it is not in a voice channel.").complete();
+				} else {
+					event.getTextChannel()
+							.sendMessage("The bot can not be disconnected if it is not in a voice channel.").complete();
 				}
 			}
 
