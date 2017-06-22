@@ -1,5 +1,6 @@
 package Commands;
 
+import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
@@ -14,9 +15,9 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public class Help {
 
 	public Help(MessageReceivedEvent event) {
-		event.getAuthor().openPrivateChannel();
+		PrivateChannel channel =  event.getAuthor().openPrivateChannel().complete();
 		if (event.getAuthor().hasPrivateChannel()) {
-			event.getAuthor().getPrivateChannel().sendMessage("Help is here").complete();
+			channel.sendMessage("Help is here").complete();
 		}
 	}
 
