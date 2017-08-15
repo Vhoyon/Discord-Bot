@@ -17,9 +17,10 @@ public class Main {
 
 	private static JDA jda;
 
+
 	public static void main(String[] args) {
 		try {
-			jda = new JDABuilder(AccountType.BOT).setToken(Ressources.TOKEN).buildBlocking();
+			jda = new JDABuilder(AccountType.BOT).setToken(Ressources.DISCORDTOKEN).buildBlocking();
 			jda.addEventListener(new MessageListener());
 			jda.setAutoReconnect(true);
 		} catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {

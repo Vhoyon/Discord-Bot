@@ -32,6 +32,11 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  *         l'utilisateur et appele les classes necessaires
  */
 public class MessageListener extends ListenerAdapter {
+	public String[] messageSplit(String command){
+		String[] messages = command.split(" ");
+ 		return messages;
+		
+	}
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
@@ -39,22 +44,56 @@ public class MessageListener extends ListenerAdapter {
 		String messageRecu = event.getMessage().getContent();
 		TextChannel textChannel = event.getTextChannel();
 		VoiceChannelInteraction voiceChannels = new VoiceChannelInteraction(event);
-		if (messageRecu.contains("!")) {
-			if (messageRecu.equalsIgnoreCase("!hello")) {
+		String[] message = messageSplit(messageRecu);
+		if (message[0].contains("!")) {
+			switch (message[0].substring(1)) {
+			case "hello":
 				textChannel.sendMessage("hello " + event.getAuthor().getName()).complete();
-			} else if (messageRecu.equalsIgnoreCase("!help")) {
+				break;
+			case "help":
 				Help help = new Help(event);
-			} else if (messageRecu.equalsIgnoreCase("!connect")) {
+				break;
+			case "connect":
 				voiceChannels.JoinVoiceChannel();
-			} else if (messageRecu.equalsIgnoreCase("!disconnect")) {
+				break;
+			case "disconnect":
 				voiceChannels.LeaveVoiceChannel();
-			} else if (messageRecu.contains("!play ")) {
+				break;
+			case "play":
 				audio.play();
-			} else if (messageRecu.equalsIgnoreCase("!clear")) {
+				break;
+			case "clear":
 				Clear clear = new Clear(event);
-			} else if (messageRecu.equalsIgnoreCase("!spam")) {
+				break;
+			case "spam":
 				Spam spam = new Spam(event);
+				break;
+			case "game":
+				Game game = new Game(event,message[1]);
+				break;
+			default:
+				break;
 			}
 		}
 	}
 }
+
+
+
+//if (messageRecu.equalsIgnoreCase("!hello")) {
+//	textChannel.sendMessage("hello " + event.getAuthor().getName()).complete();
+//} else if (messageRecu.equalsIgnoreCase("!help")) {
+//	Help help = new Help(event);
+//} else if (messageRecu.equalsIgnoreCase("!connect")) {
+//	voiceChannels.JoinVoiceChannel();
+//} else if (messageRecu.equalsIgnoreCase("!disconnect")) {
+//	voiceChannels.LeaveVoiceChannel();
+//} else if (messageRecu.contains("!play ")) {
+//	audio.play();
+//} else if (messageRecu.equalsIgnoreCase("!clear")) {
+//	Clear clear = new Clear(event);
+//} else if (messageRecu.equalsIgnoreCase("!spam")) {
+//	Spam spam = new Spam(event);
+//}  else if (messageRecu.substring(0, 5).equalsIgnoreCase("!game")) {
+//	Game game = new Game(event,messageRecu);
+//} 
