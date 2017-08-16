@@ -10,6 +10,9 @@ public class Game {
 	  String[] jeux = messageRecu.split(",");
 	 Random ran = new Random();
 	 int num = ran.nextInt(jeux.length);
+	 while(jeux[num].trim().isEmpty()){
+		 num = ran.nextInt(jeux.length);
+	 }
 	 event.getTextChannel().sendMessage(jeux[num]).complete();
 	}
 
