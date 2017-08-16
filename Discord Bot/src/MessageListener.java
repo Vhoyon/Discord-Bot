@@ -1,8 +1,7 @@
+import ressources.Ressources;
 import commands.*;
-
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.entities.TextChannel;
 
 /**
  * 
@@ -15,66 +14,81 @@ import net.dv8tion.jda.core.entities.TextChannel;
  */
 public class MessageListener extends ListenerAdapter {
 	
-	public String[] messageSplit(String command){
+	public String[] splitContent(String command){
 		
-		String[] messages = command.split(" ", 2);
-		return messages;
+		return command.split(" ", 2);
 		
 	}
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event){
 		
-		AudioCommands audio = new AudioCommands(event);
-		
 		String messageRecu = event.getMessage().getContent();
 		
-		TextChannel textChannel = event.getTextChannel();
-		
-		VoiceChannelInteraction voiceChannels = new VoiceChannelInteraction(
-				event);
-		
-		String[] message = messageSplit(messageRecu);
-		
-		if(message[0].contains("!")){
+		if(messageRecu.matches(Ressources.PREFIX + ".*")){
 			
-			switch(message[0].substring(1)){
+			messageRecu = messageRecu.substring(Ressources.PREFIX.length());
+			
+			//			AudioCommands audio = new AudioCommands(event);
+			
+			//			TextChannel textChannel = event.getTextChannel();
+			
+			//			VoiceChannelInteraction voiceChannels = new VoiceChannelInteraction(
+			//					event);
+			
+			Command command;
+			
+			String[] message = splitContent(messageRecu);
+			
+			final int COMMAND = 0;
+			final int CONTENT = 1;
+			
+			switch(message[COMMAND]){
 			case "hello":
-				textChannel.sendMessage("hello " + event.getAuthor().getName())
-						.complete();
+				command = new SimpleTextCommand("hello "
+						+ event.getAuthor().getName());
 				break;
-			case "help":
-				Help help = new Help(event);
-				break;
+			//			case "help":
+			//				Help help = new Help(event);
+			//				break;
 			case "connect":
-				voiceChannels.JoinVoiceChannel();
+				command = new Connect();
 				break;
 			case "disconnect":
-				voiceChannels.LeaveVoiceChannel();
+				command = new Disconnect();
 				break;
-			case "play":
-				audio.play();
-				break;
-			case "clear":
-				Clear clear = new Clear(event);
-				break;
-			case "spam":
-				Spam spam = new Spam(event);
-				break;
+			//			case "play":
+			//				audio.play();
+			//				break;
+			//			case "clear":
+			//				Clear clear = new Clear(event);
+			//				break;
+			//			case "spam":
+			//				Spam spam = new Spam(event);
+			//				break;
 			case "game":
-				Game game = new Game(event, message[1]);
+				command = new Game();
 				break;
 			case "test":
-				textChannel.sendMessage("test hello " + event.getAuthor().getName())
-				.complete();
+				command = new SimpleTextCommand("test hello "
+						+ event.getAuthor().getName());
 			default:
+				command = new SimpleTextCommand(
+						"~~ No actions created for the command \""
+								+ Ressources.PREFIX
+								+ message[COMMAND]
+								+ "\" - please make an idea in the idea text channel! ~~");
 				break;
 			}
+			
+			command.setContent(message[CONTENT]);
+			command.setContext(event);
+			
+			command.action();
 			
 		}
 		
 	}
-	
 }
 
 //if (messageRecu.equalsIgnoreCase("!hello")) {
