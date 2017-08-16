@@ -16,7 +16,16 @@ public class MessageListener extends ListenerAdapter {
 	
 	public String[] splitContent(String command){
 		
-		return command.split(" ", 2);
+		String[] splitted = command.split(" ", 2);
+		
+		if(splitted.length == 1){
+			// TODO : Find better way you lazy basterd.
+			String actualCommand = splitted[0];
+			splitted = new String[2];
+			splitted[0] = actualCommand;
+		}
+		
+		return splitted;
 		
 	}
 	
@@ -60,9 +69,9 @@ public class MessageListener extends ListenerAdapter {
 			//			case "play":
 			//				audio.play();
 			//				break;
-			//			case "clear":
-			//				Clear clear = new Clear(event);
-			//				break;
+			case "clear":
+				command = new Clear();
+				break;
 			//			case "spam":
 			//				Spam spam = new Spam(event);
 			//				break;
@@ -74,10 +83,10 @@ public class MessageListener extends ListenerAdapter {
 						+ event.getAuthor().getName());
 			default:
 				command = new SimpleTextCommand(
-						"~~ No actions created for the command \""
+						"\\~\\~ No actions created for the command \""
 								+ Ressources.PREFIX
 								+ message[COMMAND]
-								+ "\" - please make an idea in the idea text channel! ~~");
+								+ "\" - please make an idea in the idea text channel! \\~\\~");
 				break;
 			}
 			
