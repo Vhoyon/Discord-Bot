@@ -33,7 +33,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
  */
 public class MessageListener extends ListenerAdapter {
 	public String[] messageSplit(String command){
-		String[] messages = command.split(" ");
+		String[] messages = command.split(" ",2);
  		return messages;
 		
 	}
