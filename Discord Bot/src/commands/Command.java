@@ -8,8 +8,6 @@ public abstract class Command {
 	private String content;
 	private MessageReceivedEvent event;
 	
-	public Command(){}
-	
 	protected String getContent(){
 		return content;
 	}

@@ -4,8 +4,6 @@ import java.util.Random;
 
 public class Game extends Command {
 	
-	public Game(){}
-	
 	@Override
 	public void action(){
 		
