@@ -1,4 +1,4 @@
-package Commands;
+package commands;
 
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.audio.hooks.ConnectionListener;

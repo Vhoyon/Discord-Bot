@@ -7,8 +7,5 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Discord%20Bot/src/JDA-3.1.0_204-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Stephano/git/Bot/Discord Bot/src/youtube/google-api-services-youtube-v3-rev183-1.22.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Stephano/git/Bot/Discord Bot/src/youtube/google-api-services-youtube-v3-rev183-1.22.0-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Stephano/git/Bot/Discord Bot/src/youtube/google-api-services-youtube-v3-rev183-1.22.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
