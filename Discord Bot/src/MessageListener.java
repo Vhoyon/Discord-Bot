@@ -34,8 +34,6 @@ public class MessageListener extends ListenerAdapter {
 		
 		String messageRecu = event.getMessage().getContent();
 		
-		System.out.println(messageRecu);
-		
 		if(messageRecu.matches(Ressources.PREFIX + ".+")){
 			
 			messageRecu = messageRecu.substring(Ressources.PREFIX.length());
