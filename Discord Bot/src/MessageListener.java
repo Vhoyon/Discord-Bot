@@ -34,7 +34,9 @@ public class MessageListener extends ListenerAdapter {
 		
 		String messageRecu = event.getMessage().getContent();
 		
-		if(messageRecu.matches(Ressources.PREFIX + ".*")){
+		System.out.println(messageRecu);
+		
+		if(messageRecu.matches(Ressources.PREFIX + ".+")){
 			
 			messageRecu = messageRecu.substring(Ressources.PREFIX.length());
 			
@@ -61,10 +63,18 @@ public class MessageListener extends ListenerAdapter {
 			//				Help help = new Help(event);
 			//				break;
 			case "connect":
-				command = new Connect();
+				command = new Command(){
+					public void action(){
+						getVoiceContext().JoinVoiceChannel();
+					}
+				};
 				break;
 			case "disconnect":
-				command = new Disconnect();
+				command = new Command(){
+					public void action(){
+						getVoiceContext().JoinVoiceChannel();
+					}
+				};
 				break;
 			//			case "play":
 			//				audio.play();
@@ -83,10 +93,10 @@ public class MessageListener extends ListenerAdapter {
 						+ event.getAuthor().getName());
 			default:
 				command = new SimpleTextCommand(
-						"\\~\\~ No actions created for the command \""
+						"\\~\\~\n*No actions created for the command \"**"
 								+ Ressources.PREFIX
 								+ message[COMMAND]
-								+ "\" - please make an idea in the idea text channel! \\~\\~");
+								+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
 				break;
 			}
 			
