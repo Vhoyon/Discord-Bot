@@ -2,6 +2,8 @@ package commands;
 
 import java.util.Random;
 
+import ressources.Ressources;
+
 public class CommandGameInteraction extends Command {
 	
 	public enum CommandGameType{
@@ -46,11 +48,9 @@ public class CommandGameInteraction extends Command {
 			
 			String[] jeux = getContent().split(",");
 			
-			Random ran = new Random();
+			GamePool gamepool = new GamePool(jeux);
 			
-			int num = ran.nextInt(jeux.length);
-			
-			sendMessage(jeux[num]);
+			getBuffer().push(gamepool, "GamePool");
 			
 		}
 		
@@ -84,6 +84,14 @@ public class CommandGameInteraction extends Command {
 	
 	private void roll(){
 		
+		Random ran = new Random();
+		
+		GamePool gamepool = (GamePool)getBuffer().get("GamePool");
+		
+		int num = ran.nextInt(gamepool.getJeux().size());
+		
+		sendMessage(gamepool.getJeux().get(num));
+		
 	}
 	
 	private void list(){
@@ -91,6 +99,30 @@ public class CommandGameInteraction extends Command {
 	}
 	
 	private void error(){
+		
+		String message;
+		
+		switch(commandType){
+		case INITIAL:
+			message = "Usage : **"
+					+ Ressources.PREFIX
+					+ "game [game 1],[game 2],[game 3],[...]** .\nSeparate games using commas.";
+			break;
+		case ADD:
+			message = "Usage : **" + Ressources.PREFIX
+					+ "game_add [game name]** .";
+			break;
+		case REMOVE:
+			message = "Usage : **" + Ressources.PREFIX
+					+ "game_remove [game name]** OR **" + Ressources.PREFIX
+					+ "game_remove [game index]** .";
+			break;
+		default:
+			message = "An unsuspected error happened. What have you done.";
+			break;
+		}
+		
+		sendMessage(message);
 		
 	}
 	

@@ -1,7 +1,5 @@
 package commands;
 
-import java.util.ArrayList;
-
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -11,7 +9,7 @@ import net.dv8tion.jda.core.managers.AudioManager;
 public abstract class Command {
 	
 	private String content;
-	private ArrayList<Object> buffer;
+	private Buffer buffer;
 	private MessageReceivedEvent event;
 	
 	protected String getContent(){
@@ -22,11 +20,11 @@ public abstract class Command {
 		this.content = content;
 	}
 	
-	public ArrayList<Object> getBuffer(){
+	public Buffer getBuffer(){
 		return buffer;
 	}
 	
-	public void setBuffer(ArrayList<Object> buffer){
+	public void setBuffer(Buffer buffer){
 		this.buffer = buffer;
 	}
 	

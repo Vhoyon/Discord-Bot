@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 import ressources.Ressources;
 import commands.*;
 import commands.CommandGameInteraction.CommandGameType;
@@ -17,10 +15,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  */
 public class MessageListener extends ListenerAdapter {
 	
-	private ArrayList<Object> buffer = new ArrayList<>();
+	private Buffer buffer = new Buffer();
 	
 	public MessageListener(){
-		buffer.add(false);
+		buffer.push(false, "isVoiceConnected");
 	}
 	
 	@Override
