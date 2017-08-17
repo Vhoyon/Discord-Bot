@@ -2,7 +2,7 @@ package commands;
 
 import java.util.Random;
 
-public class Game extends Command {
+public class CommandGame extends Command {
 	
 	@Override
 	public void action(){

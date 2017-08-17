@@ -13,7 +13,7 @@ import net.dv8tion.jda.core.entities.MessageHistory;
  *         l'invoque
  *
  */
-public class Clear extends Command {
+public class CommandClear extends Command {
 	
 	@Override
 	public void action(){

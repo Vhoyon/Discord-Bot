@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import ressources.Ressources;
 import commands.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -13,6 +15,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  *         l'utilisateur et appele les classes necessaires
  */
 public class MessageListener extends ListenerAdapter {
+	
+	private ArrayList<Object> buffer = new ArrayList<>();
 	
 	public String[] splitContent(String command){
 		
@@ -63,14 +67,14 @@ public class MessageListener extends ListenerAdapter {
 			case "connect":
 				command = new Command(){
 					public void action(){
-						getVoiceContext().JoinVoiceChannel();
+						connect();
 					}
 				};
 				break;
 			case "disconnect":
 				command = new Command(){
 					public void action(){
-						getVoiceContext().LeaveVoiceChannel();
+						disconnect();
 					}
 				};
 				break;
@@ -78,28 +82,29 @@ public class MessageListener extends ListenerAdapter {
 			//				audio.play();
 			//				break;
 			case "clear":
-				command = new Clear();
+				command = new CommandClear();
 				break;
 			//			case "spam":
 			//				Spam spam = new Spam(event);
 			//				break;
 			case "game":
-				command = new Game();
+				command = new CommandGame();
 				break;
 			case "test":
 				command = new SimpleTextCommand("test hello "
 						+ event.getAuthor().getName());
 			default:
 				command = new SimpleTextCommand(
-                        "\\~\\~\n*No actions created for the command \"**"
-                                + Ressources.PREFIX
-                                + message[COMMAND]
-                                + "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
+						"\\~\\~\n*No actions created for the command \"**"
+								+ Ressources.PREFIX
+								+ message[COMMAND]
+								+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
 				break;
 			}
 			
 			command.setContent(message[CONTENT]);
 			command.setContext(event);
+			command.setBuffer(buffer);
 			
 			command.action();
 			
