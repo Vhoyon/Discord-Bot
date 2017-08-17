@@ -1,5 +1,6 @@
 package commands;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import ressources.Ressources;
@@ -95,6 +96,12 @@ public class CommandGameInteraction extends Command {
 	}
 	
 	private void list(){
+		
+		ArrayList<String> list = ((GamePool)getBuffer().get("GamePool"))
+				.getJeux();
+		for(int i = 0; i < list.size(); i++){
+			sendMessage(list.get(i) + "\n");
+		}
 		
 	}
 	

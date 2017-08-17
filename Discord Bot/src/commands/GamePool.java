@@ -10,14 +10,14 @@ public class GamePool {
 	
 	public GamePool(String[] jeux){
 		for(int i = 0; i < jeux.length; i++){
-			add(jeux[i]);
+			this.jeux.add(jeux[i]);
 		}
 	}
 	
 	private void add(String nom){
 		jeux.add(nom);
 	}
-
+	
 	public ArrayList<String> getJeux(){
 		return jeux;
 	}

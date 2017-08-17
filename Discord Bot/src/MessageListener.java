@@ -85,6 +85,9 @@ public class MessageListener extends ListenerAdapter {
 			case "roll":
 				command = new CommandGameInteraction(CommandGameType.ROLL);
 				break;
+			case "game_list":
+				command = new CommandGameInteraction(CommandGameType.LIST);
+				break;
 			case "test":
 				command = new SimpleTextCommand("test hello "
 						+ event.getAuthor().getName());
