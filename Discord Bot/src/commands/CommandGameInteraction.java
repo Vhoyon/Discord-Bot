@@ -1,5 +1,6 @@
 package commands;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class CommandGameInteraction extends Command {
@@ -9,6 +10,7 @@ public class CommandGameInteraction extends Command {
 	}
 	
 	CommandGameType commandType;
+	GamePool games;
 	
 	public CommandGameInteraction(CommandGameType commandGameType){
 		commandType = commandGameType;
@@ -45,6 +47,8 @@ public class CommandGameInteraction extends Command {
 		else{
 			
 			String[] jeux = getContent().split(",");
+			
+			games = new GamePool();
 			
 			Random ran = new Random();
 			
@@ -87,7 +91,10 @@ public class CommandGameInteraction extends Command {
 	}
 	
 	private void list(){
-		
+		ArrayList<String> list = games.getJeux();
+		for (int i = 0; i < list.size(); i++) {
+			sendMessage(list.get(i));
+		}
 	}
 	
 	private void error(){

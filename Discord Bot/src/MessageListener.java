@@ -1,3 +1,4 @@
+import java.nio.channels.GatheringByteChannel;
 import java.util.ArrayList;
 
 import ressources.Ressources;
