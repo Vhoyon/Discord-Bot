@@ -69,6 +69,7 @@ public abstract class Command {
 					break;
 					
 				}
+				
 			}
 			
 		}

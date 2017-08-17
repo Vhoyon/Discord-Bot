@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import ressources.Ressources;
 import commands.*;
+import commands.CommandGameInteraction.CommandGameType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -18,19 +19,8 @@ public class MessageListener extends ListenerAdapter {
 	
 	private ArrayList<Object> buffer = new ArrayList<>();
 	
-	public String[] splitContent(String command){
-		
-		String[] splitted = command.split(" ", 2);
-		
-		if(splitted.length == 1){
-			// TODO : Find better way you lazy basterd.
-			String actualCommand = splitted[0];
-			splitted = new String[2];
-			splitted[0] = actualCommand;
-		}
-		
-		return splitted;
-		
+	public MessageListener(){
+		buffer.add(false);
 	}
 	
 	@Override
@@ -53,10 +43,7 @@ public class MessageListener extends ListenerAdapter {
 			
 			String[] message = splitContent(messageRecu);
 			
-			final int COMMAND = 0;
-			final int CONTENT = 1;
-			
-			switch(message[COMMAND]){
+			switch(message[0]){
 			case "hello":
 				command = new SimpleTextCommand("hello "
 						+ event.getAuthor().getName());
@@ -88,7 +75,17 @@ public class MessageListener extends ListenerAdapter {
 			//				Spam spam = new Spam(event);
 			//				break;
 			case "game":
-				command = new CommandGame();
+				command = new CommandGameInteraction(CommandGameType.INITIAL);
+				break;
+			case "game_add":
+				command = new CommandGameInteraction(CommandGameType.ADD);
+				break;
+			case "game_remove":
+				command = new CommandGameInteraction(CommandGameType.REMOVE);
+				break;
+			case "game_roll":
+			case "roll":
+				command = new CommandGameInteraction(CommandGameType.ROLL);
 				break;
 			case "test":
 				command = new SimpleTextCommand("test hello "
@@ -97,12 +94,12 @@ public class MessageListener extends ListenerAdapter {
 				command = new SimpleTextCommand(
 						"\\~\\~\n*No actions created for the command \"**"
 								+ Ressources.PREFIX
-								+ message[COMMAND]
+								+ message[0]
 								+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
 				break;
 			}
 			
-			command.setContent(message[CONTENT]);
+			command.setContent(message[1]);
 			command.setContext(event);
 			command.setBuffer(buffer);
 			
@@ -111,22 +108,20 @@ public class MessageListener extends ListenerAdapter {
 		}
 		
 	}
+	
+	public String[] splitContent(String command){
+		
+		String[] splitted = command.split(" ", 2);
+		
+		if(splitted.length == 1){
+			// TODO : Find better way you lazy basterd.
+			String actualCommand = splitted[0];
+			splitted = new String[2];
+			splitted[0] = actualCommand;
+		}
+		
+		return splitted;
+		
+	}
+	
 }
-
-//if (messageRecu.equalsIgnoreCase("!hello")) {
-//	textChannel.sendMessage("hello " + event.getAuthor().getName()).complete();
-//} else if (messageRecu.equalsIgnoreCase("!help")) {
-//	Help help = new Help(event);
-//} else if (messageRecu.equalsIgnoreCase("!connect")) {
-//	voiceChannels.JoinVoiceChannel();
-//} else if (messageRecu.equalsIgnoreCase("!disconnect")) {
-//	voiceChannels.LeaveVoiceChannel();
-//} else if (messageRecu.contains("!play ")) {
-//	audio.play();
-//} else if (messageRecu.equalsIgnoreCase("!clear")) {
-//	Clear clear = new Clear(event);
-//} else if (messageRecu.equalsIgnoreCase("!spam")) {
-//	Spam spam = new Spam(event);
-//}  else if (messageRecu.substring(0, 5).equalsIgnoreCase("!game")) {
-//	Game game = new Game(event,messageRecu);
-//} 
