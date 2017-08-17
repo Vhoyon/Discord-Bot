@@ -50,20 +50,26 @@ public class VoiceChannelInteraction {
 	}
 
 	public void LeaveVoiceChannel() {
+		String message = null;
 		for (VoiceChannel channel : event.getGuild().getVoiceChannels()) {
 
 			for (Member usr : channel.getMembers()) {
 				if (usr.getEffectiveName().equalsIgnoreCase("bot")) {
 					AudioManager man = event.getGuild().getAudioManager();
 					man.closeAudioConnection();
+					message = null;
 					event.getTextChannel().sendMessage("The bot has disconnected").complete();
+					
 					break;
-				} else {
-					event.getTextChannel()
-							.sendMessage("The bot can not be disconnected if it is not in a voice channel.").complete();
+				}else {
+					message = "The bot can not be disconnected if it is not in a voice channel.";
 				}
 			}
+			
 
+		}
+		if(message != null){
+			event.getTextChannel().sendMessage(message).complete();
 		}
 	}
 

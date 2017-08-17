@@ -70,7 +70,7 @@ public class MessageListener extends ListenerAdapter {
 			case "disconnect":
 				command = new Command(){
 					public void action(){
-						getVoiceContext().JoinVoiceChannel();
+						getVoiceContext().LeaveVoiceChannel();
 					}
 				};
 				break;
@@ -91,10 +91,10 @@ public class MessageListener extends ListenerAdapter {
 						+ event.getAuthor().getName());
 			default:
 				command = new SimpleTextCommand(
-						"\\~\\~\n*No actions created for the command \"**"
-								+ Ressources.PREFIX
-								+ message[COMMAND]
-								+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
+                        "\\~\\~\n*No actions created for the command \"**"
+                                + Ressources.PREFIX
+                                + message[COMMAND]
+                                + "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
 				break;
 			}
 			
