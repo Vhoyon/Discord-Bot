@@ -5,7 +5,7 @@ import java.util.Random;
 public class CommandGameInteraction extends Command {
 	
 	public enum CommandGameType{
-		INITIAL, ADD, REMOVE, ROLL
+		INITIAL, ADD, REMOVE, ROLL, LIST
 	}
 	
 	CommandGameType commandType;
@@ -30,37 +30,67 @@ public class CommandGameInteraction extends Command {
 		case ROLL:
 			roll();
 			break;
+		case LIST:
+			list();
+			break;
 		}
 		
 	}
 	
 	private void initial(){
 		
-		String[] jeux = getContent().split(",");
-		
-		Random ran = new Random();
-		
-		int num = ran.nextInt(jeux.length);
-		
-		sendMessage(jeux[num]);
+		if(getContent() == null){
+			error();
+		}
+		else{
+			
+			String[] jeux = getContent().split(",");
+			
+			Random ran = new Random();
+			
+			int num = ran.nextInt(jeux.length);
+			
+			sendMessage(jeux[num]);
+			
+		}
 		
 	}
 	
 	private void add(){
 		
-		sendMessage("no");
+		if(getContent() == null){
+			error();
+		}
+		else{
+			
+			// TODO Add to GamePool Object
+			
+		}
 		
 	}
 	
 	private void remove(){
 		
-		
+		if(getContent() == null){
+			error();
+		}
+		else{
+			
+			// TODO Remove from GamePool Object
+			
+		}
 		
 	}
 	
 	private void roll(){
 		
+	}
+	
+	private void list(){
 		
+	}
+	
+	private void error(){
 		
 	}
 	
