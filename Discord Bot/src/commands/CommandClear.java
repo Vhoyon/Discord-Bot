@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 
 /**
  * 
@@ -18,22 +19,29 @@ public class CommandClear extends Command {
 	@Override
 	public void action(){
 		
-		boolean vide = false;
-		MessageHistory hist = getTextContext().getHistory();
-		do{
+		try{
 			
-			List<Message> messages = hist.retrievePast(100).complete();
-			
-			if(!messages.isEmpty()){
+			boolean vide = false;
+			MessageHistory hist = getTextContext().getHistory();
+			do{
 				
-				getTextContext().deleteMessages(messages).complete();
+				List<Message> messages = hist.retrievePast(100).complete();
 				
-			}
-			else{
-				vide = true;
-			}
+				if(!messages.isEmpty()){
+					
+					getTextContext().deleteMessages(messages).complete();
+					
+				}
+				else{
+					vide = true;
+				}
+				
+			}while(!vide);
 			
-		}while(!vide);
+		}
+		catch(PermissionException e){
+			sendMessage("I do not have the permissions for that!");
+		}
 		
 	}
 	
