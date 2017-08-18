@@ -14,7 +14,7 @@ public class GamePool {
 		}
 	}
 	
-	private void add(String nom){
+	public void add(String nom){
 		jeux.add(nom);
 	}
 	

@@ -53,6 +53,8 @@ public class CommandGameInteraction extends Command {
 			
 			getBuffer().push(gamepool, "GamePool");
 			
+			sendMessage("Added games, whatever they were.");
+			
 		}
 		
 	}
@@ -63,8 +65,6 @@ public class CommandGameInteraction extends Command {
 			error();
 		}
 		else{
-			
-			// TODO Add to GamePool Object
 			
 		}
 		
@@ -97,10 +97,19 @@ public class CommandGameInteraction extends Command {
 	
 	private void list(){
 		
-		ArrayList<String> list = ((GamePool)getBuffer().get("GamePool"))
-				.getJeux();
-		for(int i = 0; i < list.size(); i++){
-			sendMessage(list.get(i) + "\n");
+		GamePool gamepool = (GamePool)getBuffer().get("GamePool");
+		
+		if(gamepool == null){
+			sendMessage("No games in your pool mate!");
+		}
+		else{
+			
+			ArrayList<String> list = gamepool.getJeux();
+			
+			for(int i = 0; i < list.size(); i++){
+				sendMessage(list.get(i) + "\n");
+			}
+			
 		}
 		
 	}

@@ -15,10 +15,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  */
 public class MessageListener extends ListenerAdapter {
 	
-	private Buffer buffer = new Buffer();
+	private Buffer buffer;
 	
 	public MessageListener(){
-		buffer.push(false, "isVoiceConnected");
+		buffer = new Buffer();
 	}
 	
 	@Override
@@ -27,6 +27,8 @@ public class MessageListener extends ListenerAdapter {
 		String messageRecu = event.getMessage().getContent();
 		
 		if(messageRecu.matches(Ressources.PREFIX + ".+")){
+			
+			buffer.setGuildID(event.getGuild().getId());
 			
 			messageRecu = messageRecu.substring(Ressources.PREFIX.length());
 			
