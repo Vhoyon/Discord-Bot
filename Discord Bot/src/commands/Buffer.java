@@ -39,17 +39,24 @@ public class Buffer {
 		@Override
 		public boolean equals(Object obj){
 			
-			if(!(obj instanceof BufferObject)){
-				return false;
-			}
-			else{
+			boolean isEqual = false;
+			
+			if(obj instanceof BufferObject){
 				
 				BufferObject bufrObj = (BufferObject)obj;
 				
-				return bufrObj.getGuildID().equals(currentGuildID)
-						&& bufrObj.getName().equals(this.associatedName);
+				if(bufrObj.getGuildID().equals(currentGuildID)){
+					
+					if(getName() != null)
+						isEqual = bufrObj.getName().equals(this.associatedName);
+					else
+						isEqual = bufrObj.getObject().equals(this.getObject());
+					
+				}
 				
 			}
+			
+			return isEqual;
 			
 		}
 		
@@ -134,7 +141,7 @@ public class Buffer {
 	
 	public boolean remove(String associatedName){
 		
-		return remove(memory.lastIndexOf(associatedName));
+		return remove(memory.indexOf(associatedName));
 		
 	}
 	
