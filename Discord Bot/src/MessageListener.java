@@ -71,9 +71,9 @@ public class MessageListener extends ListenerAdapter {
 			case "clear":
 				command = new CommandClear();
 				break;
-			//			case "spam":
-			//				Spam spam = new Spam(event);
-			//				break;
+			case "spam":
+				command = new CommandSpam();
+				break;
 			case "game":
 				command = new CommandGameInteraction(CommandGameType.INITIAL);
 				break;

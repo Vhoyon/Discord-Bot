@@ -48,9 +48,9 @@ public class Buffer {
 				if(bufrObj.getGuildID().equals(currentGuildID)){
 					
 					if(getName() != null)
-						isEqual = bufrObj.getName().equals(this.associatedName);
+						isEqual = bufrObj.getName().equals(getName());
 					else
-						isEqual = bufrObj.getObject().equals(this.getObject());
+						isEqual = bufrObj.getObject().equals(getObject());
 					
 				}
 				
