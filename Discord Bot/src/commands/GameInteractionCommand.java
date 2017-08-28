@@ -3,17 +3,19 @@ package commands;
 import java.util.ArrayList;
 import java.util.Random;
 
+import framework.Command;
+import framework.GamePool;
 import ressources.Ressources;
 
-public class CommandGameInteraction extends Command {
+public class GameInteractionCommand extends Command {
 	
-	public enum CommandGameType{
+	public enum CommandType{
 		INITIAL, ADD, REMOVE, ROLL, LIST
 	}
 	
-	CommandGameType commandType;
+	CommandType commandType;
 	
-	public CommandGameInteraction(CommandGameType commandGameType){
+	public GameInteractionCommand(CommandType commandGameType){
 		commandType = commandGameType;
 	}
 	

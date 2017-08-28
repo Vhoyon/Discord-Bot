@@ -1,6 +1,8 @@
 import ressources.Ressources;
 import commands.*;
-import commands.CommandGameInteraction.CommandGameType;
+import commands.GameInteractionCommand.CommandType;
+import framework.Buffer;
+import framework.Command;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -91,25 +93,25 @@ public class MessageListener extends ListenerAdapter {
 						command = new CommandSpam();
 						break;
 					case "game":
-						command = new CommandGameInteraction(
-								CommandGameType.INITIAL);
+						command = new GameInteractionCommand(
+								CommandType.INITIAL);
 						break;
 					case "game_add":
-						command = new CommandGameInteraction(
-								CommandGameType.ADD);
+						command = new GameInteractionCommand(
+								CommandType.ADD);
 						break;
 					case "game_remove":
-						command = new CommandGameInteraction(
-								CommandGameType.REMOVE);
+						command = new GameInteractionCommand(
+								CommandType.REMOVE);
 						break;
 					case "game_roll":
 					case "roll":
-						command = new CommandGameInteraction(
-								CommandGameType.ROLL);
+						command = new GameInteractionCommand(
+								CommandType.ROLL);
 						break;
 					case "game_list":
-						command = new CommandGameInteraction(
-								CommandGameType.LIST);
+						command = new GameInteractionCommand(
+								CommandType.LIST);
 						break;
 					case "test":
 						command = new SimpleTextCommand("test hello "
@@ -139,6 +141,7 @@ public class MessageListener extends ListenerAdapter {
 	
 	public String[] splitContent(String command){
 		
+		// Remove leading / trailing spaces (leading spaces are removed anyway)
 		command = command.trim();
 		
 		command = command.replaceAll("( )+", " ");

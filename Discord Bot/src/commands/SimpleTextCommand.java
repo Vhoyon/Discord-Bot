@@ -1,5 +1,7 @@
 package commands;
 
+import framework.Command;
+
 public class SimpleTextCommand extends Command {
 	
 	private String textToSend;

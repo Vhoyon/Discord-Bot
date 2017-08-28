@@ -1,5 +1,7 @@
 package commands;
 
+import framework.Command;
+
 public class CommandSpam extends Command {
 	
 	@Override
