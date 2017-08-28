@@ -28,6 +28,10 @@ public abstract class Command {
 		this.buffer = buffer;
 	}
 	
+	protected MessageReceivedEvent getEvent(){
+		return event;
+	}
+	
 	public void setContext(MessageReceivedEvent event){
 		this.event = event;
 	}

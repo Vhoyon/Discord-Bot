@@ -48,9 +48,9 @@ public class MessageListener extends ListenerAdapter {
 				command = new SimpleTextCommand("hello "
 						+ event.getAuthor().getName());
 				break;
-			//			case "help":
-			//				Help help = new Help(event);
-			//				break;
+			case "help":
+				command = new CommandHelp();
+				break;
 			case "connect":
 				command = new Command(){
 					public void action(){
