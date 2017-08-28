@@ -12,5 +12,11 @@ public interface Ressources {
 	public String YOUTUBETOKEN = "AIzaSyDfPTuiyimq09IK5umHfD4OY8OV5oya2mU";
 	
 	public String PREFIX = "!!";
+	
+	public String BUFFER_CONFIRMATION = "confirmation";
+	
+	public static String buildCommand(String commandName){
+		return PREFIX + commandName;
+	}
 
 }

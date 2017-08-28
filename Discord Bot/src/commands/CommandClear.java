@@ -2,7 +2,7 @@ package commands;
 
 import java.util.List;
 
-import framework.Command;
+import framework.CommandConfirmed;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
@@ -15,10 +15,14 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  *         l'invoque
  *
  */
-public class CommandClear extends Command {
+public class CommandClear extends CommandConfirmed {
+	
+	public CommandClear(){
+		super("Are you sure you want to clear all messages?");
+	}
 	
 	@Override
-	public void action(){
+	public void confirmed(){
 		
 		try{
 			
@@ -31,7 +35,7 @@ public class CommandClear extends Command {
 		
 	}
 	
-	private void fullClean(){
+	private void fullClean() throws PermissionException{
 		
 		boolean vide = false;
 		MessageHistory history = getTextContext().getHistory();
