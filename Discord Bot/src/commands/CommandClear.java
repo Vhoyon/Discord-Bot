@@ -21,27 +21,33 @@ public class CommandClear extends Command {
 		
 		try{
 			
-			boolean vide = false;
-			MessageHistory hist = getTextContext().getHistory();
-			do{
-				
-				List<Message> messages = hist.retrievePast(100).complete();
-				
-				if(!messages.isEmpty()){
-					
-					getTextContext().deleteMessages(messages).complete();
-					
-				}
-				else{
-					vide = true;
-				}
-				
-			}while(!vide);
+			fullClean();
 			
 		}
 		catch(PermissionException e){
 			sendMessage("I do not have the permissions for that!");
 		}
+		
+	}
+	
+	private void fullClean(){
+		
+		boolean vide = false;
+		MessageHistory history = getTextContext().getHistory();
+		do{
+			
+			List<Message> messages = history.retrievePast(100).complete();
+			
+			if(!messages.isEmpty()){
+				
+				getTextContext().deleteMessages(messages).complete();
+				
+			}
+			else{
+				vide = true;
+			}
+			
+		}while(!vide);
 		
 	}
 	

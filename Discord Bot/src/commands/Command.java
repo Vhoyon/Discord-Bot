@@ -1,6 +1,7 @@
 package commands;
 
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -14,6 +15,10 @@ public abstract class Command {
 	
 	protected String getContent(){
 		return content;
+	}
+	
+	protected String[] getSplitContent(){
+		return content.split(" ");
 	}
 	
 	public void setContent(String content){
@@ -45,6 +50,19 @@ public abstract class Command {
 	protected void sendMessage(String messageToSend){
 		
 		getTextContext().sendMessage(messageToSend).complete();
+		
+	}
+	
+	protected void sendPrivateMessage(String messageToSend){
+		
+		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
+				.complete();
+		if(getEvent().getAuthor().hasPrivateChannel()){
+			channel.sendMessage(messageToSend).complete();
+		}
+		else{
+			sendMessage("User has no private channel, cancelling.");
+		}
 		
 	}
 	

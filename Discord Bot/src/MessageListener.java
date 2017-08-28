@@ -1,6 +1,7 @@
 import ressources.Ressources;
 import commands.*;
 import commands.CommandGameInteraction.CommandGameType;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -26,93 +27,121 @@ public class MessageListener extends ListenerAdapter {
 		
 		String messageRecu = event.getMessage().getContent();
 		
-		if(messageRecu.matches(Ressources.PREFIX + ".+")){
+		// Bots doesn't need attention...
+		if(!event.getAuthor().isBot()){
 			
-			buffer.setGuildID(event.getGuild().getId());
-			
-			messageRecu = messageRecu.substring(Ressources.PREFIX.length());
-			
-			//			AudioCommands audio = new AudioCommands(event);
-			
-			//			TextChannel textChannel = event.getTextChannel();
-			
-			//			VoiceChannelInteraction voiceChannels = new VoiceChannelInteraction(
-			//					event);
-			
-			Command command;
-			
-			String[] message = splitContent(messageRecu);
-			
-			switch(message[0]){
-			case "hello":
-				command = new SimpleTextCommand("hello "
-						+ event.getAuthor().getName());
-				break;
-			case "help":
-				command = new CommandHelp();
-				break;
-			case "connect":
-				command = new Command(){
-					public void action(){
-						connect();
-					}
-				};
-				break;
-			case "disconnect":
-				command = new Command(){
-					public void action(){
-						disconnect();
-					}
-				};
-				break;
-			//			case "play":
-			//				audio.play();
-			//				break;
-			case "clear":
-				command = new CommandClear();
-				break;
-			case "spam":
-				command = new CommandSpam();
-				break;
-			case "game":
-				command = new CommandGameInteraction(CommandGameType.INITIAL);
-				break;
-			case "game_add":
-				command = new CommandGameInteraction(CommandGameType.ADD);
-				break;
-			case "game_remove":
-				command = new CommandGameInteraction(CommandGameType.REMOVE);
-				break;
-			case "game_roll":
-			case "roll":
-				command = new CommandGameInteraction(CommandGameType.ROLL);
-				break;
-			case "game_list":
-				command = new CommandGameInteraction(CommandGameType.LIST);
-				break;
-			case "test":
-				command = new SimpleTextCommand("test hello "
-						+ event.getAuthor().getName());
-			default:
-				command = new SimpleTextCommand(
-						"\\~\\~\n*No actions created for the command \"**"
-								+ Ressources.PREFIX
-								+ message[0]
-								+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
-				break;
+			// Only interactions are through a server, no single conversations permitted!
+			if(event.isFromType(ChannelType.PRIVATE)){
+				
+				event.getPrivateChannel()
+						.sendMessage(
+								"*You must be in a server to interact with me!*")
+						.complete();
+				
 			}
-			
-			command.setContent(message[1]);
-			command.setContext(event);
-			command.setBuffer(buffer);
-			
-			command.action();
+			else if(event.isFromType(ChannelType.TEXT)){
+				
+				if(messageRecu.matches(Ressources.PREFIX + ".+")){
+					
+					buffer.setGuildID(event.getGuild().getId());
+					
+					messageRecu = messageRecu.substring(Ressources.PREFIX
+							.length());
+					
+					//			AudioCommands audio = new AudioCommands(event);
+					
+					//			TextChannel textChannel = event.getTextChannel();
+					
+					//			VoiceChannelInteraction voiceChannels = new VoiceChannelInteraction(
+					//					event);
+					
+					Command command;
+					
+					String[] message = splitContent(messageRecu);
+					
+					switch(message[0]){
+					case "hello":
+						command = new SimpleTextCommand("hello "
+								+ event.getAuthor().getName());
+						break;
+					case "help":
+						command = new CommandHelp();
+						break;
+					case "connect":
+						command = new Command(){
+							public void action(){
+								connect();
+							}
+						};
+						break;
+					case "disconnect":
+						command = new Command(){
+							public void action(){
+								disconnect();
+							}
+						};
+						break;
+					//			case "play":
+					//				audio.play();
+					//				break;
+					case "clear":
+						command = new CommandClear();
+						break;
+					case "spam":
+						command = new CommandSpam();
+						break;
+					case "game":
+						command = new CommandGameInteraction(
+								CommandGameType.INITIAL);
+						break;
+					case "game_add":
+						command = new CommandGameInteraction(
+								CommandGameType.ADD);
+						break;
+					case "game_remove":
+						command = new CommandGameInteraction(
+								CommandGameType.REMOVE);
+						break;
+					case "game_roll":
+					case "roll":
+						command = new CommandGameInteraction(
+								CommandGameType.ROLL);
+						break;
+					case "game_list":
+						command = new CommandGameInteraction(
+								CommandGameType.LIST);
+						break;
+					case "test":
+						command = new SimpleTextCommand("test hello "
+								+ event.getAuthor().getName());
+					default:
+						command = new SimpleTextCommand(
+								"\\~\\~\n*No actions created for the command \"**"
+										+ Ressources.PREFIX
+										+ message[0]
+										+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
+						break;
+					}
+					
+					command.setContent(message[1]);
+					command.setContext(event);
+					command.setBuffer(buffer);
+					
+					command.action();
+					
+				}
+				
+			}
 			
 		}
 		
 	}
 	
 	public String[] splitContent(String command){
+		
+		command = command.trim();
+		
+		command = command.replaceAll("( )+", " ");
 		
 		String[] splitted = command.split(" ", 2);
 		
