@@ -45,12 +45,12 @@ public class Buffer {
 				
 				BufferObject bufrObj = (BufferObject)obj;
 				
-				if(bufrObj.getGuildID().equals(currentGuildID)){
+				if(currentGuildID.equals(bufrObj.getGuildID())){
 					
 					if(getName() != null)
-						isEqual = bufrObj.getName().equals(getName());
+						isEqual = getName().equals(bufrObj.getName());
 					else
-						isEqual = bufrObj.getObject().equals(getObject());
+						isEqual = getObject().equals(bufrObj.getObject());
 					
 				}
 				
@@ -62,10 +62,12 @@ public class Buffer {
 		
 	}
 	
-	private ArrayList<BufferObject> memory = new ArrayList<>();
+	private ArrayList<BufferObject> memory;
 	private String currentGuildID;
 	
-	public Buffer(){}
+	public Buffer(){
+		memory = new ArrayList<>();
+	}
 	
 	public void setGuildID(String guildID){
 		this.currentGuildID = guildID;
