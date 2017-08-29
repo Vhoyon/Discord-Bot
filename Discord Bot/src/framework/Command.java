@@ -21,6 +21,10 @@ public abstract class Command {
 		return content.split(" ");
 	}
 	
+	protected String[] getSplitContentMaxed(int maxSize){
+		return content.split(" ", maxSize);
+	}
+	
 	public void setContent(String content){
 		this.content = content;
 	}

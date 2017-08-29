@@ -119,18 +119,18 @@ public class GameInteractionCommand extends Command {
 		
 		switch(commandType){
 		case INITIAL:
-			message = "Usage : **"
+			message = "Usage : `"
 					+ Ressources.PREFIX
-					+ "game [game 1],[game 2],[game 3],[...]** .\nSeparate games using commas.";
+					+ "game [game 1],[game 2],[game 3],[...]`.\nSeparate games using commas.";
 			break;
 		case ADD:
-			message = "Usage : **" + Ressources.PREFIX
-					+ "game_add [game name]** .";
+			message = "Usage : `" + Ressources.PREFIX
+					+ "game_add [game name]`.";
 			break;
 		case REMOVE:
-			message = "Usage : **" + Ressources.PREFIX
-					+ "game_remove [game name]** OR **" + Ressources.PREFIX
-					+ "game_remove [game index]** .";
+			message = "Usage : `" + Ressources.PREFIX
+					+ "game_remove [game name]` OR `" + Ressources.PREFIX
+					+ "game_remove [game index]`.";
 			break;
 		default:
 			message = "An unsuspected error happened. What have you done.";

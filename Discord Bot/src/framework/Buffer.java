@@ -107,19 +107,20 @@ public class Buffer {
 		
 	}
 	
-	public Object get(int index) throws IndexOutOfBoundsException{
+	public Object get(int index) throws ArrayIndexOutOfBoundsException{
 		
 		return memory.get(index).getObject();
 		
 	}
 	
-	public Object get(String associatedName) throws IndexOutOfBoundsException{
+	public Object get(String associatedName)
+			throws ArrayIndexOutOfBoundsException{
 		
 		return get(memory.indexOf(new BufferObject(associatedName)));
 		
 	}
 	
-	public boolean remove(int index) throws IndexOutOfBoundsException{
+	public boolean remove(int index){
 		
 		boolean success = true;
 		
@@ -136,7 +137,7 @@ public class Buffer {
 		
 	}
 	
-	public boolean remove(String associatedName) throws IndexOutOfBoundsException{
+	public boolean remove(String associatedName){
 		
 		return remove(memory.indexOf(new BufferObject(associatedName)));
 		

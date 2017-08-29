@@ -119,6 +119,10 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 						case "spam":
 							command = new CommandSpam();
 							break;
+						case "stop":
+							command = new SimpleTextCommand(
+									"**T** *h*~~E~~ __*b* **O**t__ **CA*__n__N*oT** ~~B*E*~~ __St*O**P**P*eD__");
+							break;
 						case "game":
 							command = new GameInteractionCommand(
 									CommandType.INITIAL);
