@@ -1,25 +1,9 @@
 package framework;
 
-import java.util.ArrayList;
-
-public class GamePool {
-	
-	private ArrayList<String> jeux = new ArrayList<>();
-	
-	public GamePool(){}
+public class GamePool extends Pool<String> {
 	
 	public GamePool(String[] jeux){
-		for(int i = 0; i < jeux.length; i++){
-			this.jeux.add(jeux[i]);
-		}
-	}
-	
-	public void add(String nom){
-		jeux.add(nom);
-	}
-	
-	public ArrayList<String> getJeux(){
-		return jeux;
+		super(jeux);
 	}
 	
 }
