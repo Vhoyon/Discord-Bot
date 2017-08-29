@@ -88,7 +88,7 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 					
 					if(!neededConfirmation){
 						
-						switch(message[0]){
+						switch(message[0].toLowerCase()){
 						case "hello":
 							command = new SimpleTextCommand("hello "
 									+ event.getAuthor().getName());
