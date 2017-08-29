@@ -61,7 +61,7 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 					
 					String[] message = splitContent(messageRecu);
 					
-					boolean hasConfirmed = false;
+					boolean neededConfirmation = false;
 					
 					try{
 						
@@ -71,11 +71,11 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 						CommandConfirmed object = (CommandConfirmed)needsConfirmation;
 						if(message[0].equals("confirm")){
 							object.confirmed();
-							hasConfirmed = true;
+							neededConfirmation = true;
 						}
 						else if(message[0].equals("cancel")){
 							object.cancelled();
-							hasConfirmed = true;
+							neededConfirmation = true;
 						}
 						else{
 							object.cancelled();
@@ -86,7 +86,7 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 					}
 					catch(IndexOutOfBoundsException e){}
 					
-					if(!hasConfirmed){
+					if(!neededConfirmation){
 						
 						switch(message[0]){
 						case "hello":
