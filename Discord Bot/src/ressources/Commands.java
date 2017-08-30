@@ -16,7 +16,7 @@ public interface Commands {
 	 *         "<b>`</b>" tick, meaning the visual will be like code in Discord.
 	 */
 	public default String buildVCommand(String command){
-		return "`" + Ressources.PREFIX + command + "`";
+		return "`" + buildCommand(command) + "`";
 	}
 	
 	public String HELLO = "hello";
