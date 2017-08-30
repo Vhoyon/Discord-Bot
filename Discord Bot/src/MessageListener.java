@@ -1,5 +1,4 @@
-import ressources.Commands;
-import ressources.Ressources;
+import ressources.*;
 import commands.*;
 import commands.GameInteractionCommand.CommandType;
 import framework.Buffer;

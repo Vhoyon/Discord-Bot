@@ -4,10 +4,9 @@ import java.util.Random;
 
 import framework.Command;
 import framework.GamePool;
-import ressources.Commands;
 import ressources.Ressources;
 
-public class GameInteractionCommand extends Command implements Commands {
+public class GameInteractionCommand extends Command {
 	
 	public enum CommandType{
 		INITIAL, ADD, REMOVE, ROLL, LIST

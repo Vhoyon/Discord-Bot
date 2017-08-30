@@ -1,10 +1,8 @@
 package framework;
 
-import ressources.Commands;
 import ressources.Ressources;
 
-public abstract class CommandConfirmed extends Command implements Ressources,
-		Commands {
+public abstract class CommandConfirmed extends Command implements Ressources {
 	
 	private String confirmationMessage;
 	
