@@ -157,10 +157,9 @@ public class MessageListener extends ListenerAdapter implements Ressources,
 							break;
 						default:
 							command = new SimpleTextCommand(
-									"\\~\\~\n*No actions created for the command \"**"
-											+ Ressources.PREFIX
-											+ message[0]
-											+ "**\" - please make an idea in the __ideas__ text channel!*\n\\~\\~");
+									"\\~\\~\n*No actions created for the command* "
+											+ buildVCommand(message[0])
+											+ " *- please make an idea in the __ideas__ text channel!*\n\\~\\~");
 							break;
 						}
 						
