@@ -113,10 +113,16 @@ public class Buffer {
 		
 	}
 	
-	public Object get(String associatedName)
-			throws ArrayIndexOutOfBoundsException{
+	public Object get(String associatedName) throws NullPointerException{
 		
-		return get(memory.indexOf(new BufferObject(associatedName)));
+		try{
+			return get(memory.indexOf(new BufferObject(associatedName)));
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			throw new NullPointerException(
+					"No object with the associated name \"" + associatedName
+							+ "\" found in the buffer.");
+		}
 		
 	}
 	
@@ -125,9 +131,7 @@ public class Buffer {
 		boolean success = true;
 		
 		try{
-			
 			memory.remove(index);
-			
 		}
 		catch(Exception e){
 			success = false;

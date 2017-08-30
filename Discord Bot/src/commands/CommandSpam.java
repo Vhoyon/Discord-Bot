@@ -1,6 +1,5 @@
 package commands;
 
-import ressources.Ressources;
 import framework.Command;
 
 public class CommandSpam extends Command {
@@ -43,7 +42,7 @@ public class CommandSpam extends Command {
 		}
 		catch(NumberFormatException e){
 			
-			String commandStart = "`" + Ressources.PREFIX + "spam";
+			String commandStart = "`" + buildCommand(SPAM);
 			
 			String command1 = commandStart + "` : Send a default of "
 					+ numberOfSpam + " spam messages.";

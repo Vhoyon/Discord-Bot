@@ -14,9 +14,6 @@ public interface Ressources {
 	public String PREFIX = "!!";
 	
 	public String BUFFER_CONFIRMATION = "confirmation";
-	
-	public static String buildCommand(String commandName){
-		return PREFIX + commandName;
-	}
+	public String BUFFER_GAMEPOOL = "GamePool";
 
 }

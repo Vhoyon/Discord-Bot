@@ -1,5 +1,6 @@
 package framework;
 
+import ressources.Commands;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -7,7 +8,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-public abstract class Command {
+public abstract class Command implements Commands {
 	
 	private String content;
 	private Buffer buffer;

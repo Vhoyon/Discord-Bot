@@ -1,3 +1,4 @@
+import ressources.Commands;
 import ressources.Ressources;
 import commands.*;
 import commands.GameInteractionCommand.CommandType;
@@ -17,7 +18,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  *         Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
  *         l'utilisateur et appele les classes necessaires
  */
-public class MessageListener extends ListenerAdapter implements Ressources {
+public class MessageListener extends ListenerAdapter implements Ressources,
+		Commands {
 	
 	private Buffer buffer;
 	
@@ -68,42 +70,42 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 						Object needsConfirmation = buffer
 								.get(BUFFER_CONFIRMATION);
 						
-						CommandConfirmed object = (CommandConfirmed)needsConfirmation;
-						if(message[0].equals("confirm")){
-							object.confirmed();
+						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
+						if(message[0].equals(CONFIRM)){
+							confirmationObject.confirmed();
 							neededConfirmation = true;
 						}
-						else if(message[0].equals("cancel")){
-							object.cancelled();
+						else if(message[0].equals(CANCEL)){
+							confirmationObject.cancelled();
 							neededConfirmation = true;
 						}
 						else{
-							object.cancelled();
+							confirmationObject.cancelled();
 						}
 						
 						buffer.remove(BUFFER_CONFIRMATION);
 						
 					}
-					catch(IndexOutOfBoundsException e){}
+					catch(NullPointerException e){}
 					
 					if(!neededConfirmation){
 						
 						switch(message[0].toLowerCase()){
-						case "hello":
+						case HELLO:
 							command = new SimpleTextCommand("hello "
 									+ event.getAuthor().getName());
 							break;
-						case "help":
+						case HELP:
 							command = new CommandHelp();
 							break;
-						case "connect":
+						case CONNECT:
 							command = new Command(){
 								public void action(){
 									connect();
 								}
 							};
 							break;
-						case "disconnect":
+						case DISCONNECT:
 							command = new Command(){
 								public void action(){
 									disconnect();
@@ -113,38 +115,38 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 						//			case "play":
 						//				audio.play();
 						//				break;
-						case "clear":
+						case CLEAR:
 							command = new CommandClear();
 							break;
-						case "spam":
+						case SPAM:
 							command = new CommandSpam();
 							break;
-						case "stop":
+						case STOP:
 							command = new SimpleTextCommand(
 									"**T** *h*~~E~~ __*b* **O**t__ **CA*__n__N*oT** ~~B*E*~~ __St*O**P**P*eD__");
 							break;
-						case "game":
+						case GAME:
 							command = new GameInteractionCommand(
 									CommandType.INITIAL);
 							break;
-						case "game_add":
+						case GAME_ADD:
 							command = new GameInteractionCommand(
 									CommandType.ADD);
 							break;
-						case "game_remove":
+						case GAME_REMOVE:
 							command = new GameInteractionCommand(
 									CommandType.REMOVE);
 							break;
-						case "game_roll":
-						case "roll":
+						case GAME_ROLL:
+						case GAME_ROLL_ALT:
 							command = new GameInteractionCommand(
 									CommandType.ROLL);
 							break;
-						case "game_list":
+						case GAME_LIST:
 							command = new GameInteractionCommand(
 									CommandType.LIST);
 							break;
-						case "test":
+						case TEST:
 							command = new CommandConfirmed(
 									"Are you sure you want to do X?"){
 								@Override

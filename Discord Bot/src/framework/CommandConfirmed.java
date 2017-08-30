@@ -1,8 +1,10 @@
 package framework;
 
+import ressources.Commands;
 import ressources.Ressources;
 
-public abstract class CommandConfirmed extends Command implements Ressources {
+public abstract class CommandConfirmed extends Command implements Ressources,
+		Commands {
 	
 	private String confirmationMessage;
 	
@@ -18,14 +20,14 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 		try{
 			getBuffer().get(BUFFER_CONFIRMATION);
 		}
-		catch(IndexOutOfBoundsException e){
+		catch(NullPointerException e){
 			
 			sendMessage(confirmationMessage
-					+ "\n\nEnter `"
-					+ Ressources.buildCommand("confirm")
-					+ "` to confirm. Entering `"
-					+ Ressources.buildCommand("cancel")
-					+ "` will cancel the confirmation.\nAny other command will cancel the confirmation and execute the inputted command.");
+					+ "\n\nEnter "
+					+ buildVCommand(CONFIRM)
+					+ " to confirm. Entering "
+					+ buildVCommand(CANCEL)
+					+ " will cancel the confirmation.\nAny other command will cancel the confirmation and execute the inputted command.");
 			
 			getBuffer().push(this, BUFFER_CONFIRMATION);
 			
