@@ -17,7 +17,7 @@ public class Buffer {
 		public BufferObject(Object object, String associatedName){
 			this.object = object;
 			this.associatedName = associatedName;
-			this.guildID = currentGuildID;
+			this.guildID = latestGuildID;
 		}
 		
 		public Object getObject(){
@@ -45,7 +45,7 @@ public class Buffer {
 				
 				BufferObject bufrObj = (BufferObject)obj;
 				
-				if(currentGuildID.equals(bufrObj.getGuildID())){
+				if(latestGuildID.equals(bufrObj.getGuildID())){
 					
 					if(getName() != null)
 						isEqual = getName().equals(bufrObj.getName());
@@ -63,14 +63,18 @@ public class Buffer {
 	}
 	
 	private ArrayList<BufferObject> memory;
-	private String currentGuildID;
+	private String latestGuildID;
 	
 	public Buffer(){
 		memory = new ArrayList<>();
 	}
 	
-	public void setGuildID(String guildID){
-		this.currentGuildID = guildID;
+	public void setLatestGuildID(String guildID){
+		this.latestGuildID = guildID;
+	}
+	
+	public String getLatestGuildID(){
+		return latestGuildID;
 	}
 	
 	public boolean push(Object object, String associatedName){
@@ -107,7 +111,7 @@ public class Buffer {
 		
 	}
 	
-	public Object get(int index) throws ArrayIndexOutOfBoundsException{
+	public Object get(int index) throws IndexOutOfBoundsException{
 		
 		return memory.get(index).getObject();
 		
@@ -133,7 +137,7 @@ public class Buffer {
 		try{
 			memory.remove(index);
 		}
-		catch(Exception e){
+		catch(IndexOutOfBoundsException e){
 			success = false;
 		}
 		

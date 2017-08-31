@@ -12,32 +12,48 @@ public class CommandSpam extends Command {
 		
 		try{
 			
-			String[] content = getSplitContentMaxed(2);
+			String[] content;
+			
+			try{
+				content = getSplitContentMaxed(2);
+			}
+			catch(Exception e){
+				content = new String[]{};
+			}
 			
 			if(getContent() != null)
 				numberOfSpam = Integer.parseInt(content[0]);
 			
-			getBuffer().push(true, "SPAM_CONDITION");
+			getBuffer().push(true, BUFFER_SPAM);
 			
 			boolean hasCustomMessage = content.length == 2;
 			
-			for(int i = 0; i < numberOfSpam
-					&& (boolean)getBuffer().get("SPAM_CONDITION"); i++){
+			try{
 				
-				if(i != 0)
-					try{
-						Thread.sleep(1250);
-					}
-					catch(InterruptedException e){}
+				for(int i = 0; i < numberOfSpam
+						&& (boolean)getBuffer().get(BUFFER_SPAM); i++){
+					
+					if(i != 0)
+						try{
+							Thread.sleep(1250);
+						}
+						catch(InterruptedException e){}
+					
+					if(hasCustomMessage)
+						sendMessage(content[1]);
+					else
+						sendMessage("Spam #" + (i + 1));
+					
+				}
 				
-				if(hasCustomMessage)
-					sendMessage(content[1]);
-				else
-					sendMessage("Spam #" + (i + 1));
+				getBuffer().remove(BUFFER_SPAM);
 				
 			}
-			
-			getBuffer().remove("SPAM_CONDITION");
+			catch(NullPointerException e){
+				
+				sendMessage("\\~\\~YOU BROKE ME... <3\\~\\~");
+				
+			}
 			
 		}
 		catch(NumberFormatException e){
@@ -57,4 +73,5 @@ public class CommandSpam extends Command {
 		}
 		
 	}
+	
 }

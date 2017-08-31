@@ -115,10 +115,13 @@ public class GameInteractionCommand extends Command {
 				
 				if(!content.equals("-all")){
 					
-					gamepool.remove(getContent());
-					
-					sendMessage("The game `" + getContent()
-							+ "` has been removed from the game pool!");
+					if(gamepool.remove(getContent()))
+						sendMessage("The game `" + getContent()
+								+ "` has been removed from the game pool!");
+					else
+						sendMessage("There is no such game in your pool! Type "
+								+ buildVCommand(GAME_LIST)
+								+ " to see which games you have in your pool.");
 					
 				}
 				else{

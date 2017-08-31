@@ -1,6 +1,7 @@
 package framework;
 
 import ressources.Commands;
+import ressources.Ressources;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -8,11 +9,12 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-public abstract class Command implements Commands {
+public abstract class Command implements Commands, Ressources {
 	
 	private String content;
 	private Buffer buffer;
 	private MessageReceivedEvent event;
+	private String guildID;
 	
 	protected String getContent(){
 		return content;
@@ -31,7 +33,11 @@ public abstract class Command implements Commands {
 	}
 	
 	public Buffer getBuffer(){
+		
+		buffer.setLatestGuildID(getGuildID());
+		
 		return buffer;
+		
 	}
 	
 	public void setBuffer(Buffer buffer){
@@ -48,6 +54,14 @@ public abstract class Command implements Commands {
 	
 	protected TextChannel getTextContext(){
 		return event.getTextChannel();
+	}
+	
+	public String getGuildID(){
+		return guildID;
+	}
+	
+	public void setGuildID(String guildID){
+		this.guildID = guildID;
 	}
 	
 	public abstract void action();
