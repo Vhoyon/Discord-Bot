@@ -98,7 +98,7 @@ public class CommandRouter implements Runnable, Ressources, Commands {
 				break;
 			case STOP:
 				command = new SimpleTextCommand(
-						"**T** *h*~~E~~ __*b* **O**t__ **CA*__n__N*oT** ~~B*E*~~ __St*O**P**P*eD__");
+						"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
 				break;
 			case GAME:
 				command = new GameInteractionCommand(CommandType.INITIAL);
