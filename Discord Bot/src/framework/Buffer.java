@@ -122,6 +122,7 @@ public class Buffer {
 		try{
 			return get(memory.indexOf(new BufferObject(associatedName)));
 		}
+		
 		catch(ArrayIndexOutOfBoundsException e){
 			throw new NullPointerException(
 					"No object with the associated name \"" + associatedName

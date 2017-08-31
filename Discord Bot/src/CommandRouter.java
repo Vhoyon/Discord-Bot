@@ -67,8 +67,8 @@ public class CommandRouter implements Runnable, Ressources, Commands {
 			
 			switch(message[0].toLowerCase()){
 			case HELLO:
-				command = new SimpleTextCommand("hello "
-						+ event.getAuthor().getName());
+				command = new SimpleTextCommand(
+						"hello " + event.getAuthor().getName());
 				break;
 			case HELP:
 				command = new CommandHelp();
@@ -96,9 +96,26 @@ public class CommandRouter implements Runnable, Ressources, Commands {
 			case SPAM:
 				command = new CommandSpam();
 				break;
-			case STOP:
+			case TERMINATE:
 				command = new SimpleTextCommand(
 						"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
+				break;
+			case STOP:
+				command = new Command(){
+					@Override
+					public void action(){
+						
+						try{
+							getBuffer().get(BUFFER_SPAM);
+							getBuffer().push(false, BUFFER_SPAM);
+							sendMessage("You have been saved from the spam :ok_hand:");
+						}
+						catch(NullPointerException e){
+							sendMessage("I CAN'T STOP");
+						}
+						
+					}
+				};
 				break;
 			case GAME:
 				command = new GameInteractionCommand(CommandType.INITIAL);
@@ -117,7 +134,8 @@ public class CommandRouter implements Runnable, Ressources, Commands {
 				command = new GameInteractionCommand(CommandType.LIST);
 				break;
 			case TEST:
-				command = new CommandConfirmed("Are you sure you want to do X?"){
+				command = new CommandConfirmed(
+						"Are you sure you want to do X?"){
 					@Override
 					public void confirmed(){
 						sendMessage("hi");

@@ -34,6 +34,7 @@ public interface Commands {
 	public String GAME_LIST = "game_list";
 	public String TEST = "test";
 	public String CONFIRM = "confirm";
+	public String TERMINATE = "terminate";
 	public String CANCEL = "cancel";
 	
 }

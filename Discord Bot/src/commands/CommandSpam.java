@@ -30,14 +30,16 @@ public class CommandSpam extends Command {
 			
 			try{
 				
-				for(int i = 0; i < numberOfSpam
-						&& (boolean)getBuffer().get(BUFFER_SPAM); i++){
+				for(int i = 0; i < numberOfSpam ; i++){
 					
 					if(i != 0)
 						try{
 							Thread.sleep(1250);
 						}
 						catch(InterruptedException e){}
+					
+					if(!(boolean)getBuffer().get(BUFFER_SPAM))
+						break;
 					
 					if(hasCustomMessage)
 						sendMessage(content[1]);
