@@ -169,7 +169,7 @@ public class GameInteractionCommand extends Command {
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage("The random game selected is : `"
+				sendMessage("You shall play : `"
 						+ gamepool.get(num) + "`!");
 				
 			}

@@ -46,6 +46,14 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 							.start();
 					
 				}
+				else if(messageRecu.equals(PREFIX)){
+					
+					event.getTextChannel()
+							.sendMessage(
+									"... you wanted to call upon me or...?")
+							.complete();
+					
+				}
 				
 			}
 			
