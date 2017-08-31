@@ -14,23 +14,18 @@ public class CommandSpam extends Command {
 			
 			String[] content;
 			
-			try{
-				content = getSplitContentMaxed(2);
-			}
-			catch(Exception e){
-				content = new String[]{};
-			}
+			content = getSplitContentMaxed(2);
 			
 			if(getContent() != null)
 				numberOfSpam = Integer.parseInt(content[0]);
 			
 			getBuffer().push(true, BUFFER_SPAM);
 			
-			boolean hasCustomMessage = content.length == 2;
+			boolean hasCustomMessage = content != null && content.length == 2;
 			
 			try{
 				
-				for(int i = 0; i < numberOfSpam ; i++){
+				for(int i = 0; i < numberOfSpam; i++){
 					
 					if(i != 0)
 						try{
@@ -48,13 +43,12 @@ public class CommandSpam extends Command {
 					
 				}
 				
-				getBuffer().remove(BUFFER_SPAM);
-				
 			}
 			catch(NullPointerException e){
-				
-				sendMessage("\\~\\~YOU BROKE ME... <3\\~\\~");
-				
+				// Was probably removed by the stopAction.
+			}
+			finally{
+				getBuffer().remove(BUFFER_SPAM);
 			}
 			
 		}
@@ -73,6 +67,15 @@ public class CommandSpam extends Command {
 					+ command3);
 			
 		}
+		
+	}
+	
+	@Override
+	public boolean stopAction(){
+		
+		getBuffer().remove(BUFFER_SPAM);
+		
+		return true;
 		
 	}
 	

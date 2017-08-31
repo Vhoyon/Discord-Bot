@@ -1,5 +1,6 @@
 package commands;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import framework.Command;
@@ -57,12 +58,16 @@ public class GameInteractionCommand extends Command {
 			
 			getBuffer().push(gamepool, Ressources.BUFFER_GAMEPOOL);
 			
-			sendMessage("The following games are now ready to be rolled :");
+			ArrayList<String> messages = new ArrayList<>();
+			
+			messages.add("The following games are now ready to be rolled :");
 			
 			for(int i = 1; i <= gamepool.size(); i++)
-				sendMessage(i + ". `" + gamepool.get(i - 1) + "`");
+				messages.add(i + ". `" + gamepool.get(i - 1) + "`");
 			
-			sendMessage("Enter the command " + buildVCommand(GAME_LIST)
+			groupAndSendMessages(messages);
+			
+			sendInfoMessage("Enter the command " + buildVCommand(GAME_LIST)
 					+ " to view this list again.");
 			
 		}
@@ -89,7 +94,7 @@ public class GameInteractionCommand extends Command {
 			}
 			catch(NullPointerException e){
 				
-				sendMessage("Your game pool is not yet created.\nYou can create a game pool using "
+				sendInfoMessage("Your game pool is not yet created.\nYou can create a game pool using "
 						+ buildVCommand(GAME + " [game 1],[game 2],[...]")
 						+ ".");
 				
@@ -119,7 +124,7 @@ public class GameInteractionCommand extends Command {
 						sendMessage("The game `" + getContent()
 								+ "` has been removed from the game pool!");
 					else
-						sendMessage("There is no such game in your pool! Type "
+						sendInfoMessage("There is no such game in your pool! Type "
 								+ buildVCommand(GAME_LIST)
 								+ " to see which games you have in your pool.");
 					
@@ -141,7 +146,7 @@ public class GameInteractionCommand extends Command {
 				
 			}
 			catch(NullPointerException e){
-				sendMessage("You cannot remove a game from an empty game pool!");
+				sendInfoMessage("You cannot remove a game from an empty game pool!");
 			}
 			
 		}
@@ -164,13 +169,13 @@ public class GameInteractionCommand extends Command {
 			int num;
 			
 			if(wantedRoll < 1)
-				Integer.parseInt("Forcing Error");
+				throw new IllegalArgumentException(
+						"The number inputted needs to be a positive number.");
 			else if(wantedRoll == 1){
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage("You shall play : `"
-						+ gamepool.get(num) + "`!");
+				sendMessage("You shall play : `" + gamepool.get(num) + "`!");
 				
 			}
 			else{
@@ -188,16 +193,17 @@ public class GameInteractionCommand extends Command {
 			
 		}
 		catch(NullPointerException e){
-			sendMessage("The game pool is empty!\nCreate a game pool using "
+			sendInfoMessage("The game pool is empty!\nCreate a game pool using "
 					+ buildVCommand(GAME + " [game 1],[game 2],[...]") + "!");
 		}
-		catch(NumberFormatException e){
-			sendMessage("Usage :\n" + buildVCommand(GAME_ROLL) + " OR "
+		catch(IllegalArgumentException e){
+			sendInfoMessage("Usage :\n" + buildVCommand(GAME_ROLL) + " OR "
 					+ buildVCommand(GAME_ROLL_ALT)
 					+ " : Roll the dice once to get a random game.\n"
 					+ buildVCommand(GAME_ROLL + " [positive number]") + " OR "
 					+ buildVCommand(GAME_ROLL_ALT + " [positive number]")
-					+ " : Roll a random game for the inputted number of time.");
+					+ " : Roll a random game for the inputted number of time.",
+					false);
 		}
 		
 	}
@@ -216,9 +222,14 @@ public class GameInteractionCommand extends Command {
 		}
 		else{
 			
-			for(int i = 0; i < gamepool.size(); i++){
-				sendMessage((i + 1) + ". `" + gamepool.get(i) + "`\n");
-			}
+			ArrayList<String> messages = new ArrayList<>();
+			
+			messages.add("Here are the games in your game pool :");
+			
+			for(int i = 0; i < gamepool.size(); i++)
+				messages.add((i + 1) + ". `" + gamepool.get(i) + "`");
+			
+			groupAndSendMessages(messages);
 			
 		}
 		
@@ -249,7 +260,7 @@ public class GameInteractionCommand extends Command {
 			break;
 		}
 		
-		sendMessage(message);
+		sendInfoMessage(message, false);
 		
 	}
 	

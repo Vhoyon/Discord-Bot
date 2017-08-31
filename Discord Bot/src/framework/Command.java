@@ -1,5 +1,7 @@
 package framework;
 
+import java.util.ArrayList;
+
 import ressources.Commands;
 import ressources.Ressources;
 import net.dv8tion.jda.core.entities.Member;
@@ -11,21 +13,40 @@ import net.dv8tion.jda.core.managers.AudioManager;
 
 public abstract class Command implements Commands, Ressources {
 	
+	private String commandName;
 	private String content;
 	private Buffer buffer;
 	private MessageReceivedEvent event;
 	private String guildID;
+	
+	public String getCommandName(){
+		return commandName;
+	}
+	
+	public void setCommandName(String commandName){
+		this.commandName = commandName;
+	}
 	
 	protected String getContent(){
 		return content;
 	}
 	
 	protected String[] getSplitContent(){
-		return content.split(" ");
+		
+		if(content != null)
+			return content.split(" ");
+		else
+			return null;
+		
 	}
 	
 	protected String[] getSplitContentMaxed(int maxSize){
-		return content.split(" ", maxSize);
+		
+		if(content != null)
+			return content.split(" ", maxSize);
+		else
+			return null;
+		
 	}
 	
 	public void setContent(String content){
@@ -66,6 +87,10 @@ public abstract class Command implements Commands, Ressources {
 	
 	public abstract void action();
 	
+	public boolean stopAction(){
+		return false;
+	}
+	
 	protected void sendMessage(String messageToSend){
 		
 		getTextContext().sendMessage(messageToSend).complete();
@@ -82,6 +107,47 @@ public abstract class Command implements Commands, Ressources {
 		else{
 			sendMessage("User has no private channel, cancelling.");
 		}
+		
+	}
+	
+	protected void sendInfoMessage(String messageToSend, boolean isOneLiner){
+		
+		String infoChars = "\\~\\~";
+		
+		String separator;
+		
+		if(isOneLiner)
+			separator = " ";
+		else
+			separator = "\n";
+		
+		sendMessage(infoChars + separator + messageToSend + separator
+				+ infoChars);
+		
+	}
+	
+	protected void sendInfoMessage(String messageToSend){
+		sendInfoMessage(messageToSend, true);
+	}
+	
+	protected void groupAndSendMessages(String[] messages){
+		
+		StringBuilder messageToSend = new StringBuilder();
+		
+		for(int i = 0; i < messages.length; i++){
+			messageToSend.append(messages[i]);
+			if(i < messages.length - 1){
+				messageToSend.append("\n");
+			}
+		}
+		
+		sendMessage(messageToSend.toString());
+		
+	}
+	
+	protected void groupAndSendMessages(ArrayList<String> messages){
+		
+		groupAndSendMessages(messages.toArray(new String[messages.size()]));
 		
 	}
 	

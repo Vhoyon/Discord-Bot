@@ -42,8 +42,7 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 				
 				if(messageRecu.matches(PREFIX + ".+")){
 					
-					new Thread(new CommandRouter(event, messageRecu, buffer))
-							.start();
+					new CommandRouter(event, messageRecu, buffer).start();
 					
 				}
 				else if(messageRecu.equals(PREFIX)){
