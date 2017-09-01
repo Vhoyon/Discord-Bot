@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ressources.Ressources;
+
 public class Request {
 	
 	public class Parameter {
@@ -181,7 +183,7 @@ public class Request {
 	
 	public void setCommand(String command){
 		
-		if(command.matches(Parameter.PREFIX + ".+"))
+		if(command.matches(Ressources.PREFIX + ".+"))
 			command = command.substring(Parameter.PREFIX.length());
 		
 		this.command = command;

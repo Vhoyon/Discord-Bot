@@ -23,10 +23,6 @@ public abstract class Command implements Commands, Ressources {
 		return request.getCommand();
 	}
 	
-	public void setCommandName(String commandName){
-		request.setCommand(commandName);
-	}
-	
 	protected String getContent(){
 		return request.getContent();
 	}
@@ -47,10 +43,6 @@ public abstract class Command implements Commands, Ressources {
 		else
 			return null;
 		
-	}
-	
-	public void setContent(String content){
-		request.setContent(content);
 	}
 	
 	public Buffer getBuffer(){

@@ -161,8 +161,6 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 					break;
 				}
 			
-			command.setCommandName(request.getCommand());
-			command.setContent(request.getContent());
 			command.setContext(event);
 			command.setBuffer(buffer);
 			command.setGuildID(event.getGuild().getId());

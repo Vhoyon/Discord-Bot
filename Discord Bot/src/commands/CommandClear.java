@@ -37,6 +37,8 @@ public class CommandClear extends CommandConfirmed {
 	
 	private void fullClean() throws PermissionException{
 		
+		boolean hadErrors = false;
+		
 		boolean vide = false;
 		MessageHistory history = getTextContext().getHistory();
 		do{
@@ -45,7 +47,12 @@ public class CommandClear extends CommandConfirmed {
 			
 			if(!messages.isEmpty()){
 				
-				getTextContext().deleteMessages(messages).complete();
+				try{
+					getTextContext().deleteMessages(messages).complete();
+				}
+				catch(IllegalArgumentException e){
+					hadErrors = true;
+				}
 				
 			}
 			else{
@@ -53,6 +60,9 @@ public class CommandClear extends CommandConfirmed {
 			}
 			
 		}while(!vide);
+		
+		if(hadErrors)
+			sendInfoMessage("One or more messages couldn't be deleted. Cannot bulk delete message more than 2 weeks old. Please try again earlier.");
 		
 	}
 	
