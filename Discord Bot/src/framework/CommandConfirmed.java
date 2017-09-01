@@ -20,12 +20,14 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 		}
 		catch(NullPointerException e){
 			
-			sendMessage(confirmationMessage
-					+ "\n\nEnter "
-					+ buildVCommand(CONFIRM)
-					+ " to confirm. Entering "
-					+ buildVCommand(CANCEL)
-					+ " will cancel the confirmation.\nAny other command will cancel the confirmation and execute the inputted command.");
+			sendInfoMessage(
+					confirmationMessage
+							+ "\n\nEnter "
+							+ buildVCommand(CONFIRM)
+							+ " to confirm. Entering "
+							+ buildVCommand(CANCEL)
+							+ " will cancel the confirmation.\nAny other command will cancel the confirmation and execute the inputted command.",
+					false);
 			
 			getBuffer().push(this, BUFFER_CONFIRMATION);
 			
@@ -36,7 +38,7 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 	public abstract void confirmed();
 	
 	public void cancelled(){
-		sendMessage("\\~\\~*Confirmation cancelled*\\~\\~");
+		sendInfoMessage("*Confirmation cancelled*");
 	}
 	
 }

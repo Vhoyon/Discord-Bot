@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Set;
 
 import ressources.*;
@@ -10,8 +11,116 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class CommandRouter extends Thread implements Ressources, Commands {
 	
+	private class Request {
+		
+		private class Parameter {
+			
+			private String parameter;
+			private String parameterContent;
+			
+			public Parameter(String parameter){
+				
+				this.parameter = parameter;
+				
+			}
+			
+			public String getParameter(){
+				return parameter;
+			}
+			
+			public String getParameterContent(){
+				return parameterContent;
+			}
+			
+		}
+		
+		private String command;
+		private String content;
+		private ArrayList<Parameter> parameters;
+		
+		public Request(String receivedMessage){
+			
+			String[] messageSplit = splitCommandAndContent(receivedMessage);
+			
+			setCommand(messageSplit[0]);
+			setContent(messageSplit[1]);
+			
+			if(content != null){
+				
+				String[] splittedContent = content.split(" ");
+				
+				boolean isValidParameters = true;
+				
+				final String parameterPrefix = "--";
+				
+				for(int i = 0; i < splittedContent.length && isValidParameters; i++){
+					
+					// That regex tho
+					if(splittedContent[i].matches("(.+)?" + parameterPrefix
+							+ "[^\\s]+( (\"[^\"]+\"|[^\\s]+)?)? ?")){
+						
+//						parameter.add(splittedContent[i]
+//								.substring(parameterPrefix.length()));
+//						
+//						try{
+//							
+//							parameterContent.add(splittedContent[i + 1]);
+//							
+//						}
+//						catch(IndexOutOfBoundsException e){
+//							isValidParameters = false;
+//						}
+						
+					}
+					else{
+						isValidParameters = false;
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		public String getCommand(){
+			return command;
+		}
+		
+		public void setCommand(String command){
+			this.command = command.substring(PREFIX.length());
+		}
+		
+		public String getContent(){
+			return content;
+		}
+		
+		public void setContent(String content){
+			this.content = content;
+		}
+		
+		private String[] splitCommandAndContent(String command){
+			
+			// Remove leading / trailing spaces (leading spaces are removed anyway)
+			String[] splitted = command.trim().replaceAll("( )+", " ")
+					.split(" ", 2);
+			
+			if(splitted.length == 1){
+				// TODO : Find better way you lazy basterd.
+				String actualCommand = splitted[0];
+				splitted = new String[2];
+				splitted[0] = actualCommand;
+			}
+			
+			splitted[0] = splitted[0].toLowerCase();
+			
+			return splitted;
+			
+		}
+		
+	}
+	
 	private MessageReceivedEvent event;
-	private String messageRecu;
+	private Request request;
 	private Buffer buffer;
 	private Command command;
 	
@@ -19,7 +128,7 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 			Buffer buffer){
 		
 		this.event = event;
-		this.messageRecu = messageRecu;
+		this.request = new Request(messageRecu);
 		this.buffer = buffer;
 		
 	}
@@ -31,11 +140,9 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 	@Override
 	public void run(){
 		
-		messageRecu = messageRecu.substring(PREFIX.length());
+		//		String[] message = splitContent(messageRecu);
 		
-		String[] message = splitContent(messageRecu);
-		
-		this.setName(message[0] + event.getGuild().getId());
+		this.setName(request.getCommand() + event.getGuild().getId());
 		
 		buffer.setLatestGuildID(event.getGuild().getId());
 		
@@ -46,11 +153,11 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 			Object needsConfirmation = buffer.get(BUFFER_CONFIRMATION);
 			
 			CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
-			if(message[0].equals(CONFIRM)){
+			if(request.getCommand().equals(CONFIRM)){
 				confirmationObject.confirmed();
 				neededConfirmation = true;
 			}
-			else if(message[0].equals(CANCEL)){
+			else if(request.getCommand().equals(CANCEL)){
 				confirmationObject.cancelled();
 				neededConfirmation = true;
 			}
@@ -65,13 +172,14 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		
 		if(!neededConfirmation){
 			
-			if(isCommandRunning(message[0], event.getGuild().getId()) != null){
+			if(isCommandRunning(request.getCommand(), event.getGuild().getId()) != null){
 				command = new SimpleTextCommand(
 						"Cannot run another instance of the command `"
-								+ message[0] + "` : it is already running.");
+								+ request.getCommand()
+								+ "` : it is already running.");
 			}
 			else
-				switch(message[0]){
+				switch(request.getCommand()){
 				case HELLO:
 					command = new SimpleTextCommand("hello "
 							+ event.getAuthor().getName());
@@ -107,8 +215,8 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 							"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
 					break;
 				case STOP:
-					command = new CommandStop(isCommandRunning(message[1],
-							event.getGuild().getId()));
+					command = new CommandStop(isCommandRunning(
+							request.getContent(), event.getGuild().getId()));
 					break;
 				case GAME:
 					command = new GameInteractionCommand(CommandType.INITIAL);
@@ -138,14 +246,14 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 				default:
 					command = new SimpleTextCommand(
 							"*No actions created for the command* "
-									+ buildVCommand(message[0])
+									+ buildVCommand(request.getCommand())
 									+ " *- please make an idea in the __ideas__ text channel!*",
 							false);
 					break;
 				}
 			
-			command.setCommandName(message[0]);
-			command.setContent(message[1]);
+			command.setCommandName(request.getCommand());
+			command.setContent(request.getContent());
 			command.setContext(event);
 			command.setBuffer(buffer);
 			command.setGuildID(event.getGuild().getId());
