@@ -135,6 +135,9 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 						}
 					};
 					break;
+				case TIMER:
+					command = new CommandTimer();
+					break;
 				default:
 					command = new SimpleTextCommand(
 							"*No actions created for the command* "
