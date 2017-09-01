@@ -1,7 +1,4 @@
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ressources.*;
 import commands.*;
@@ -9,161 +6,10 @@ import commands.GameInteractionCommand.CommandType;
 import framework.Buffer;
 import framework.Command;
 import framework.CommandConfirmed;
+import framework.Request;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class CommandRouter extends Thread implements Ressources, Commands {
-	
-	private class Request {
-		
-		private class Parameter {
-			
-			public final static String PREFIX = "--";
-			
-			private String parameter;
-			private String parameterContent;
-			
-			public Parameter(String parameter){
-				
-				this.parameter = parameter;
-				
-			}
-			
-			public String getParameter(){
-				return parameter.substring(PREFIX.length());
-			}
-			
-			public String getParameterContent(){
-				return parameterContent;
-			}
-			
-			public void setParameterContent(String parameterContent){
-				this.parameterContent = parameterContent;
-			}
-			
-		}
-		
-		private String command;
-		private String content;
-		private ArrayList<Parameter> parameters;
-		
-		public Request(String receivedMessage){
-			
-			String[] messageSplit = splitCommandAndContent(receivedMessage);
-			
-			setCommand(messageSplit[0]);
-			setContent(messageSplit[1]);
-			
-			if(content != null){
-				
-				// Test if content contains parameters.
-				// The params must be right after command for it to trigger.
-				//				if(content.matches("(" + Parameter.PREFIX + ".+)+")){
-				
-				parameters = new ArrayList<>();
-				
-				// Splits the content : Search for all spaces, except thoses
-				// in double quotes and put all what's found in the
-				// possibleParams ArrayList.
-				// Necessary since .split() removes the wanted Strings.
-				ArrayList<String> possibleParams = new ArrayList<>();
-				Matcher matcher = Pattern.compile(
-						"[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(content);
-				while(matcher.find()){
-					possibleParams.add(matcher.group());
-				}
-				
-				boolean canRoll = true;
-				
-				for(int i = 0; i < possibleParams.size() && canRoll; i++){
-					
-					String stringToTest = possibleParams.get(i);
-					
-					// If string is structured as a parameter, create it.
-					if(stringToTest.matches(Parameter.PREFIX + "[^\\s]+")){
-						
-						Parameter newParam = new Parameter(
-								possibleParams.get(i));
-						
-						try{
-							
-							String possibleParamContent = possibleParams
-									.get(i + 1);
-							
-							// If the following String isn't another param, set
-							// said String as the content for the current param.
-							if(!possibleParamContent.matches(Parameter.PREFIX
-									+ "[^\\s]+")){
-								
-								newParam.setParameterContent(possibleParamContent
-										.replaceAll("\"", ""));
-								
-								i++;
-								
-							}
-							
-						}
-						catch(IndexOutOfBoundsException e){
-							canRoll = false;
-						}
-						
-						parameters.add(newParam);
-						
-						// TODO Remove the parameters and their content from the content of the whole command
-//						getContent().substring(
-//								getContent().indexOf(newParam.getParameter()),
-//								getContent().indexOf(
-//										newParam.getParameterContent())
-//										+ newParam.getParameterContent()
-//												.length());
-						
-					}
-					
-				}
-				
-				new String();
-				
-				//				}
-				
-			}
-			
-		}
-		
-		public String getCommand(){
-			return command;
-		}
-		
-		public void setCommand(String command){
-			this.command = command.substring(PREFIX.length());
-		}
-		
-		public String getContent(){
-			return content;
-		}
-		
-		public void setContent(String content){
-			this.content = content;
-		}
-		
-		private String[] splitCommandAndContent(String command){
-			
-			// Remove leading / trailing spaces (leading spaces are removed anyway)
-			String[] splitted = command.trim().replaceAll("( )+", " ")
-					.split(" ", 2);
-			
-			if(splitted.length == 1){
-				// TODO : Find better way you lazy basterd.
-				String actualCommand = splitted[0];
-				splitted = new String[2];
-				splitted[0] = actualCommand;
-			}
-			
-			splitted[0] = splitted[0].toLowerCase();
-			
-			return splitted;
-			
-		}
-		
-	}
 	
 	private MessageReceivedEvent event;
 	private Request request;
@@ -303,6 +149,7 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 			command.setContext(event);
 			command.setBuffer(buffer);
 			command.setGuildID(event.getGuild().getId());
+			command.setRequest(request);
 			
 			command.action();
 			

@@ -18,6 +18,7 @@ public abstract class Command implements Commands, Ressources {
 	private Buffer buffer;
 	private MessageReceivedEvent event;
 	private String guildID;
+	private Request request;
 	
 	public String getCommandName(){
 		return commandName;
@@ -85,6 +86,14 @@ public abstract class Command implements Commands, Ressources {
 		this.guildID = guildID;
 	}
 	
+	public Request getRequest(){
+		return request;
+	}
+
+	public void setRequest(Request request){
+		this.request = request;
+	}
+
 	public abstract void action();
 	
 	public boolean stopAction(){
