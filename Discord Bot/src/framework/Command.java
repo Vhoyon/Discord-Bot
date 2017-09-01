@@ -14,29 +14,27 @@ import net.dv8tion.jda.core.managers.AudioManager;
 
 public abstract class Command implements Commands, Ressources {
 	
-	private String commandName;
-	private String content;
 	private Buffer buffer;
 	private MessageReceivedEvent event;
 	private String guildID;
 	private Request request;
 	
 	public String getCommandName(){
-		return commandName;
+		return request.getCommand();
 	}
 	
 	public void setCommandName(String commandName){
-		this.commandName = commandName;
+		request.setCommand(commandName);
 	}
 	
 	protected String getContent(){
-		return content;
+		return request.getContent();
 	}
 	
 	protected String[] getSplitContent(){
 		
-		if(content != null)
-			return content.split(" ");
+		if(request.getContent() != null)
+			return request.getContent().split(" ");
 		else
 			return null;
 		
@@ -44,15 +42,15 @@ public abstract class Command implements Commands, Ressources {
 	
 	protected String[] getSplitContentMaxed(int maxSize){
 		
-		if(content != null)
-			return content.split(" ", maxSize);
+		if(request.getContent() != null)
+			return request.getContent().split(" ", maxSize);
 		else
 			return null;
 		
 	}
 	
 	public void setContent(String content){
-		this.content = content;
+		request.setContent(content);
 	}
 	
 	public Buffer getBuffer(){

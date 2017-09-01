@@ -180,7 +180,11 @@ public class Request {
 	}
 	
 	public void setCommand(String command){
-		this.command = command.substring(Parameter.PREFIX.length());
+		
+		if(command.matches(Parameter.PREFIX + ".+"))
+			command = command.substring(Parameter.PREFIX.length());
+		
+		this.command = command;
 	}
 	
 	public String getContent(){
