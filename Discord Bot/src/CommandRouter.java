@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ressources.*;
 import commands.*;
@@ -15,6 +17,8 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		
 		private class Parameter {
 			
+			public final static String PREFIX = "--";
+			
 			private String parameter;
 			private String parameterContent;
 			
@@ -25,11 +29,15 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 			}
 			
 			public String getParameter(){
-				return parameter;
+				return parameter.substring(PREFIX.length());
 			}
 			
 			public String getParameterContent(){
 				return parameterContent;
+			}
+			
+			public void setParameterContent(String parameterContent){
+				this.parameterContent = parameterContent;
 			}
 			
 		}
@@ -47,36 +55,74 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 			
 			if(content != null){
 				
-				String[] splittedContent = content.split(" ");
+				// Test if content contains parameters.
+				// The params must be right after command for it to trigger.
+				//				if(content.matches("(" + Parameter.PREFIX + ".+)+")){
 				
-				boolean isValidParameters = true;
+				parameters = new ArrayList<>();
 				
-				final String parameterPrefix = "--";
+				// Splits the content : Search for all spaces, except thoses
+				// in double quotes and put all what's found in the
+				// possibleParams ArrayList.
+				// Necessary since .split() removes the wanted Strings.
+				ArrayList<String> possibleParams = new ArrayList<>();
+				Matcher matcher = Pattern.compile(
+						"[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(content);
+				while(matcher.find()){
+					possibleParams.add(matcher.group());
+				}
 				
-				for(int i = 0; i < splittedContent.length && isValidParameters; i++){
+				boolean canRoll = true;
+				
+				for(int i = 0; i < possibleParams.size() && canRoll; i++){
 					
-					// That regex tho
-					if(splittedContent[i].matches("(.+)?" + parameterPrefix
-							+ "[^\\s]+( (\"[^\"]+\"|[^\\s]+)?)? ?")){
+					String stringToTest = possibleParams.get(i);
+					
+					// If string is structured as a parameter, create it.
+					if(stringToTest.matches(Parameter.PREFIX + "[^\\s]+")){
 						
-//						parameter.add(splittedContent[i]
-//								.substring(parameterPrefix.length()));
-//						
-//						try{
-//							
-//							parameterContent.add(splittedContent[i + 1]);
-//							
-//						}
-//						catch(IndexOutOfBoundsException e){
-//							isValidParameters = false;
-//						}
+						Parameter newParam = new Parameter(
+								possibleParams.get(i));
 						
-					}
-					else{
-						isValidParameters = false;
+						try{
+							
+							String possibleParamContent = possibleParams
+									.get(i + 1);
+							
+							// If the following String isn't another param, set
+							// said String as the content for the current param.
+							if(!possibleParamContent.matches(Parameter.PREFIX
+									+ "[^\\s]+")){
+								
+								newParam.setParameterContent(possibleParamContent
+										.replaceAll("\"", ""));
+								
+								i++;
+								
+							}
+							
+						}
+						catch(IndexOutOfBoundsException e){
+							canRoll = false;
+						}
+						
+						parameters.add(newParam);
+						
+						// TODO Remove the parameters and their content from the content of the whole command
+//						getContent().substring(
+//								getContent().indexOf(newParam.getParameter()),
+//								getContent().indexOf(
+//										newParam.getParameterContent())
+//										+ newParam.getParameterContent()
+//												.length());
+						
 					}
 					
 				}
+				
+				new String();
+				
+				//				}
 				
 			}
 			
