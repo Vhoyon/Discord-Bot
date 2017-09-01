@@ -32,8 +32,6 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 	@Override
 	public void run(){
 		
-		//		String[] message = splitContent(messageRecu);
-		
 		this.setName(request.getCommand() + event.getGuild().getId());
 		
 		buffer.setLatestGuildID(event.getGuild().getId());
@@ -70,6 +68,9 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 								+ request.getCommand()
 								+ "` : it is already running.");
 			}
+			else if(request.getErrorMessage() != null)
+				command = new SimpleTextCommand(request.getErrorMessage(),
+						false);
 			else
 				switch(request.getCommand()){
 				case HELLO:
@@ -127,11 +128,27 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 					command = new GameInteractionCommand(CommandType.LIST);
 					break;
 				case TEST:
-					command = new CommandConfirmed(
-							"Are you sure you want to do X?"){
+					command = new Command(){
 						@Override
-						public void confirmed(){
-							sendMessage("hi");
+						public void action(){
+							
+							try{
+								
+								String paramContent = getParameter("content")
+										.toString();
+								
+								sendMessage("Happy tree friends, "
+										+ paramContent + "!");
+								
+							}
+							catch(NullPointerException e){
+								
+								sendMessage("Parameter `"
+										+ "content"
+										+ "` is not present or missing it's following content.");
+								
+							}
+							
 						}
 					};
 					break;
@@ -154,28 +171,6 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 			command.action();
 			
 		}
-		
-	}
-	
-	public String[] splitContent(String command){
-		
-		// Remove leading / trailing spaces (leading spaces are removed anyway)
-		command = command.trim();
-		
-		command = command.replaceAll("( )+", " ");
-		
-		String[] splitted = command.split(" ", 2);
-		
-		if(splitted.length == 1){
-			// TODO : Find better way you lazy basterd.
-			String actualCommand = splitted[0];
-			splitted = new String[2];
-			splitted[0] = actualCommand;
-		}
-		
-		splitted[0] = splitted[0].toLowerCase();
-		
-		return splitted;
 		
 	}
 	

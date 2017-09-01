@@ -13,9 +13,6 @@ public class Request {
 		private String parameter;
 		private String parameterContent;
 		
-		private int paramStartPos;
-		private int paramEndPos;
-		
 		public Parameter(String parameter){
 			this.parameter = parameter;
 		}
@@ -25,27 +22,37 @@ public class Request {
 		}
 		
 		public String getParameterContent(){
-			return parameterContent.replaceAll("\"", "");
+			
+			if(parameterContent == null)
+				return null;
+			else
+				return parameterContent.replaceAll("\"", "");
 		}
 		
 		public void setParameterContent(String parameterContent){
 			this.parameterContent = parameterContent;
 		}
 		
-		public int getParamStartPos(){
-			return paramStartPos;
+		@Override
+		public boolean equals(Object obj){
+			
+			boolean isEqual = false;
+			
+			if(obj instanceof Parameter){
+				
+				Parameter parameterToCompare = (Parameter)obj;
+				
+				isEqual = getParameter().equals(
+						parameterToCompare.getParameter());
+				
+			}
+			
+			return isEqual;
 		}
 		
-		public void setParamStartPos(int paramStartPos){
-			this.paramStartPos = paramStartPos;
-		}
-		
-		public int getParamEndPos(){
-			return paramEndPos;
-		}
-		
-		public void setParamEndPos(int paramEndPos){
-			this.paramEndPos = paramEndPos;
+		@Override
+		public String toString(){
+			return this.getParameterContent();
 		}
 		
 	}
@@ -53,6 +60,8 @@ public class Request {
 	private String command;
 	private String content;
 	private ArrayList<Parameter> parameters;
+	
+	private String errorMessage = null;
 	
 	public Request(String receivedMessage){
 		
@@ -79,6 +88,7 @@ public class Request {
 			while(matcher.find()){
 				possibleParams.add(matcher.group());
 			}
+			ArrayList<Parameter> duplicateParams = new ArrayList<>();
 			
 			boolean canRoll = true;
 			
@@ -91,46 +101,75 @@ public class Request {
 					
 					Parameter newParam = new Parameter(possibleParam);
 					
-					newParam.setParamStartPos(getContent().indexOf(
-							possibleParam));
+					int paramStartPos;
+					int paramEndPos;
 					
-					try{
+					paramStartPos = getContent().indexOf(possibleParam);
+					paramEndPos = paramStartPos + possibleParam.length();
+					
+					if(parameters.contains(newParam)){
 						
-						String possibleParamContent = possibleParams.get(i + 1);
+						if(!duplicateParams.contains(newParam))
+							duplicateParams.add(newParam);
 						
-						// If the following String isn't another param, set
-						// said String as the content for the current param.
-						if(!possibleParamContent.matches(Parameter.PREFIX
-								+ "[^\\s]+")){
+					}
+					else{
+						
+						try{
 							
-							newParam.setParameterContent(possibleParamContent);
+							String possibleParamContent = possibleParams
+									.get(i + 1);
 							
-							i++;
-							
-							newParam.setParamEndPos(getContent().indexOf(
-									possibleParamContent)
-									+ possibleParamContent.length());
+							// If the following String isn't another param, set
+							// said String as the content for the current param.
+							if(!possibleParamContent.matches(Parameter.PREFIX
+									+ "[^\\s]+")){
+								
+								newParam.setParameterContent(possibleParamContent);
+								
+								i++;
+								
+								paramEndPos = getContent().indexOf(
+										possibleParamContent)
+										+ possibleParamContent.length();
+								
+							}
 							
 						}
+						catch(IndexOutOfBoundsException e){
+							canRoll = false;
+						}
+						
+						parameters.add(newParam);
 						
 					}
-					catch(IndexOutOfBoundsException e){
-						canRoll = false;
-					}
-					
-					parameters.add(newParam);
 					
 					String contentToRemove = getContent().substring(
-							newParam.getParamStartPos(),
-							newParam.getParamEndPos());
+							paramStartPos, paramEndPos);
 					
-					setContent(getContent().replace(contentToRemove, ""));
+					setContent(getContent().replaceFirst(contentToRemove, ""));
 					
 				}
 				
 			}
 			
-			setContent(getContent().trim());
+			if(getContent() != null)
+				setContent(getContent().trim());
+			
+			if(duplicateParams.size() != 0){
+				
+				StringBuilder message = new StringBuilder(
+						"Those parameter(s) has been entered more than once :\n");
+				
+				for(int i = 0; i < duplicateParams.size(); i++)
+					message.append((i + 1) + ". `"
+							+ duplicateParams.get(i).getParameter() + "`\n");
+				
+				message.append("***Only the first instance of those parameters will be taken into consideration.***");
+				
+				this.errorMessage = message.toString();
+				
+			}
 			
 		}
 		
@@ -150,7 +189,7 @@ public class Request {
 	
 	public void setContent(String content){
 		
-		if(content.length() == 0)
+		if(content == null || content.length() == 0)
 			this.content = null;
 		else
 			this.content = content;
@@ -159,6 +198,38 @@ public class Request {
 	
 	public ArrayList<Parameter> getParameters(){
 		return parameters;
+	}
+	
+	public Parameter getParameter(String parameterName){
+		
+		Parameter parameterFound = null;
+		
+		if(parameters != null)
+			for(Parameter parameter : parameters){
+				
+				if(parameter.getParameter().equals(parameterName)){
+					
+					parameterFound = parameter;
+					break;
+					
+				}
+				
+			}
+		
+		return parameterFound;
+		
+	}
+	
+	public boolean isParameterPresent(Parameter parameter){
+		return parameters.contains(parameter);
+	}
+	
+	public boolean isParameterPresent(String parameterName){
+		return isParameterPresent(new Parameter(parameterName));
+	}
+	
+	public String getErrorMessage(){
+		return errorMessage;
 	}
 	
 	private String[] splitCommandAndContent(String command){

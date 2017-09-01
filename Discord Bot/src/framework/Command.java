@@ -2,6 +2,7 @@ package framework;
 
 import java.util.ArrayList;
 
+import framework.Request.Parameter;
 import ressources.Commands;
 import ressources.Ressources;
 import net.dv8tion.jda.core.entities.Member;
@@ -89,11 +90,27 @@ public abstract class Command implements Commands, Ressources {
 	public Request getRequest(){
 		return request;
 	}
-
+	
 	public void setRequest(Request request){
 		this.request = request;
 	}
-
+	
+	public ArrayList<Parameter> getParameters(){
+		return this.request.getParameters();
+	}
+	
+	public Parameter getParameter(String parameterName){
+		return this.request.getParameter(parameterName);
+	}
+	
+	public boolean isParameterPresent(Parameter parameter){
+		return request.isParameterPresent(parameter);
+	}
+	
+	public boolean isParameterPresent(String parameterName){
+		return request.isParameterPresent(parameterName);
+	}
+	
 	public abstract void action();
 	
 	public boolean stopAction(){
