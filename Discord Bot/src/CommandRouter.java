@@ -60,6 +60,13 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		}
 		catch(NullPointerException e){}
 		
+		if(request.getErrorMessage() != null){
+			command = new SimpleTextCommand(request.getErrorMessage(), false);
+			command.setContext(event);
+			command.action();
+			command = null;
+		}
+		
 		if(!neededConfirmation){
 			
 			if(isCommandRunning(request.getCommand(), event.getGuild().getId()) != null){
@@ -68,9 +75,6 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 								+ request.getCommand()
 								+ "` : it is already running.");
 			}
-			else if(request.getErrorMessage() != null)
-				command = new SimpleTextCommand(request.getErrorMessage(),
-						false);
 			else
 				switch(request.getCommand()){
 				case HELLO:

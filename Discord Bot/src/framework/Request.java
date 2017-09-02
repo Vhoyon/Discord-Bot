@@ -160,14 +160,34 @@ public class Request {
 			
 			if(duplicateParams.size() != 0){
 				
-				StringBuilder message = new StringBuilder(
-						"Those parameter(s) has been entered more than once :\n");
+				String pluralTester;
 				
-				for(int i = 0; i < duplicateParams.size(); i++)
-					message.append((i + 1) + ". `"
-							+ duplicateParams.get(i).getParameter() + "`\n");
+				if(duplicateParams.size() == 1)
+					pluralTester = "That parameter";
+				else
+					pluralTester = "Those parameters";
 				
-				message.append("***Only the first instance of those parameters will be taken into consideration.***");
+				StringBuilder message = new StringBuilder(pluralTester
+						+ " has been entered more than once : ");
+				
+				for(int i = 0; i < duplicateParams.size(); i++){
+					
+					if(duplicateParams.size() != 1)
+						message.append("\n" + (i + 1) + ". ");
+					
+					message.append("`" + duplicateParams.get(i).getParameter()
+							+ "`");
+					
+				}
+				
+				if(duplicateParams.size() == 1)
+					pluralTester = "the parameter";
+				else
+					pluralTester = "those parameters";
+				
+				message.append("\n***Only the first instance of "
+						+ pluralTester
+						+ " will be taken into consideration.***");
 				
 				this.errorMessage = message.toString();
 				
