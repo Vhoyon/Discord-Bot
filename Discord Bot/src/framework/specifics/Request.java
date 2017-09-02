@@ -1,4 +1,4 @@
-package framework;
+package framework.specifics;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -15,6 +15,8 @@ public class Request {
 		private String parameter;
 		private String parameterContent;
 		
+		protected Parameter(){}
+		
 		public Parameter(String parameter){
 			this.parameter = parameter;
 		}
@@ -24,14 +26,13 @@ public class Request {
 		}
 		
 		public String getParameterContent(){
-			
 			if(parameterContent == null)
 				return null;
 			else
 				return parameterContent.replaceAll("\"", "");
 		}
 		
-		public void setParameterContent(String parameterContent){
+		protected void setParameterContent(String parameterContent){
 			this.parameterContent = parameterContent;
 		}
 		
@@ -57,6 +58,13 @@ public class Request {
 			return this.getParameterContent();
 		}
 		
+	}
+	
+	public class NoParameterContentException extends Exception {
+		public NoParameterContentException(){
+			super("No content has been set for the command " + getCommand()
+					+ ".");
+		}
 	}
 	
 	private String command;
@@ -226,11 +234,12 @@ public class Request {
 		return parameters;
 	}
 	
-	public Parameter getParameter(String parameterName){
+	public Parameter getParameter(String parameterName)
+			throws NoParameterContentException{
 		
 		Parameter parameterFound = null;
 		
-		if(parameters != null)
+		try{
 			for(Parameter parameter : parameters){
 				
 				if(parameter.getParameter().equals(parameterName)){
@@ -241,6 +250,10 @@ public class Request {
 				}
 				
 			}
+		}
+		catch(NullPointerException e){
+			throw new NoParameterContentException();
+		}
 		
 		return parameterFound;
 		

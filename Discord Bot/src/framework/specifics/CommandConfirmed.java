@@ -1,5 +1,6 @@
-package framework;
+package framework.specifics;
 
+import framework.Command;
 import ressources.Ressources;
 
 public abstract class CommandConfirmed extends Command implements Ressources {

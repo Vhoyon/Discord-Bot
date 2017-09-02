@@ -2,7 +2,9 @@ package framework;
 
 import java.util.ArrayList;
 
-import framework.Request.Parameter;
+import framework.specifics.Request;
+import framework.specifics.Request.NoParameterContentException;
+import framework.specifics.Request.Parameter;
 import ressources.Commands;
 import ressources.Ressources;
 import net.dv8tion.jda.core.entities.Member;
@@ -89,7 +91,8 @@ public abstract class Command implements Commands, Ressources {
 		return this.request.getParameters();
 	}
 	
-	public Parameter getParameter(String parameterName){
+	public Parameter getParameter(String parameterName)
+			throws NoParameterContentException{
 		return this.request.getParameter(parameterName);
 	}
 	
@@ -126,7 +129,7 @@ public abstract class Command implements Commands, Ressources {
 		
 	}
 	
-	protected void sendInfoMessage(String messageToSend, boolean isOneLiner){
+	protected String createInfoMessage(String messageToSend, boolean isOneLiner){
 		
 		String infoChars = "\\~\\~";
 		
@@ -137,13 +140,25 @@ public abstract class Command implements Commands, Ressources {
 		else
 			separator = "\n";
 		
-		sendMessage(infoChars + separator + messageToSend + separator
-				+ infoChars);
+		return infoChars + separator + messageToSend + separator + infoChars;
 		
+	}
+	
+	protected void sendInfoMessage(String messageToSend, boolean isOneLiner){
+		sendMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
 	protected void sendInfoMessage(String messageToSend){
 		sendInfoMessage(messageToSend, true);
+	}
+	
+	protected void sendInfoPrivateMessage(String messageToSend,
+			boolean isOneLiner){
+		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
+	}
+	
+	protected void sendInfoPrivateMessage(String messageToSend){
+		sendInfoPrivateMessage(messageToSend, true);
 	}
 	
 	protected void groupAndSendMessages(String[] messages){

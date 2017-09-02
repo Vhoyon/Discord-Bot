@@ -2,7 +2,7 @@ package commands;
 
 import java.util.List;
 
-import framework.CommandConfirmed;
+import framework.specifics.CommandConfirmed;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;

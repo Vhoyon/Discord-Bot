@@ -1,4 +1,6 @@
-package framework;
+package framework.specifics;
+
+import framework.Pool;
 
 public class MusicPool extends Pool<Music> {
 

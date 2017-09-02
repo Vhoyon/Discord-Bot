@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import framework.Command;
-import framework.GamePool;
+import framework.specifics.GamePool;
 import ressources.Ressources;
 
 public class GameInteractionCommand extends Command {

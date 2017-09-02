@@ -5,8 +5,10 @@ import commands.*;
 import commands.GameInteractionCommand.CommandType;
 import framework.Buffer;
 import framework.Command;
-import framework.CommandConfirmed;
-import framework.Request;
+import framework.specifics.CommandConfirmed;
+import framework.specifics.Request;
+import framework.specifics.Request.NoParameterContentException;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class CommandRouter extends Thread implements Ressources, Commands {
@@ -36,147 +38,179 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		
 		buffer.setLatestGuildID(event.getGuild().getId());
 		
-		boolean neededConfirmation = false;
-		
 		try{
 			
-			Object needsConfirmation = buffer.get(BUFFER_CONFIRMATION);
-			
-			CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
-			if(request.getCommand().equals(CONFIRM)){
-				confirmationObject.confirmed();
-				neededConfirmation = true;
-			}
-			else if(request.getCommand().equals(CANCEL)){
-				confirmationObject.cancelled();
-				neededConfirmation = true;
-			}
-			else{
-				confirmationObject.cancelled();
-			}
-			
-			buffer.remove(BUFFER_CONFIRMATION);
-			
-		}
-		catch(NullPointerException e){}
-		
-		if(request.getErrorMessage() != null){
-			command = new SimpleTextCommand(request.getErrorMessage(), false);
-			command.setContext(event);
-			command.action();
-			command = null;
-		}
-		
-		if(!neededConfirmation){
-			
-			if(isCommandRunning(request.getCommand(), event.getGuild().getId()) != null){
-				command = new SimpleTextCommand(
-						"Cannot run another instance of the command `"
-								+ request.getCommand()
-								+ "` : it is already running.");
-			}
-			else
-				switch(request.getCommand()){
-				case HELLO:
-					command = new SimpleTextCommand("hello "
-							+ event.getAuthor().getName());
-					break;
-				case HELP:
-					command = new CommandHelp();
-					break;
-				case CONNECT:
-					command = new Command(){
-						public void action(){
-							connect();
-						}
-					};
-					break;
-				case DISCONNECT:
-					command = new Command(){
-						public void action(){
-							disconnect();
-						}
-					};
-					break;
-				//			case "play":
-				//				audio.play();
-				//				break;
-				case CLEAR:
-					command = new CommandClear();
-					break;
-				case SPAM:
-					command = new CommandSpam();
-					break;
-				case TERMINATE:
-					command = new SimpleTextCommand(
-							"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
-					break;
-				case STOP:
-					command = new CommandStop(isCommandRunning(
-							request.getContent(), event.getGuild().getId()));
-					break;
-				case GAME:
-					command = new GameInteractionCommand(CommandType.INITIAL);
-					break;
-				case GAME_ADD:
-					command = new GameInteractionCommand(CommandType.ADD);
-					break;
-				case GAME_REMOVE:
-					command = new GameInteractionCommand(CommandType.REMOVE);
-					break;
-				case GAME_ROLL:
-				case GAME_ROLL_ALT:
-					command = new GameInteractionCommand(CommandType.ROLL);
-					break;
-				case GAME_LIST:
-					command = new GameInteractionCommand(CommandType.LIST);
-					break;
-				case TEST:
-					command = new Command(){
-						@Override
-						public void action(){
-							
-							try{
-								
-								String paramContent = getParameter("content")
-										.toString();
-								
-								sendMessage("Happy tree friends, "
-										+ paramContent + "!");
-								
-							}
-							catch(NullPointerException e){
-								
-								sendMessage("Parameter `"
-										+ "content"
-										+ "` is not present or missing it's following content.");
-								
-							}
-							
-						}
-					};
-					break;
-				default:
-					command = new SimpleTextCommand(
-							"*No actions created for the command* "
-									+ buildVCommand(request.getCommand())
-									+ " *- please make an idea in the __ideas__ text channel!*",
-							false);
-					break;
+			if((command = validateMessage()) == null){
+				
+				boolean neededConfirmation = false;
+				
+				try{
+					
+					Object needsConfirmation = buffer.get(BUFFER_CONFIRMATION);
+					
+					CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
+					if(request.getCommand().equals(CONFIRM)){
+						confirmationObject.confirmed();
+						neededConfirmation = true;
+					}
+					else if(request.getCommand().equals(CANCEL)){
+						confirmationObject.cancelled();
+						neededConfirmation = true;
+					}
+					else{
+						confirmationObject.cancelled();
+					}
+					
+					buffer.remove(BUFFER_CONFIRMATION);
+					
 				}
-			
-			command.setContext(event);
-			command.setBuffer(buffer);
-			command.setGuildID(event.getGuild().getId());
-			command.setRequest(request);
-			
-			command.action();
+				catch(NullPointerException e){}
+				
+				if(request.getErrorMessage() != null){
+					command = new SimpleTextCommand(request.getErrorMessage(),
+							false);
+					command.setContext(event);
+					command.action();
+					command = null;
+				}
+				
+				if(!neededConfirmation){
+					
+					if(isCommandRunning(request.getCommand(), event.getGuild()
+							.getId()) != null){
+						command = new SimpleTextCommand(
+								"Cannot run another instance of the command `"
+										+ request.getCommand()
+										+ "` : it is already running.");
+					}
+					else
+						switch(request.getCommand()){
+						case HELLO:
+							command = new SimpleTextCommand("hello "
+									+ event.getAuthor().getName());
+							break;
+						case HELP:
+							command = new CommandHelp();
+							break;
+						case CONNECT:
+							command = new Command(){
+								public void action(){
+									connect();
+								}
+							};
+							break;
+						case DISCONNECT:
+							command = new Command(){
+								public void action(){
+									disconnect();
+								}
+							};
+							break;
+						//			case "play":
+						//				audio.play();
+						//				break;
+						case CLEAR:
+							command = new CommandClear();
+							break;
+						case SPAM:
+							command = new CommandSpam();
+							break;
+						case TERMINATE:
+							command = new SimpleTextCommand(
+									"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
+							break;
+						case STOP:
+							command = new CommandStop(isCommandRunning(
+									request.getContent(), event.getGuild()
+											.getId()));
+							break;
+						case GAME:
+							command = new GameInteractionCommand(
+									CommandType.INITIAL);
+							break;
+						case GAME_ADD:
+							command = new GameInteractionCommand(
+									CommandType.ADD);
+							break;
+						case GAME_REMOVE:
+							command = new GameInteractionCommand(
+									CommandType.REMOVE);
+							break;
+						case GAME_ROLL:
+						case GAME_ROLL_ALT:
+							command = new GameInteractionCommand(
+									CommandType.ROLL);
+							break;
+						case GAME_LIST:
+							command = new GameInteractionCommand(
+									CommandType.LIST);
+							break;
+						case TEST:
+							command = new Command(){
+								@Override
+								public void action(){
+									
+									try{
+										
+										String paramContent = getParameter(
+												"content").toString();
+										
+										sendMessage("Happy tree friends, "
+												+ paramContent + "!");
+										
+									}
+									catch(NoParameterContentException e){
+										
+										sendMessage("Parameter `"
+												+ "content"
+												+ "` is not present or missing it's following content.");
+										
+									}
+									
+								}
+							};
+							break;
+						default:
+							command = new SimpleTextCommand(
+									"*No actions created for the command* "
+											+ buildVCommand(request
+													.getCommand())
+											+ " *- please make an idea in the __ideas__ text channel!*",
+									false);
+							break;
+						}
+					
+				}
+				
+				command.setContext(event);
+				command.setBuffer(buffer);
+				command.setGuildID(event.getGuild().getId());
+				command.setRequest(request);
+				
+				command.action();
+				
+			}
 			
 		}
+		catch(NoCommandException e){}
 		
 	}
 	
-	public Command isCommandRunning(String commandName, String guildID){
+	/**
+	 * Method that determines whether a command is running by scanning all the
+	 * threads used in the server of the <code>guildID</code> parameter, looking
+	 * for the desired <code>command</code> parameter.
+	 * 
+	 * @param commandName
+	 *            The command name to search for.
+	 * @param guildID
+	 *            The server's <code>guildID</code> required to search for
+	 *            commands running in said server.
+	 * @return The command found with all of it's attribute in a
+	 *         <code>Command</code> object, <code>null</code> if the command
+	 *         wasn't found.
+	 */
+	private Command isCommandRunning(String commandName, String guildID){
 		
 		Command commandFound = null;
 		
@@ -197,6 +231,55 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		
 		return commandFound;
 		
+	}
+	
+	/**
+	 * Method that validates the message received and return the command to
+	 * execute if it is not validated. In the case where the message received
+	 * isn't a command (a message that starts with
+	 * <i>Ressources.<b>PREFIX</b></i>), a <i>NoCommandException</i> is thrown.
+	 * 
+	 * @return <code>null</code> if valid; a command to execute otherwise.
+	 * @throws NoCommandException
+	 *             Generic exception thrown if the message isn't a command.
+	 */
+	private Command validateMessage() throws NoCommandException{
+		
+		Command command = null;
+		
+		// Only interactions are through a server, no single conversations permitted!
+		if(event.isFromType(ChannelType.PRIVATE)){
+			
+			command = new SimpleTextCommand(true,
+					"*You must be in a server to interact with me!*");
+			
+		}
+		else if(event.isFromType(ChannelType.TEXT)){
+			
+			if(!request.getCommand().matches(PREFIX + ".+")){
+				throw new NoCommandException();
+			}
+			else{
+				
+				if(request.getCommand().equals(PREFIX)){
+					
+					command = new SimpleTextCommand(
+							"... you wanted to call upon me or...?");
+					
+				}
+				
+			}
+			
+		}
+		
+		return command;
+		
+	}
+	
+	private class NoCommandException extends Exception {
+		public NoCommandException(){
+			super("The message received is not a command.");
+		}
 	}
 	
 }
