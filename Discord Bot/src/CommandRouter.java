@@ -3,15 +3,17 @@ import java.util.Set;
 import ressources.*;
 import commands.*;
 import commands.GameInteractionCommand.CommandType;
+import errorHandling.*;
+import errorHandling.exceptions.*;
 import framework.Buffer;
 import framework.Command;
 import framework.specifics.CommandConfirmed;
 import framework.specifics.Request;
-import framework.specifics.Request.NoParameterContentException;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class CommandRouter extends Thread implements Ressources, Commands {
+public class CommandRouter extends Thread implements Ressources, Commands,
+		Emojis {
 	
 	private MessageReceivedEvent event;
 	private Request request;
@@ -66,9 +68,7 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 				}
 				catch(NullPointerException e){}
 				
-				if(request.getErrorMessage() != null){
-					command = new SimpleTextCommand(request.getErrorMessage(),
-							false);
+				if((command = request.getErrorMessage()) != null){
 					command.setContext(event);
 					command.action();
 					command = null;
@@ -171,7 +171,7 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 							};
 							break;
 						default:
-							command = new SimpleTextCommand(
+							command = new BotError(
 									"*No actions created for the command* "
 											+ buildVCommand(request
 													.getCommand())
@@ -182,6 +182,10 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 					
 				}
 				
+			}
+			
+			try{
+				
 				command.setContext(event);
 				command.setBuffer(buffer);
 				command.setGuildID(event.getGuild().getId());
@@ -190,6 +194,7 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 				command.action();
 				
 			}
+			catch(NullPointerException e){}
 			
 		}
 		catch(NoCommandException e){}
@@ -256,7 +261,7 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		}
 		else if(event.isFromType(ChannelType.TEXT)){
 			
-			if(!request.getCommand().matches(PREFIX + ".+")){
+			if(!request.getCommandNoFormat().matches(PREFIX + ".+")){
 				throw new NoCommandException();
 			}
 			else{
@@ -274,12 +279,6 @@ public class CommandRouter extends Thread implements Ressources, Commands {
 		
 		return command;
 		
-	}
-	
-	private class NoCommandException extends Exception {
-		public NoCommandException(){
-			super("The message received is not a command.");
-		}
 	}
 	
 }

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ressources.Ressources;
+import errorHandling.AbstractBotError;
+import errorHandling.BotError;
+import errorHandling.exceptions.NoParameterContentException;
 
 public class Request {
 	
@@ -60,18 +62,11 @@ public class Request {
 		
 	}
 	
-	public class NoParameterContentException extends Exception {
-		public NoParameterContentException(){
-			super("No content has been set for the command " + getCommand()
-					+ ".");
-		}
-	}
-	
 	private String command;
 	private String content;
 	private ArrayList<Parameter> parameters;
 	
-	private String errorMessage = null;
+	private AbstractBotError error;
 	
 	public Request(String receivedMessage){
 		
@@ -166,54 +161,21 @@ public class Request {
 			if(getContent() != null)
 				setContent(getContent().trim());
 			
-			if(duplicateParams.size() != 0){
-				
-				String pluralTester;
-				
-				if(duplicateParams.size() == 1)
-					pluralTester = "That parameter";
-				else
-					pluralTester = "Those parameters";
-				
-				StringBuilder message = new StringBuilder(pluralTester
-						+ " has been entered more than once : ");
-				
-				for(int i = 0; i < duplicateParams.size(); i++){
-					
-					if(duplicateParams.size() != 1)
-						message.append("\n" + (i + 1) + ". ");
-					
-					message.append("`" + duplicateParams.get(i).getParameter()
-							+ "`");
-					
-				}
-				
-				if(duplicateParams.size() == 1)
-					pluralTester = "the parameter";
-				else
-					pluralTester = "those parameters";
-				
-				message.append("\n***Only the first instance of "
-						+ pluralTester
-						+ " will be taken into consideration.***");
-				
-				this.errorMessage = message.toString();
-				
-			}
+			handleDuplicateParameter(duplicateParams);
 			
 		}
 		
 	}
 	
 	public String getCommand(){
+		return command.substring(Parameter.PREFIX.length());
+	}
+	
+	public String getCommandNoFormat(){
 		return command;
 	}
 	
 	public void setCommand(String command){
-		
-		if(command.matches(Ressources.PREFIX + ".+"))
-			command = command.substring(Parameter.PREFIX.length());
-		
 		this.command = command;
 	}
 	
@@ -252,11 +214,15 @@ public class Request {
 			}
 		}
 		catch(NullPointerException e){
-			throw new NoParameterContentException();
+			throw new NoParameterContentException(getCommand());
 		}
 		
 		return parameterFound;
 		
+	}
+	
+	public AbstractBotError getErrorMessage(){
+		return error;
 	}
 	
 	public boolean isParameterPresent(Parameter parameter){
@@ -267,14 +233,10 @@ public class Request {
 		return isParameterPresent(new Parameter(parameterName));
 	}
 	
-	public String getErrorMessage(){
-		return errorMessage;
-	}
-	
 	private String[] splitCommandAndContent(String command){
 		
 		// Remove leading / trailing spaces (leading spaces are removed anyway)
-		String[] splitted = command.trim().replaceAll("( )+", " ")
+		String[] splitted = command.trim().replaceAll("\\s+", " ")
 				.split(" ", 2);
 		
 		if(splitted.length == 1){
@@ -287,6 +249,44 @@ public class Request {
 		splitted[0] = splitted[0].toLowerCase();
 		
 		return splitted;
+		
+	}
+	
+	private void handleDuplicateParameter(ArrayList<Parameter> duplicateParams){
+		
+		if(duplicateParams.size() != 0){
+			
+			String pluralTester;
+			
+			if(duplicateParams.size() == 1)
+				pluralTester = "That parameter";
+			else
+				pluralTester = "Those parameters";
+			
+			StringBuilder message = new StringBuilder(pluralTester
+					+ " has been entered more than once : ");
+			
+			for(int i = 0; i < duplicateParams.size(); i++){
+				
+				if(duplicateParams.size() != 1)
+					message.append("\n" + (i + 1) + ". ");
+				
+				message.append("`" + duplicateParams.get(i).getParameter()
+						+ "`");
+				
+			}
+			
+			if(duplicateParams.size() == 1)
+				pluralTester = "the parameter";
+			else
+				pluralTester = "those parameters";
+			
+			message.append("\n*Only the first instance of " + pluralTester
+					+ " will be taken into consideration.*");
+			
+			this.error = new BotError(message.toString(), false);
+			
+		}
 		
 	}
 	

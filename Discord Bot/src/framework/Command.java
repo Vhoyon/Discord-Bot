@@ -2,11 +2,10 @@ package framework;
 
 import java.util.ArrayList;
 
+import errorHandling.exceptions.*;
 import framework.specifics.Request;
-import framework.specifics.Request.NoParameterContentException;
 import framework.specifics.Request.Parameter;
-import ressources.Commands;
-import ressources.Ressources;
+import ressources.*;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -14,12 +13,21 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AudioManager;
 
-public abstract class Command implements Commands, Ressources {
+public abstract class Command implements Commands, Ressources, Emojis {
 	
 	private Buffer buffer;
 	private MessageReceivedEvent event;
 	private String guildID;
 	private Request request;
+	
+	public Command(){}
+	
+	public Command(Command commandToCopy){
+		setContext(commandToCopy.getEvent());
+		setBuffer(commandToCopy.getBuffer());
+		setGuildID(commandToCopy.getGuildID());
+		setRequest(commandToCopy.getRequest());
+	}
 	
 	public String getCommandName(){
 		return request.getCommand();

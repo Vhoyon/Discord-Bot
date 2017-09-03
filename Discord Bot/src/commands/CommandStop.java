@@ -1,5 +1,6 @@
 package commands;
 
+import errorHandling.BotError;
 import framework.Command;
 
 public class CommandStop extends Command {
@@ -10,7 +11,6 @@ public class CommandStop extends Command {
 		this.commandToStop = commandToStop;
 	}
 	
-	
 	@Override
 	public void action(){
 		
@@ -20,14 +20,16 @@ public class CommandStop extends Command {
 				
 				getBuffer().get(BUFFER_SPAM);
 				getBuffer().push(false, BUFFER_SPAM);
-				sendInfoMessage("You have been saved from the spam :ok_hand:");
+				sendInfoMessage("You have been saved from the spam "
+						+ EMOJI_OK_HAND);
 				
 			}
 			else{
 				
 				if(commandToStop == null){
 					
-					sendInfoMessage("No command with the name `" + getContent()
+					new BotError(this, "No command with the name `"
+							+ getContent()
 							+ "` was found, no action was taken.");
 					
 				}

@@ -2,6 +2,7 @@ package commands;
 
 import java.util.List;
 
+import errorHandling.BotError;
 import framework.specifics.CommandConfirmed;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
@@ -62,7 +63,9 @@ public class CommandClear extends CommandConfirmed {
 		}while(!vide);
 		
 		if(hadErrors)
-			sendInfoMessage("One or more messages couldn't be deleted. Cannot bulk delete message more than 2 weeks old. Please try again earlier.");
+			new BotError(
+					this,
+					"One or more messages couldn't be deleted. Cannot bulk delete message more than 2 weeks old. Please try again earlier.");
 		
 	}
 	
