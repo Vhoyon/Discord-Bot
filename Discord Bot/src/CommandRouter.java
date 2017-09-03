@@ -36,15 +36,17 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	@Override
 	public void run(){
 		
-		String commandGuildID = event.getGuild().getId();
-		
-		this.setName(request.getCommand() + commandGuildID);
-		
-		buffer.setLatestGuildID(commandGuildID);
-		
 		try{
 			
+			String commandGuildID = null;
+			
 			if((command = validateMessage()) == null){
+				
+				commandGuildID = event.getGuild().getId();
+				
+				this.setName(request.getCommand() + commandGuildID);
+				
+				buffer.setLatestGuildID(commandGuildID);
 				
 				boolean confirmationConfirmed = false;
 				
@@ -79,18 +81,16 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				
 				if(!confirmationConfirmed){
 					
-					if(isCommandRunning(request.getCommand(), event.getGuild()
-							.getId()) != null){
+					if(isCommandRunning(request.getCommand(), commandGuildID) != null){
 						command = new SimpleTextCommand(
-								"Cannot run another instance of the command `"
-										+ request.getCommand()
-										+ "` : it is already running.");
+								"Cannot run another instance of the command `%s` : it is already running.",
+								request.getCommand());
 					}
 					else
 						switch(request.getCommand()){
 						case HELLO:
-							command = new SimpleTextCommand("hello "
-									+ event.getAuthor().getName());
+							command = new SimpleTextCommand("hello %s", event
+									.getAuthor().getName());
 							break;
 						case HELP:
 							command = new CommandHelp();
@@ -152,10 +152,12 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 								@Override
 								public void action(){
 									
+									String parameterWanted = "content";
+									
 									try{
 										
 										String paramContent = getParameter(
-												"content").toString();
+												parameterWanted).toString();
 										
 										sendMessage("Happy tree friends, "
 												+ paramContent + "!");
@@ -163,9 +165,9 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 									}
 									catch(NoParameterContentException e){
 										
-										sendMessage("Parameter `"
-												+ "content"
-												+ "` is not present or missing it's following content.");
+										sendMessage(
+												"Parameter `%s` is not present or missing it's following content.",
+												parameterWanted);
 										
 									}
 									
@@ -174,11 +176,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							break;
 						default:
 							command = new BotError(
-									"*No actions created for the command* "
-											+ buildVCommand(request
-													.getCommand())
-											+ " *- please make an idea in the __ideas__ text channel!*",
-									false);
+									"*No actions created for the command* %s *- please make an idea in the __ideas__ text channel!*",
+									false, buildVCommand(request.getCommand()));
 							break;
 						}
 					
@@ -245,6 +244,17 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	 * execute if it is not validated. In the case where the message received
 	 * isn't a command (a message that starts with
 	 * <i>Ressources.<b>PREFIX</b></i>), a <i>NoCommandException</i> is thrown.
+	 * <p>
+	 * If the message received is from a private channel, a
+	 * {@link errorHandling.BotErrorPrivate BotErrorPrivate} command is created,
+	 * having the message that <i>you need to be in a server to intercat with
+	 * the bot</i>.
+	 * <p>
+	 * In another case where the received message in a server is only "
+	 * <code>!!</code>" (the <code><i>PREFIX</i></code> value), a
+	 * {@link commands.SimpleTextCommand SimpleTextCommand} command is created
+	 * that will send the message
+	 * "<i>... you wanted to call upon me or...?</i>".
 	 * 
 	 * @return <code>null</code> if valid; a command to execute otherwise.
 	 * @throws NoCommandException
@@ -257,8 +267,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		// Only interactions are through a server, no single conversations permitted!
 		if(event.isFromType(ChannelType.PRIVATE)){
 			
-			command = new SimpleTextCommand(true,
-					"*You must be in a server to interact with me!*");
+			command = new BotErrorPrivate(
+					"*You must be in a server to interact with me!*", true);
 			
 		}
 		else if(event.isFromType(ChannelType.TEXT)){

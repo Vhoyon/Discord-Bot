@@ -12,23 +12,36 @@ public class SimpleTextCommand extends Command {
 	private String textToSend;
 	private boolean isPrivateMessage;
 	
+	private Object[] replacements;
+	
 	private SimpleTextCommand(boolean isPrivateMessage, String textToSend,
-			TextType textType){
+			TextType textType, Object... replacements){
 		
 		this.isPrivateMessage = isPrivateMessage;
 		this.textToSend = textToSend;
 		this.textType = textType;
+		this.replacements = replacements;
 		
 	}
 	
 	public SimpleTextCommand(boolean isPrivateMessage, String textToSend){
-		this(isPrivateMessage, textToSend, TextType.SIMPLE);
+		this(isPrivateMessage, textToSend, (Object[])null);
+	}
+	
+	public SimpleTextCommand(boolean isPrivateMessage, String textToSend,
+			Object... replacements){
+		this(isPrivateMessage, textToSend, TextType.SIMPLE, replacements);
 	}
 	
 	public SimpleTextCommand(boolean isPrivateMessage, String textToSend,
 			boolean isInfoOneLiner){
+		this(isPrivateMessage, textToSend, isInfoOneLiner, (Object[])null);
+	}
+	
+	public SimpleTextCommand(boolean isPrivateMessage, String textToSend,
+			boolean isInfoOneLiner, Object... replacements){
 		
-		this(isPrivateMessage, textToSend, TextType.INFO_LINE);
+		this(isPrivateMessage, textToSend, TextType.INFO_LINE, replacements);
 		
 		if(!isInfoOneLiner)
 			this.textType = TextType.INFO_BLOCK;
@@ -36,11 +49,20 @@ public class SimpleTextCommand extends Command {
 	}
 	
 	public SimpleTextCommand(String textToSend){
-		this(false, textToSend);
+		this(textToSend, (Object[])null);
+	}
+	
+	public SimpleTextCommand(String textToSend, Object... replacements){
+		this(false, textToSend, replacements);
 	}
 	
 	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner){
-		this(false, textToSend, isInfoOneLiner);
+		this(textToSend, isInfoOneLiner, (Object[])null);
+	}
+	
+	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner,
+			Object... replacements){
+		this(false, textToSend, isInfoOneLiner, replacements);
 	}
 	
 	@Override
@@ -49,25 +71,25 @@ public class SimpleTextCommand extends Command {
 		if(isPrivateMessage)
 			switch(textType){
 			case SIMPLE:
-				sendPrivateMessage(textToSend);
+				sendPrivateMessage(textToSend, replacements);
 				break;
 			case INFO_LINE:
-				sendInfoPrivateMessage(textToSend);
+				sendInfoPrivateMessage(textToSend, replacements);
 				break;
 			case INFO_BLOCK:
-				sendInfoPrivateMessage(textToSend, false);
+				sendInfoPrivateMessage(textToSend, false, replacements);
 				break;
 			}
 		else
 			switch(textType){
 			case SIMPLE:
-				sendMessage(textToSend);
+				sendMessage(textToSend, replacements);
 				break;
 			case INFO_LINE:
-				sendInfoMessage(textToSend);
+				sendInfoMessage(textToSend, replacements);
 				break;
 			case INFO_BLOCK:
-				sendInfoMessage(textToSend, false);
+				sendInfoMessage(textToSend, false, replacements);
 				break;
 			}
 		

@@ -28,21 +28,22 @@ public class CommandStop extends Command {
 				
 				if(commandToStop == null){
 					
-					new BotError(this, "No command with the name `"
-							+ getContent()
-							+ "` was found, no action was taken.");
+					new BotError(
+							this,
+							"No command with the name `%s` was found, no action was taken.",
+							getContent());
 					
 				}
 				else{
 					
 					if(commandToStop.stopAction())
-						sendInfoMessage("The `"
-								+ getContent()
-								+ "` command was successfully stopped. :ok_hand:");
+						sendInfoMessage(
+								"The `%s` command was successfully stopped. :ok_hand:",
+								getContent());
 					else{
-						sendInfoMessage("The `"
-								+ getContent()
-								+ "` command refused to stop. Ooo, scary. (It probably just wasn't implemented...)");
+						sendInfoMessage(
+								"The `%s` command refused to stop. Ooo, scary. (It probably just wasn't implemented...)",
+								getContent());
 					}
 					
 				}
