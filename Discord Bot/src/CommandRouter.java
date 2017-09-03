@@ -36,15 +36,17 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	@Override
 	public void run(){
 		
-		this.setName(request.getCommand() + event.getGuild().getId());
+		String commandGuildID = event.getGuild().getId();
 		
-		buffer.setLatestGuildID(event.getGuild().getId());
+		this.setName(request.getCommand() + commandGuildID);
+		
+		buffer.setLatestGuildID(commandGuildID);
 		
 		try{
 			
 			if((command = validateMessage()) == null){
 				
-				boolean neededConfirmation = false;
+				boolean confirmationConfirmed = false;
 				
 				try{
 					
@@ -53,14 +55,15 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 					CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 					if(request.getCommand().equals(CONFIRM)){
 						confirmationObject.confirmed();
-						neededConfirmation = true;
-					}
-					else if(request.getCommand().equals(CANCEL)){
-						confirmationObject.cancelled();
-						neededConfirmation = true;
+						confirmationConfirmed = true;
 					}
 					else{
+						
 						confirmationObject.cancelled();
+						
+						if(request.getCommand().equals(CANCEL))
+							confirmationConfirmed = true;
+						
 					}
 					
 					buffer.remove(BUFFER_CONFIRMATION);
@@ -74,7 +77,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 					command = null;
 				}
 				
-				if(!neededConfirmation){
+				if(!confirmationConfirmed){
 					
 					if(isCommandRunning(request.getCommand(), event.getGuild()
 							.getId()) != null){
@@ -121,8 +124,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							break;
 						case STOP:
 							command = new CommandStop(isCommandRunning(
-									request.getContent(), event.getGuild()
-											.getId()));
+									request.getContent(), commandGuildID));
 							break;
 						case GAME:
 							command = new GameInteractionCommand(
@@ -188,7 +190,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				
 				command.setContext(event);
 				command.setBuffer(buffer);
-				command.setGuildID(event.getGuild().getId());
+				command.setGuildID(commandGuildID);
 				command.setRequest(request);
 				
 				command.action();
