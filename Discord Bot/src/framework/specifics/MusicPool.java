@@ -3,7 +3,7 @@ package framework.specifics;
 import framework.Pool;
 
 public class MusicPool extends Pool<Music> {
-
+	
 	public MusicPool(Music[] musics){
 		super(musics);
 	}
@@ -16,8 +16,6 @@ public class MusicPool extends Pool<Music> {
 	}
 	
 	public void removeFromQueue(String associatedName){
-		
-		
 		
 	}
 	
@@ -32,6 +30,22 @@ class Music {
 		
 		this.url = url;
 		
+	}
+	
+	public String getUrl(){
+		return url;
+	}
+	
+	public void setUrl(String url){
+		this.url = url;
+	}
+	
+	public String getAssociatedName(){
+		return associatedName;
+	}
+	
+	public void setAssociatedName(String associatedName){
+		this.associatedName = associatedName;
 	}
 	
 	@Override
