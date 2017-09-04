@@ -24,7 +24,7 @@ public class CommandTimer extends Command {
 		long totalTime = (seconds * 1000);
 		long temps = System.currentTimeMillis();
 		sendMessage(seconds + " seconds");
-		lastmsgId = getTextContext().getLatestMessageId();
+		lastmsgId = (String)getBuffer().get(BUFFER_LASTMSGID);
 		for(int i = seconds; i >= 0; i--){
 			editMessage(i + " seconds", lastmsgId);
 			if(i == 0){
