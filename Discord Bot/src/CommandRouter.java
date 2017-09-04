@@ -7,6 +7,7 @@ import errorHandling.*;
 import errorHandling.exceptions.*;
 import framework.Buffer;
 import framework.Command;
+import framework.Dictionary;
 import framework.specifics.CommandConfirmed;
 import framework.specifics.Request;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -19,6 +20,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	private Request request;
 	private Buffer buffer;
 	private Command command;
+	private Dictionary dict;
 	
 	public CommandRouter(MessageReceivedEvent event, String messageRecu,
 			Buffer buffer){
@@ -26,6 +28,19 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		this.event = event;
 		this.request = new Request(messageRecu);
 		this.buffer = buffer;
+		
+		try{
+			
+			Object object = buffer.get(BUFFER_LANG);
+			dict = (Dictionary)object;
+			
+		}
+		catch(NullPointerException e){
+			
+			dict = new Dictionary();
+			buffer.push(dict, BUFFER_LANG);
+			
+		}
 		
 	}
 	
@@ -147,6 +162,10 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							command = new GameInteractionCommand(
 									CommandType.LIST);
 							break;
+						case LANGUAGE:
+						case LANG:
+							command = new CommandLanguage();
+							break;
 						case TEST:
 							command = new Command(){
 								@Override
@@ -159,8 +178,9 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 										String paramContent = getParameter(
 												parameterWanted).toString();
 										
-										sendMessage("Happy tree friends, "
-												+ paramContent + "!");
+										sendMessage(
+												dict.getString("TestingReplacements"),
+												event.getAuthor().getName());
 										
 									}
 									catch(NoParameterContentException e){

@@ -19,22 +19,24 @@ public interface Commands {
 		return "`" + buildCommand(command) + "`";
 	}
 	
-	public String HELLO = "hello";
-	public String HELP = "help";
-	public String CONNECT = "connect";
-	public String DISCONNECT = "disconnect";
-	public String CLEAR = "clear";
-	public String SPAM = "spam";
-	public String STOP = "stop";
-	public String GAME = "game";
-	public String GAME_ADD = "game_add";
-	public String GAME_REMOVE = "game_remove";
-	public String GAME_ROLL = "game_roll";
-	public String GAME_ROLL_ALT = "roll";
-	public String GAME_LIST = "game_list";
-	public String TEST = "test";
-	public String CONFIRM = "confirm";
-	public String TERMINATE = "terminate";
-	public String CANCEL = "cancel";
+	String HELLO = "hello";
+	String HELP = "help";
+	String CONNECT = "connect";
+	String DISCONNECT = "disconnect";
+	String CLEAR = "clear";
+	String SPAM = "spam";
+	String STOP = "stop";
+	String GAME = "game";
+	String GAME_ADD = "game_add";
+	String GAME_REMOVE = "game_remove";
+	String GAME_ROLL = "game_roll";
+	String GAME_ROLL_ALT = "roll";
+	String GAME_LIST = "game_list";
+	String TEST = "test";
+	String CONFIRM = "confirm";
+	String TERMINATE = "terminate";
+	String CANCEL = "cancel";
+	String LANGUAGE = "language";
+	String LANG = "lang";
 	
 }

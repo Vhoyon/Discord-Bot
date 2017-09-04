@@ -1,4 +1,5 @@
 package ressources;
+
 /**
  * 
  * @author Stephano
@@ -8,13 +9,14 @@ package ressources;
  */
 public interface Ressources {
 	
-	public String DISCORDTOKEN = "MzIxMTQ1NDI0NTQ5MzgwMDk3.DBZxmA.CyEXFP8cQEkV5Qn8X-PKLPY4EhM";
-	public String YOUTUBETOKEN = "AIzaSyDfPTuiyimq09IK5umHfD4OY8OV5oya2mU";
+	String DISCORDTOKEN = "MzIxMTQ1NDI0NTQ5MzgwMDk3.DBZxmA.CyEXFP8cQEkV5Qn8X-PKLPY4EhM";
+	String YOUTUBETOKEN = "AIzaSyDfPTuiyimq09IK5umHfD4OY8OV5oya2mU";
 	
-	public String PREFIX = "!!";
+	String PREFIX = "!!";
 	
-	public String BUFFER_CONFIRMATION = "confirmation";
-	public String BUFFER_GAMEPOOL = "GamePool";
-	public String BUFFER_SPAM = "SPAM_CONDITION";
-
+	String BUFFER_CONFIRMATION = "confirmation";
+	String BUFFER_GAMEPOOL = "GamePool";
+	String BUFFER_SPAM = "SPAM_CONDITION";
+	String BUFFER_LANG = "LANGUAGE";
+	
 }
