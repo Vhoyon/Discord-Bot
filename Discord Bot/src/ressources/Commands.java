@@ -36,5 +36,6 @@ public interface Commands {
 	public String CONFIRM = "confirm";
 	public String TERMINATE = "terminate";
 	public String CANCEL = "cancel";
+	public String TIMER = "timer";
 	
 }

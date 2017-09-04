@@ -121,6 +121,8 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	protected void sendMessage(String messageToSend){
 		
 		getTextContext().sendMessage(messageToSend).complete();
+		getBuffer().push(getTextContext().getLatestMessageId(),
+				BUFFER_LASTMSGID);
 		
 	}
 	
@@ -188,6 +190,10 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 		groupAndSendMessages(messages.toArray(new String[messages.size()]));
 		
+	}
+	
+	protected void editMessage(String messageToEdit, String messageId){
+		getTextContext().editMessageById(messageId, messageToEdit).complete();
 	}
 	
 	public void connect(){

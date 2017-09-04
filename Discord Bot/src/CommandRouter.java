@@ -147,6 +147,9 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							command = new GameInteractionCommand(
 									CommandType.LIST);
 							break;
+						case TIMER:
+							command = new CommandTimer();
+							break;
 						case TEST:
 							command = new Command(){
 								@Override

@@ -40,9 +40,12 @@ public class CommandStop extends Command {
 								+ getContent()
 								+ "` command was successfully stopped. :ok_hand:");
 					else{
-						sendInfoMessage("The `"
-								+ getContent()
-								+ "` command refused to stop. Ooo, scary. (It probably just wasn't implemented...)");
+						new BotError(
+								this,
+								"The `"
+										+ getContent()
+										+ "` command refused to stop. Ooo, scary. (*It probably just wasn't implemented...*)",
+								true);
 					}
 					
 				}

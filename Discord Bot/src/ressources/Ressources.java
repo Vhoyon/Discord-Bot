@@ -16,5 +16,6 @@ public interface Ressources {
 	public String BUFFER_CONFIRMATION = "confirmation";
 	public String BUFFER_GAMEPOOL = "GamePool";
 	public String BUFFER_SPAM = "SPAM_CONDITION";
+	public String BUFFER_LASTMSGID = "LAST MSG ID";
 
 }
