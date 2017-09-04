@@ -190,7 +190,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	
 	protected void sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
+		sendPrivateMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
 	protected void sendInfoPrivateMessage(String messageToSend,
@@ -200,7 +200,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	}
 	
 	protected void sendInfoPrivateMessage(String messageToSend){
-		sendInfoPrivateMessage(messageToSend, true);
+		sendInfoPrivateMessage(messageToSend, (Object[])null);
 	}
 	
 	protected void sendInfoPrivateMessage(String messageToSend,
