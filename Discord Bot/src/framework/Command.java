@@ -118,7 +118,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		return dictionary.getString(key);
 	}
 	
-	public String getEzString(String shortKey){
+	public String getStringEz(String shortKey){
 		return dictionary.getString(getClass().getSimpleName() + shortKey);
 	}
 	
