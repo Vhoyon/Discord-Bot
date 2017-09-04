@@ -1,12 +1,12 @@
 package framework;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Dictionary {
 	
 	private ResourceBundle resources;
+	private Locale locale;
 	
 	public Dictionary(){
 		this.resources = getDefaultLanguageResources();
@@ -20,27 +20,22 @@ public class Dictionary {
 		
 		String string;
 		
-		try{
-			string = resources.getString(key);
-		}
-		catch(MissingResourceException e){
-			string = getDefaultLanguageResources().getString(key);
-			System.out.println("lol");
-		}
+		string = resources.getString(key);
 		
 		return string;
+		
 	}
 	
 	private ResourceBundle getLanguageResources(String lang, String country){
 		
-		Locale locale = new Locale(lang, country);
+		locale = new Locale(lang, country);
 		
 		return ResourceBundle.getBundle("languages.DiscordBot", locale);
 		
 	}
 	
 	private ResourceBundle getDefaultLanguageResources(){
-		return ResourceBundle.getBundle("languages.DiscordBot");
+		return getLanguageResources("en", "US");
 	}
 	
 }

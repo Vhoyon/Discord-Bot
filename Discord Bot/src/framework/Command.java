@@ -19,6 +19,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	private MessageReceivedEvent event;
 	private String guildID;
 	private Request request;
+	private Dictionary dictionary;
 	
 	public Command(){}
 	
@@ -27,6 +28,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		setBuffer(commandToCopy.getBuffer());
 		setGuildID(commandToCopy.getGuildID());
 		setRequest(commandToCopy.getRequest());
+		setDictionary(commandToCopy.getDictionary());
 	}
 	
 	public String getCommandName(){
@@ -110,6 +112,22 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	
 	public boolean isParameterPresent(String parameterName){
 		return request.isParameterPresent(parameterName);
+	}
+	
+	public String getString(String key){
+		return dictionary.getString(key);
+	}
+	
+	public String getEzString(String shortKey){
+		return dictionary.getString(getClass().getSimpleName() + shortKey);
+	}
+	
+	public void setDictionary(Dictionary dictionary){
+		this.dictionary = dictionary;
+	}
+	
+	public Dictionary getDictionary(){
+		return dictionary;
 	}
 	
 	public abstract void action();

@@ -10,8 +10,8 @@ public class CommandLanguage extends Command {
 	public void action(){
 		
 		if(getContent() == null){
-			sendMessage("Usage : "
-					+ buildVCommand(LANGUAGE + " [language name]") + ".");
+			sendMessage(getEzString("NullContent"), buildVCommand(LANGUAGE
+					+ " [" + getEzString("NullContentUsage") + "]"));
 		}
 		else{
 			
@@ -25,12 +25,14 @@ public class CommandLanguage extends Command {
 			case "français":
 			case "fra":
 			case "french":
+			case "fr":
 				lang = "fr";
 				country = "CA";
 				break;
 			case "anglais":
 			case "eng":
 			case "english":
+			case "en":
 				lang = "en";
 				country = "US";
 				break;
@@ -41,18 +43,21 @@ public class CommandLanguage extends Command {
 			
 			if(!canChangeLanguage){
 				
-				new BotError(this,
-						"The bot hasn't been translated to that language!");
+				new BotError(this, getEzString("NoTranslation"));
 				
 			}
 			else{
 				
 				Dictionary dict = (Dictionary)getBuffer().get(BUFFER_LANG);
+				
+				String langChangeMessage = dict
+						.getString("CommandLanguageChangingLanguage");
+				
 				dict.setLanguage(lang, country);
 				getBuffer().push(dict, BUFFER_LANG);
 				
-				sendInfoMessage("The language has been set to : `"
-						+ dict.getString("LanguageName") + "`!");
+				sendInfoMessage(langChangeMessage,
+						dict.getString("LanguageName"));
 				
 			}
 			

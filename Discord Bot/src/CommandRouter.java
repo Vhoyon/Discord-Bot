@@ -171,25 +171,25 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 								@Override
 								public void action(){
 									
-									String parameterWanted = "content";
+									sendMessage(
+											dict.getString("TestingReplacements"),
+											event.getAuthor().getName());
 									
-									try{
-										
-										String paramContent = getParameter(
-												parameterWanted).toString();
-										
-										sendMessage(
-												dict.getString("TestingReplacements"),
-												event.getAuthor().getName());
-										
-									}
-									catch(NoParameterContentException e){
-										
-										sendMessage(
-												"Parameter `%s` is not present or missing it's following content.",
-												parameterWanted);
-										
-									}
+									//									String parameterWanted = "content";
+									//									
+									//									try{
+									//										
+									//										String paramContent = getParameter(
+									//												parameterWanted).toString();
+									//										
+									//									}
+									//									catch(NoParameterContentException e){
+									//										
+									//										sendMessage(
+									//												"Parameter `%s` is not present or missing it's following content.",
+									//												parameterWanted);
+									//										
+									//									}
 									
 								}
 							};
@@ -211,6 +211,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				command.setBuffer(buffer);
 				command.setGuildID(commandGuildID);
 				command.setRequest(request);
+				command.setDictionary(dict);
 				
 				command.action();
 				
