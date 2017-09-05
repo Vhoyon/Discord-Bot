@@ -28,10 +28,7 @@ public class CommandStop extends Command {
 				if(commandToStop == null){
 					
 					new BotError(this, getStringEz("NoCommandToStopMessage"),
-							new String[]
-							{
-								getContent()
-							});
+							useThis(getContent()));
 					
 				}
 				else{

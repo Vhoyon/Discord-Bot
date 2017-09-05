@@ -5,7 +5,7 @@ import framework.Command;
 public class BotError extends AbstractBotError {
 	
 	public BotError(Command commandInError, String errorMessage,
-			boolean isErrorOneLiner, String... replacements){
+			boolean isErrorOneLiner, Object[] replacements){
 		super(commandInError, errorMessage, isErrorOneLiner, replacements);
 	}
 	
@@ -15,7 +15,12 @@ public class BotError extends AbstractBotError {
 	}
 	
 	public BotError(Command commandInError, String errorMessage,
-			String errorEmoji, boolean isErrorOneLiner, String... replacements){
+			Object[] replacements){
+		super(commandInError, errorMessage, replacements);
+	}
+	
+	public BotError(Command commandInError, String errorMessage,
+			String errorEmoji, boolean isErrorOneLiner, Object[] replacements){
 		super(commandInError, errorMessage, errorEmoji, isErrorOneLiner,
 				replacements);
 	}
@@ -26,13 +31,8 @@ public class BotError extends AbstractBotError {
 	}
 	
 	public BotError(Command commandInError, String errorMessage,
-			String errorEmoji, String... replacements){
+			String errorEmoji, Object[] replacements){
 		super(commandInError, errorMessage, errorEmoji, replacements);
-	}
-	
-	public BotError(Command commandInError, String errorMessage,
-			String... replacements){
-		super(commandInError, errorMessage, replacements);
 	}
 	
 	public BotError(Command commandInError, String errorMessage,
@@ -45,7 +45,7 @@ public class BotError extends AbstractBotError {
 	}
 	
 	public BotError(String errorMessage, boolean isErrorOneLiner,
-			String... replacements){
+			Object[] replacements){
 		super(errorMessage, isErrorOneLiner, replacements);
 	}
 	
@@ -53,8 +53,12 @@ public class BotError extends AbstractBotError {
 		super(errorMessage, isErrorOneLiner);
 	}
 	
+	public BotError(String errorMessage, Object[] replacements){
+		super(errorMessage, replacements);
+	}
+	
 	public BotError(String errorMessage, String errorEmoji,
-			boolean isErrorOneLiner, String... replacements){
+			boolean isErrorOneLiner, Object[] replacements){
 		super(errorMessage, errorEmoji, isErrorOneLiner, replacements);
 	}
 	
@@ -64,12 +68,8 @@ public class BotError extends AbstractBotError {
 	}
 	
 	public BotError(String errorMessage, String errorEmoji,
-			String... replacements){
+			Object[] replacements){
 		super(errorMessage, errorEmoji, replacements);
-	}
-	
-	public BotError(String errorMessage, String... replacements){
-		super(errorMessage, replacements);
 	}
 	
 	public BotError(String errorMessage, String errorEmoji){

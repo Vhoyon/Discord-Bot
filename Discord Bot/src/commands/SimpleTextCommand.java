@@ -12,10 +12,10 @@ public class SimpleTextCommand extends Command {
 	private String textToSend;
 	private boolean isPrivateMessage;
 	
-	private Object[] replacements;
+	private String[] replacements;
 	
 	private SimpleTextCommand(boolean isPrivateMessage, String textToSend,
-			TextType textType, Object... replacements){
+			TextType textType, String... replacements){
 		
 		this.isPrivateMessage = isPrivateMessage;
 		this.textToSend = textToSend;
@@ -25,21 +25,21 @@ public class SimpleTextCommand extends Command {
 	}
 	
 	public SimpleTextCommand(boolean isPrivateMessage, String textToSend){
-		this(isPrivateMessage, textToSend, (Object[])null);
+		this(isPrivateMessage, textToSend, (String[])null);
 	}
 	
 	public SimpleTextCommand(boolean isPrivateMessage, String textToSend,
-			Object... replacements){
+			String... replacements){
 		this(isPrivateMessage, textToSend, TextType.SIMPLE, replacements);
 	}
 	
 	public SimpleTextCommand(boolean isPrivateMessage, String textToSend,
 			boolean isInfoOneLiner){
-		this(isPrivateMessage, textToSend, isInfoOneLiner, (Object[])null);
+		this(isPrivateMessage, textToSend, isInfoOneLiner, (String[])null);
 	}
 	
 	public SimpleTextCommand(boolean isPrivateMessage, String textToSend,
-			boolean isInfoOneLiner, Object... replacements){
+			boolean isInfoOneLiner, String... replacements){
 		
 		this(isPrivateMessage, textToSend, TextType.INFO_LINE, replacements);
 		
@@ -49,19 +49,19 @@ public class SimpleTextCommand extends Command {
 	}
 	
 	public SimpleTextCommand(String textToSend){
-		this(textToSend, (Object[])null);
+		this(textToSend, (String[])null);
 	}
 	
-	public SimpleTextCommand(String textToSend, Object... replacements){
+	public SimpleTextCommand(String textToSend, String... replacements){
 		this(false, textToSend, replacements);
 	}
 	
 	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner){
-		this(textToSend, isInfoOneLiner, (Object[])null);
+		this(textToSend, isInfoOneLiner, (String[])null);
 	}
 	
 	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner,
-			Object... replacements){
+			String... replacements){
 		this(false, textToSend, isInfoOneLiner, replacements);
 	}
 	
@@ -71,25 +71,26 @@ public class SimpleTextCommand extends Command {
 		if(isPrivateMessage)
 			switch(textType){
 			case SIMPLE:
-				sendPrivateMessage(textToSend, replacements);
+				sendPrivateMessage(textToSend, (Object[])replacements);
 				break;
 			case INFO_LINE:
-				sendInfoPrivateMessage(textToSend, replacements);
+				sendInfoPrivateMessage(textToSend, (Object[])replacements);
 				break;
 			case INFO_BLOCK:
-				sendInfoPrivateMessage(textToSend, false, replacements);
+				sendInfoPrivateMessage(textToSend, false,
+						(Object[])replacements);
 				break;
 			}
 		else
 			switch(textType){
 			case SIMPLE:
-				sendMessage(textToSend, replacements);
+				sendMessage(textToSend, (Object[])replacements);
 				break;
 			case INFO_LINE:
-				sendInfoMessage(textToSend, replacements);
+				sendInfoMessage(textToSend, (Object[])replacements);
 				break;
 			case INFO_BLOCK:
-				sendInfoMessage(textToSend, false, replacements);
+				sendInfoMessage(textToSend, false, (Object[])replacements);
 				break;
 			}
 		

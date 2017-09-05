@@ -5,9 +5,7 @@ import commands.*;
 import commands.GameInteractionCommand.CommandType;
 import errorHandling.*;
 import errorHandling.exceptions.*;
-import framework.Buffer;
-import framework.Command;
-import framework.Dictionary;
+import framework.*;
 import framework.specifics.CommandConfirmed;
 import framework.specifics.Request;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -206,7 +204,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 						default:
 							command = new BotError(
 									getString("NoActionForCommand"), false,
-									buildVCommand(request.getCommand()));
+									Command.useThis(buildVCommand(request
+											.getCommand())));
 							break;
 						}
 					

@@ -8,46 +8,46 @@ public abstract class AbstractBotError extends Command {
 	private String emoji;
 	protected boolean isErrorOneLiner;
 	
-	private String[] replacements;
+	private Object[] replacements;
 	
 	public AbstractBotError(Command commandInError, String errorMessage){
-		this(commandInError, errorMessage, (String[])null);
+		this(commandInError, errorMessage, (Object[])null);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
-			String... replacements){
+			Object[] replacements){
 		this(commandInError, errorMessage, EMOJI_RED_CROSS, replacements);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
 			boolean isErrorOneLiner){
-		this(commandInError, errorMessage, isErrorOneLiner, (String[])null);
+		this(commandInError, errorMessage, isErrorOneLiner, (Object[])null);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
-			boolean isErrorOneLiner, String... replacements){
+			boolean isErrorOneLiner, Object[] replacements){
 		this(commandInError, errorMessage, EMOJI_RED_CROSS, isErrorOneLiner,
 				replacements);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
 			String errorEmoji){
-		this(commandInError, errorMessage, errorEmoji, (String[])null);
+		this(commandInError, errorMessage, errorEmoji, (Object[])null);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
-			String errorEmoji, String... replacements){
+			String errorEmoji, Object[] replacements){
 		this(commandInError, errorMessage, errorEmoji, true, replacements);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
 			String errorEmoji, boolean isErrorOneLiner){
 		this(commandInError, errorMessage, errorEmoji, isErrorOneLiner,
-				(String[])null);
+				(Object[])null);
 	}
 	
 	public AbstractBotError(Command commandInError, String errorMessage,
-			String errorEmoji, boolean isErrorOneLiner, String... replacements){
+			String errorEmoji, boolean isErrorOneLiner, Object[] replacements){
 		
 		super(commandInError);
 		
@@ -64,35 +64,35 @@ public abstract class AbstractBotError extends Command {
 		this(errorMessage, (String[])null);
 	}
 	
-	public AbstractBotError(String errorMessage, String... replacements){
+	public AbstractBotError(String errorMessage, Object[] replacements){
 		this(errorMessage, EMOJI_RED_CROSS, replacements);
 	}
 	
 	public AbstractBotError(String errorMessage, boolean isErrorOneLiner){
-		this(errorMessage, isErrorOneLiner, (String[])null);
+		this(errorMessage, isErrorOneLiner, (Object[])null);
 	}
 	
 	public AbstractBotError(String errorMessage, boolean isErrorOneLiner,
-			String... replacements){
+			Object[] replacements){
 		this(errorMessage, EMOJI_RED_CROSS, isErrorOneLiner, replacements);
 	}
 	
 	public AbstractBotError(String errorMessage, String errorEmoji){
-		this(errorMessage, errorEmoji, (String[])null);
+		this(errorMessage, errorEmoji, (Object[])null);
 	}
 	
 	public AbstractBotError(String errorMessage, String errorEmoji,
-			String... replacements){
+			Object[] replacements){
 		this(errorMessage, errorEmoji, true, replacements);
 	}
 	
 	public AbstractBotError(String errorMessage, String errorEmoji,
 			boolean isErrorOneLiner){
-		this(errorMessage, errorEmoji, isErrorOneLiner, (String[])null);
+		this(errorMessage, errorEmoji, isErrorOneLiner, (Object[])null);
 	}
 	
 	public AbstractBotError(String errorMessage, String errorEmoji,
-			boolean isErrorOneLiner, String... replacements){
+			boolean isErrorOneLiner, Object[] replacements){
 		
 		this.errorMessage = errorMessage;
 		this.emoji = errorEmoji;

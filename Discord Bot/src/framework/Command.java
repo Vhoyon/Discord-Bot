@@ -314,4 +314,24 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 	}
 	
+	/**
+	 * Method to go around the technicalities that emerges from creating methods
+	 * using varargs as parameters.<br>
+	 * You can use this to replace strings in
+	 * messages sent - for example :<br>
+	 * 
+	 * <pre>
+	 * new BotError(this, getStringEz(&quot;StringToSend&quot;), useThis(
+	 * 		buildVCommand(command1), buildVCommand(command2)));
+	 * </pre>
+	 * 
+	 * @param replacements
+	 *            Objects to replace the string with.
+	 * @return An object (<code>Object[]</code>) that is compliant to the
+	 *         general localisations methods.
+	 */
+	public static Object[] useThis(Object... replacements){
+		return replacements;
+	}
+	
 }
