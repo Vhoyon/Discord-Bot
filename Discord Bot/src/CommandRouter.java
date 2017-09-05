@@ -226,8 +226,6 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 			}
 			catch(NullPointerException e){}
 			
-			new String();
-			
 		}
 		catch(NoCommandException e){}
 		
