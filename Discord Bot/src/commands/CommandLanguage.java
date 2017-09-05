@@ -11,7 +11,9 @@ public class CommandLanguage extends Command {
 		
 		if(getContent() == null){
 			sendMessage(getStringEz("NullContent"), buildVCommand(LANGUAGE
-					+ " [" + getStringEz("NullContentUsage") + "]"));
+					+ " [" + getStringEz("NullContentUsage") + "]"),
+					buildVCommand(LANG + " [" + getStringEz("NullContentUsage")
+							+ "]"));
 		}
 		else{
 			
@@ -43,7 +45,7 @@ public class CommandLanguage extends Command {
 			
 			if(!canChangeLanguage){
 				
-				new BotError(this, getStringEz("NoTranslation"));
+				new BotError(this, getStringEz("NoTranslation"), false);
 				
 			}
 			else{

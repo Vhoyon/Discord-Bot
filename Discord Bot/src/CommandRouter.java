@@ -48,6 +48,10 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		return command;
 	}
 	
+	public String getString(String key){
+		return dict.getString(key);
+	}
+	
 	@Override
 	public void run(){
 		
@@ -196,8 +200,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							break;
 						default:
 							command = new BotError(
-									"*No actions created for the command* %s *- please make an idea in the __ideas__ text channel!*",
-									false, buildVCommand(request.getCommand()));
+									getString("NoActionForCommand"), false,
+									buildVCommand(request.getCommand()));
 							break;
 						}
 					
