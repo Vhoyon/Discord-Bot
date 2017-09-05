@@ -5,13 +5,7 @@ import ressources.Ressources;
 
 public abstract class CommandConfirmed extends Command implements Ressources {
 	
-	private String confirmationMessage;
-	
-	public CommandConfirmed(String confirmationMessage){
-		
-		this.confirmationMessage = confirmationMessage;
-		
-	}
+	public abstract String getConfMessage();
 	
 	@Override
 	public void action(){
@@ -22,7 +16,7 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 		catch(NullPointerException e){
 			
 			sendInfoMessage(
-					confirmationMessage
+					getConfMessage()
 							+ "\n\nEnter "
 							+ buildVCommand(CONFIRM)
 							+ " to confirm. Entering "

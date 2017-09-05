@@ -3,6 +3,7 @@ package commands;
 import java.util.ArrayList;
 import java.util.Random;
 
+import errorHandling.BotError;
 import framework.Command;
 import framework.specifics.GamePool;
 import ressources.Ressources;
@@ -60,15 +61,15 @@ public class GameInteractionCommand extends Command {
 			
 			ArrayList<String> messages = new ArrayList<>();
 			
-			messages.add("The following games are now ready to be rolled :");
+			messages.add(getStringEz("GamesReadyToBeRolledMessage"));
 			
 			for(int i = 1; i <= gamepool.size(); i++)
 				messages.add(i + ". `" + gamepool.get(i - 1) + "`");
 			
 			groupAndSendMessages(messages);
 			
-			sendInfoMessage("Enter the command " + buildVCommand(GAME_LIST)
-					+ " to view this list again.");
+			sendInfoMessage(getStringEz("InitialViewListAgainMessage"),
+					buildVCommand(GAME_LIST));
 			
 		}
 		
@@ -88,15 +89,14 @@ public class GameInteractionCommand extends Command {
 				
 				gamepool.add(getContent());
 				
-				sendMessage("The game `" + getContent()
-						+ "` has been added to the pool!");
+				sendMessage(getStringEz("AddedGameSuccessMessage"),
+						getContent());
 				
 			}
 			catch(NullPointerException e){
 				
-				sendInfoMessage("Your game pool is not yet created.\nYou can create a game pool using "
-						+ buildVCommand(GAME + " [game 1],[game 2],[...]")
-						+ ".");
+				sendInfoMessage(getStringEz("AddErrorNoPoolCreated"),
+						buildVCommand(GAME + " [game 1],[game 2],[...]"));
 				
 			}
 			
@@ -121,12 +121,11 @@ public class GameInteractionCommand extends Command {
 				if(!content.equals("-all")){
 					
 					if(gamepool.remove(getContent()))
-						sendMessage("The game `" + getContent()
-								+ "` has been removed from the game pool!");
+						sendMessage(getStringEz("RemovedGameSuccessMessage"),
+								getContent());
 					else
-						sendInfoMessage("There is no such game in your pool! Type "
-								+ buildVCommand(GAME_LIST)
-								+ " to see which games you have in your pool.");
+						sendInfoMessage(getStringEz("RemoveErrorNoSuchGame"),
+								buildVCommand(GAME_LIST));
 					
 				}
 				else{
@@ -140,13 +139,13 @@ public class GameInteractionCommand extends Command {
 				if(gamepool.isEmpty()){
 					
 					getBuffer().remove(Ressources.BUFFER_GAMEPOOL);
-					sendMessage("The game pool is now empty!");
+					sendMessage(getStringEz("RemoveIsNowEmpty"));
 					
 				}
 				
 			}
 			catch(NullPointerException e){
-				sendInfoMessage("You cannot remove a game from an empty game pool!");
+				sendInfoMessage(getStringEz("RemoveErrorEmptyPool"));
 			}
 			
 		}
@@ -163,19 +162,21 @@ public class GameInteractionCommand extends Command {
 			int wantedRoll = 1;
 			
 			if(getContent() != null)
-				wantedRoll = Integer.parseInt(getContent());
+				try{
+					wantedRoll = Integer.parseInt(getContent());
+				}
+				catch(NumberFormatException e){}
 			
 			Random ran = new Random();
 			int num;
 			
 			if(wantedRoll < 1)
-				throw new IllegalArgumentException(
-						"The number inputted needs to be a positive number.");
+				new BotError(getStringEz("RollNumberIsNotValid"));
 			else if(wantedRoll == 1){
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage("You shall play : `" + gamepool.get(num) + "`!");
+				sendMessage(getStringEz("RolledGameMessage"), gamepool.get(num));
 				
 			}
 			else{
@@ -184,8 +185,8 @@ public class GameInteractionCommand extends Command {
 					
 					num = ran.nextInt(gamepool.size());
 					
-					sendMessage(i + " game selected is : `" + gamepool.get(num)
-							+ "`.");
+					sendMessage(getStringEz("RolledMultipleGamesMessage"), i,
+							gamepool.get(num));
 					
 				}
 				
@@ -193,8 +194,8 @@ public class GameInteractionCommand extends Command {
 			
 		}
 		catch(NullPointerException e){
-			sendInfoMessage("The game pool is empty!\nCreate a game pool using "
-					+ buildVCommand(GAME + " [game 1],[game 2],[...]") + "!");
+			sendInfoMessage(getStringEz("RollErrorPoolEmpty"),
+					buildVCommand(GAME + " [game 1],[game 2],[...]"));
 		}
 		catch(IllegalArgumentException e){
 			sendInfoMessage("Usage :\n" + buildVCommand(GAME_ROLL) + " OR "

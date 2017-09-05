@@ -39,7 +39,7 @@ public class CommandSpam extends Command {
 					if(hasCustomMessage)
 						sendMessage(content[1]);
 					else
-						sendMessage("Spam #" + (i + 1));
+						sendMessage(getStringEz("Spam") + " #" + (i + 1));
 					
 				}
 				
@@ -54,17 +54,21 @@ public class CommandSpam extends Command {
 		}
 		catch(NumberFormatException e){
 			
-			String commandStart = "`" + buildCommand(SPAM);
+			String commandStart = getStringEz("UsageStart");
+			String command = buildCommand(SPAM);
 			
-			String command1 = commandStart + "` : Send a default of "
-					+ numberOfSpam + " spam messages.";
-			String command2 = commandStart
-					+ " [number of times to spam]` : Send a **[number of spam]**.";
-			String command3 = commandStart
-					+ " [number of times to spam] [custom message]` : Send a **[number of spam]** with a **[custom message]**.";
+			String command1 = String.format(commandStart, command)
+					+ " : "
+					+ String.format(getStringEz("UsageFirstLine"), numberOfSpam);
+			String command2 = String.format(commandStart, command
+					+ " [number of times to spam]")
+					+ " : " + getStringEz("UsageSecondLine");
+			String command3 = String.format(commandStart, command
+					+ " [number of times to spam] [custom message]")
+					+ " : " + getStringEz("UsageThirdLine");
 			
-			sendMessage("Usage :\n" + command1 + "\n" + command2 + "\n"
-					+ command3);
+			sendMessage(getString("Usage") + " :\n" + command1 + "\n"
+					+ command2 + "\n" + command3);
 			
 		}
 		

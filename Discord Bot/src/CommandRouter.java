@@ -26,7 +26,6 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 			Buffer buffer){
 		
 		this.event = event;
-		this.request = new Request(messageRecu);
 		this.buffer = buffer;
 		
 		try{
@@ -41,6 +40,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 			buffer.push(dict, BUFFER_LANG);
 			
 		}
+		
+		this.request = new Request(messageRecu, dict);
 		
 	}
 	
@@ -101,15 +102,19 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				if(!confirmationConfirmed){
 					
 					if(isCommandRunning(request.getCommand(), commandGuildID) != null){
-						command = new SimpleTextCommand(
-								"Cannot run another instance of the command `%s` : it is already running.",
-								request.getCommand());
+						command = new BotError(
+								getString("CommandIsRunningError"),
+								new String[]
+								{
+									request.getCommand()
+								});
 					}
 					else
 						switch(request.getCommand()){
 						case HELLO:
-							command = new SimpleTextCommand("hello %s", event
-									.getAuthor().getName());
+							command = new SimpleTextCommand(
+									getString("HelloResponse"), event
+											.getAuthor().getName());
 							break;
 						case HELP:
 							command = new CommandHelp();
@@ -139,7 +144,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							break;
 						case TERMINATE:
 							command = new SimpleTextCommand(
-									"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
+									getString("TERMINATE"));
 							break;
 						case STOP:
 							command = new CommandStop(isCommandRunning(
@@ -222,6 +227,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 			}
 			catch(NullPointerException e){}
 			
+			new String();
+			
 		}
 		catch(NoCommandException e){}
 		
@@ -250,7 +257,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		
 		for(Thread thread : threadArray){
 			
-			if(thread instanceof CommandRouter
+			if(thread instanceof CommandRouter && !thread.equals(this)
 					&& thread.getName().equals(commandName + guildID)){
 				
 				commandFound = ((CommandRouter)thread).getCommand();
@@ -292,8 +299,9 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		// Only interactions are through a server, no single conversations permitted!
 		if(event.isFromType(ChannelType.PRIVATE)){
 			
-			command = new BotErrorPrivate(
-					"*You must be in a server to interact with me!*", true);
+			command = new BotErrorPrivate("*"
+					+ getString("MessageReceivedFromPrivateResponse") + "*",
+					true);
 			
 		}
 		else if(event.isFromType(ChannelType.TEXT)){
@@ -306,7 +314,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				if(request.getCommand().equals(PREFIX)){
 					
 					command = new SimpleTextCommand(
-							"... you wanted to call upon me or...?");
+							getString("MessageIsOnlyPrefixResponse"));
 					
 				}
 				

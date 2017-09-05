@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import errorHandling.AbstractBotError;
 import errorHandling.BotError;
 import errorHandling.exceptions.NoParameterContentException;
+import framework.Dictionary;
 
 public class Request {
 	
@@ -65,10 +66,13 @@ public class Request {
 	private String command;
 	private String content;
 	private ArrayList<Parameter> parameters;
+	private Dictionary dict;
 	
 	private AbstractBotError error;
 	
-	public Request(String receivedMessage){
+	public Request(String receivedMessage, Dictionary dictionary){
+		
+		this.dict = dictionary;
 		
 		String[] messageSplit = splitCommandAndContent(receivedMessage);
 		
@@ -259,12 +263,12 @@ public class Request {
 			String pluralTester;
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = "That parameter";
+				pluralTester = dict.getString("RequestParamStartSingle");
 			else
-				pluralTester = "Those parameters";
+				pluralTester = dict.getString("RequestParamStartMultiple");
 			
-			StringBuilder message = new StringBuilder(pluralTester
-					+ " has been entered more than once : ");
+			StringBuilder message = new StringBuilder(pluralTester + " "
+					+ dict.getString("RequestParamStartFollowing") + " ");
 			
 			for(int i = 0; i < duplicateParams.size(); i++){
 				
@@ -277,12 +281,13 @@ public class Request {
 			}
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = "the parameter";
+				pluralTester = dict.getString("RequestEndMessageSingle");
 			else
-				pluralTester = "those parameters";
+				pluralTester = dict.getString("RequestEndMessageMultiple");
 			
-			message.append("\n*Only the first instance of " + pluralTester
-					+ " will be taken into consideration.*");
+			message.append("\n*"
+					+ String.format(dict.getString("RequestEndMessage"),
+							pluralTester) + "*");
 			
 			this.error = new BotError(message.toString(), false);
 			

@@ -162,7 +162,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 					.complete();
 		}
 		else{
-			sendMessage("User has no private channel, cancelling.");
+			sendMessage(getString("CommandUserHasNoPrivateChannel"));
 		}
 		
 	}
@@ -208,13 +208,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	
 	protected void sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		sendPrivateMessage(messageToSend, isOneLiner, (Object[])null);
-	}
-	
-	protected void sendInfoPrivateMessage(String messageToSend,
-			boolean isOneLiner, Object... replacements){
-		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
-				replacements));
+		sendInfoPrivateMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
 	protected void sendInfoPrivateMessage(String messageToSend){
@@ -224,6 +218,12 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	protected void sendInfoPrivateMessage(String messageToSend,
 			Object... replacements){
 		sendInfoPrivateMessage(messageToSend, true, replacements);
+	}
+	
+	protected void sendInfoPrivateMessage(String messageToSend,
+			boolean isOneLiner, Object... replacements){
+		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
+				replacements));
 	}
 	
 	protected void groupAndSendMessages(String[] messages){
@@ -288,7 +288,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	
 	public void disconnect(){
 		
-		String message = "The bot can not be disconnected if it is not in a voice channel.";
+		String message = getString("CommandCannotDisconnectOrNotConnected");
 		
 		for(VoiceChannel channel : event.getGuild().getVoiceChannels()){
 			
@@ -300,7 +300,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 					
 					man.closeAudioConnection();
 					
-					message = "The bot has disconnected";
+					message = getString("CommandDisconnectDisconnected");
 					
 					break;
 					
