@@ -21,7 +21,10 @@ public class Request {
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			this.parameter = parameter;
+			if(!parameter.matches(PREFIX + ".+"))
+				this.parameter = PREFIX + parameter;
+			else
+				this.parameter = parameter;
 		}
 		
 		public String getParameter(){
