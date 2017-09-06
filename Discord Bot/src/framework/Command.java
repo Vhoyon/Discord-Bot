@@ -141,13 +141,9 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	}
 	
 	protected void sendMessage(String messageToSend, Object... replacements){
-		
 		getTextContext()
 				.sendMessage(String.format(messageToSend, replacements))
 				.complete();
-		getBuffer().push(getTextContext().getLatestMessageId(),
-				BUFFER_LASTMSGID);
-		
 	}
 	
 	protected void sendPrivateMessage(String messageToSend){
@@ -256,6 +252,19 @@ public abstract class Command implements Commands, Ressources, Emojis {
 			Object... replacements){
 		groupAndSendMessages(messages.toArray(new String[messages.size()]),
 				replacements);
+	}
+	
+	protected String sendMessageEditable(String message){
+		
+		sendMessage(message);
+		
+		try{
+			Thread.sleep(30);
+		}
+		catch(InterruptedException e){}
+		
+		return getTextContext().getLatestMessageId();
+		
 	}
 	
 	protected void editMessage(String messageToEdit, String messageId){

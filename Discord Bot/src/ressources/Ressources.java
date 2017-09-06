@@ -18,6 +18,5 @@ public interface Ressources {
 	String BUFFER_GAMEPOOL = "GamePool";
 	String BUFFER_SPAM = "SPAM_CONDITION";
 	String BUFFER_LANG = "LANGUAGE";
-	String BUFFER_LASTMSGID = "LAST MSG ID";
 	
 }

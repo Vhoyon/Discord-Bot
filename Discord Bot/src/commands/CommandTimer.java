@@ -35,28 +35,24 @@ public class CommandTimer extends Command {
 			sendMessage("You must give an amount of time to the "
 					+ buildVCommand("timer") + " command for it too count");
 		}
-		catch(NumberFormatException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(NoParameterContentException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		catch(NumberFormatException | NoParameterContentException e){}
 		
 		int totalTime = (hours * 3600) + (minutes * 60) + seconds;
 		String lastmsgId = null;
 		// long totalTime = (seconds * 1000);
 		// long temps = System.currentTimeMillis();
-		sendMessage(hours + "hours " + minutes + " minutes " + seconds
-				+ " seconds");
-		lastmsgId = (String)getBuffer().get(BUFFER_LASTMSGID);
+		lastmsgId = sendMessageEditable(hours + "hours " + minutes
+				+ " minutes " + seconds + " seconds");
+		//		lastmsgId = (String)getBuffer().get(BUFFER_LAST_EDITABLE_MSG_ID);
 		
 		for(int i = totalTime; i >= 0 && isAlive; i--){
 			
-			timeConstruct(i);
-			editMessage(timeRef[0] + "hours " + timeRef[1] + " minutes "
-					+ timeRef[2] + " seconds", lastmsgId);
+			if(i < totalTime){
+				timeConstruct(i);
+				editMessage(timeRef[0] + "hours " + timeRef[1] + " minutes "
+						+ timeRef[2] + " seconds", lastmsgId);
+			}
+			
 			if(i == 0){
 				sendMessage("TimerEnded");
 			}
