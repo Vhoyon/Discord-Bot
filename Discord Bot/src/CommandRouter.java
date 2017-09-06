@@ -5,8 +5,7 @@ import commands.*;
 import commands.GameInteractionCommand.CommandType;
 import errorHandling.*;
 import errorHandling.exceptions.*;
-import framework.Buffer;
-import framework.Command;
+import framework.*;
 import framework.specifics.CommandConfirmed;
 import framework.specifics.Request;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -19,13 +18,28 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	private Request request;
 	private Buffer buffer;
 	private Command command;
+	private Dictionary dict;
 	
 	public CommandRouter(MessageReceivedEvent event, String messageRecu,
 			Buffer buffer){
 		
 		this.event = event;
-		this.request = new Request(messageRecu);
 		this.buffer = buffer;
+		
+		try{
+			
+			Object object = buffer.get(BUFFER_LANG);
+			dict = (Dictionary)object;
+			
+		}
+		catch(NullPointerException e){
+			
+			dict = new Dictionary();
+			buffer.push(dict, BUFFER_LANG);
+			
+		}
+		
+		this.request = new Request(messageRecu, dict);
 		
 	}
 	
@@ -33,18 +47,24 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		return command;
 	}
 	
+	public String getString(String key){
+		return dict.getString(key);
+	}
+	
 	@Override
 	public void run(){
 		
-		String commandGuildID = event.getGuild().getId();
-		
-		this.setName(request.getCommand() + commandGuildID);
-		
-		buffer.setLatestGuildID(commandGuildID);
-		
 		try{
 			
+			String commandGuildID = null;
+			
 			if((command = validateMessage()) == null){
+				
+				commandGuildID = event.getGuild().getId();
+				
+				this.setName(request.getCommand() + commandGuildID);
+				
+				buffer.setLatestGuildID(commandGuildID);
 				
 				boolean confirmationConfirmed = false;
 				
@@ -79,18 +99,17 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				
 				if(!confirmationConfirmed){
 					
-					if(isCommandRunning(request.getCommand(), event.getGuild()
-							.getId()) != null){
-						command = new SimpleTextCommand(
-								"Cannot run another instance of the command `"
-										+ request.getCommand()
-										+ "` : it is already running.");
+					if(isCommandRunning(request.getCommand(), commandGuildID) != null){
+						command = new BotError(
+								getString("CommandIsRunningError"),
+								Command.useThis(request.getCommand()));
 					}
 					else
 						switch(request.getCommand()){
 						case HELLO:
-							command = new SimpleTextCommand("hello "
-									+ event.getAuthor().getName());
+							command = new SimpleTextCommand(
+									getString("HelloResponse"), event
+											.getAuthor().getName());
 							break;
 						case HELP:
 							command = new CommandHelp();
@@ -120,7 +139,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							break;
 						case TERMINATE:
 							command = new SimpleTextCommand(
-									"**Y** *O*__***~~U~~***__ __*C* **A**N__ **NO*__t_S*To** ~~P*T*~~ __he*B**O**T*");
+									getString("TERMINATE"));
 							break;
 						case STOP:
 							command = new CommandStop(isCommandRunning(
@@ -150,38 +169,43 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 						case TIMER:
 							command = new CommandTimer();
 							break;
+						case LANGUAGE:
+						case LANG:
+							command = new CommandLanguage();
+							break;
 						case TEST:
 							command = new Command(){
 								@Override
 								public void action(){
 									
-									try{
-										
-										String paramContent = getParameter(
-												"content").toString();
-										
-										sendMessage("Happy tree friends, "
-												+ paramContent + "!");
-										
-									}
-									catch(NoParameterContentException e){
-										
-										sendMessage("Parameter `"
-												+ "content"
-												+ "` is not present or missing it's following content.");
-										
-									}
+									sendMessage(
+											dict.getString("TestingReplacements"),
+											event.getAuthor().getName());
+									
+									//									String parameterWanted = "content";
+									//									
+									//									try{
+									//										
+									//										String paramContent = getParameter(
+									//												parameterWanted).toString();
+									//										
+									//									}
+									//									catch(NoParameterContentException e){
+									//										
+									//										sendMessage(
+									//												"Parameter `%s` is not present or missing it's following content.",
+									//												parameterWanted);
+									//										
+									//									}
 									
 								}
 							};
 							break;
 						default:
 							command = new BotError(
-									"*No actions created for the command* "
-											+ buildVCommand(request
-													.getCommand())
-											+ " *- please make an idea in the __ideas__ text channel!*",
-									false);
+									getString("NoActionForCommand"), false,
+									Command.useThis(buildVCommand(request
+											.getCommand())));
 							break;
 						}
 					
@@ -195,6 +219,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				command.setBuffer(buffer);
 				command.setGuildID(commandGuildID);
 				command.setRequest(request);
+				command.setDictionary(dict);
 				
 				command.action();
 				
@@ -229,7 +254,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		
 		for(Thread thread : threadArray){
 			
-			if(thread instanceof CommandRouter
+			if(thread instanceof CommandRouter && !thread.equals(this)
 					&& thread.getName().equals(commandName + guildID)){
 				
 				commandFound = ((CommandRouter)thread).getCommand();
@@ -248,6 +273,17 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	 * execute if it is not validated. In the case where the message received
 	 * isn't a command (a message that starts with
 	 * <i>Ressources.<b>PREFIX</b></i>), a <i>NoCommandException</i> is thrown.
+	 * <p>
+	 * If the message received is from a private channel, a
+	 * {@link errorHandling.BotErrorPrivate BotErrorPrivate} command is created,
+	 * having the message that <i>you need to be in a server to intercat with
+	 * the bot</i>.
+	 * <p>
+	 * In another case where the received message in a server is only "
+	 * <code>!!</code>" (the <code><i>PREFIX</i></code> value), a
+	 * {@link commands.SimpleTextCommand SimpleTextCommand} command is created
+	 * that will send the message
+	 * "<i>... you wanted to call upon me or...?</i>".
 	 * 
 	 * @return <code>null</code> if valid; a command to execute otherwise.
 	 * @throws NoCommandException
@@ -260,8 +296,9 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		// Only interactions are through a server, no single conversations permitted!
 		if(event.isFromType(ChannelType.PRIVATE)){
 			
-			command = new SimpleTextCommand(true,
-					"*You must be in a server to interact with me!*");
+			command = new BotErrorPrivate("*"
+					+ getString("MessageReceivedFromPrivateResponse") + "*",
+					true);
 			
 		}
 		else if(event.isFromType(ChannelType.TEXT)){
@@ -274,7 +311,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				if(request.getCommand().equals(PREFIX)){
 					
 					command = new SimpleTextCommand(
-							"... you wanted to call upon me or...?");
+							getString("MessageIsOnlyPrefixResponse"));
 					
 				}
 				

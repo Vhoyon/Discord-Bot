@@ -106,15 +106,11 @@ public class Buffer {
 	}
 	
 	public boolean push(Object object){
-		
 		return push(object, null);
-		
 	}
 	
 	public Object get(int index) throws IndexOutOfBoundsException{
-		
 		return memory.get(index).getObject();
-		
 	}
 	
 	public Object get(String associatedName) throws NullPointerException{
@@ -147,9 +143,7 @@ public class Buffer {
 	}
 	
 	public boolean remove(String associatedName){
-		
 		return remove(memory.indexOf(new BufferObject(associatedName)));
-		
 	}
 	
 }

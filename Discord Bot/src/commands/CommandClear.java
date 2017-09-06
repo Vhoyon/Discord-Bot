@@ -12,14 +12,15 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  * 
  * @author Stephano
  *
- *         Classe qui permet d'éffacer tout les messages dans le chat ou on
+ *         Classe qui permet d'effacer tout les messages dans le chat ou on
  *         l'invoque
  *
  */
 public class CommandClear extends CommandConfirmed {
 	
-	public CommandClear(){
-		super("Are you sure you want to clear all messages?");
+	@Override
+	public String getConfMessage(){
+		return getStringEz("ConfirmMessage");
 	}
 	
 	@Override
@@ -31,7 +32,7 @@ public class CommandClear extends CommandConfirmed {
 			
 		}
 		catch(PermissionException e){
-			sendMessage("I do not have the permissions for that!");
+			sendMessage(getStringEz("NoPermission"));
 		}
 		
 	}
@@ -63,9 +64,7 @@ public class CommandClear extends CommandConfirmed {
 		}while(!vide);
 		
 		if(hadErrors)
-			new BotError(
-					this,
-					"One or more messages couldn't be deleted. Cannot bulk delete message more than 2 weeks old. Please try again earlier.");
+			new BotError(this, getStringEz("CannotBulkDeleteOld"));
 		
 	}
 	

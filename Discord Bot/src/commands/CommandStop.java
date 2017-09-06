@@ -20,32 +20,27 @@ public class CommandStop extends Command {
 				
 				getBuffer().get(BUFFER_SPAM);
 				getBuffer().push(false, BUFFER_SPAM);
-				sendInfoMessage("You have been saved from the spam "
-						+ EMOJI_OK_HAND);
+				sendInfoMessage(getStringEz("SavedFromSpam"), EMOJI_OK_HAND);
 				
 			}
 			else{
 				
 				if(commandToStop == null){
 					
-					new BotError(this, "No command with the name `"
-							+ getContent()
-							+ "` was found, no action was taken.");
+					new BotError(this, getStringEz("NoCommandToStopMessage"),
+							useThis(getContent()));
 					
 				}
 				else{
 					
 					if(commandToStop.stopAction())
-						sendInfoMessage("The `"
-								+ getContent()
-								+ "` command was successfully stopped. :ok_hand:");
+						sendInfoMessage(
+								getStringEz("CommandFullyStoppedMessage"),
+								getContent(), EMOJI_OK_HAND);
 					else{
-						new BotError(
-								this,
-								"The `"
-										+ getContent()
-										+ "` command refused to stop. Ooo, scary. (*It probably just wasn't implemented...*)",
-								true);
+						new BotError(this,
+								getStringEz("CommandNotStoppedMessage"), true,
+								useThis(getContent()));
 					}
 					
 				}
@@ -54,9 +49,8 @@ public class CommandStop extends Command {
 			
 		}
 		catch(NullPointerException e){
-			sendMessage("I CAN'T STOP");
+			sendMessage(getStringEz("BotCantStop"));
 		}
 		
 	}
-	
 }

@@ -19,6 +19,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	private MessageReceivedEvent event;
 	private String guildID;
 	private Request request;
+	private Dictionary dictionary;
 	
 	public Command(){}
 	
@@ -27,6 +28,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		setBuffer(commandToCopy.getBuffer());
 		setGuildID(commandToCopy.getGuildID());
 		setRequest(commandToCopy.getRequest());
+		setDictionary(commandToCopy.getDictionary());
 	}
 	
 	public String getCommandName(){
@@ -112,6 +114,22 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		return request.isParameterPresent(parameterName);
 	}
 	
+	public String getString(String key){
+		return dictionary.getString(key);
+	}
+	
+	public String getStringEz(String shortKey){
+		return dictionary.getString(getClass().getSimpleName() + shortKey);
+	}
+	
+	public void setDictionary(Dictionary dictionary){
+		this.dictionary = dictionary;
+	}
+	
+	public Dictionary getDictionary(){
+		return dictionary;
+	}
+	
 	public abstract void action();
 	
 	public boolean stopAction(){
@@ -119,27 +137,44 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	}
 	
 	protected void sendMessage(String messageToSend){
+		sendMessage(messageToSend, (Object[])null);
+	}
+	
+	protected void sendMessage(String messageToSend, Object... replacements){
 		
-		getTextContext().sendMessage(messageToSend).complete();
+		getTextContext()
+				.sendMessage(String.format(messageToSend, replacements))
+				.complete();
 		getBuffer().push(getTextContext().getLatestMessageId(),
 				BUFFER_LASTMSGID);
 		
 	}
 	
 	protected void sendPrivateMessage(String messageToSend){
+		sendPrivateMessage(messageToSend, (Object[])null);
+	}
+	
+	protected void sendPrivateMessage(String messageToSend,
+			Object... replacements){
 		
 		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
 				.complete();
 		if(getEvent().getAuthor().hasPrivateChannel()){
-			channel.sendMessage(messageToSend).complete();
+			channel.sendMessage(String.format(messageToSend, replacements))
+					.complete();
 		}
 		else{
-			sendMessage("User has no private channel, cancelling.");
+			sendMessage(getString("CommandUserHasNoPrivateChannel"));
 		}
 		
 	}
 	
 	protected String createInfoMessage(String messageToSend, boolean isOneLiner){
+		return createInfoMessage(messageToSend, isOneLiner, (Object[])null);
+	}
+	
+	protected String createInfoMessage(String messageToSend,
+			boolean isOneLiner, Object... replacements){
 		
 		String infoChars = "\\~\\~";
 		
@@ -150,28 +185,55 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		else
 			separator = "\n";
 		
-		return infoChars + separator + messageToSend + separator + infoChars;
+		return infoChars + separator
+				+ String.format(messageToSend, replacements) + separator
+				+ infoChars;
 		
 	}
 	
 	protected void sendInfoMessage(String messageToSend, boolean isOneLiner){
-		sendMessage(createInfoMessage(messageToSend, isOneLiner));
+		sendInfoMessage(messageToSend, isOneLiner, (Object[])null);
+	}
+	
+	protected void sendInfoMessage(String messageToSend, boolean isOneLiner,
+			Object... replacements){
+		sendMessage(createInfoMessage(messageToSend, isOneLiner, replacements));
 	}
 	
 	protected void sendInfoMessage(String messageToSend){
-		sendInfoMessage(messageToSend, true);
+		sendInfoMessage(messageToSend, (Object[])null);
+	}
+	
+	protected void sendInfoMessage(String messageToSend, Object... replacements){
+		sendInfoMessage(messageToSend, true, replacements);
 	}
 	
 	protected void sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
+		sendInfoPrivateMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
 	protected void sendInfoPrivateMessage(String messageToSend){
-		sendInfoPrivateMessage(messageToSend, true);
+		sendInfoPrivateMessage(messageToSend, (Object[])null);
+	}
+	
+	protected void sendInfoPrivateMessage(String messageToSend,
+			Object... replacements){
+		sendInfoPrivateMessage(messageToSend, true, replacements);
+	}
+	
+	protected void sendInfoPrivateMessage(String messageToSend,
+			boolean isOneLiner, Object... replacements){
+		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
+				replacements));
 	}
 	
 	protected void groupAndSendMessages(String[] messages){
+		groupAndSendMessages(messages, (Object[])null);
+	}
+	
+	protected void groupAndSendMessages(String[] messages,
+			Object... replacements){
 		
 		StringBuilder messageToSend = new StringBuilder();
 		
@@ -182,14 +244,18 @@ public abstract class Command implements Commands, Ressources, Emojis {
 			}
 		}
 		
-		sendMessage(messageToSend.toString());
+		sendMessage(messageToSend.toString(), replacements);
 		
 	}
 	
 	protected void groupAndSendMessages(ArrayList<String> messages){
-		
 		groupAndSendMessages(messages.toArray(new String[messages.size()]));
-		
+	}
+	
+	protected void groupAndSendMessages(ArrayList<String> messages,
+			Object... replacements){
+		groupAndSendMessages(messages.toArray(new String[messages.size()]),
+				replacements);
 	}
 	
 	protected void editMessage(String messageToEdit, String messageId){
@@ -228,7 +294,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	
 	public void disconnect(){
 		
-		String message = "The bot can not be disconnected if it is not in a voice channel.";
+		String message = getString("CommandCannotDisconnectOrNotConnected");
 		
 		for(VoiceChannel channel : event.getGuild().getVoiceChannels()){
 			
@@ -240,7 +306,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 					
 					man.closeAudioConnection();
 					
-					message = "The bot has disconnected";
+					message = getString("CommandDisconnectDisconnected");
 					
 					break;
 					
@@ -252,6 +318,26 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 		sendMessage(message);
 		
+	}
+	
+	/**
+	 * Method to go around the technicalities that emerges from creating methods
+	 * using varargs as parameters.<br>
+	 * You can use this to replace strings in
+	 * messages sent - for example :<br>
+	 * 
+	 * <pre>
+	 * new BotError(this, getStringEz(&quot;StringToSend&quot;), useThis(
+	 * 		buildVCommand(command1), buildVCommand(command2)));
+	 * </pre>
+	 * 
+	 * @param replacements
+	 *            Objects to replace the string with.
+	 * @return An object (<code>Object[]</code>) that is compliant to the
+	 *         general localisations methods.
+	 */
+	public static Object[] useThis(Object... replacements){
+		return replacements;
 	}
 	
 }

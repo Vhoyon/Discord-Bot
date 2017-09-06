@@ -5,13 +5,7 @@ import ressources.Ressources;
 
 public abstract class CommandConfirmed extends Command implements Ressources {
 	
-	private String confirmationMessage;
-	
-	public CommandConfirmed(String confirmationMessage){
-		
-		this.confirmationMessage = confirmationMessage;
-		
-	}
+	public abstract String getConfMessage();
 	
 	@Override
 	public void action(){
@@ -21,14 +15,12 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 		}
 		catch(NullPointerException e){
 			
-			sendInfoMessage(
-					confirmationMessage
-							+ "\n\nEnter "
-							+ buildVCommand(CONFIRM)
-							+ " to confirm. Entering "
-							+ buildVCommand(CANCEL)
-							+ " will cancel the confirmation.\nAny other command will cancel the confirmation and execute the inputted command.",
-					false);
+			sendInfoMessage(getConfMessage() + "\n\n"
+					+ getString("CommandConfirmedCustomAndConfirmMessage"),
+					false, new Object[]
+					{
+						buildVCommand(CONFIRM), buildVCommand(CANCEL)
+					});
 			
 			getBuffer().push(this, BUFFER_CONFIRMATION);
 			
@@ -39,7 +31,7 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 	public abstract void confirmed();
 	
 	public void cancelled(){
-		sendInfoMessage("*Confirmation cancelled*");
+		sendInfoMessage("*" + getString("CommandConfirmedConfCancelled") + "*");
 	}
 	
 }

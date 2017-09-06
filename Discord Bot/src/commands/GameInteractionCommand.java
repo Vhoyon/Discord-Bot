@@ -3,8 +3,10 @@ package commands;
 import java.util.ArrayList;
 import java.util.Random;
 
+import errorHandling.BotError;
 import framework.Command;
 import framework.specifics.GamePool;
+import framework.specifics.Request;
 import ressources.Ressources;
 
 public class GameInteractionCommand extends Command {
@@ -60,15 +62,15 @@ public class GameInteractionCommand extends Command {
 			
 			ArrayList<String> messages = new ArrayList<>();
 			
-			messages.add("The following games are now ready to be rolled :");
+			messages.add(getStringEz("GamesReadyToBeRolledMessage"));
 			
 			for(int i = 1; i <= gamepool.size(); i++)
 				messages.add(i + ". `" + gamepool.get(i - 1) + "`");
 			
 			groupAndSendMessages(messages);
 			
-			sendInfoMessage("Enter the command " + buildVCommand(GAME_LIST)
-					+ " to view this list again.");
+			sendInfoMessage(getStringEz("InitialViewListAgainMessage"),
+					buildVCommand(GAME_LIST));
 			
 		}
 		
@@ -88,15 +90,14 @@ public class GameInteractionCommand extends Command {
 				
 				gamepool.add(getContent());
 				
-				sendMessage("The game `" + getContent()
-						+ "` has been added to the pool!");
+				sendMessage(getStringEz("AddedGameSuccessMessage"),
+						getContent());
 				
 			}
 			catch(NullPointerException e){
 				
-				sendInfoMessage("Your game pool is not yet created.\nYou can create a game pool using "
-						+ buildVCommand(GAME + " [game 1],[game 2],[...]")
-						+ ".");
+				sendInfoMessage(getStringEz("AddErrorNoPoolCreated"),
+						buildVCommand(GAME + " [game 1],[game 2],[...]"));
 				
 			}
 			
@@ -116,37 +117,35 @@ public class GameInteractionCommand extends Command {
 				GamePool gamepool = (GamePool)getBuffer().get(
 						Ressources.BUFFER_GAMEPOOL);
 				
-				String content = getContent();
-				
-				if(!content.equals("-all")){
-					
-					if(gamepool.remove(getContent()))
-						sendMessage("The game `" + getContent()
-								+ "` has been removed from the game pool!");
-					else
-						sendInfoMessage("There is no such game in your pool! Type "
-								+ buildVCommand(GAME_LIST)
-								+ " to see which games you have in your pool.");
-					
-				}
-				else{
+				if(isParameterPresent("all")){
 					
 					do{
 						gamepool.remove(0);
 					}while(!gamepool.isEmpty());
 					
 				}
+				else{
+					
+					if(gamepool.remove(getContent()))
+						sendMessage(getStringEz("RemovedGameSuccessMessage"),
+								getContent());
+					else
+						new BotError(this,
+								getStringEz("RemoveErrorNoSuchGame"),
+								useThis(buildVCommand(GAME_LIST)));
+					
+				}
 				
 				if(gamepool.isEmpty()){
 					
 					getBuffer().remove(Ressources.BUFFER_GAMEPOOL);
-					sendMessage("The game pool is now empty!");
+					sendMessage(getStringEz("RemoveIsNowEmpty"));
 					
 				}
 				
 			}
 			catch(NullPointerException e){
-				sendInfoMessage("You cannot remove a game from an empty game pool!");
+				sendInfoMessage(getStringEz("RemoveErrorEmptyPool"));
 			}
 			
 		}
@@ -163,19 +162,21 @@ public class GameInteractionCommand extends Command {
 			int wantedRoll = 1;
 			
 			if(getContent() != null)
-				wantedRoll = Integer.parseInt(getContent());
+				try{
+					wantedRoll = Integer.parseInt(getContent());
+				}
+				catch(NumberFormatException e){}
 			
 			Random ran = new Random();
 			int num;
 			
 			if(wantedRoll < 1)
-				throw new IllegalArgumentException(
-						"The number inputted needs to be a positive number.");
+				new BotError(getStringEz("RollNumberIsNotValid"));
 			else if(wantedRoll == 1){
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage("You shall play : `" + gamepool.get(num) + "`!");
+				sendMessage(getStringEz("RolledGameMessage"), gamepool.get(num));
 				
 			}
 			else{
@@ -184,8 +185,8 @@ public class GameInteractionCommand extends Command {
 					
 					num = ran.nextInt(gamepool.size());
 					
-					sendMessage(i + " game selected is : `" + gamepool.get(num)
-							+ "`.");
+					sendMessage(getStringEz("RolledMultipleGamesMessage"), i,
+							gamepool.get(num));
 					
 				}
 				
@@ -193,17 +194,21 @@ public class GameInteractionCommand extends Command {
 			
 		}
 		catch(NullPointerException e){
-			sendInfoMessage("The game pool is empty!\nCreate a game pool using "
-					+ buildVCommand(GAME + " [game 1],[game 2],[...]") + "!");
+			sendInfoMessage(getStringEz("RollErrorPoolEmpty"), false,
+					new Object[]
+					{
+						buildVCommand(GAME + " [game 1],[game 2],[...]")
+					});
 		}
 		catch(IllegalArgumentException e){
-			sendInfoMessage("Usage :\n" + buildVCommand(GAME_ROLL) + " OR "
-					+ buildVCommand(GAME_ROLL_ALT)
-					+ " : Roll the dice once to get a random game.\n"
-					+ buildVCommand(GAME_ROLL + " [positive number]") + " OR "
-					+ buildVCommand(GAME_ROLL_ALT + " [positive number]")
-					+ " : Roll a random game for the inputted number of time.",
-					false);
+			sendInfoMessage(getStringEz("RollErrorUsageMessage"), false,
+					new Object[]
+					{
+						buildVCommand(GAME_ROLL),
+						buildVCommand(GAME_ROLL_ALT),
+						buildVCommand(GAME_ROLL + " [positive number]"),
+						buildVCommand(GAME_ROLL_ALT + " [positive number]")
+					});
 		}
 		
 	}
@@ -218,13 +223,13 @@ public class GameInteractionCommand extends Command {
 		catch(NullPointerException e){}
 		
 		if(gamepool == null){
-			sendMessage("No games in your pool mate!");
+			sendMessage(getStringEz("ListNoGamesInPoolMessage"));
 		}
 		else{
 			
 			ArrayList<String> messages = new ArrayList<>();
 			
-			messages.add("Here are the games in your game pool :");
+			messages.add(getStringEz("ListTitleOfList"));
 			
 			for(int i = 0; i < gamepool.size(); i++)
 				messages.add((i + 1) + ". `" + gamepool.get(i) + "`");
@@ -241,27 +246,25 @@ public class GameInteractionCommand extends Command {
 		
 		switch(commandType){
 		case INITIAL:
-			message = "Usage : "
-					+ buildVCommand(GAME + " [game 1],[game 2],[game 3],[...]")
-					+ ".\nSeparate games using commas.";
+			message = String.format(getStringEz("ErrorInitialUsage"),
+					buildVCommand(GAME + " [game 1],[game 2],[game 3],[...]"));
 			break;
 		case ADD:
-			message = "Usage : " + buildVCommand(GAME_ADD + " [game name]")
-					+ ".";
+			message = String.format(getStringEz("ErrorAddUsage"),
+					buildVCommand(GAME_ADD + " [game name]"));
 			break;
 		case REMOVE:
-			message = "Usage : `" + buildVCommand(GAME_REMOVE + " [game name]")
-					+ ".\nYou could also input "
-					+ buildVCommand(GAME_REMOVE + " -all")
-					+ " to remove all the games in the current pool.";
+			message = String.format(getStringEz("ErrorRemoveUsage"),
+					buildVCommand(GAME_REMOVE + " [game name]"),
+					buildVCommand(GAME_REMOVE + " " + Request.Parameter.PREFIX
+							+ "all"));
 			break;
 		default:
-			message = "An unsuspected error happened. What have you done.";
+			message = getStringEz("ErrorUndefined");
 			break;
 		}
 		
 		sendInfoMessage(message, false);
 		
 	}
-	
 }
