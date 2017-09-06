@@ -182,22 +182,6 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 											dict.getString("TestingReplacements"),
 											event.getAuthor().getName());
 									
-									//									String parameterWanted = "content";
-									//									
-									//									try{
-									//										
-									//										String paramContent = getParameter(
-									//												parameterWanted).toString();
-									//										
-									//									}
-									//									catch(NoParameterContentException e){
-									//										
-									//										sendMessage(
-									//												"Parameter `%s` is not present or missing it's following content.",
-									//												parameterWanted);
-									//										
-									//									}
-									
 								}
 							};
 							break;

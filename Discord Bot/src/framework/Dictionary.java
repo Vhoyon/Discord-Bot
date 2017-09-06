@@ -25,7 +25,7 @@ public class Dictionary {
 			ResourceBundle.clearCache();
 		
 		locale = new Locale(lang, country);
-		this.resources = getLanguageResources(lang, country);
+		this.resources = getLanguageResources(locale);
 		
 	}
 	
@@ -48,6 +48,10 @@ public class Dictionary {
 	}
 	
 	private ResourceBundle getLanguageResources(String lang, String country){
+		return getLanguageResources(new Locale(lang, country));
+	}
+	
+	private ResourceBundle getLanguageResources(Locale locale){
 		return ResourceBundle.getBundle("languages.DiscordBot", locale);
 	}
 	
