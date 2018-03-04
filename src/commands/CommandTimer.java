@@ -38,19 +38,18 @@ public class CommandTimer extends Command {
 		catch(NumberFormatException | NoParameterContentException e){}
 		
 		int totalTime = (hours * 3600) + (minutes * 60) + seconds;
-		String lastmsgId = null;
+		String timerMessageId = null;
 		// long totalTime = (seconds * 1000);
 		// long temps = System.currentTimeMillis();
-		lastmsgId = sendMessageEditable(hours + "hours " + minutes
+		timerMessageId = sendMessage(hours + "hours " + minutes
 				+ " minutes " + seconds + " seconds");
-		//		lastmsgId = (String)getBuffer().get(BUFFER_LAST_EDITABLE_MSG_ID);
 		
 		for(int i = totalTime; i >= 0 && isAlive; i--){
 			
 			if(i < totalTime){
 				timeConstruct(i);
 				editMessage(timeRef[0] + "hours " + timeRef[1] + " minutes "
-						+ timeRef[2] + " seconds", lastmsgId);
+						+ timeRef[2] + " seconds", timerMessageId);
 			}
 			
 			if(i == 0){
