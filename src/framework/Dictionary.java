@@ -21,7 +21,7 @@ public class Dictionary {
 	
 	public void setLanguage(String lang, String country){
 		
-		if("true".equals(System.getProperty("isDebugMode")))
+		if(System.getProperty("debug-mode") != null)
 			ResourceBundle.clearCache();
 		
 		locale = new Locale(lang, country);
@@ -38,9 +38,14 @@ public class Dictionary {
 		}
 		catch(MissingResourceException e){
 			string = getDefaultLanguageResources().getString(key);
-			System.out.println("Key \"" + key
-					+ "\" is missing in the resource file for the language \""
-					+ locale.getLanguage() + "_" + locale.getCountry() + "\".");
+			
+			if(System.getProperty("debug-mode") != null)
+				System.out
+						.println("Key \""
+								+ key
+								+ "\" is missing in the resource file for the language \""
+								+ locale.getLanguage() + "_"
+								+ locale.getCountry() + "\".");
 		}
 		
 		return string;
