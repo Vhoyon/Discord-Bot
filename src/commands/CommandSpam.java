@@ -77,7 +77,7 @@ public class CommandSpam extends Command {
 	@Override
 	public boolean stopAction(){
 		
-		getBuffer().remove(BUFFER_SPAM);
+		forget(BUFFER_SPAM);
 		
 		return true;
 		

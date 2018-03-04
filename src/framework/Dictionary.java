@@ -34,7 +34,12 @@ public class Dictionary {
 		String string;
 		
 		try{
+			
 			string = resources.getString(key);
+			
+			if(string.length() == 0)
+				throw new NullPointerException();
+			
 		}
 		catch(MissingResourceException e){
 			string = getDefaultLanguageResources().getString(key);
@@ -46,6 +51,19 @@ public class Dictionary {
 								+ "\" is missing in the resource file for the language \""
 								+ locale.getLanguage() + "_"
 								+ locale.getCountry() + "\".");
+		}
+		catch(NullPointerException e){
+			
+			string = getDefaultLanguageResources().getString(key);
+			
+			if(System.getProperty("debug-mode") != null)
+				System.out
+						.println("Key \""
+								+ key
+								+ "\" is empty in the resource file for the language \""
+								+ locale.getLanguage() + "_"
+								+ locale.getCountry() + "\".");
+			
 		}
 		
 		return string;

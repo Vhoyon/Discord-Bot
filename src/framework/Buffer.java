@@ -41,7 +41,7 @@ public class Buffer {
 			
 			boolean isEqual = false;
 			
-			if(obj instanceof BufferObject){
+			if(this.getGuildID() != null && obj instanceof BufferObject){
 				
 				BufferObject bufrObj = (BufferObject)obj;
 				

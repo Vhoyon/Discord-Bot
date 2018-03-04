@@ -1,5 +1,7 @@
 package ressources;
 
+import languages.Language;
+
 /**
  * 
  * @author Stephano
@@ -9,8 +11,10 @@ package ressources;
  */
 public interface Ressources {
 	
-	String DISCORDTOKEN = "MzIxMTQ1NDI0NTQ5MzgwMDk3.DBZxmA.CyEXFP8cQEkV5Qn8X-PKLPY4EhM";
-	String YOUTUBETOKEN = "AIzaSyDfPTuiyimq09IK5umHfD4OY8OV5oya2mU";
+	String BOT_NAME = "Bot";
+	
+	String TOKEN_DISCORD = "MzIxMTQ1NDI0NTQ5MzgwMDk3.DBZxmA.CyEXFP8cQEkV5Qn8X-PKLPY4EhM";
+	String TOKEN_YOUTUBE = "AIzaSyDfPTuiyimq09IK5umHfD4OY8OV5oya2mU";
 	
 	String PREFIX = "!!";
 	
@@ -18,5 +22,12 @@ public interface Ressources {
 	String BUFFER_GAMEPOOL = "GamePool";
 	String BUFFER_SPAM = "SPAM_CONDITION";
 	String BUFFER_LANG = "LANGUAGE";
+	
+	Language[] languages =
+	{
+		new Language("en", "US", "anglais", "eng", "english", "en"),
+		new Language("fr", "CA", "francais", "fran�ais", "fra", "french", "fr"),
+//		new Language("fr", "Te", "test")
+	};
 	
 }
