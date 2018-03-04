@@ -136,31 +136,32 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		return false;
 	}
 	
-	protected void sendMessage(String messageToSend){
-		sendMessage(messageToSend, (Object[])null);
+	protected String sendMessage(String messageToSend){
+		return sendMessage(messageToSend, (Object[])null);
 	}
 	
-	protected void sendMessage(String messageToSend, Object... replacements){
-		getTextContext()
+	protected String sendMessage(String messageToSend, Object... replacements){
+		return getTextContext()
 				.sendMessage(String.format(messageToSend, replacements))
-				.complete();
+				.complete().getId();
 	}
 	
-	protected void sendPrivateMessage(String messageToSend){
-		sendPrivateMessage(messageToSend, (Object[])null);
+	protected String sendPrivateMessage(String messageToSend){
+		return sendPrivateMessage(messageToSend, (Object[])null);
 	}
 	
-	protected void sendPrivateMessage(String messageToSend,
+	protected String sendPrivateMessage(String messageToSend,
 			Object... replacements){
 		
 		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
 				.complete();
+		
 		if(getEvent().getAuthor().hasPrivateChannel()){
-			channel.sendMessage(String.format(messageToSend, replacements))
-					.complete();
+			return channel.sendMessage(String.format(messageToSend, replacements))
+					.complete().getId();
 		}
 		else{
-			sendMessage(getString("CommandUserHasNoPrivateChannel"));
+			return sendMessage(getString("CommandUserHasNoPrivateChannel"));
 		}
 		
 	}
@@ -187,48 +188,48 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 	}
 	
-	protected void sendInfoMessage(String messageToSend, boolean isOneLiner){
-		sendInfoMessage(messageToSend, isOneLiner, (Object[])null);
+	protected String sendInfoMessage(String messageToSend, boolean isOneLiner){
+		return sendInfoMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
-	protected void sendInfoMessage(String messageToSend, boolean isOneLiner,
+	protected String sendInfoMessage(String messageToSend, boolean isOneLiner,
 			Object... replacements){
-		sendMessage(createInfoMessage(messageToSend, isOneLiner, replacements));
+		return sendMessage(createInfoMessage(messageToSend, isOneLiner, replacements));
 	}
 	
-	protected void sendInfoMessage(String messageToSend){
-		sendInfoMessage(messageToSend, (Object[])null);
+	protected String sendInfoMessage(String messageToSend){
+		return sendInfoMessage(messageToSend, (Object[])null);
 	}
 	
-	protected void sendInfoMessage(String messageToSend, Object... replacements){
-		sendInfoMessage(messageToSend, true, replacements);
+	protected String sendInfoMessage(String messageToSend, Object... replacements){
+		return sendInfoMessage(messageToSend, true, replacements);
 	}
 	
-	protected void sendInfoPrivateMessage(String messageToSend,
+	protected String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		sendInfoPrivateMessage(messageToSend, isOneLiner, (Object[])null);
+		return sendInfoPrivateMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
-	protected void sendInfoPrivateMessage(String messageToSend){
-		sendInfoPrivateMessage(messageToSend, (Object[])null);
+	protected String sendInfoPrivateMessage(String messageToSend){
+		return sendInfoPrivateMessage(messageToSend, (Object[])null);
 	}
 	
-	protected void sendInfoPrivateMessage(String messageToSend,
+	protected String sendInfoPrivateMessage(String messageToSend,
 			Object... replacements){
-		sendInfoPrivateMessage(messageToSend, true, replacements);
+		return sendInfoPrivateMessage(messageToSend, true, replacements);
 	}
 	
-	protected void sendInfoPrivateMessage(String messageToSend,
+	protected String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner, Object... replacements){
-		sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
+		return sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
 				replacements));
 	}
 	
-	protected void groupAndSendMessages(String[] messages){
-		groupAndSendMessages(messages, (Object[])null);
+	protected String groupAndSendMessages(String[] messages){
+		return groupAndSendMessages(messages, (Object[])null);
 	}
 	
-	protected void groupAndSendMessages(String[] messages,
+	protected String groupAndSendMessages(String[] messages,
 			Object... replacements){
 		
 		StringBuilder messageToSend = new StringBuilder();
@@ -240,31 +241,18 @@ public abstract class Command implements Commands, Ressources, Emojis {
 			}
 		}
 		
-		sendMessage(messageToSend.toString(), replacements);
+		return sendMessage(messageToSend.toString(), replacements);
 		
 	}
 	
-	protected void groupAndSendMessages(ArrayList<String> messages){
-		groupAndSendMessages(messages.toArray(new String[messages.size()]));
+	protected String groupAndSendMessages(ArrayList<String> messages){
+		return groupAndSendMessages(messages.toArray(new String[messages.size()]));
 	}
 	
-	protected void groupAndSendMessages(ArrayList<String> messages,
+	protected String groupAndSendMessages(ArrayList<String> messages,
 			Object... replacements){
-		groupAndSendMessages(messages.toArray(new String[messages.size()]),
+		return groupAndSendMessages(messages.toArray(new String[messages.size()]),
 				replacements);
-	}
-	
-	protected String sendMessageEditable(String message){
-		
-		sendMessage(message);
-		
-		try{
-			Thread.sleep(30);
-		}
-		catch(InterruptedException e){}
-		
-		return getTextContext().getLatestMessageId();
-		
 	}
 	
 	protected void editMessage(String messageToEdit, String messageId){
