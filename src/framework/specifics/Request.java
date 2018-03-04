@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ressources.Ressources;
 import errorHandling.AbstractBotError;
 import errorHandling.BotError;
 import errorHandling.exceptions.NoParameterContentException;
@@ -175,7 +176,7 @@ public class Request {
 	}
 	
 	public String getCommand(){
-		return command.substring(Parameter.PREFIX.length());
+		return command.substring(Ressources.PREFIX.length());
 	}
 	
 	public String getCommandNoFormat(){
