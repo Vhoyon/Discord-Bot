@@ -1,5 +1,6 @@
 package commands;
 
+import languages.Language;
 import errorHandling.BotError;
 import framework.Command;
 import framework.Dictionary;
@@ -17,33 +18,9 @@ public class CommandLanguage extends Command {
 		}
 		else{
 			
-			boolean canChangeLanguage = true;
+			Language lang = getLanguage(getContent());
 			
-			String lang = null;
-			String country = null;
-			
-			switch(getContent().toLowerCase()){
-			case "francais":
-			case "français":
-			case "fra":
-			case "french":
-			case "fr":
-				lang = "fr";
-				country = "CA";
-				break;
-			case "anglais":
-			case "eng":
-			case "english":
-			case "en":
-				lang = "en";
-				country = "US";
-				break;
-			default:
-				canChangeLanguage = false;
-				break;
-			}
-			
-			if(!canChangeLanguage){
+			if(lang == null){
 				
 				new BotError(this, getStringEz("NoTranslation"), false);
 				
@@ -54,8 +31,10 @@ public class CommandLanguage extends Command {
 				
 				Dictionary changedDictionary = getDictionary();
 				
-				changedDictionary.setLanguage(lang, country);
-				getBuffer().push(changedDictionary, BUFFER_LANG);
+				changedDictionary
+						.setLanguage(lang.getLang(), lang.getCountry());
+				
+				remember(changedDictionary, BUFFER_LANG);
 				
 				sendInfoMessage(langChangeMessage,
 						changedDictionary.getString("LanguageName"));
@@ -65,4 +44,18 @@ public class CommandLanguage extends Command {
 		}
 		
 	}
+	
+	private Language getLanguage(String langFriendlyName){
+		
+		for(Language lang : languages){
+			
+			if(lang.equals(langFriendlyName))
+				return lang;
+			
+		}
+		
+		return null;
+		
+	}
+	
 }

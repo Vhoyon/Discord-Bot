@@ -20,7 +20,7 @@ public class Main {
 		try{
 			
 			jda = new JDABuilder(AccountType.BOT).setToken(
-					Ressources.DISCORDTOKEN).buildBlocking();
+					Ressources.TOKEN_DISCORD).buildBlocking();
 			jda.addEventListener(new MessageListener());
 			jda.setAutoReconnect(true);
 			
