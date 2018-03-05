@@ -4,6 +4,7 @@ import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
+import errorHandling.exceptions.BadParameterException;
 import framework.Command;
 
 public class CommandMusic extends Command {
@@ -89,18 +90,22 @@ public class CommandMusic extends Command {
 			int volume = Integer.valueOf(content);
 			
 			if(volume < 0 || volume > 100){
-				throw new IllegalArgumentException();
+				throw new BadParameterException();
 			}
 			else{
+				
 				MusicManager.get().getPlayer(getGuild()).getAudioPlayer().setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
+				
+				sendMessage("The volume has been set to " + volume + "%%!");
+				
 			}
 			
 		}
 		catch(NumberFormatException e){
-			new BotError("Please use a number!");
+			new BotError(this, "Please use a number!");
 		}
-		catch (IllegalArgumentException e) {
-			new BotError("Please enter a number between 0 and 100.");
+		catch (BadParameterException e) {
+			new BotError(this, "Please enter a number between 0 and 100.");
 		}
 		
 		
