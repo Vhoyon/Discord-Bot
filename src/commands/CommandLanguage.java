@@ -11,10 +11,10 @@ public class CommandLanguage extends Command {
 	public void action(){
 		
 		if(getContent() == null){
-			sendMessage(getStringEz("NullContent"), buildVCommand(LANGUAGE
+			sendMessage(getStringEz("NullContent", buildVCommand(LANGUAGE
 					+ " [" + getStringEz("NullContentUsage") + "]"),
 					buildVCommand(LANG + " [" + getStringEz("NullContentUsage")
-							+ "]"));
+							+ "]")));
 		}
 		else{
 			
@@ -36,8 +36,8 @@ public class CommandLanguage extends Command {
 				
 				remember(changedDictionary, BUFFER_LANG);
 				
-				sendInfoMessage(langChangeMessage,
-						changedDictionary.getString("LanguageName"));
+				sendInfoMessage(String.format(langChangeMessage,
+						changedDictionary.getString("LanguageName")));
 				
 			}
 			

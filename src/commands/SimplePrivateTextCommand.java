@@ -2,7 +2,7 @@ package commands;
 
 import framework.Command;
 
-public class SimpleTextCommand extends Command {
+public class SimplePrivateTextCommand extends Command {
 	
 	private enum TextType{
 		SIMPLE, INFO_LINE, INFO_BLOCK
@@ -13,7 +13,7 @@ public class SimpleTextCommand extends Command {
 	
 	private String[] replacements;
 	
-	private SimpleTextCommand(String textToSend, TextType textType,
+	private SimplePrivateTextCommand(String textToSend, TextType textType,
 			String... replacements){
 		
 		this.textToSend = textToSend;
@@ -22,7 +22,7 @@ public class SimpleTextCommand extends Command {
 		
 	}
 	
-	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner,
+	public SimplePrivateTextCommand(String textToSend, boolean isInfoOneLiner,
 			String... replacements){
 		
 		this(textToSend, TextType.INFO_LINE, replacements);
@@ -32,15 +32,15 @@ public class SimpleTextCommand extends Command {
 		
 	}
 	
-	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner){
+	public SimplePrivateTextCommand(String textToSend, boolean isInfoOneLiner){
 		this(textToSend, isInfoOneLiner, (String[])null);
 	}
 	
-	public SimpleTextCommand(String textToSend, String... replacements){
+	public SimplePrivateTextCommand(String textToSend, String... replacements){
 		this(textToSend, TextType.SIMPLE, replacements);
 	}
 	
-	public SimpleTextCommand(String textToSend){
+	public SimplePrivateTextCommand(String textToSend){
 		this(textToSend, (String[])null);
 	}
 	
@@ -49,14 +49,16 @@ public class SimpleTextCommand extends Command {
 		
 		switch(textType){
 		case SIMPLE:
-			sendMessage(String.format(textToSend, (Object[])replacements));
+			sendPrivateMessage(String
+					.format(textToSend, (Object[])replacements));
 			break;
 		case INFO_LINE:
-			sendInfoMessage(String.format(textToSend, (Object[])replacements));
+			sendInfoPrivateMessage(format(textToSend,
+					(Object[])replacements));
 			break;
 		case INFO_BLOCK:
-			sendInfoMessage(String.format(textToSend, (Object[])replacements),
-					false);
+			sendInfoPrivateMessage(
+					String.format(textToSend, (Object[])replacements), false);
 			break;
 		}
 		
