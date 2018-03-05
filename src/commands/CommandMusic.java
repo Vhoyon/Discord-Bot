@@ -78,7 +78,7 @@ public class CommandMusic extends Command {
 		
 		player.skipTrack();
 	
-		sendMessage(getStringEz("SkippedNowPlaying"), player.getAudioPlayer().getPlayingTrack().getInfo().title);
+		sendMessage(getStringEz("SkippedNowPlaying", player.getAudioPlayer().getPlayingTrack().getInfo().title));
 		
 	}
 	
@@ -97,7 +97,7 @@ public class CommandMusic extends Command {
 				
 				MusicManager.get().getPlayer(getGuild()).getAudioPlayer().setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
 				
-				sendMessage(getStringEz("VolumeChangedSuccess"), volume);
+				sendMessage(getStringEz("VolumeChangedSuccess", volume));
 				
 			}
 			
@@ -106,7 +106,7 @@ public class CommandMusic extends Command {
 			new BotError(this, getStringEz("VolumeNotANumber"));
 		}
 		catch (BadParameterException e) {
-			new BotError(this, getStringEz("VolumeNotANumber"), useThis(0));
+			new BotError(this, getStringEz("VolumeNotANumber", 0, 100));
 		}
 		
 	}
