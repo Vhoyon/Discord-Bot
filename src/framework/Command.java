@@ -169,11 +169,11 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		return false;
 	}
 	
-	protected String sendMessage(String messageToSend){
+	public String sendMessage(String messageToSend){
 		return getTextContext().sendMessage(messageToSend).complete().getId();
 	}
 	
-	protected String sendPrivateMessage(String messageToSend){
+	public String sendPrivateMessage(String messageToSend){
 		
 		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
 				.complete();
@@ -187,7 +187,7 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		
 	}
 	
-	protected String createInfoMessage(String messageToSend, boolean isOneLiner){
+	public String createInfoMessage(String messageToSend, boolean isOneLiner){
 		
 		String infoChars = "\\~\\~";
 		
@@ -202,24 +202,24 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		
 	}
 	
-	protected String sendInfoMessage(String messageToSend, boolean isOneLiner){
+	public String sendInfoMessage(String messageToSend, boolean isOneLiner){
 		return sendMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
-	protected String sendInfoMessage(String messageToSend){
+	public String sendInfoMessage(String messageToSend){
 		return sendInfoMessage(messageToSend, true);
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend){
+	public String sendInfoPrivateMessage(String messageToSend){
 		return sendInfoPrivateMessage(messageToSend, true);
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend,
+	public String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
 		return sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
-	protected String groupAndSendMessages(String... messages){
+	public String groupAndSendMessages(String... messages){
 		
 		StringBuilder messageToSend = new StringBuilder();
 		
@@ -234,12 +234,12 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		
 	}
 	
-	protected String groupAndSendMessages(ArrayList<String> messages){
+	public String groupAndSendMessages(ArrayList<String> messages){
 		return groupAndSendMessages(messages
 				.toArray(new String[messages.size()]));
 	}
 	
-	protected void editMessage(String messageToEdit, String messageId){
+	public void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
 	}
 	

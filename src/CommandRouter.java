@@ -259,6 +259,18 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		//			case "play":
 		//				audio.play();
 		//				break;
+		case MUSIC_PLAY:
+			command = new CommandMusic(CommandMusic.CommandType.PLAY);
+			break;
+//		case MUSIC_PAUSE:
+//			command = new CommandMusic(CommandMusic.CommandType.PAUSE);
+//			break;
+		case MUSIC_SKIP:
+			command = new CommandMusic(CommandMusic.CommandType.SKIP);
+			break;
+		case MUSIC_VOLUME:
+			command = new CommandMusic(CommandMusic.CommandType.VOLUME);
+			break;
 		case CLEAR:
 			command = new CommandClear();
 			break;
