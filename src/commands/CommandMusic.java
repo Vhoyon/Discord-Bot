@@ -74,10 +74,11 @@ public class CommandMusic extends Command {
 			sendMessage("No music is currently playing.");
 			return;
 		}
+		MusicPlayer player = MusicManager.get().getPlayer(getGuild());
 		
-		MusicManager.get().getPlayer(getGuild()).skipTrack();
-		
-		sendMessage("Skipped!");
+		player.skipTrack();
+	
+		sendMessage("Skipped! Now playing : " + player.getAudioPlayer().getPlayingTrack().getInfo().title);
 		
 	}
 	
