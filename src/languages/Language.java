@@ -37,26 +37,18 @@ public class Language {
 		this.friendlyNames = friendlyNames;
 	}
 	
-	private String getFriendlyNameAt(int position){
-		return getFriendlyNames()[position];
-	}
-	
 	@Override
 	public boolean equals(Object obj){
-		
-		boolean isEqual = false;
 		
 		String friendlyName = obj.toString();
 		
 		if(friendlyName != null)
-			for(int i = 0; !isEqual && i < getFriendlyNames().length; i++){
-				
-				if(friendlyName.equals(getFriendlyNameAt(i)))
-					isEqual = true;
-				
-			}
+			for(String langFriendlyName : getFriendlyNames())
+				if(friendlyName.equals(langFriendlyName))
+					return true;
 		
-		return isEqual;
+		return false;
+		
 	}
 	
 }
