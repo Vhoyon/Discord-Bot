@@ -68,12 +68,12 @@ public class MusicManager {
 				StringBuilder builder = new StringBuilder();
 				
 				builder.append("Playlist ").append(playlist.getName())
-						.append(" has been added \\n");
+						.append(" has been added \n");
 				
 				for(int i = 0; i < playlist.getTracks().size(); i++){
 					AudioTrack track = playlist.getTracks().get(i);
 					
-					builder.append("\\n **->** ").append(track.getInfo().title);
+					builder.append("\nAdded track `#" + (i + 1) + "` **->** ").append(track.getInfo().title);
 					
 					player.playTrack(track);
 				}
@@ -93,6 +93,7 @@ public class MusicManager {
 				command.sendMessage("Cannot load the song : "
 						+ exeption.getMessage());
 			}
+			
 		});
 		
 	}

@@ -53,7 +53,7 @@ public class CommandMusic extends Command {
 					.getVoiceState().getChannel();
 			
 			if(voiceChannel == null){
-				sendMessage("Connect to a voice lobby");
+				sendMessage(getStringEz("PlayNotConnected"));
 				return;
 			}
 			
@@ -71,14 +71,14 @@ public class CommandMusic extends Command {
 	public void skip(){
 		
 		if(!getGuild().getAudioManager().isConnected() && !getGuild().getAudioManager().isAttemptingToConnect()){
-			sendMessage("No music is currently playing.");
+			sendMessage(getStringEz("SkipNotPlaying"));
 			return;
 		}
 		MusicPlayer player = MusicManager.get().getPlayer(getGuild());
 		
 		player.skipTrack();
 	
-		sendMessage("Skipped! Now playing : " + player.getAudioPlayer().getPlayingTrack().getInfo().title);
+		sendMessage(getStringEz("SkippedNowPlaying"), player.getAudioPlayer().getPlayingTrack().getInfo().title);
 		
 	}
 	
@@ -97,18 +97,17 @@ public class CommandMusic extends Command {
 				
 				MusicManager.get().getPlayer(getGuild()).getAudioPlayer().setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
 				
-				sendMessage("The volume has been set to " + volume + "%%!");
+				sendMessage(getStringEz("VolumeChangedSuccess"), volume);
 				
 			}
 			
 		}
 		catch(NumberFormatException e){
-			new BotError(this, "Please use a number!");
+			new BotError(this, getStringEz("VolumeNotANumber"));
 		}
 		catch (BadParameterException e) {
-			new BotError(this, "Please enter a number between 0 and 100.");
+			new BotError(this, getStringEz("VolumeNotANumber"), useThis(0));
 		}
-		
 		
 	}
 	
