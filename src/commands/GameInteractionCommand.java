@@ -69,8 +69,8 @@ public class GameInteractionCommand extends Command {
 			
 			groupAndSendMessages(messages);
 			
-			sendInfoMessage(getStringEz("InitialViewListAgainMessage"),
-					buildVCommand(GAME_LIST));
+			sendInfoMessage(getStringEz("InitialViewListAgainMessage",
+					buildVCommand(GAME_LIST)));
 			
 		}
 		
@@ -90,14 +90,13 @@ public class GameInteractionCommand extends Command {
 				
 				gamepool.add(getContent());
 				
-				sendMessage(getStringEz("AddedGameSuccessMessage"),
-						getContent());
+				sendMessage(getStringEz("AddedGameSuccessMessage", getContent()));
 				
 			}
 			catch(NullPointerException e){
 				
-				sendInfoMessage(getStringEz("AddErrorNoPoolCreated"),
-						buildVCommand(GAME + " [game 1],[game 2],[...]"));
+				sendInfoMessage(getStringEz("AddErrorNoPoolCreated",
+						buildVCommand(GAME + " [game 1],[game 2],[...]")));
 				
 			}
 			
@@ -127,12 +126,11 @@ public class GameInteractionCommand extends Command {
 				else{
 					
 					if(gamepool.remove(getContent()))
-						sendMessage(getStringEz("RemovedGameSuccessMessage"),
-								getContent());
+						sendMessage(getStringEz("RemovedGameSuccessMessage",
+								getContent()));
 					else
-						new BotError(this,
-								getStringEz("RemoveErrorNoSuchGame"),
-								useThis(buildVCommand(GAME_LIST)));
+						new BotError(this, getStringEz("RemoveErrorNoSuchGame",
+								buildVCommand(GAME_LIST)));
 					
 				}
 				
@@ -176,7 +174,7 @@ public class GameInteractionCommand extends Command {
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage(getStringEz("RolledGameMessage"), gamepool.get(num));
+				sendMessage(getStringEz("RolledGameMessage", gamepool.get(num)));
 				
 			}
 			else{
@@ -185,8 +183,8 @@ public class GameInteractionCommand extends Command {
 					
 					num = ran.nextInt(gamepool.size());
 					
-					sendMessage(getStringEz("RolledMultipleGamesMessage"), i,
-							gamepool.get(num));
+					sendMessage(getStringEz("RolledMultipleGamesMessage", i,
+							gamepool.get(num)));
 					
 				}
 				
@@ -194,21 +192,18 @@ public class GameInteractionCommand extends Command {
 			
 		}
 		catch(NullPointerException e){
-			sendInfoMessage(getStringEz("RollErrorPoolEmpty"), false,
-					new Object[]
-					{
-						buildVCommand(GAME + " [game 1],[game 2],[...]")
-					});
+			sendInfoMessage(
+					getStringEz("RollErrorPoolEmpty", buildVCommand(GAME
+							+ " [game 1],[game 2],[...]")), false);
 		}
 		catch(IllegalArgumentException e){
-			sendInfoMessage(getStringEz("RollErrorUsageMessage"), false,
-					new Object[]
-					{
-						buildVCommand(GAME_ROLL),
-						buildVCommand(GAME_ROLL_ALT),
-						buildVCommand(GAME_ROLL + " [positive number]"),
-						buildVCommand(GAME_ROLL_ALT + " [positive number]")
-					});
+			sendInfoMessage(
+					getStringEz("RollErrorUsageMessage",
+							buildVCommand(GAME_ROLL),
+							buildVCommand(GAME_ROLL_ALT),
+							buildVCommand(GAME_ROLL + " [positive number]"),
+							buildVCommand(GAME_ROLL_ALT + " [positive number]")),
+					false);
 		}
 		
 	}
@@ -246,18 +241,17 @@ public class GameInteractionCommand extends Command {
 		
 		switch(commandType){
 		case INITIAL:
-			message = String.format(getStringEz("ErrorInitialUsage"),
-					buildVCommand(GAME + " [game 1],[game 2],[game 3],[...]"));
+			message = getStringEz("ErrorInitialUsage", buildVCommand(GAME
+					+ " [game 1],[game 2],[game 3],[...]"));
 			break;
 		case ADD:
-			message = String.format(getStringEz("ErrorAddUsage"),
-					buildVCommand(GAME_ADD + " [game name]"));
+			message = getStringEz("ErrorAddUsage", buildVCommand(GAME_ADD
+					+ " [game name]"));
 			break;
 		case REMOVE:
-			message = String.format(getStringEz("ErrorRemoveUsage"),
-					buildVCommand(GAME_REMOVE + " [game name]"),
-					buildVCommand(GAME_REMOVE + " " + Request.Parameter.PREFIX
-							+ "all"));
+			message = getStringEz("ErrorRemoveUsage", buildVCommand(GAME_REMOVE
+					+ " [game name]"), buildVCommand(GAME_REMOVE + " "
+					+ Request.Parameter.PREFIX + "all"));
 			break;
 		default:
 			message = getStringEz("ErrorUndefined");

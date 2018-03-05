@@ -7,15 +7,12 @@ import framework.specifics.Request;
 import framework.specifics.Request.Parameter;
 import ressources.*;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.managers.AudioManager;
 
-public abstract class Command implements Commands, Ressources, Emojis {
+public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	private Buffer buffer;
 	private MessageReceivedEvent event;
@@ -147,7 +144,15 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	}
 	
 	public String getStringEz(String shortKey){
-		return getDictionary().getString(getClass().getSimpleName() + shortKey);
+		return getString(getClass().getSimpleName() + shortKey);
+	}
+	
+	public String getString(String key, Object... replacements){
+		return getDictionary().getString(key, replacements);
+	}
+	
+	public String getStringEz(String shortKey, Object... replacements){
+		return getString(getClass().getSimpleName() + shortKey, replacements);
 	}
 	
 	public void setDictionary(Dictionary dictionary){
@@ -165,29 +170,16 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	}
 	
 	protected String sendMessage(String messageToSend){
-		return sendMessage(messageToSend, (Object[])null);
-	}
-	
-	protected String sendMessage(String messageToSend, Object... replacements){
-		return getTextContext()
-				.sendMessage(String.format(messageToSend, replacements))
-				.complete().getId();
+		return getTextContext().sendMessage(messageToSend).complete().getId();
 	}
 	
 	protected String sendPrivateMessage(String messageToSend){
-		return sendPrivateMessage(messageToSend, (Object[])null);
-	}
-	
-	protected String sendPrivateMessage(String messageToSend,
-			Object... replacements){
 		
 		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
 				.complete();
 		
-		if(getEvent().getAuthor().hasPrivateChannel()){
-			return channel
-					.sendMessage(String.format(messageToSend, replacements))
-					.complete().getId();
+		if(getUser().hasPrivateChannel()){
+			return channel.sendMessage(messageToSend).complete().getId();
 		}
 		else{
 			return sendMessage(getString("CommandUserHasNoPrivateChannel"));
@@ -196,11 +188,6 @@ public abstract class Command implements Commands, Ressources, Emojis {
 	}
 	
 	protected String createInfoMessage(String messageToSend, boolean isOneLiner){
-		return createInfoMessage(messageToSend, isOneLiner, (Object[])null);
-	}
-	
-	protected String createInfoMessage(String messageToSend,
-			boolean isOneLiner, Object... replacements){
 		
 		String infoChars = "\\~\\~";
 		
@@ -211,57 +198,28 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		else
 			separator = "\n";
 		
-		return infoChars + separator
-				+ String.format(messageToSend, replacements) + separator
-				+ infoChars;
+		return infoChars + separator + messageToSend + separator + infoChars;
 		
 	}
 	
 	protected String sendInfoMessage(String messageToSend, boolean isOneLiner){
-		return sendInfoMessage(messageToSend, isOneLiner, (Object[])null);
-	}
-	
-	protected String sendInfoMessage(String messageToSend, boolean isOneLiner,
-			Object... replacements){
-		return sendMessage(createInfoMessage(messageToSend, isOneLiner,
-				replacements));
+		return sendMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
 	protected String sendInfoMessage(String messageToSend){
-		return sendInfoMessage(messageToSend, (Object[])null);
+		return sendInfoMessage(messageToSend, true);
 	}
 	
-	protected String sendInfoMessage(String messageToSend,
-			Object... replacements){
-		return sendInfoMessage(messageToSend, true, replacements);
+	protected String sendInfoPrivateMessage(String messageToSend){
+		return sendInfoPrivateMessage(messageToSend, true);
 	}
 	
 	protected String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		return sendInfoPrivateMessage(messageToSend, isOneLiner, (Object[])null);
+		return sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend){
-		return sendInfoPrivateMessage(messageToSend, (Object[])null);
-	}
-	
-	protected String sendInfoPrivateMessage(String messageToSend,
-			Object... replacements){
-		return sendInfoPrivateMessage(messageToSend, true, replacements);
-	}
-	
-	protected String sendInfoPrivateMessage(String messageToSend,
-			boolean isOneLiner, Object... replacements){
-		return sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
-				replacements));
-	}
-	
-	protected String groupAndSendMessages(String[] messages){
-		return groupAndSendMessages(messages, (Object[])null);
-	}
-	
-	protected String groupAndSendMessages(String[] messages,
-			Object... replacements){
+	protected String groupAndSendMessages(String... messages){
 		
 		StringBuilder messageToSend = new StringBuilder();
 		
@@ -272,7 +230,7 @@ public abstract class Command implements Commands, Ressources, Emojis {
 			}
 		}
 		
-		return sendMessage(messageToSend.toString(), replacements);
+		return sendMessage(messageToSend.toString());
 		
 	}
 	
@@ -281,92 +239,12 @@ public abstract class Command implements Commands, Ressources, Emojis {
 				.toArray(new String[messages.size()]));
 	}
 	
-	protected String groupAndSendMessages(ArrayList<String> messages,
-			Object... replacements){
-		return groupAndSendMessages(
-				messages.toArray(new String[messages.size()]), replacements);
-	}
-	
 	protected void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
 	}
 	
-	public void connect(){
-		
-		VoiceChannel vc = null;
-		//		GuildManager gm = null;
-		
-		for(VoiceChannel channel : event.getGuild().getVoiceChannels()){
-			
-			vc = channel;
-			
-			for(Member usr : vc.getMembers()){
-				
-				if(usr.getEffectiveName().equals(event.getAuthor().getName())){
-					
-					//					gm = new GuildManager(event.getGuild());
-					
-					//					ChannelManager cm = vc.getManager();
-					
-					AudioManager man = event.getGuild().getAudioManager();
-					
-					man.openAudioConnection(vc);
-					break;
-					
-				}
-				
-			}
-			
-		}
-		
-	}
-	
-	public void disconnect(){
-		
-		String message = getString("CommandCannotDisconnectOrNotConnected");
-		
-		for(VoiceChannel channel : event.getGuild().getVoiceChannels()){
-			
-			for(Member usr : channel.getMembers()){
-				
-				if(usr.getEffectiveName().equals(BOT_NAME)){
-					
-					AudioManager man = event.getGuild().getAudioManager();
-					
-					man.closeAudioConnection();
-					
-					message = getString("CommandDisconnectDisconnected");
-					
-					break;
-					
-				}
-				
-			}
-			
-		}
-		
-		sendMessage(message);
-		
-	}
-	
-	/**
-	 * Method to go around the technicalities that emerges from creating methods
-	 * using varargs as parameters.<br>
-	 * You can use this to replace strings in
-	 * messages sent - for example :<br>
-	 * 
-	 * <pre>
-	 * new BotError(this, getStringEz(&quot;StringToSend&quot;), useThis(
-	 * 		buildVCommand(command1), buildVCommand(command2)));
-	 * </pre>
-	 * 
-	 * @param replacements
-	 *            Objects to replace the string with.
-	 * @return An object (<code>Object[]</code>) that is compliant to the
-	 *         general localisations methods.
-	 */
-	public static Object[] useThis(Object... replacements){
-		return replacements;
+	public String format(String stringToFormat, Object... replacements){
+		return Utils.format(stringToFormat, replacements);
 	}
 	
 }

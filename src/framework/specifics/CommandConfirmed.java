@@ -15,12 +15,13 @@ public abstract class CommandConfirmed extends Command implements Ressources {
 		}
 		catch(NullPointerException e){
 			
-			sendInfoMessage(getConfMessage() + "\n\n"
-					+ getString("CommandConfirmedCustomAndConfirmMessage"),
-					false, new Object[]
-					{
-						buildVCommand(CONFIRM), buildVCommand(CANCEL)
-					});
+			sendInfoMessage(
+					getConfMessage()
+							+ "\n\n"
+							+ getString(
+									"CommandConfirmedCustomAndConfirmMessage",
+									buildVCommand(CONFIRM),
+									buildVCommand(CANCEL)), false);
 			
 			getBuffer().push(this, BUFFER_CONFIRMATION);
 			

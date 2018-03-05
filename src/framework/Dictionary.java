@@ -4,6 +4,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import ressources.Utils;
+
 public class Dictionary {
 	
 	private String defaultLang = "en";
@@ -27,6 +29,10 @@ public class Dictionary {
 		locale = new Locale(lang, country);
 		this.resources = getLanguageResources(locale);
 		
+	}
+	
+	public String getString(String key, Object... replacements){
+		return Utils.format(this.getString(key), replacements);
 	}
 	
 	public String getString(String key){
