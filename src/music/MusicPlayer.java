@@ -7,6 +7,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 public class MusicPlayer {
 	
+	public final static int MAX_VOLUME = 20;
+	
 	private final AudioPlayer audioPlayer;
 	private final AudioListener listener;
 	private final Guild guild;
@@ -14,6 +16,9 @@ public class MusicPlayer {
 	public MusicPlayer(AudioPlayer audioPlayer, Guild guild){
 		this.audioPlayer = audioPlayer;
 		this.guild = guild;
+		
+		// Defaults volume to 75% of our maxed value (20) by default
+		this.audioPlayer.setVolume(15);
 		
 		listener = new AudioListener(this);
 		audioPlayer.addListener(listener);
@@ -23,12 +28,12 @@ public class MusicPlayer {
 		return this.audioPlayer;
 	}
 	
-	public Guild getGuild(){
-		return this.guild;
-	}
-	
 	public AudioListener getListener(){
 		return this.listener;
+	}
+	
+	public Guild getGuild(){
+		return this.guild;
 	}
 	
 	public AudioHandler getAudioHandler(){

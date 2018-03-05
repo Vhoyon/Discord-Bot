@@ -36,16 +36,25 @@
   </repositories>
   
   <dependencies>
+  
 	<dependency>
 	  <groupId>net.dv8tion</groupId>
 	  <artifactId>JDA</artifactId>
 	  <version>3.5.1_339</version>
 	</dependency>
+	
 	<dependency>
 	  <groupId>com.sedmelluq</groupId>
 	  <artifactId>lavaplayer</artifactId>
 	  <version>1.2.56</version>
 	</dependency>
+	
+	<dependency>
+	 <groupId>org.slf4j</groupId>
+	 <artifactId>slf4j-simple</artifactId>
+	 <version>1.7.25</version>
+	</dependency>
+	
   </dependencies>
   
 </project>

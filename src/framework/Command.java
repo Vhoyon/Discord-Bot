@@ -7,13 +7,10 @@ import framework.specifics.Request;
 import framework.specifics.Request.Parameter;
 import ressources.*;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.managers.AudioManager;
 
 public abstract class Command implements Commands, Ressources, Emojis {
 	
@@ -164,21 +161,21 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		return false;
 	}
 	
-	protected String sendMessage(String messageToSend){
+	public String sendMessage(String messageToSend){
 		return sendMessage(messageToSend, (Object[])null);
 	}
 	
-	protected String sendMessage(String messageToSend, Object... replacements){
+	public String sendMessage(String messageToSend, Object... replacements){
 		return getTextContext()
 				.sendMessage(String.format(messageToSend, replacements))
 				.complete().getId();
 	}
 	
-	protected String sendPrivateMessage(String messageToSend){
+	public String sendPrivateMessage(String messageToSend){
 		return sendPrivateMessage(messageToSend, (Object[])null);
 	}
 	
-	protected String sendPrivateMessage(String messageToSend,
+	public String sendPrivateMessage(String messageToSend,
 			Object... replacements){
 		
 		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
@@ -195,11 +192,11 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 	}
 	
-	protected String createInfoMessage(String messageToSend, boolean isOneLiner){
+	public String createInfoMessage(String messageToSend, boolean isOneLiner){
 		return createInfoMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
-	protected String createInfoMessage(String messageToSend,
+	public String createInfoMessage(String messageToSend,
 			boolean isOneLiner, Object... replacements){
 		
 		String infoChars = "\\~\\~";
@@ -217,50 +214,50 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 	}
 	
-	protected String sendInfoMessage(String messageToSend, boolean isOneLiner){
+	public String sendInfoMessage(String messageToSend, boolean isOneLiner){
 		return sendInfoMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
-	protected String sendInfoMessage(String messageToSend, boolean isOneLiner,
+	public String sendInfoMessage(String messageToSend, boolean isOneLiner,
 			Object... replacements){
 		return sendMessage(createInfoMessage(messageToSend, isOneLiner,
 				replacements));
 	}
 	
-	protected String sendInfoMessage(String messageToSend){
+	public String sendInfoMessage(String messageToSend){
 		return sendInfoMessage(messageToSend, (Object[])null);
 	}
 	
-	protected String sendInfoMessage(String messageToSend,
+	public String sendInfoMessage(String messageToSend,
 			Object... replacements){
 		return sendInfoMessage(messageToSend, true, replacements);
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend,
+	public String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
 		return sendInfoPrivateMessage(messageToSend, isOneLiner, (Object[])null);
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend){
+	public String sendInfoPrivateMessage(String messageToSend){
 		return sendInfoPrivateMessage(messageToSend, (Object[])null);
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend,
+	public String sendInfoPrivateMessage(String messageToSend,
 			Object... replacements){
 		return sendInfoPrivateMessage(messageToSend, true, replacements);
 	}
 	
-	protected String sendInfoPrivateMessage(String messageToSend,
+	public String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner, Object... replacements){
 		return sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner,
 				replacements));
 	}
 	
-	protected String groupAndSendMessages(String[] messages){
+	public String groupAndSendMessages(String[] messages){
 		return groupAndSendMessages(messages, (Object[])null);
 	}
 	
-	protected String groupAndSendMessages(String[] messages,
+	public String groupAndSendMessages(String[] messages,
 			Object... replacements){
 		
 		StringBuilder messageToSend = new StringBuilder();
@@ -276,77 +273,19 @@ public abstract class Command implements Commands, Ressources, Emojis {
 		
 	}
 	
-	protected String groupAndSendMessages(ArrayList<String> messages){
+	public String groupAndSendMessages(ArrayList<String> messages){
 		return groupAndSendMessages(messages
 				.toArray(new String[messages.size()]));
 	}
 	
-	protected String groupAndSendMessages(ArrayList<String> messages,
+	public String groupAndSendMessages(ArrayList<String> messages,
 			Object... replacements){
 		return groupAndSendMessages(
 				messages.toArray(new String[messages.size()]), replacements);
 	}
 	
-	protected void editMessage(String messageToEdit, String messageId){
+	public void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
-	}
-	
-	public void connect(){
-		
-		VoiceChannel vc = null;
-		//		GuildManager gm = null;
-		
-		for(VoiceChannel channel : event.getGuild().getVoiceChannels()){
-			
-			vc = channel;
-			
-			for(Member usr : vc.getMembers()){
-				
-				if(usr.getEffectiveName().equals(event.getAuthor().getName())){
-					
-					//					gm = new GuildManager(event.getGuild());
-					
-					//					ChannelManager cm = vc.getManager();
-					
-					AudioManager man = event.getGuild().getAudioManager();
-					
-					man.openAudioConnection(vc);
-					break;
-					
-				}
-				
-			}
-			
-		}
-		
-	}
-	
-	public void disconnect(){
-		
-		String message = getString("CommandCannotDisconnectOrNotConnected");
-		
-		for(VoiceChannel channel : event.getGuild().getVoiceChannels()){
-			
-			for(Member usr : channel.getMembers()){
-				
-				if(usr.getEffectiveName().equals(BOT_NAME)){
-					
-					AudioManager man = event.getGuild().getAudioManager();
-					
-					man.closeAudioConnection();
-					
-					message = getString("CommandDisconnectDisconnected");
-					
-					break;
-					
-				}
-				
-			}
-			
-		}
-		
-		sendMessage(message);
-		
 	}
 	
 	/**

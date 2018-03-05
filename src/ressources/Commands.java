@@ -39,5 +39,9 @@ public interface Commands {
 	String LANGUAGE = "language";
 	String LANG = "lang";
 	String TIMER = "timer";
+	String MUSIC_PLAY = "play";
+	String MUSIC_PAUSE = "pause";
+	String MUSIC_SKIP = "skip";
+	String MUSIC_VOLUME = "volume";
 	
 }

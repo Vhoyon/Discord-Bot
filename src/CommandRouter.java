@@ -253,23 +253,35 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		case HELP:
 			command = new CommandHelp();
 			break;
-		case CONNECT:
-			command = new Command(){
-				public void action(){
-					connect();
-				}
-			};
-			break;
-		case DISCONNECT:
-			command = new Command(){
-				public void action(){
-					disconnect();
-				}
-			};
-			break;
+		//		case CONNECT:
+		//			command = new Command(){
+		//				public void action(){
+		//					connect();
+		//				}
+		//			};
+		//			break;
+		//		case DISCONNECT:
+		//			command = new Command(){
+		//				public void action(){
+		//					disconnect();
+		//				}
+		//			};
+		//			break;
 		//			case "play":
 		//				audio.play();
 		//				break;
+		case MUSIC_PLAY:
+			command = new CommandMusic(CommandMusic.CommandType.PLAY);
+			break;
+//		case MUSIC_PAUSE:
+//			command = new CommandMusic(CommandMusic.CommandType.PAUSE);
+//			break;
+		case MUSIC_SKIP:
+			command = new CommandMusic(CommandMusic.CommandType.SKIP);
+			break;
+		case MUSIC_VOLUME:
+			command = new CommandMusic(CommandMusic.CommandType.VOLUME);
+			break;
 		case CLEAR:
 			command = new CommandClear();
 			break;
