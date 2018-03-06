@@ -44,8 +44,24 @@ public class MusicPlayer {
 		this.getListener().queue(track);
 	}
 	
-	public synchronized void skipTrack(){
-		this.getListener().nextTrack();
+	public synchronized void togglePause(){
+		this.setPause(!this.getAudioPlayer().isPaused());
+	}
+	
+	public synchronized void setPause(boolean isPaused){
+		this.getAudioPlayer().setPaused(isPaused);
+	}
+	
+	public synchronized boolean isPaused(){
+		return this.getAudioPlayer().isPaused();
+	}
+	
+	public synchronized boolean skipTrack(){
+		return this.getListener().nextTrack();
+	}
+	
+	public synchronized int getNumberOfTracks(){
+		return this.getListener().getTracks().size();
 	}
 	
 }

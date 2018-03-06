@@ -23,7 +23,7 @@ public class Dictionary {
 	
 	public void setLanguage(String lang, String country){
 		
-		if(System.getProperty("debug-mode") != null)
+		if(Utils.isDebugging())
 			ResourceBundle.clearCache();
 		
 		locale = new Locale(lang, country);
@@ -32,7 +32,7 @@ public class Dictionary {
 	}
 	
 	public String getString(String key, Object... replacements){
-		return Utils.format(this.getString(key), replacements);
+		return Utils.formatThis(this.getString(key), replacements);
 	}
 	
 	public String getString(String key){
@@ -50,7 +50,7 @@ public class Dictionary {
 		catch(MissingResourceException e){
 			string = getDefaultLanguageResources().getString(key);
 			
-			if(System.getProperty("debug-mode") != null)
+			if(Utils.isDebugging())
 				System.out
 						.println("Key \""
 								+ key

@@ -106,7 +106,7 @@ public abstract class AbstractBotError extends Command {
 	public void action(){
 		
 		String messageToSend = emoji + " ** "
-				+ Utils.format(errorMessage, replacements) + " **";
+				+ Utils.formatThis(errorMessage, replacements) + " **";
 		
 		sendErrorMessage(messageToSend);
 		

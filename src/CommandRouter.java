@@ -126,10 +126,16 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				command.action();
 				
 			}
-			catch(NullPointerException e){}
+			catch(NullPointerException e){
+				if(Utils.isDebugging())
+					e.printStackTrace();
+			}
 			
 		}
-		catch(NoCommandException e){}
+		catch(NoCommandException e){
+			if(Utils.isDebugging())
+				e.printStackTrace();
+		}
 		
 	}
 	
@@ -256,17 +262,19 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		case HELP:
 			command = new CommandHelp();
 			break;
-		//			case "play":
-		//				audio.play();
-		//				break;
 		case MUSIC_PLAY:
 			command = new CommandMusic(CommandMusic.CommandType.PLAY);
 			break;
-//		case MUSIC_PAUSE:
-//			command = new CommandMusic(CommandMusic.CommandType.PAUSE);
-//			break;
+		case MUSIC_PAUSE:
+			command = new CommandMusic(CommandMusic.CommandType.PAUSE);
+			break;
 		case MUSIC_SKIP:
 			command = new CommandMusic(CommandMusic.CommandType.SKIP);
+			break;
+		case MUSIC_SKIP_ALL1:
+		case MUSIC_SKIP_ALL2:
+		case MUSIC_SKIP_ALL3:
+			command = new CommandMusic(CommandMusic.CommandType.SKIP_ALL);
 			break;
 		case MUSIC_VOLUME:
 			command = new CommandMusic(CommandMusic.CommandType.VOLUME);

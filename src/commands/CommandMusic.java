@@ -4,13 +4,15 @@ import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
+import errorHandling.exceptions.BadContentException;
 import errorHandling.exceptions.BadParameterException;
 import framework.Command;
+import framework.specifics.CommandConfirmed;
 
 public class CommandMusic extends Command {
 	
 	public enum CommandType{
-		PLAY, PAUSE, SKIP, VOLUME
+		PLAY, PAUSE, SKIP, SKIP_ALL, VOLUME
 	}
 	
 	private CommandType commandType;
@@ -30,7 +32,10 @@ public class CommandMusic extends Command {
 			pause();
 			break;
 		case SKIP:
-			skip();
+			skipLogic(false);
+			break;
+		case SKIP_ALL:
+			skipLogic(true);
 			break;
 		case VOLUME:
 			volume();
@@ -47,7 +52,8 @@ public class CommandMusic extends Command {
 			return;
 		
 		if(!getGuild().getAudioManager().isConnected()
-				&& !getGuild().getAudioManager().isAttemptingToConnect()){
+				&& !getGuild().getAudioManager().isAttemptingToConnect()
+				&& getContent() != null){
 			
 			VoiceChannel voiceChannel = getGuild().getMember(getUser())
 					.getVoiceState().getChannel();
@@ -58,27 +64,161 @@ public class CommandMusic extends Command {
 			}
 			
 			getGuild().getAudioManager().openAudioConnection(voiceChannel);
+			
 		}
 		
-		MusicManager.get().loadTrack(this, getContent());
+		if(getContent() == null && !MusicManager.get().hasPlayer(getGuild())){
+			new BotError(this,
+					"Please enter the title or the link to your music after the command!");
+		}
+		else{
+			
+			if(getContent() != null){
+				MusicManager.get().loadTrack(this, getContent());
+			}
+			else{
+				
+				MusicPlayer player = MusicManager.get().getPlayer(getGuild());
+				
+				if(player.isPaused()){
+					player.setPause(false);
+					
+					sendMessage("Resuming where you left off!");
+				}
+				else{
+					new BotError(this,
+							"Please enter the title or the link to your music after the command!");
+				}
+				
+			}
+			
+		}
 		
 	}
 	
 	public void pause(){
-		// TODO : Implement pause() logic.
+		
+		if(getGuild() == null)
+			return;
+		
+		if(!getGuild().getAudioManager().isConnected()){
+			new BotError(this,
+					"You cannot pause the music when the bot is not playing any!");
+		}
+		else{
+			
+			MusicPlayer player = MusicManager.get().getPlayer(getGuild());
+			
+			if(player.isPaused()){
+				new BotError(this, "The bot is already paused!");
+			}
+			else{
+				player.setPause(true);
+				
+				sendInfoMessage("The music has been paused!");
+			}
+			
+		}
+		
 	}
 	
-	public void skip(){
+	private void skip(){
 		
-		if(!getGuild().getAudioManager().isConnected() && !getGuild().getAudioManager().isAttemptingToConnect()){
-			sendMessage(getStringEz("SkipNotPlaying"));
-			return;
-		}
 		MusicPlayer player = MusicManager.get().getPlayer(getGuild());
 		
-		player.skipTrack();
+		if(getContent() == null){
+			
+			if(player.skipTrack()){
+				sendInfoMessage(getStringEz("SkippedNowPlaying", player
+						.getAudioPlayer().getPlayingTrack().getInfo().title));
+			}
+			else{
+				sendInfoMessage("No more music to the queue!");
+				
+				MusicManager.get().emptyPlayer(this);
+			}
+			
+		}
+		else{
+			
+			try{
+				
+				int skipAmount = Integer.valueOf(getContent());
+				
+				if(skipAmount < 1){
+					throw new BadContentException();
+				}
+				else{
+					
+					if(skipAmount < player.getNumberOfTracks()){
+						
+						for(int i = 0; i < skipAmount; i++){
+							player.skipTrack();
+						}
+						
+						sendInfoMessage(getStringEz("SkippedNowPlaying",
+								player.getAudioPlayer().getPlayingTrack()
+										.getInfo().title));
+						
+					}
+					else{
+						
+						new CommandConfirmed(this){
+							@Override
+							public String getConfMessage(){
+								return "Are you sure about that? You are trying to skip all the tracks as you entered a number (`"
+										+ skipAmount
+										+ "`) higher than the remaining number of songs (`"
+										+ player.getNumberOfTracks()
+										+ "`) in the playlist.";
+							}
+							
+							@Override
+							public void confirmed(){
+								skipAll();
+							}
+						};
+						
+					}
+					
+				}
+				
+			}
+			catch(NumberFormatException e){
+				new BotError(this, getStringEz("VolumeNotANumber"));
+			}
+			catch(BadContentException e){
+				new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
+			}
+			
+		}
+		
+	}
 	
-		sendMessage(getStringEz("SkippedNowPlaying", player.getAudioPlayer().getPlayingTrack().getInfo().title));
+	private void skipAll(){
+		
+		MusicManager.get().emptyPlayer(this);
+		
+		sendInfoMessage(getStringEz("SkippedAllMusic"));
+		
+	}
+	
+	public void skipLogic(boolean skipAll){
+		
+		if(!getGuild().getAudioManager().isConnected()
+				&& !getGuild().getAudioManager().isAttemptingToConnect()){
+			new BotError(this, getStringEz("SkipNotPlaying"));
+			return;
+		}
+		
+		if(isParameterPresent("a", "all")){
+			skipAll = true;
+		}
+		
+		if(!skipAll)
+			skip();
+		else
+			skipAll();
 		
 	}
 	
@@ -95,7 +235,8 @@ public class CommandMusic extends Command {
 			}
 			else{
 				
-				MusicManager.get().getPlayer(getGuild()).getAudioPlayer().setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
+				MusicManager.get().getPlayer(getGuild()).getAudioPlayer()
+						.setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
 				
 				sendMessage(getStringEz("VolumeChangedSuccess", volume));
 				
@@ -105,8 +246,8 @@ public class CommandMusic extends Command {
 		catch(NumberFormatException e){
 			new BotError(this, getStringEz("VolumeNotANumber"));
 		}
-		catch (BadParameterException e) {
-			new BotError(this, getStringEz("VolumeNotANumber", 0, 100));
+		catch(BadParameterException e){
+			new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
 		}
 		
 	}

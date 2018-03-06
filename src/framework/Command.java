@@ -135,8 +135,16 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		return getRequest().isParameterPresent(parameter);
 	}
 	
+	public boolean isParameterPresent(Parameter... parameter){
+		return getRequest().isParameterPresent(parameter);
+	}
+	
 	public boolean isParameterPresent(String parameterName){
 		return getRequest().isParameterPresent(parameterName);
+	}
+	
+	public boolean isParameterPresent(String... parameterNames){
+		return getRequest().isParameterPresent(parameterNames);
 	}
 	
 	public String getString(String key){
@@ -241,10 +249,6 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	public void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
-	}
-	
-	public String format(String stringToFormat, Object... replacements){
-		return Utils.format(stringToFormat, replacements);
 	}
 	
 }

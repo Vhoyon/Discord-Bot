@@ -42,6 +42,9 @@ public interface Commands {
 	String MUSIC_PLAY = "play";
 	String MUSIC_PAUSE = "pause";
 	String MUSIC_SKIP = "skip";
+	String MUSIC_SKIP_ALL1 = "skip_all";
+	String MUSIC_SKIP_ALL2 = "skip-all";
+	String MUSIC_SKIP_ALL3 = "skipall";
 	String MUSIC_VOLUME = "volume";
 	
 }
