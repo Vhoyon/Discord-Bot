@@ -46,5 +46,6 @@ public interface Commands {
 	String MUSIC_SKIP_ALL2 = "skip-all";
 	String MUSIC_SKIP_ALL3 = "skipall";
 	String MUSIC_VOLUME = "volume";
+	String MUSIC_LIST = "list";
 	
 }

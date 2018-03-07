@@ -1,5 +1,7 @@
 package commands;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -12,7 +14,7 @@ import framework.specifics.CommandConfirmed;
 public class CommandMusic extends Command {
 	
 	public enum CommandType{
-		PLAY, PAUSE, SKIP, SKIP_ALL, VOLUME
+		PLAY, PAUSE, SKIP, SKIP_ALL, VOLUME, LIST
 	}
 	
 	private CommandType commandType;
@@ -40,6 +42,9 @@ public class CommandMusic extends Command {
 		case VOLUME:
 			volume();
 			break;
+		case LIST:
+			list();
+			break;
 		default:
 			break;
 		}
@@ -51,15 +56,13 @@ public class CommandMusic extends Command {
 		if(getGuild() == null)
 			return;
 		
-		if(!getGuild().getAudioManager().isConnected()
-				&& !getGuild().getAudioManager().isAttemptingToConnect()
-				&& getContent() != null){
+		if(!isPlaying() && getContent() != null){
 			
 			VoiceChannel voiceChannel = getGuild().getMember(getUser())
 					.getVoiceState().getChannel();
 			
 			if(voiceChannel == null){
-				sendMessage(getStringEz("PlayNotConnected"));
+				sendInfoMessage(getStringEz("PlayNotConnected"));
 				return;
 			}
 			
@@ -101,7 +104,7 @@ public class CommandMusic extends Command {
 		if(getGuild() == null)
 			return;
 		
-		if(!getGuild().getAudioManager().isConnected()){
+		if(!isPlaying()){
 			new BotError(this,
 					"You cannot pause the music when the bot is not playing any!");
 		}
@@ -128,14 +131,22 @@ public class CommandMusic extends Command {
 		
 		if(getContent() == null){
 			
-			if(player.skipTrack()){
-				sendInfoMessage(getStringEz("SkippedNowPlaying", player
-						.getAudioPlayer().getPlayingTrack().getInfo().title));
+			if(!isPlaying()){
+				new BotError(this,
+						"You cannot skip anything when the bot is not playing!");
 			}
 			else{
-				sendInfoMessage("No more music to the queue!");
 				
-				MusicManager.get().emptyPlayer(this);
+				if(player.skipTrack()){
+					sendInfoMessage(getStringEz("SkippedNowPlaying", player
+							.getAudioPlayer().getPlayingTrack().getInfo().title));
+				}
+				else{
+					sendInfoMessage("No more music to the queue!");
+					
+					MusicManager.get().emptyPlayer(this);
+				}
+				
 			}
 			
 		}
@@ -205,8 +216,7 @@ public class CommandMusic extends Command {
 	
 	public void skipLogic(boolean skipAll){
 		
-		if(!getGuild().getAudioManager().isConnected()
-				&& !getGuild().getAudioManager().isAttemptingToConnect()){
+		if(!isPlaying()){
 			new BotError(this, getStringEz("SkipNotPlaying"));
 			return;
 		}
@@ -250,6 +260,40 @@ public class CommandMusic extends Command {
 			new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
 		}
 		
+	}
+	
+	public void list(){
+		
+		if(!isPlaying()){
+			new BotError(this,
+					"The bot has no playlist right now. Add some with "
+							+ buildVCommand(MUSIC_PLAY + " [music]") + "!");
+		}
+		else{
+			
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("Here's the current playlist!\n\n");
+			
+			int i = 1;
+			
+			for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
+					.getListener().getTracks()){
+				
+				sb.append("Track number `" + i++ + "` : `"
+						+ track.getInfo().title + "`.\n");
+				
+			}
+			
+			sendMessage(sb.toString());
+			
+		}
+		
+	}
+	
+	private boolean isPlaying(){
+		return getGuild().getAudioManager().isConnected()
+				|| getGuild().getAudioManager().isAttemptingToConnect();
 	}
 	
 }
