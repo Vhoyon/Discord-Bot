@@ -23,7 +23,7 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event){
 		
-		String messageRecu = event.getMessage().getContent();
+		String messageRecu = event.getMessage().getContentRaw();
 		
 		// Bots doesn't need attention...
 		if(!event.getAuthor().isBot()){

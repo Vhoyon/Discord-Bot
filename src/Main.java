@@ -4,7 +4,6 @@ import vendor.Framework;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
  * 
@@ -46,7 +45,7 @@ public class Main {
 				
 			}
 			catch(LoginException | IllegalArgumentException
-					| InterruptedException | RateLimitedException e){
+					| InterruptedException e){
 				e.printStackTrace();
 			}
 			
