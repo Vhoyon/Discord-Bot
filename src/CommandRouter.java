@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class CommandRouter extends Thread implements Ressources, Commands,
-		Emojis {
+		Emojis, Utils {
 	
 	private MessageReceivedEvent event;
 	private Request request;
@@ -127,13 +127,13 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				
 			}
 			catch(NullPointerException e){
-				if(Utils.isDebugging())
+				if(isDebugging())
 					e.printStackTrace();
 			}
 			
 		}
 		catch(NoCommandException e){
-			if(Utils.isDebugging())
+			if(isDebugging())
 				e.printStackTrace();
 		}
 		

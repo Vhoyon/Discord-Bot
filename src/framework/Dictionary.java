@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 import ressources.Utils;
 
-public class Dictionary {
+public class Dictionary implements Utils {
 	
 	private String defaultLang = "en";
 	private String defaultCountry = "US";
@@ -23,7 +23,7 @@ public class Dictionary {
 	
 	public void setLanguage(String lang, String country){
 		
-		if(Utils.isDebugging())
+		if(isDebugging())
 			ResourceBundle.clearCache();
 		
 		locale = new Locale(lang, country);
@@ -32,7 +32,7 @@ public class Dictionary {
 	}
 	
 	public String getString(String key, Object... replacements){
-		return Utils.formatThis(this.getString(key), replacements);
+		return format(this.getString(key), replacements);
 	}
 	
 	public String getString(String key){
@@ -50,7 +50,7 @@ public class Dictionary {
 		catch(MissingResourceException e){
 			string = getDefaultLanguageResources().getString(key);
 			
-			if(Utils.isDebugging())
+			if(isDebugging())
 				System.out
 						.println("Key \""
 								+ key
