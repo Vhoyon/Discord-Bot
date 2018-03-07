@@ -28,10 +28,10 @@
   </build>
   
   <repositories>
-  	<repository>
-	  <id>central</id>
-	  <name>bintray</name>
-	  <url>http://jcenter.bintray.com</url>
+	<repository>
+	 <id>jcenter</id>
+	 <name>jcenter-bintray</name>
+	 <url>http://jcenter.bintray.com</url>
 	</repository>
   </repositories>
   
@@ -40,7 +40,7 @@
 	<dependency>
 	  <groupId>net.dv8tion</groupId>
 	  <artifactId>JDA</artifactId>
-	  <version>3.5.1_339</version>
+	  <version>3.5.1_345</version>
 	</dependency>
 	
 	<dependency>
