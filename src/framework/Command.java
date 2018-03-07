@@ -243,8 +243,4 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
 	}
 	
-	public String format(String stringToFormat, Object... replacements){
-		return Utils.format(stringToFormat, replacements);
-	}
-	
 }

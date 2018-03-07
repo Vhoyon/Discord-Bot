@@ -11,11 +11,6 @@ import languages.Language;
  */
 public interface Ressources {
 	
-	String BOT_NAME = "Bot";
-	
-	String TOKEN_DISCORD = "MzIxMTQ1NDI0NTQ5MzgwMDk3.DBZxmA.CyEXFP8cQEkV5Qn8X-PKLPY4EhM";
-	String TOKEN_YOUTUBE = "AIzaSyDfPTuiyimq09IK5umHfD4OY8OV5oya2mU";
-	
 	String PREFIX = "!!";
 	
 	String BUFFER_CONFIRMATION = "confirmation";

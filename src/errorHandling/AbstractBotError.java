@@ -1,6 +1,5 @@
 package errorHandling;
 
-import ressources.Utils;
 import framework.Command;
 
 public abstract class AbstractBotError extends Command {
@@ -106,7 +105,7 @@ public abstract class AbstractBotError extends Command {
 	public void action(){
 		
 		String messageToSend = emoji + " ** "
-				+ Utils.format(errorMessage, replacements) + " **";
+				+ format(errorMessage, replacements) + " **";
 		
 		sendErrorMessage(messageToSend);
 		
