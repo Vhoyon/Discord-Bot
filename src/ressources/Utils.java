@@ -23,7 +23,7 @@ public interface Utils {
 	public default boolean envBool(String key, Object defaultValue){
 		Object value = env(key, defaultValue);
 		
-		return ((Boolean)value).booleanValue();
+		return Boolean.valueOf((String)value).booleanValue();
 	}
 	
 	public default Object envBool(String key){
