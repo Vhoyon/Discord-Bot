@@ -9,25 +9,15 @@ public interface Utils {
 	}
 	
 	public default boolean isDebugging(){
-		return envBool("DEBUG", false);
+		return env("DEBUG", false);
 	}
 	
-	public default Object env(String key, Object defaultValue){
+	public default <EnvVar> EnvVar env(String key, Object defaultValue){
 		return Framework.getEnvVar(key, defaultValue);
 	}
 	
-	public default Object env(String key){
+	public default <EnvVar> EnvVar env(String key){
 		return env(key, null);
-	}
-	
-	public default boolean envBool(String key, Object defaultValue){
-		Object value = env(key, defaultValue);
-		
-		return Boolean.valueOf((String)value).booleanValue();
-	}
-	
-	public default Object envBool(String key){
-		return envBool(key, null);
 	}
 	
 }
