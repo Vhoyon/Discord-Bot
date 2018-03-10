@@ -22,17 +22,16 @@ public class Main {
 			
 			try{
 				
-				jda = new JDABuilder(AccountType.BOT).setToken(
-						(String)Framework.getEnvVar("BOT_TOKEN"))
+				String botToken = Framework.getEnvVar("BOT_TOKEN");
+				
+				jda = new JDABuilder(AccountType.BOT).setToken(botToken)
 						.buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
 				
-				boolean isDebug = Boolean.valueOf(
-						(String)Framework.getEnvVar("DEBUG")).booleanValue();
+				boolean isDebug = Framework.getEnvVar("DEBUG");
 				if(isDebug){
-					String clientId = (String)Framework.getEnvVar("CLIENT_ID",
-							null);
+					String clientId = Framework.getEnvVar("CLIENT_ID", null);
 					
 					if(clientId != null){
 						System.out

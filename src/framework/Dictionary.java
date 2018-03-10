@@ -81,7 +81,7 @@ public class Dictionary implements Utils {
 	}
 	
 	private ResourceBundle getLanguageResources(Locale locale){
-		return ResourceBundle.getBundle("languages.DiscordBot", locale);
+		return ResourceBundle.getBundle("lang.DiscordBot", locale);
 	}
 	
 	private ResourceBundle getDefaultLanguageResources(){
