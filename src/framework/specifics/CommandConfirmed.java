@@ -1,9 +1,16 @@
 package framework.specifics;
 
 import framework.Command;
-import ressources.Ressources;
 
-public abstract class CommandConfirmed extends Command implements Ressources {
+public abstract class CommandConfirmed extends Command {
+	
+	public CommandConfirmed(){}
+	
+	public CommandConfirmed(Command inceptionCommand){
+		super(inceptionCommand);
+		
+		action();
+	}
 	
 	public abstract String getConfMessage();
 	

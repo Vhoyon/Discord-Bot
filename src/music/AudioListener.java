@@ -25,26 +25,39 @@ public class AudioListener extends AudioEventAdapter {
 		return tracks.size();
 	}
 	
-	public void nextTrack(){
+	public boolean nextTrack(){
+		
 		if(tracks.isEmpty()){
+			
 			if(player.getGuild().getAudioManager().getConnectedChannel() != null){
 				player.getGuild().getAudioManager().closeAudioConnection();
 			}
-			return;
+			return false;
+			
 		}
-		player.getAudioPlayer().startTrack(tracks.poll(), false);
+		
+		return player.getAudioPlayer().startTrack(tracks.poll(), false);
+		
 	}
 	
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track,
 			AudioTrackEndReason endReason){
+		
 		if(endReason.mayStartNext)
 			nextTrack();
+		
 	}
 	
 	public void queue(AudioTrack track){
+		
 		if(!player.getAudioPlayer().startTrack(track, true))
 			tracks.offer(track);
+		
 	}
+	
+	public void purgeQueue() {
+        tracks.clear();
+    }
 	
 }

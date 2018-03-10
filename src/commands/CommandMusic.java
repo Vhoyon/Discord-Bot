@@ -1,16 +1,20 @@
 package commands;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
+import errorHandling.exceptions.BadContentException;
 import errorHandling.exceptions.BadParameterException;
 import framework.Command;
+import framework.specifics.CommandConfirmed;
 
 public class CommandMusic extends Command {
 	
 	public enum CommandType{
-		PLAY, PAUSE, SKIP, VOLUME
+		PLAY, PAUSE, SKIP, SKIP_ALL, VOLUME, LIST, DISCONNECT
 	}
 	
 	private CommandType commandType;
@@ -30,10 +34,19 @@ public class CommandMusic extends Command {
 			pause();
 			break;
 		case SKIP:
-			skip();
+			skipLogic(false);
+			break;
+		case SKIP_ALL:
+			skipLogic(true);
+			break;
+		case DISCONNECT:
+			disconnect();
 			break;
 		case VOLUME:
 			volume();
+			break;
+		case LIST:
+			list();
 			break;
 		default:
 			break;
@@ -46,39 +59,185 @@ public class CommandMusic extends Command {
 		if(getGuild() == null)
 			return;
 		
-		if(!getGuild().getAudioManager().isConnected()
-				&& !getGuild().getAudioManager().isAttemptingToConnect()){
+		if(!isPlaying() && getContent() != null){
 			
 			VoiceChannel voiceChannel = getGuild().getMember(getUser())
 					.getVoiceState().getChannel();
 			
 			if(voiceChannel == null){
-				sendMessage(getStringEz("PlayNotConnected"));
+				sendInfoMessage(getStringEz("PlayNotConnected"));
 				return;
 			}
 			
 			getGuild().getAudioManager().openAudioConnection(voiceChannel);
+			
 		}
 		
-		MusicManager.get().loadTrack(this, getContent());
+		if(getContent() == null && !MusicManager.get().hasPlayer(getGuild())){
+			new BotError(this, getStringEz("PlayNoContent"));
+		}
+		else{
+			
+			if(getContent() != null){
+				MusicManager.get().loadTrack(this, getContent());
+			}
+			else{
+				
+				MusicPlayer player = MusicManager.get().getPlayer(getGuild());
+				
+				if(player.isPaused()){
+					player.setPause(false);
+					
+					sendMessage(getStringEz("PlayResuming"));
+				}
+				else{
+					new BotError(this, getStringEz("PlayNoContent"));
+				}
+				
+			}
+			
+		}
 		
 	}
 	
 	public void pause(){
-		// TODO : Implement pause() logic.
+		
+		if(getGuild() == null)
+			return;
+		
+		if(!isPlaying()){
+			new BotError(this, getStringEz("SkipNotPlaying"));
+		}
+		else{
+			
+			MusicPlayer player = MusicManager.get().getPlayer(getGuild());
+			
+			if(player.isPaused()){
+				new BotError(this, getStringEz("PauseAlreadyPaused"));
+			}
+			else{
+				player.setPause(true);
+				
+				sendInfoMessage(getStringEz("PauseSuccess"));
+			}
+			
+		}
+		
 	}
 	
-	public void skip(){
+	private void skip(){
 		
-		if(!getGuild().getAudioManager().isConnected() && !getGuild().getAudioManager().isAttemptingToConnect()){
-			sendMessage(getStringEz("SkipNotPlaying"));
-			return;
-		}
 		MusicPlayer player = MusicManager.get().getPlayer(getGuild());
 		
-		player.skipTrack();
+		if(getContent() == null){
+			
+			if(!isPlaying()){
+				new BotError(this, getStringEz("SkipNotPlaying"));
+			}
+			else{
+				
+				if(player.skipTrack()){
+					sendInfoMessage(getStringEz("SkippedNowPlaying", player
+							.getAudioPlayer().getPlayingTrack().getInfo().title));
+				}
+				else{
+					sendInfoMessage(getStringEz("SkipNoMoreMusic"));
+					
+					MusicManager.get().emptyPlayer(this);
+				}
+				
+			}
+			
+		}
+		else{
+			
+			try{
+				
+				int skipAmount = Integer.valueOf(getContent());
+				
+				if(skipAmount < 1){
+					throw new BadContentException();
+				}
+				else{
+					
+					if(skipAmount < player.getNumberOfTracks()){
+						
+						for(int i = 0; i < skipAmount; i++){
+							player.skipTrack();
+						}
+						
+						sendInfoMessage(getStringEz("SkippedNowPlaying",
+								player.getAudioPlayer().getPlayingTrack()
+										.getInfo().title));
+						
+					}
+					else{
+						
+						new CommandConfirmed(this){
+							@Override
+							public String getConfMessage(){
+								return getStringEz("SkipOverflowConfirm",
+										skipAmount, player.getNumberOfTracks());
+							}
+							
+							@Override
+							public void confirmed(){
+								skipAll();
+							}
+						};
+						
+					}
+					
+				}
+				
+			}
+			catch(NumberFormatException e){
+				new BotError(this, getStringEz("VolumeNotANumber"));
+			}
+			catch(BadContentException e){
+				new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
+			}
+			
+		}
+		
+	}
 	
-		sendMessage(getStringEz("SkippedNowPlaying", player.getAudioPlayer().getPlayingTrack().getInfo().title));
+	private void skipAll(){
+		
+		MusicManager.get().emptyPlayer(this);
+		
+		sendInfoMessage(getStringEz("SkippedAllMusic"));
+		
+	}
+	
+	public void skipLogic(boolean skipAll){
+		
+		if(!isPlaying()){
+			new BotError(this, getStringEz("SkipNotPlaying"));
+			return;
+		}
+		
+		if(isParameterPresent("a", "all")){
+			skipAll = true;
+		}
+		
+		if(!skipAll)
+			skip();
+		else
+			skipAll();
+		
+	}
+	
+	public void disconnect(){
+		
+		if(!isPlaying()){
+			new BotError(this, getStringEz("DisconnectNotConnected"));
+			return;
+		}
+		
+		MusicManager.get().emptyPlayer(this);
+		
+		sendInfoMessage(getStringEz("DisconnectSuccess"));
 		
 	}
 	
@@ -95,7 +254,8 @@ public class CommandMusic extends Command {
 			}
 			else{
 				
-				MusicManager.get().getPlayer(getGuild()).getAudioPlayer().setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
+				MusicManager.get().getPlayer(getGuild()).getAudioPlayer()
+						.setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
 				
 				sendMessage(getStringEz("VolumeChangedSuccess", volume));
 				
@@ -105,10 +265,44 @@ public class CommandMusic extends Command {
 		catch(NumberFormatException e){
 			new BotError(this, getStringEz("VolumeNotANumber"));
 		}
-		catch (BadParameterException e) {
-			new BotError(this, getStringEz("VolumeNotANumber", 0, 100));
+		catch(BadParameterException e){
+			new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
 		}
 		
+	}
+	
+	public void list(){
+		
+		if(!isPlaying()){
+			new BotError(this, getStringEz("ListNoList",
+					buildVCommand(MUSIC_PLAY + " [music]")));
+		}
+		else{
+			
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(getStringEz("ListHeader")).append("\n\n");
+			
+			int i = 1;
+			
+			for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
+					.getListener().getTracks()){
+				
+				sb.append(
+						getStringEz("ListTrackInfo", i++, track.getInfo().title))
+						.append("\n");
+				
+			}
+			
+			sendMessage(sb.toString());
+			
+		}
+		
+	}
+	
+	private boolean isPlaying(){
+		return getGuild().getAudioManager().isConnected()
+				|| getGuild().getAudioManager().isAttemptingToConnect();
 	}
 	
 }

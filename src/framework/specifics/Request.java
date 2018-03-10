@@ -28,6 +28,12 @@ public class Request {
 				this.parameter = parameter;
 		}
 		
+		public Parameter(String paramName, String paramContent){
+			this(paramName);
+			
+			this.setParameterContent(paramContent);
+		}
+		
 		public String getParameter(){
 			return parameter.substring(PREFIX.length());
 		}
@@ -233,12 +239,47 @@ public class Request {
 		return error;
 	}
 	
+	public boolean isParameterPresent(Parameter... parameters){
+		
+		for(Parameter parameter : parameters)
+			if(this.isParameterPresent(parameter))
+				return true;
+		
+		return false;
+		
+	}
+	
 	public boolean isParameterPresent(Parameter parameter){
-		return parameters.contains(parameter);
+		try{
+			return this.getParameters().contains(parameter);
+		}
+		catch(NullPointerException e){
+			return false;
+		}
 	}
 	
 	public boolean isParameterPresent(String parameterName){
 		return isParameterPresent(new Parameter(parameterName));
+	}
+	
+	public boolean isParameterPresent(String... parameterNames){
+		
+		ArrayList<Parameter> params = new ArrayList<>();
+		
+		for(String paramName : parameterNames){
+			params.add(new Parameter(paramName));
+		}
+		
+		return isParameterPresent(params.toArray(new Parameter[0]));
+		
+	}
+	
+	public boolean addParameter(String paramName){
+		return this.getParameters().add(new Parameter(paramName));
+	}
+	
+	public boolean addParameter(String paramName, String paramContent){
+		return this.getParameters().add(new Parameter(paramName, paramContent));
 	}
 	
 	private String[] splitCommandAndContent(String command){
