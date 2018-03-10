@@ -80,8 +80,8 @@ public class MusicManager {
 			
 			@Override
 			public void trackLoaded(AudioTrack track){
-				command.sendMessage("`" + track.getInfo().title
-						+ "` has been added.");
+				command.sendMessage(command.getString(
+						"MusicManagerTrackLoaded", track.getInfo().title));
 				
 				player.playTrack(track);
 			}
@@ -91,14 +91,17 @@ public class MusicManager {
 				
 				StringBuilder builder = new StringBuilder();
 				
-				builder.append("Playlist `").append(playlist.getName())
-						.append("` has been added \n");
+				builder.append(
+						command.getString("MusicManagerPlaylistLoaded",
+								playlist.getName())).append("\n");
 				
 				for(int i = 0; i < playlist.getTracks().size(); i++){
 					AudioTrack track = playlist.getTracks().get(i);
 					
-					builder.append("\nAdded track `#" + (i + 1) + "` **->** ")
-							.append(track.getInfo().title + ".");
+					builder.append("\n").append(
+							command.getString(
+									"MusicManagerPlaylistAddedTrackInfo",
+									(i + 1), track.getInfo().title));
 					
 					player.playTrack(track);
 				}
@@ -109,14 +112,14 @@ public class MusicManager {
 			
 			@Override
 			public void noMatches(){
-				command.sendMessage("The song `" + source
-						+ "` has not been found.");
+				command.sendMessage(command.getString("MusicManagerNoMatch",
+						source));
 			}
 			
 			@Override
 			public void loadFailed(FriendlyException exeption){
-				command.sendMessage("Cannot load the song : `"
-						+ exeption.getMessage() + "`.");
+				command.sendMessage(command.getString("MusicManagerLoadFailed",
+						exeption.getMessage()));
 			}
 			
 		});

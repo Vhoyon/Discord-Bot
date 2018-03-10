@@ -21,8 +21,6 @@ public interface Commands {
 	
 	String HELLO = "hello";
 	String HELP = "help";
-	String CONNECT = "connect";
-	String DISCONNECT = "disconnect";
 	String CLEAR = "clear";
 	String SPAM = "spam";
 	String STOP = "stop";
@@ -47,5 +45,6 @@ public interface Commands {
 	String MUSIC_SKIP_ALL3 = "skipall";
 	String MUSIC_VOLUME = "volume";
 	String MUSIC_LIST = "list";
+	String MUSIC_DISCONNECT = "disconnect";
 	
 }

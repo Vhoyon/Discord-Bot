@@ -14,7 +14,7 @@ import framework.specifics.CommandConfirmed;
 public class CommandMusic extends Command {
 	
 	public enum CommandType{
-		PLAY, PAUSE, SKIP, SKIP_ALL, VOLUME, LIST
+		PLAY, PAUSE, SKIP, SKIP_ALL, VOLUME, LIST, DISCONNECT
 	}
 	
 	private CommandType commandType;
@@ -38,6 +38,9 @@ public class CommandMusic extends Command {
 			break;
 		case SKIP_ALL:
 			skipLogic(true);
+			break;
+		case DISCONNECT:
+			disconnect();
 			break;
 		case VOLUME:
 			volume();
@@ -71,8 +74,7 @@ public class CommandMusic extends Command {
 		}
 		
 		if(getContent() == null && !MusicManager.get().hasPlayer(getGuild())){
-			new BotError(this,
-					"Please enter the title or the link to your music after the command!");
+			new BotError(this, getStringEz("PlayNoContent"));
 		}
 		else{
 			
@@ -86,11 +88,10 @@ public class CommandMusic extends Command {
 				if(player.isPaused()){
 					player.setPause(false);
 					
-					sendMessage("Resuming where you left off!");
+					sendMessage(getStringEz("PlayResuming"));
 				}
 				else{
-					new BotError(this,
-							"Please enter the title or the link to your music after the command!");
+					new BotError(this, getStringEz("PlayNoContent"));
 				}
 				
 			}
@@ -105,20 +106,19 @@ public class CommandMusic extends Command {
 			return;
 		
 		if(!isPlaying()){
-			new BotError(this,
-					"You cannot pause the music when the bot is not playing any!");
+			new BotError(this, getStringEz("SkipNotPlaying"));
 		}
 		else{
 			
 			MusicPlayer player = MusicManager.get().getPlayer(getGuild());
 			
 			if(player.isPaused()){
-				new BotError(this, "The bot is already paused!");
+				new BotError(this, getStringEz("PauseAlreadyPaused"));
 			}
 			else{
 				player.setPause(true);
 				
-				sendInfoMessage("The music has been paused!");
+				sendInfoMessage(getStringEz("PauseSuccess"));
 			}
 			
 		}
@@ -132,8 +132,7 @@ public class CommandMusic extends Command {
 		if(getContent() == null){
 			
 			if(!isPlaying()){
-				new BotError(this,
-						"You cannot skip anything when the bot is not playing!");
+				new BotError(this, getStringEz("SkipNotPlaying"));
 			}
 			else{
 				
@@ -142,7 +141,7 @@ public class CommandMusic extends Command {
 							.getAudioPlayer().getPlayingTrack().getInfo().title));
 				}
 				else{
-					sendInfoMessage("No more music to the queue!");
+					sendInfoMessage(getStringEz("SkipNoMoreMusic"));
 					
 					MusicManager.get().emptyPlayer(this);
 				}
@@ -177,11 +176,8 @@ public class CommandMusic extends Command {
 						new CommandConfirmed(this){
 							@Override
 							public String getConfMessage(){
-								return "Are you sure about that? You are trying to skip all the tracks as you entered a number (`"
-										+ skipAmount
-										+ "`) higher than the remaining number of songs (`"
-										+ player.getNumberOfTracks()
-										+ "`) in the playlist.";
+								return getStringEz("SkipOverflowConfirm",
+										skipAmount, player.getNumberOfTracks());
 							}
 							
 							@Override
@@ -232,6 +228,19 @@ public class CommandMusic extends Command {
 		
 	}
 	
+	public void disconnect(){
+		
+		if(!isPlaying()){
+			new BotError(this, getStringEz("DisconnectNotConnected"));
+			return;
+		}
+		
+		MusicManager.get().emptyPlayer(this);
+		
+		sendInfoMessage(getStringEz("DisconnectSuccess"));
+		
+	}
+	
 	public void volume(){
 		
 		String content = getContent();
@@ -265,23 +274,23 @@ public class CommandMusic extends Command {
 	public void list(){
 		
 		if(!isPlaying()){
-			new BotError(this,
-					"The bot has no playlist right now. Add some with "
-							+ buildVCommand(MUSIC_PLAY + " [music]") + "!");
+			new BotError(this, getStringEz("ListNoList",
+					buildVCommand(MUSIC_PLAY + " [music]")));
 		}
 		else{
 			
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append("Here's the current playlist!\n\n");
+			sb.append(getStringEz("ListHeader")).append("\n\n");
 			
 			int i = 1;
 			
 			for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
 					.getListener().getTracks()){
 				
-				sb.append("Track number `" + i++ + "` : `"
-						+ track.getInfo().title + "`.\n");
+				sb.append(
+						getStringEz("ListTrackInfo", i++, track.getInfo().title))
+						.append("\n");
 				
 			}
 			
