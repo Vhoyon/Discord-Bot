@@ -1,6 +1,7 @@
 import javax.security.auth.login.LoginException;
 
 import vendor.Framework;
+import vendor.modules.Environment;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -22,16 +23,16 @@ public class Main {
 			
 			try{
 				
-				String botToken = Framework.getEnvVar("BOT_TOKEN");
+				String botToken = Environment.getEnvVar("BOT_TOKEN");
 				
 				jda = new JDABuilder(AccountType.BOT).setToken(botToken)
 						.buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
 				
-				boolean isDebug = Framework.getEnvVar("DEBUG");
+				boolean isDebug = Environment.getEnvVar("DEBUG");
 				if(isDebug){
-					String clientId = Framework.getEnvVar("CLIENT_ID", null);
+					String clientId = Environment.getEnvVar("CLIENT_ID", null);
 					
 					if(clientId != null){
 						System.out

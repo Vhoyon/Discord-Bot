@@ -1,4 +1,4 @@
-package vendor;
+package vendor.modules;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -8,60 +8,15 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import vendor.Framework;
+import abstracts.FrameworkModule;
 import errorHandling.exceptions.BadFileContentException;
 
-public abstract class Framework {
+public class Environment extends FrameworkModule {
 	
 	private static HashMap<String, String> envVars;
 	
-	public static <EnvVar> EnvVar getEnvVar(String key){
-		return getEnvVar(key, null);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <EnvVar> EnvVar getEnvVar(String key, Object defaultValue){
-		String value = envVars.get(key.toLowerCase());
-		
-		if(value == null || value.equals("")){
-			return (EnvVar)defaultValue;
-		}
-		
-		if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")){
-			return (EnvVar)Boolean.valueOf(value);
-		}
-		else if(value.matches("^[0-9]+$")){
-			
-			try{
-				Integer number = Integer.valueOf(value);
-				
-				return (EnvVar)number;
-			}
-			catch(NumberFormatException e){}
-			
-		}
-		else if(value.matches("^[0-9]+(\\.[0-9]+)?$")){
-			
-			try{
-				Double number = Double.valueOf(value);
-				
-				return (EnvVar)number;
-			}
-			catch(NumberFormatException e){}
-			
-		}
-		
-		return (EnvVar)(String)value;
-	}
-	
-	private Framework(){}
-	
-	public static void build() throws Exception{
-		
-		buildEnvironment();
-		
-	}
-	
-	private static void buildEnvironment() throws Exception{
+	public void build() throws Exception{
 		
 		try{
 			
@@ -111,6 +66,45 @@ public abstract class Framework {
 					"The environment file \".env\" was not found or is unavailable at this time.");
 		}
 		
+	}
+	
+	public static <EnvVar> EnvVar getEnvVar(String key){
+		return getEnvVar(key, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <EnvVar> EnvVar getEnvVar(String key, Object defaultValue){
+		String value = envVars.get(key.toLowerCase());
+		
+		if(value == null || value.equals("")){
+			return (EnvVar)defaultValue;
+		}
+		
+		if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")){
+			return (EnvVar)Boolean.valueOf(value);
+		}
+		else if(value.matches("^[0-9]+$")){
+			
+			try{
+				Integer number = Integer.valueOf(value);
+				
+				return (EnvVar)number;
+			}
+			catch(NumberFormatException e){}
+			
+		}
+		else if(value.matches("^[0-9]+(\\.[0-9]+)?$")){
+			
+			try{
+				Double number = Double.valueOf(value);
+				
+				return (EnvVar)number;
+			}
+			catch(NumberFormatException e){}
+			
+		}
+		
+		return (EnvVar)(String)value;
 	}
 	
 }

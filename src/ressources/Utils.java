@@ -1,6 +1,6 @@
 package ressources;
 
-import vendor.Framework;
+import vendor.modules.Environment;
 
 public interface Utils {
 	
@@ -13,7 +13,7 @@ public interface Utils {
 	}
 	
 	public default <EnvVar> EnvVar env(String key, Object defaultValue){
-		return Framework.getEnvVar(key, defaultValue);
+		return Environment.getEnvVar(key, defaultValue);
 	}
 	
 	public default <EnvVar> EnvVar env(String key){
