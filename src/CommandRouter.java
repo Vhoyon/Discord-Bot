@@ -58,84 +58,88 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	@Override
 	public void run(){
 		
-		try{
-			
-			String commandGuildID = null;
-			
-			if((command = validateMessage()) == null){
+		if(request.getCommandNoFormat().startsWith(PREFIX))
+			try{
 				
-				commandGuildID = event.getGuild().getId();
+				String commandGuildID = null;
 				
-				this.setName(request.getCommand() + commandGuildID);
-				
-				buffer.setLatestGuildID(commandGuildID);
-				
-				boolean confirmationConfirmed = false;
+				if((command = validateMessage()) == null){
+					
+					commandGuildID = event.getGuild().getId();
+					
+					this.setName(request.getCommand() + commandGuildID);
+					
+					buffer.setLatestGuildID(commandGuildID);
+					
+					boolean confirmationConfirmed = false;
+					
+					try{
+						
+						Object needsConfirmation = buffer
+								.get(BUFFER_CONFIRMATION);
+						
+						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
+						if(request.getCommand().equals(CONFIRM)){
+							confirmationObject.confirmed();
+							confirmationConfirmed = true;
+						}
+						else{
+							
+							confirmationObject.cancelled();
+							
+							if(request.getCommand().equals(CANCEL))
+								confirmationConfirmed = true;
+							
+						}
+						
+						buffer.remove(BUFFER_CONFIRMATION);
+						
+					}
+					catch(NullPointerException e){}
+					
+					if((command = request.getErrorMessage()) != null){
+						command.setContext(event);
+						command.action();
+						command = null;
+					}
+					
+					if(!confirmationConfirmed){
+						
+						if(isCommandRunning(request.getCommand(),
+								commandGuildID)){
+							command = new BotError(getString(
+									"CommandIsRunningError",
+									request.getCommand()));
+						}
+						else{
+							command = buildCommandFromName(
+									request.getCommand(), commandGuildID);
+						}
+						
+					}
+					
+				}
 				
 				try{
 					
-					Object needsConfirmation = buffer.get(BUFFER_CONFIRMATION);
-					
-					CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
-					if(request.getCommand().equals(CONFIRM)){
-						confirmationObject.confirmed();
-						confirmationConfirmed = true;
-					}
-					else{
-						
-						confirmationObject.cancelled();
-						
-						if(request.getCommand().equals(CANCEL))
-							confirmationConfirmed = true;
-						
-					}
-					
-					buffer.remove(BUFFER_CONFIRMATION);
-					
-				}
-				catch(NullPointerException e){}
-				
-				if((command = request.getErrorMessage()) != null){
 					command.setContext(event);
+					command.setBuffer(buffer);
+					command.setRequest(request);
+					command.setDictionary(dict);
+					
 					command.action();
-					command = null;
+					
 				}
-				
-				if(!confirmationConfirmed){
-					
-					if(isCommandRunning(request.getCommand(), commandGuildID)){
-						command = new BotError(getString(
-								"CommandIsRunningError", request.getCommand()));
-					}
-					else{
-						command = buildCommandFromName(request.getCommand(),
-								commandGuildID);
-					}
-					
+				catch(NullPointerException e){
+					if(isDebugging())
+						e.printStackTrace();
 				}
 				
 			}
-			
-			try{
-				
-				command.setContext(event);
-				command.setBuffer(buffer);
-				command.setRequest(request);
-				command.setDictionary(dict);
-				
-				command.action();
-				
-			}
-			catch(NullPointerException e){
+			catch(NoCommandException e){
 				if(isDebugging())
 					e.printStackTrace();
 			}
-			
-		}
-		catch(NoCommandException e){
-			if(isDebugging())
-				e.printStackTrace();
-		}
 		
 	}
 	
