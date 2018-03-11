@@ -23,16 +23,16 @@ public class Main {
 			
 			try{
 				
-				String botToken = Environment.getEnvVar("BOT_TOKEN");
+				String botToken = Environment.getVar("BOT_TOKEN");
 				
 				jda = new JDABuilder(AccountType.BOT).setToken(botToken)
 						.buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
 				
-				boolean isDebug = Environment.getEnvVar("DEBUG");
+				boolean isDebug = Environment.getVar("DEBUG");
 				if(isDebug){
-					String clientId = Environment.getEnvVar("CLIENT_ID", null);
+					String clientId = Environment.getVar("CLIENT_ID", null);
 					
 					if(clientId != null){
 						System.out

@@ -13,7 +13,7 @@ public interface Utils {
 	}
 	
 	public default <EnvVar> EnvVar env(String key, Object defaultValue){
-		return Environment.getEnvVar(key, defaultValue);
+		return Environment.getVar(key, defaultValue);
 	}
 	
 	public default <EnvVar> EnvVar env(String key){

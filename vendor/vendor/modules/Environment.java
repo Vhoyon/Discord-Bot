@@ -68,12 +68,12 @@ public class Environment extends FrameworkModule {
 		
 	}
 	
-	public static <EnvVar> EnvVar getEnvVar(String key){
-		return getEnvVar(key, null);
+	public static <EnvVar> EnvVar getVar(String key){
+		return getVar(key, null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <EnvVar> EnvVar getEnvVar(String key, Object defaultValue){
+	public static <EnvVar> EnvVar getVar(String key, Object defaultValue){
 		String value = envVars.get(key.toLowerCase());
 		
 		if(value == null || value.equals("")){
