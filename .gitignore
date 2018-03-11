@@ -2,3 +2,6 @@
 /target/
 
 /res/.env
+Bot.iml
+/.idea/
+DiscordBot.iml
