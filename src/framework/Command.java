@@ -6,6 +6,7 @@ import errorHandling.exceptions.*;
 import framework.specifics.Request;
 import framework.specifics.Request.Parameter;
 import ressources.*;
+import vendor.modules.Logger;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -249,6 +250,10 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	public void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
+	}
+	
+	public void log(String message){
+		Logger.log(message);
 	}
 	
 }
