@@ -160,7 +160,7 @@ public class CommandMusic extends Command {
 				}
 				else{
 					
-					if(skipAmount < player.getNumberOfTracks()){
+					if(skipAmount <= player.getNumberOfTracks()){
 						
 						for(int i = 0; i < skipAmount; i++){
 							player.skipTrack();
@@ -176,7 +176,8 @@ public class CommandMusic extends Command {
 						new CommandConfirmed(this){
 							@Override
 							public String getConfMessage(){
-								return getStringEz("SkipOverflowConfirm",
+								return getString(
+										"CommandMusicSkipOverflowConfirm",
 										skipAmount, player.getNumberOfTracks());
 							}
 							
