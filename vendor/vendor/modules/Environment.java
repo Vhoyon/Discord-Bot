@@ -9,10 +9,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import vendor.Framework;
-import abstracts.FrameworkModule;
+import abstracts.Module;
 import errorHandling.exceptions.BadFileContentException;
 
-public class Environment extends FrameworkModule {
+public class Environment extends Module {
 	
 	private static HashMap<String, String> envVars;
 	

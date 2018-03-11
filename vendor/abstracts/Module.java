@@ -1,6 +1,6 @@
 package abstracts;
 
-public abstract class FrameworkModule {
+public abstract class Module {
 	
 	public abstract void build() throws Exception;
 	

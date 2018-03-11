@@ -1,6 +1,6 @@
 package vendor;
 
-import abstracts.FrameworkModule;
+import abstracts.Module;
 
 public class Framework {
 	
@@ -23,9 +23,9 @@ public class Framework {
 				Class<?> moduleClass = Class.forName("vendor.modules."
 						+ formattedModuleName);
 				
-				if(FrameworkModule.class.equals(moduleClass.getSuperclass())){
+				if(Module.class.equals(moduleClass.getSuperclass())){
 					
-					FrameworkModule module = (FrameworkModule)moduleClass
+					Module module = (Module)moduleClass
 							.newInstance();
 					
 					try{
@@ -42,7 +42,7 @@ public class Framework {
 			}
 			catch(ClassNotFoundException | InstantiationException
 					| IllegalAccessException e){
-				errors.append(e.getMessage() + "\n");
+				errors.append("Module \"" + e.getMessage() + "\" not found." + "\n");
 			}
 			
 		}
