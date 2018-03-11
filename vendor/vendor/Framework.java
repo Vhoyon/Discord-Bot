@@ -8,7 +8,8 @@ public class Framework {
 	
 	private static String[] modules =
 	{
-		"Environment"
+		"Environment",
+		"Logger"
 	};
 	
 	public static void build() throws Exception{

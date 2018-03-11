@@ -5,6 +5,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import ressources.Utils;
+import vendor.modules.Logger;
 
 public class Dictionary implements Utils {
 	
@@ -51,8 +52,7 @@ public class Dictionary implements Utils {
 			string = getDefaultLanguageResources().getString(key);
 			
 			if(isDebugging())
-				System.out
-						.println("Key \""
+				Logger.log("Key \""
 								+ key
 								+ "\" is missing in the resource file for the language \""
 								+ locale.getLanguage() + "_"
@@ -63,8 +63,7 @@ public class Dictionary implements Utils {
 			string = getDefaultLanguageResources().getString(key);
 			
 			if(System.getProperty("debug-mode") != null)
-				System.out
-						.println("Key \""
+				Logger.log("Key \""
 								+ key
 								+ "\" is empty in the resource file for the language \""
 								+ locale.getLanguage() + "_"

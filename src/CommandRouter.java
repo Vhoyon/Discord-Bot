@@ -1,6 +1,7 @@
 import java.util.Set;
 
 import ressources.*;
+import vendor.modules.Logger;
 import commands.*;
 import commands.GameInteractionCommand.CommandType;
 import errorHandling.*;
@@ -53,6 +54,14 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	
 	public String getString(String key, Object... replacements){
 		return dict.getString(key, replacements);
+	}
+	
+	public void log(String message){
+		Logger.log(message);
+	}
+	
+	public void log(String message, boolean appendDate){
+		Logger.log(message, appendDate);
 	}
 	
 	@Override
@@ -132,13 +141,13 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				}
 				catch(NullPointerException e){
 					if(isDebugging())
-						e.printStackTrace();
+						log(e.getMessage());
 				}
 				
 			}
 			catch(NoCommandException e){
 				if(isDebugging())
-					e.printStackTrace();
+					log(e.getMessage());
 			}
 		
 	}
