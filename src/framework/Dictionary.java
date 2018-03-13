@@ -5,7 +5,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import ressources.Utils;
-import vendor.modules.Logger;
+import modules.Logger;
 
 public class Dictionary implements Utils {
 	

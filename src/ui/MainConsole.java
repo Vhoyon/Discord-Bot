@@ -15,8 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-import vendor.modules.Environment;
-import vendor.modules.Logger;
+import modules.Environment;
+import modules.Logger;
 
 public abstract class MainConsole extends JFrame {
 	
@@ -40,8 +40,8 @@ public abstract class MainConsole extends JFrame {
 				super.windowClosing(e);
 			}
 		});
-		
-		setSize(500, 600);
+
+		setSize(500, 300);
 		setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -95,8 +95,8 @@ public abstract class MainConsole extends JFrame {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.ipady = 50;
-		c.gridx = 0;
-		c.gridy = 1;
+		c.gridx = 2;
+		c.gridy = 4;
 		
 		panel.add(actionButton, c);
 		
@@ -109,11 +109,12 @@ public abstract class MainConsole extends JFrame {
 		
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
-		c.gridy = 2;
-		c.gridheight = 4;
+		c.gridy = 1;
+		c.gridheight = 3;
+		c.gridwidth =4;
 		
 		panel.add(pane, c);
-		
+
 		add(panel);
 		
 		setVisible(true);

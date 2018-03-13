@@ -1,7 +1,7 @@
 import java.util.Set;
 
 import ressources.*;
-import vendor.modules.Logger;
+import modules.Logger;
 import commands.*;
 import commands.GameInteractionCommand.CommandType;
 import errorHandling.*;

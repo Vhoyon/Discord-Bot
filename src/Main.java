@@ -2,8 +2,8 @@ import javax.security.auth.login.LoginException;
 
 import ui.MainConsole;
 import vendor.Framework;
-import vendor.modules.Environment;
-import vendor.modules.Logger;
+import modules.Environment;
+import modules.Logger;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;

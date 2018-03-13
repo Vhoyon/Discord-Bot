@@ -21,7 +21,7 @@ public class Framework {
 			try{
 				String formattedModuleName = moduleName.replaceAll("/", ".");
 				
-				Class<?> moduleClass = Class.forName("vendor.modules."
+				Class<?> moduleClass = Class.forName("modules."
 						+ formattedModuleName);
 				
 				if(Module.class.equals(moduleClass.getSuperclass())){

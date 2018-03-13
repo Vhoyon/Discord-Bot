@@ -1,4 +1,4 @@
-package vendor.modules;
+package modules;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

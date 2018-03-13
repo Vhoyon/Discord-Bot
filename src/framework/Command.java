@@ -6,7 +6,7 @@ import errorHandling.exceptions.*;
 import framework.specifics.Request;
 import framework.specifics.Request.Parameter;
 import ressources.*;
-import vendor.modules.Logger;
+import modules.Logger;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;

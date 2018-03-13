@@ -1,6 +1,6 @@
 package ressources;
 
-import vendor.modules.Environment;
+import modules.Environment;
 
 public interface Utils {
 	
