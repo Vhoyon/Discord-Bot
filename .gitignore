@@ -2,6 +2,9 @@
 /target/
 
 /res/.env
-Bot.iml
+
+/.vscode/
 /.idea/
+
+Bot.iml
 DiscordBot.iml
