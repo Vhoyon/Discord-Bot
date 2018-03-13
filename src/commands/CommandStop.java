@@ -1,7 +1,7 @@
 package commands;
 
+import utilities.Command;
 import errorHandling.BotError;
-import framework.Command;
 
 public class CommandStop extends Command {
 	

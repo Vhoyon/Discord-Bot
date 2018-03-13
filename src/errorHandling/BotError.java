@@ -1,6 +1,6 @@
 package errorHandling;
 
-import framework.Command;
+import utilities.Command;
 
 public class BotError extends AbstractBotError {
 	

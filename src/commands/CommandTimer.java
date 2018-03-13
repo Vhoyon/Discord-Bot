@@ -1,7 +1,7 @@
 package commands;
 
+import utilities.Command;
 import errorHandling.exceptions.NoParameterContentException;
-import framework.Command;
 
 public class CommandTimer extends Command {
 	

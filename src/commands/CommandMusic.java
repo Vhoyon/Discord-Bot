@@ -1,15 +1,16 @@
 package commands;
 
+import utilities.Command;
+import utilities.music.MusicManager;
+import utilities.music.MusicPlayer;
+import utilities.specifics.CommandConfirmed;
+
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import music.MusicManager;
-import music.MusicPlayer;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
 import errorHandling.exceptions.BadContentException;
 import errorHandling.exceptions.BadParameterException;
-import framework.Command;
-import framework.specifics.CommandConfirmed;
 
 public class CommandMusic extends Command {
 	

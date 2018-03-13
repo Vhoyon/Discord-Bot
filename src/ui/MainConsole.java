@@ -15,8 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-import modules.Environment;
-import modules.Logger;
+import vendor.modules.Environment;
+import vendor.modules.Logger;
 
 public abstract class MainConsole extends JFrame {
 	

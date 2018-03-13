@@ -1,9 +1,9 @@
 package commands;
 
-import languages.Language;
+import utilities.Command;
+import utilities.Dictionary;
+import utilities.Language;
 import errorHandling.BotError;
-import framework.Command;
-import framework.Dictionary;
 
 public class CommandLanguage extends Command {
 	

@@ -1,6 +1,6 @@
 package commands;
 
-import framework.Command;
+import utilities.Command;
 
 /**
  * 

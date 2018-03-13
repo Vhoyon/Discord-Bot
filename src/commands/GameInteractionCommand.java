@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import errorHandling.BotError;
-import framework.Command;
-import framework.specifics.GamePool;
-import framework.specifics.Request;
-import ressources.Ressources;
+import utilities.Command;
+import utilities.interfaces.Ressources;
+import utilities.specifics.GamePool;
+import utilities.specifics.Request;
 
 public class GameInteractionCommand extends Command {
 	
