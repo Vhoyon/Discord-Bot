@@ -38,6 +38,11 @@ public class Dictionary implements Utils {
 	
 	public String getString(String key){
 		
+		if(key == null){
+			throw new IllegalArgumentException(
+					"The \"key\" parameter cannot be null!");
+		}
+		
 		String string;
 		
 		try{
@@ -53,21 +58,21 @@ public class Dictionary implements Utils {
 			
 			if(isDebugging())
 				Logger.log("Key \""
-								+ key
-								+ "\" is missing in the resource file for the language \""
-								+ locale.getLanguage() + "_"
-								+ locale.getCountry() + "\".");
+						+ key
+						+ "\" is missing in the resource file for the language \""
+						+ locale.getLanguage() + "_" + locale.getCountry()
+						+ "\".");
 		}
 		catch(NullPointerException e){
 			
 			string = getDefaultLanguageResources().getString(key);
 			
-			if(System.getProperty("debug-mode") != null)
+			if(isDebugging())
 				Logger.log("Key \""
-								+ key
-								+ "\" is empty in the resource file for the language \""
-								+ locale.getLanguage() + "_"
-								+ locale.getCountry() + "\".");
+						+ key
+						+ "\" is empty in the resource file for the language \""
+						+ locale.getLanguage() + "_" + locale.getCountry()
+						+ "\".");
 			
 		}
 		

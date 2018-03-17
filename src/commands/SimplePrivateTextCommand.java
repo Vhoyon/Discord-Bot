@@ -53,8 +53,7 @@ public class SimplePrivateTextCommand extends Command {
 					.format(textToSend, (Object[])replacements));
 			break;
 		case INFO_LINE:
-			sendInfoPrivateMessage(format(textToSend,
-					(Object[])replacements));
+			sendInfoPrivateMessage(format(textToSend, (Object[])replacements));
 			break;
 		case INFO_BLOCK:
 			sendInfoPrivateMessage(

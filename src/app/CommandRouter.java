@@ -352,7 +352,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				@Override
 				public void action(){
 					
-					sendMessage(getString("TestingReplacements", event
+					sendMessage(langFull("TestingReplacements", event
 							.getAuthor().getName()));
 					
 				}

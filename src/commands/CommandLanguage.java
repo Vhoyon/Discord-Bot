@@ -11,10 +11,9 @@ public class CommandLanguage extends Command {
 	public void action(){
 		
 		if(getContent() == null){
-			sendMessage(getStringEz("NullContent", buildVCommand(LANGUAGE
-					+ " [" + getStringEz("NullContentUsage") + "]"),
-					buildVCommand(LANG + " [" + getStringEz("NullContentUsage")
-							+ "]")));
+			sendMessage(lang("NullContent", buildVCommand(LANGUAGE + " ["
+					+ lang("NullContentUsage") + "]"), buildVCommand(LANG
+					+ " [" + lang("NullContentUsage") + "]")));
 		}
 		else{
 			
@@ -22,12 +21,12 @@ public class CommandLanguage extends Command {
 			
 			if(lang == null){
 				
-				new BotError(this, getStringEz("NoTranslation"), false);
+				new BotError(this, lang("NoTranslation"), false);
 				
 			}
 			else{
 				
-				String langChangeMessage = getStringEz("ChangingLanguage");
+				String langChangeMessage = lang("ChangingLanguage");
 				
 				Dictionary changedDictionary = getDictionary();
 				

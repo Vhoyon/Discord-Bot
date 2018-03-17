@@ -18,8 +18,8 @@ public class CommandHelp extends Command {
 	@Override
 	public void action(){
 		
-		sendPrivateMessage(getStringEz("Content"));
-		sendInfoMessage(getStringEz("HelpSentMessage"));
+		sendPrivateMessage(lang("Content"));
+		sendInfoMessage(lang("HelpSentMessage"));
 		
 	}
 	

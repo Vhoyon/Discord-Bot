@@ -25,7 +25,7 @@ public abstract class CommandConfirmed extends Command {
 			sendInfoMessage(
 					getConfMessage()
 							+ "\n\n"
-							+ getString(
+							+ langFull(
 									"CommandConfirmedCustomAndConfirmMessage",
 									buildVCommand(CONFIRM),
 									buildVCommand(CANCEL)), false);
@@ -39,7 +39,7 @@ public abstract class CommandConfirmed extends Command {
 	public abstract void confirmed();
 	
 	public void cancelled(){
-		sendInfoMessage("*" + getString("CommandConfirmedConfCancelled") + "*");
+		sendInfoMessage("*" + langFull("CommandConfirmedConfCancelled") + "*");
 	}
 	
 }

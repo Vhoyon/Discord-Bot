@@ -20,7 +20,7 @@ public class CommandClear extends CommandConfirmed {
 	
 	@Override
 	public String getConfMessage(){
-		return getStringEz("ConfirmMessage");
+		return lang("ConfirmMessage");
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class CommandClear extends CommandConfirmed {
 			
 		}
 		catch(PermissionException e){
-			sendMessage(getStringEz("NoPermission"));
+			sendMessage(lang("NoPermission"));
 		}
 		
 	}
@@ -64,7 +64,7 @@ public class CommandClear extends CommandConfirmed {
 		}while(!vide);
 		
 		if(hadErrors)
-			new BotError(this, getStringEz("CannotBulkDeleteOld"));
+			new BotError(this, lang("CannotBulkDeleteOld"));
 		
 	}
 	

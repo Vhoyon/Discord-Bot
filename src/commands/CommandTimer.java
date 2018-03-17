@@ -41,8 +41,8 @@ public class CommandTimer extends Command {
 		String timerMessageId = null;
 		// long totalTime = (seconds * 1000);
 		// long temps = System.currentTimeMillis();
-		timerMessageId = sendMessage(hours + "hours " + minutes
-				+ " minutes " + seconds + " seconds");
+		timerMessageId = sendMessage(hours + "hours " + minutes + " minutes "
+				+ seconds + " seconds");
 		
 		for(int i = totalTime; i >= 0 && isAlive; i--){
 			

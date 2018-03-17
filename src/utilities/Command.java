@@ -148,22 +148,6 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		return getRequest().isParameterPresent(parameterNames);
 	}
 	
-	public String getString(String key){
-		return getDictionary().getString(key);
-	}
-	
-	public String getStringEz(String shortKey){
-		return getString(getClass().getSimpleName() + shortKey);
-	}
-	
-	public String getString(String key, Object... replacements){
-		return getDictionary().getString(key, replacements);
-	}
-	
-	public String getStringEz(String shortKey, Object... replacements){
-		return getString(getClass().getSimpleName() + shortKey, replacements);
-	}
-	
 	public void setDictionary(Dictionary dictionary){
 		this.dictionary = dictionary;
 	}
@@ -191,7 +175,7 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 			return channel.sendMessage(messageToSend).complete().getId();
 		}
 		else{
-			return sendMessage(getString("CommandUserHasNoPrivateChannel"));
+			return sendMessage(langFull("CommandUserHasNoPrivateChannel"));
 		}
 		
 	}
@@ -250,6 +234,22 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	public void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
+	}
+	
+	public String langFull(String key){
+		return getDictionary().getString(key);
+	}
+	
+	public String lang(String shortKey){
+		return langFull(getClass().getSimpleName() + shortKey);
+	}
+	
+	public String langFull(String key, Object... replacements){
+		return getDictionary().getString(key, replacements);
+	}
+	
+	public String lang(String shortKey, Object... replacements){
+		return langFull(getClass().getSimpleName() + shortKey, replacements);
 	}
 	
 	public void log(String message){

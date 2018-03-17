@@ -66,7 +66,7 @@ public class CommandMusic extends Command {
 					.getVoiceState().getChannel();
 			
 			if(voiceChannel == null){
-				sendInfoMessage(getStringEz("PlayNotConnected"));
+				sendInfoMessage(lang("PlayNotConnected"));
 				return;
 			}
 			
@@ -75,7 +75,7 @@ public class CommandMusic extends Command {
 		}
 		
 		if(getContent() == null && !MusicManager.get().hasPlayer(getGuild())){
-			new BotError(this, getStringEz("PlayNoContent"));
+			new BotError(this, lang("PlayNoContent"));
 		}
 		else{
 			
@@ -89,10 +89,10 @@ public class CommandMusic extends Command {
 				if(player.isPaused()){
 					player.setPause(false);
 					
-					sendMessage(getStringEz("PlayResuming"));
+					sendMessage(lang("PlayResuming"));
 				}
 				else{
-					new BotError(this, getStringEz("PlayNoContent"));
+					new BotError(this, lang("PlayNoContent"));
 				}
 				
 			}
@@ -107,19 +107,19 @@ public class CommandMusic extends Command {
 			return;
 		
 		if(!isPlaying()){
-			new BotError(this, getStringEz("SkipNotPlaying"));
+			new BotError(this, lang("SkipNotPlaying"));
 		}
 		else{
 			
 			MusicPlayer player = MusicManager.get().getPlayer(getGuild());
 			
 			if(player.isPaused()){
-				new BotError(this, getStringEz("PauseAlreadyPaused"));
+				new BotError(this, lang("PauseAlreadyPaused"));
 			}
 			else{
 				player.setPause(true);
 				
-				sendInfoMessage(getStringEz("PauseSuccess"));
+				sendInfoMessage(lang("PauseSuccess"));
 			}
 			
 		}
@@ -133,16 +133,16 @@ public class CommandMusic extends Command {
 		if(getContent() == null){
 			
 			if(!isPlaying()){
-				new BotError(this, getStringEz("SkipNotPlaying"));
+				new BotError(this, lang("SkipNotPlaying"));
 			}
 			else{
 				
 				if(player.skipTrack()){
-					sendInfoMessage(getStringEz("SkippedNowPlaying", player
+					sendInfoMessage(lang("SkippedNowPlaying", player
 							.getAudioPlayer().getPlayingTrack().getInfo().title));
 				}
 				else{
-					sendInfoMessage(getStringEz("SkipNoMoreMusic"));
+					sendInfoMessage(lang("SkipNoMoreMusic"));
 					
 					MusicManager.get().emptyPlayer(this);
 				}
@@ -167,7 +167,7 @@ public class CommandMusic extends Command {
 							player.skipTrack();
 						}
 						
-						sendInfoMessage(getStringEz("SkippedNowPlaying",
+						sendInfoMessage(lang("SkippedNowPlaying",
 								player.getAudioPlayer().getPlayingTrack()
 										.getInfo().title));
 						
@@ -177,7 +177,7 @@ public class CommandMusic extends Command {
 						new CommandConfirmed(this){
 							@Override
 							public String getConfMessage(){
-								return getString(
+								return langFull(
 										"CommandMusicSkipOverflowConfirm",
 										skipAmount, player.getNumberOfTracks());
 							}
@@ -194,10 +194,10 @@ public class CommandMusic extends Command {
 				
 			}
 			catch(NumberFormatException e){
-				new BotError(this, getStringEz("VolumeNotANumber"));
+				new BotError(this, lang("VolumeNotANumber"));
 			}
 			catch(BadContentException e){
-				new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
+				new BotError(this, lang("VolumeNotBetweenRange", 0, 100));
 			}
 			
 		}
@@ -208,14 +208,14 @@ public class CommandMusic extends Command {
 		
 		MusicManager.get().emptyPlayer(this);
 		
-		sendInfoMessage(getStringEz("SkippedAllMusic"));
+		sendInfoMessage(lang("SkippedAllMusic"));
 		
 	}
 	
 	public void skipLogic(boolean skipAll){
 		
 		if(!isPlaying()){
-			new BotError(this, getStringEz("SkipNotPlaying"));
+			new BotError(this, lang("SkipNotPlaying"));
 			return;
 		}
 		
@@ -233,13 +233,13 @@ public class CommandMusic extends Command {
 	public void disconnect(){
 		
 		if(!isPlaying()){
-			new BotError(this, getStringEz("DisconnectNotConnected"));
+			new BotError(this, lang("DisconnectNotConnected"));
 			return;
 		}
 		
 		MusicManager.get().emptyPlayer(this);
 		
-		sendInfoMessage(getStringEz("DisconnectSuccess"));
+		sendInfoMessage(lang("DisconnectSuccess"));
 		
 	}
 	
@@ -259,16 +259,16 @@ public class CommandMusic extends Command {
 				MusicManager.get().getPlayer(getGuild()).getAudioPlayer()
 						.setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
 				
-				sendMessage(getStringEz("VolumeChangedSuccess", volume));
+				sendMessage(lang("VolumeChangedSuccess", volume));
 				
 			}
 			
 		}
 		catch(NumberFormatException e){
-			new BotError(this, getStringEz("VolumeNotANumber"));
+			new BotError(this, lang("VolumeNotANumber"));
 		}
 		catch(BadParameterException e){
-			new BotError(this, getStringEz("VolumeNotBetweenRange", 0, 100));
+			new BotError(this, lang("VolumeNotBetweenRange", 0, 100));
 		}
 		
 	}
@@ -276,22 +276,21 @@ public class CommandMusic extends Command {
 	public void list(){
 		
 		if(!isPlaying()){
-			new BotError(this, getStringEz("ListNoList",
-					buildVCommand(MUSIC_PLAY + " [music]")));
+			new BotError(this, lang("ListNoList", buildVCommand(MUSIC_PLAY
+					+ " [music]")));
 		}
 		else{
 			
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append(getStringEz("ListHeader")).append("\n\n");
+			sb.append(lang("ListHeader")).append("\n\n");
 			
 			int i = 1;
 			
 			for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
 					.getListener().getTracks()){
 				
-				sb.append(
-						getStringEz("ListTrackInfo", i++, track.getInfo().title))
+				sb.append(lang("ListTrackInfo", i++, track.getInfo().title))
 						.append("\n");
 				
 			}

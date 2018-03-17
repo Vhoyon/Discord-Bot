@@ -20,26 +20,25 @@ public class CommandStop extends Command {
 				
 				getBuffer().get(BUFFER_SPAM);
 				getBuffer().push(false, BUFFER_SPAM);
-				sendInfoMessage(getStringEz("SavedFromSpam", EMOJI_OK_HAND));
+				sendInfoMessage(lang("SavedFromSpam", EMOJI_OK_HAND));
 				
 			}
 			else{
 				
 				if(commandToStop == null){
 					
-					new BotError(this, getStringEz("NoCommandToStopMessage",
+					new BotError(this, lang("NoCommandToStopMessage",
 							getContent()));
 					
 				}
 				else{
 					
 					if(commandToStop.stopAction())
-						sendInfoMessage(getStringEz(
-								"CommandFullyStoppedMessage", getContent(),
-								EMOJI_OK_HAND));
+						sendInfoMessage(lang("CommandFullyStoppedMessage",
+								getContent(), EMOJI_OK_HAND));
 					else{
-						new BotError(this, getStringEz(
-								"CommandNotStoppedMessage", getContent()), true);
+						new BotError(this, lang("CommandNotStoppedMessage",
+								getContent()), true);
 					}
 					
 				}
@@ -48,7 +47,7 @@ public class CommandStop extends Command {
 			
 		}
 		catch(NullPointerException e){
-			sendMessage(getStringEz("BotCantStop"));
+			sendMessage(lang("BotCantStop"));
 		}
 		
 	}

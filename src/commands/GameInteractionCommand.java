@@ -62,14 +62,14 @@ public class GameInteractionCommand extends Command {
 			
 			ArrayList<String> messages = new ArrayList<>();
 			
-			messages.add(getStringEz("GamesReadyToBeRolledMessage"));
+			messages.add(lang("GamesReadyToBeRolledMessage"));
 			
 			for(int i = 1; i <= gamepool.size(); i++)
 				messages.add(i + ". `" + gamepool.get(i - 1) + "`");
 			
 			groupAndSendMessages(messages);
 			
-			sendInfoMessage(getStringEz("InitialViewListAgainMessage",
+			sendInfoMessage(lang("InitialViewListAgainMessage",
 					buildVCommand(GAME_LIST)));
 			
 		}
@@ -90,12 +90,12 @@ public class GameInteractionCommand extends Command {
 				
 				gamepool.add(getContent());
 				
-				sendMessage(getStringEz("AddedGameSuccessMessage", getContent()));
+				sendMessage(lang("AddedGameSuccessMessage", getContent()));
 				
 			}
 			catch(NullPointerException e){
 				
-				sendInfoMessage(getStringEz("AddErrorNoPoolCreated",
+				sendInfoMessage(lang("AddErrorNoPoolCreated",
 						buildVCommand(GAME + " [game 1],[game 2],[...]")));
 				
 			}
@@ -126,10 +126,10 @@ public class GameInteractionCommand extends Command {
 				else{
 					
 					if(gamepool.remove(getContent()))
-						sendMessage(getStringEz("RemovedGameSuccessMessage",
+						sendMessage(lang("RemovedGameSuccessMessage",
 								getContent()));
 					else
-						new BotError(this, getStringEz("RemoveErrorNoSuchGame",
+						new BotError(this, lang("RemoveErrorNoSuchGame",
 								buildVCommand(GAME_LIST)));
 					
 				}
@@ -137,13 +137,13 @@ public class GameInteractionCommand extends Command {
 				if(gamepool.isEmpty()){
 					
 					getBuffer().remove(Ressources.BUFFER_GAMEPOOL);
-					sendMessage(getStringEz("RemoveIsNowEmpty"));
+					sendMessage(lang("RemoveIsNowEmpty"));
 					
 				}
 				
 			}
 			catch(NullPointerException e){
-				sendInfoMessage(getStringEz("RemoveErrorEmptyPool"));
+				sendInfoMessage(lang("RemoveErrorEmptyPool"));
 			}
 			
 		}
@@ -169,12 +169,12 @@ public class GameInteractionCommand extends Command {
 			int num;
 			
 			if(wantedRoll < 1)
-				new BotError(getStringEz("RollNumberIsNotValid"));
+				new BotError(lang("RollNumberIsNotValid"));
 			else if(wantedRoll == 1){
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage(getStringEz("RolledGameMessage", gamepool.get(num)));
+				sendMessage(lang("RolledGameMessage", gamepool.get(num)));
 				
 			}
 			else{
@@ -183,7 +183,7 @@ public class GameInteractionCommand extends Command {
 					
 					num = ran.nextInt(gamepool.size());
 					
-					sendMessage(getStringEz("RolledMultipleGamesMessage", i,
+					sendMessage(lang("RolledMultipleGamesMessage", i,
 							gamepool.get(num)));
 					
 				}
@@ -193,13 +193,12 @@ public class GameInteractionCommand extends Command {
 		}
 		catch(NullPointerException e){
 			sendInfoMessage(
-					getStringEz("RollErrorPoolEmpty", buildVCommand(GAME
+					lang("RollErrorPoolEmpty", buildVCommand(GAME
 							+ " [game 1],[game 2],[...]")), false);
 		}
 		catch(IllegalArgumentException e){
 			sendInfoMessage(
-					getStringEz("RollErrorUsageMessage",
-							buildVCommand(GAME_ROLL),
+					lang("RollErrorUsageMessage", buildVCommand(GAME_ROLL),
 							buildVCommand(GAME_ROLL_ALT),
 							buildVCommand(GAME_ROLL + " [positive number]"),
 							buildVCommand(GAME_ROLL_ALT + " [positive number]")),
@@ -218,13 +217,13 @@ public class GameInteractionCommand extends Command {
 		catch(NullPointerException e){}
 		
 		if(gamepool == null){
-			sendMessage(getStringEz("ListNoGamesInPoolMessage"));
+			sendMessage(lang("ListNoGamesInPoolMessage"));
 		}
 		else{
 			
 			ArrayList<String> messages = new ArrayList<>();
 			
-			messages.add(getStringEz("ListTitleOfList"));
+			messages.add(lang("ListTitleOfList"));
 			
 			for(int i = 0; i < gamepool.size(); i++)
 				messages.add((i + 1) + ". `" + gamepool.get(i) + "`");
@@ -241,20 +240,20 @@ public class GameInteractionCommand extends Command {
 		
 		switch(commandType){
 		case INITIAL:
-			message = getStringEz("ErrorInitialUsage", buildVCommand(GAME
+			message = lang("ErrorInitialUsage", buildVCommand(GAME
 					+ " [game 1],[game 2],[game 3],[...]"));
 			break;
 		case ADD:
-			message = getStringEz("ErrorAddUsage", buildVCommand(GAME_ADD
+			message = lang("ErrorAddUsage", buildVCommand(GAME_ADD
 					+ " [game name]"));
 			break;
 		case REMOVE:
-			message = getStringEz("ErrorRemoveUsage", buildVCommand(GAME_REMOVE
+			message = lang("ErrorRemoveUsage", buildVCommand(GAME_REMOVE
 					+ " [game name]"), buildVCommand(GAME_REMOVE + " "
 					+ Request.Parameter.PREFIX + "all"));
 			break;
 		default:
-			message = getStringEz("ErrorUndefined");
+			message = lang("ErrorUndefined");
 			break;
 		}
 		
