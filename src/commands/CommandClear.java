@@ -2,6 +2,7 @@ package commands;
 
 import java.util.List;
 
+import utilities.Command;
 import utilities.specifics.CommandConfirmed;
 import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Message;
@@ -16,24 +17,33 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  *         l'invoque
  *
  */
-public class CommandClear extends CommandConfirmed {
+public class CommandClear extends Command {
 	
 	@Override
-	public String getConfMessage(){
-		return lang("ConfirmMessage");
-	}
-	
-	@Override
-	public void confirmed(){
+	public void action(){
 		
-		try{
+		new CommandConfirmed(this){
 			
-			fullClean();
+			@Override
+			public String getConfMessage(){
+				return lang("ConfirmMessage");
+			}
 			
-		}
-		catch(PermissionException e){
-			sendMessage(lang("NoPermission"));
-		}
+			@Override
+			public void confirmed(){
+				
+				try{
+					
+					fullClean();
+					
+				}
+				catch(PermissionException e){
+					sendMessage(lang("NoPermission"));
+				}
+				
+			}
+			
+		};
 		
 	}
 	
