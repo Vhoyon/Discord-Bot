@@ -80,7 +80,8 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	@Override
 	public void run(){
 		
-		if(request.getCommandNoFormat().startsWith(PREFIX))
+		if(request.getCommandNoFormat().startsWith(PREFIX)){
+			
 			try{
 				
 				String commandGuildID = null;
@@ -152,16 +153,15 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 					command.action();
 					
 				}
-				catch(NullPointerException e){
-					if(isDebugging())
-						log(e.getMessage());
-				}
+				catch(NullPointerException e){}
 				
 			}
 			catch(NoCommandException e){
 				if(isDebugging())
 					log(e.getMessage());
 			}
+			
+		}
 		
 	}
 	

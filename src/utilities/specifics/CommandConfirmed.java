@@ -4,10 +4,14 @@ import utilities.Command;
 
 public abstract class CommandConfirmed extends Command {
 	
+	private Command inceptionCommand = null;
+	
 	public CommandConfirmed(){}
 	
 	public CommandConfirmed(Command inceptionCommand){
 		super(inceptionCommand);
+		
+		this.inceptionCommand = inceptionCommand;
 		
 		action();
 	}
@@ -17,18 +21,18 @@ public abstract class CommandConfirmed extends Command {
 	@Override
 	public void action(){
 		
-		try{
-			getBuffer().get(BUFFER_CONFIRMATION);
-		}
-		catch(NullPointerException e){
+		if(!hasMemory(BUFFER_CONFIRMATION)){
+//			getMemory(BUFFER_CONFIRMATION);
+//		}
+//		else{
 			
 			sendInfoMessage(
 					getConfMessage()
-							+ "\n\n"
-							+ langFull(
-									"CommandConfirmedCustomAndConfirmMessage",
-									buildVCommand(CONFIRM),
-									buildVCommand(CANCEL)), false);
+					+ "\n\n"
+					+ langFull(
+							"CommandConfirmedCustomAndConfirmMessage",
+							buildVCommand(CONFIRM),
+							buildVCommand(CANCEL)), false);
 			
 			getBuffer().push(this, BUFFER_CONFIRMATION);
 			
@@ -40,6 +44,22 @@ public abstract class CommandConfirmed extends Command {
 	
 	public void cancelled(){
 		sendInfoMessage("*" + langFull("CommandConfirmedConfCancelled") + "*");
+	}
+	
+	@Override
+	public String lang(String shortKey){
+		if(inceptionCommand != null){
+			return inceptionCommand.lang(shortKey);
+		}
+		return super.lang(shortKey);
+	}
+	
+	@Override
+	public String lang(String shortKey, Object... replacements){
+		if(inceptionCommand != null){
+			return inceptionCommand.lang(shortKey, replacements);
+		}
+		return super.lang(shortKey, replacements);
 	}
 	
 }

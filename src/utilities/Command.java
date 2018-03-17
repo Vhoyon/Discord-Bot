@@ -81,6 +81,15 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		return getBuffer().remove(associatedName);
 	}
 	
+	public boolean hasMemory(String associatedName){
+		try{
+			return getMemory(associatedName) != null;
+		}
+		catch(NullPointerException e){
+			return false;
+		}
+	}
+	
 	protected MessageReceivedEvent getEvent(){
 		return event;
 	}
@@ -163,7 +172,20 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	}
 	
 	public String sendMessage(String messageToSend){
-		return getTextContext().sendMessage(messageToSend).complete().getId();
+		if(messageToSend == null){
+			log("The bot attempted to send a null message - probably a fail safe, but concerning nontheless...");
+			
+			return null;
+		}
+		
+		try{
+			return getTextContext().sendMessage(messageToSend).complete().getId();
+		}
+		catch(IllegalArgumentException e){
+			log(e.getMessage());
+			
+			return null;
+		}
 	}
 	
 	public String sendPrivateMessage(String messageToSend){
@@ -172,7 +194,22 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 				.complete();
 		
 		if(getUser().hasPrivateChannel()){
-			return channel.sendMessage(messageToSend).complete().getId();
+			
+			if(messageToSend == null){
+				log("The bot attempted to send a null message - probably a fail safe, but concerning nontheless...");
+				
+				return null;
+			}
+			
+			try{
+				return channel.sendMessage(messageToSend).complete().getId();
+			}
+			catch(IllegalArgumentException e){
+				log(e.getMessage());
+				
+				return null;
+			}
+			
 		}
 		else{
 			return sendMessage(langFull("CommandUserHasNoPrivateChannel"));

@@ -46,33 +46,43 @@ public class Dictionary implements Utils {
 		String string;
 		
 		try{
-			
-			string = resources.getString(key);
-			
-			if(string.length() == 0)
-				throw new NullPointerException();
-			
+			try{
+				
+				string = resources.getString(key);
+				
+				if(string.length() == 0)
+					throw new NullPointerException();
+				
+			}
+			catch(MissingResourceException e){
+				string = getDefaultLanguageResources().getString(key);
+				
+				if(isDebugging())
+					Logger.log("Key \""
+							+ key
+							+ "\" is missing in the resource file for the language \""
+							+ locale.getLanguage() + "_" + locale.getCountry()
+							+ "\".");
+			}
+			catch(NullPointerException e){
+				
+				string = getDefaultLanguageResources().getString(key);
+				
+				if(isDebugging())
+					Logger.log("Key \""
+							+ key
+							+ "\" is empty in the resource file for the language \""
+							+ locale.getLanguage() + "_" + locale.getCountry()
+							+ "\".");
+				
+			}
 		}
 		catch(MissingResourceException e){
-			string = getDefaultLanguageResources().getString(key);
 			
-			if(isDebugging())
-				Logger.log("Key \""
-						+ key
-						+ "\" is missing in the resource file for the language \""
-						+ locale.getLanguage() + "_" + locale.getCountry()
-						+ "\".");
-		}
-		catch(NullPointerException e){
+			string = null;
 			
-			string = getDefaultLanguageResources().getString(key);
-			
-			if(isDebugging())
-				Logger.log("Key \""
-						+ key
-						+ "\" is empty in the resource file for the language \""
-						+ locale.getLanguage() + "_" + locale.getCountry()
-						+ "\".");
+			Logger.log("Key \"" + key
+					+ "\" is not in the default resource file - what's up with that?");
 			
 		}
 		
