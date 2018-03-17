@@ -283,15 +283,25 @@ public class CommandMusic extends Command {
 			
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append(lang("ListHeader")).append("\n\n");
+			AudioTrack currentTrack = MusicManager.get().getPlayer(getGuild())
+					.getAudioPlayer().getPlayingTrack();
 			
-			int i = 1;
+			sb.append(lang("ListCurrentTrack", currentTrack.getInfo().title));
 			
-			for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
-					.getListener().getTracks()){
+			if(MusicManager.get().getPlayer(getGuild()).getListener()
+					.getTrackSize() != 0){
 				
-				sb.append(lang("ListTrackInfo", i++, track.getInfo().title))
-						.append("\n");
+				sb.append("\n\n").append(lang("ListHeader")).append("\n\n");
+				
+				int i = 1;
+				
+				for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
+						.getListener().getTracks()){
+					
+					sb.append(lang("ListTrackInfo", i++, track.getInfo().title))
+							.append("\n");
+					
+				}
 				
 			}
 			
