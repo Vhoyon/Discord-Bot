@@ -66,7 +66,7 @@ public class CommandSpam extends Command {
 					+ " [number of times to spam] [custom message]")
 					+ " : " + lang("UsageThirdLine");
 			
-			sendMessage(langFull("Usage") + " :\n" + command1 + "\n" + command2
+			sendMessage(lang(true, "Usage") + " :\n" + command1 + "\n" + command2
 					+ "\n" + command3);
 			
 		}

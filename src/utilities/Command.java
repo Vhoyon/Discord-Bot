@@ -41,8 +41,8 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	protected String[] getSplitContent(){
 		
-		if(request.getContent() != null)
-			return request.getContent().split(" ");
+		if(getContent() != null)
+			return getContent().split(" ");
 		else
 			return null;
 		
@@ -50,8 +50,8 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	protected String[] getSplitContentMaxed(int maxSize){
 		
-		if(request.getContent() != null)
-			return request.getContent().split(" ", maxSize);
+		if(getContent() != null)
+			return getContent().split(" ", maxSize);
 		else
 			return null;
 		
@@ -142,19 +142,19 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	}
 	
 	public boolean isParameterPresent(Parameter parameter){
-		return getRequest().isParameterPresent(parameter);
+		return this.getRequest().isParameterPresent(parameter);
 	}
 	
 	public boolean isParameterPresent(Parameter... parameter){
-		return getRequest().isParameterPresent(parameter);
+		return this.getRequest().isParameterPresent(parameter);
 	}
 	
 	public boolean isParameterPresent(String parameterName){
-		return getRequest().isParameterPresent(parameterName);
+		return this.getRequest().isParameterPresent(parameterName);
 	}
 	
 	public boolean isParameterPresent(String... parameterNames){
-		return getRequest().isParameterPresent(parameterNames);
+		return this.getRequest().isParameterPresent(parameterNames);
 	}
 	
 	public void setDictionary(Dictionary dictionary){
@@ -179,7 +179,8 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		}
 		
 		try{
-			return getTextContext().sendMessage(messageToSend).complete().getId();
+			return this.getTextContext().sendMessage(messageToSend).complete()
+					.getId();
 		}
 		catch(IllegalArgumentException e){
 			log(e.getMessage());
@@ -190,8 +191,7 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	public String sendPrivateMessage(String messageToSend){
 		
-		PrivateChannel channel = getEvent().getAuthor().openPrivateChannel()
-				.complete();
+		PrivateChannel channel = this.getUser().openPrivateChannel().complete();
 		
 		if(getUser().hasPrivateChannel()){
 			
@@ -212,7 +212,7 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 			
 		}
 		else{
-			return sendMessage(langFull("CommandUserHasNoPrivateChannel"));
+			return sendMessage(lang(true, "CommandUserHasNoPrivateChannel"));
 		}
 		
 	}
@@ -254,10 +254,13 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		StringBuilder messageToSend = new StringBuilder();
 		
 		for(int i = 0; i < messages.length; i++){
+			
 			messageToSend.append(messages[i]);
+			
 			if(i < messages.length - 1){
 				messageToSend.append("\n");
 			}
+			
 		}
 		
 		return sendMessage(messageToSend.toString());
@@ -273,20 +276,22 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
 	}
 	
-	public String langFull(String key){
-		return getDictionary().getString(key);
+	public String lang(boolean isFullString, String key){
+		return isFullString ? this.getDictionary().getString(key) : lang(key);
+	}
+	
+	public String lang(boolean isFullString, String key,
+			Object... replacements){
+		return isFullString ? getDictionary().getString(key, replacements)
+				: lang(key, replacements);
 	}
 	
 	public String lang(String shortKey){
-		return langFull(getClass().getSimpleName() + shortKey);
-	}
-	
-	public String langFull(String key, Object... replacements){
-		return getDictionary().getString(key, replacements);
+		return lang(false, getClass().getSimpleName() + shortKey);
 	}
 	
 	public String lang(String shortKey, Object... replacements){
-		return langFull(getClass().getSimpleName() + shortKey, replacements);
+		return lang(false, getClass().getSimpleName() + shortKey, replacements);
 	}
 	
 	public void log(String message){

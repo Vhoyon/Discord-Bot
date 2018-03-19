@@ -22,17 +22,17 @@ public abstract class CommandConfirmed extends Command {
 	public void action(){
 		
 		if(!hasMemory(BUFFER_CONFIRMATION)){
-//			getMemory(BUFFER_CONFIRMATION);
-//		}
-//		else{
+			//			getMemory(BUFFER_CONFIRMATION);
+			//		}
+			//		else{
 			
 			sendInfoMessage(
 					getConfMessage()
-					+ "\n\n"
-					+ langFull(
-							"CommandConfirmedCustomAndConfirmMessage",
-							buildVCommand(CONFIRM),
-							buildVCommand(CANCEL)), false);
+							+ "\n\n"
+							+ lang(true,
+									"CommandConfirmedCustomAndConfirmMessage",
+									buildVCommand(CONFIRM),
+									buildVCommand(CANCEL)), false);
 			
 			getBuffer().push(this, BUFFER_CONFIRMATION);
 			
@@ -43,7 +43,7 @@ public abstract class CommandConfirmed extends Command {
 	public abstract void confirmed();
 	
 	public void cancelled(){
-		sendInfoMessage("*" + langFull("CommandConfirmedConfCancelled") + "*");
+		sendInfoMessage("*" + lang(true, "CommandConfirmedConfCancelled") + "*");
 	}
 	
 	@Override

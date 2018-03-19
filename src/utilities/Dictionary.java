@@ -100,7 +100,6 @@ public class Dictionary implements Utils {
 	
 	private ResourceBundle getDefaultLanguageResources(){
 		return getLanguageResources(defaultLang, defaultCountry);
-		
 	}
 	
 }
