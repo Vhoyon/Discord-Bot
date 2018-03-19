@@ -5,7 +5,6 @@ import java.util.Random;
 
 import errorHandling.BotError;
 import utilities.Command;
-import utilities.interfaces.Ressources;
 import utilities.specifics.GamePool;
 import utilities.specifics.Request;
 
@@ -58,7 +57,7 @@ public class GameInteractionCommand extends Command {
 			
 			GamePool gamepool = new GamePool(jeux);
 			
-			getBuffer().push(gamepool, Ressources.BUFFER_GAMEPOOL);
+			remember(gamepool, BUFFER_GAMEPOOL);
 			
 			ArrayList<String> messages = new ArrayList<>();
 			
@@ -85,8 +84,7 @@ public class GameInteractionCommand extends Command {
 			
 			try{
 				
-				GamePool gamepool = (GamePool)getBuffer().get(
-						Ressources.BUFFER_GAMEPOOL);
+				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
 				
 				gamepool.add(getContent());
 				
@@ -113,8 +111,7 @@ public class GameInteractionCommand extends Command {
 			
 			try{
 				
-				GamePool gamepool = (GamePool)getBuffer().get(
-						Ressources.BUFFER_GAMEPOOL);
+				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
 				
 				if(isParameterPresent("all")){
 					
@@ -136,7 +133,7 @@ public class GameInteractionCommand extends Command {
 				
 				if(gamepool.isEmpty()){
 					
-					getBuffer().remove(Ressources.BUFFER_GAMEPOOL);
+					forget(BUFFER_GAMEPOOL);
 					sendMessage(lang("RemoveIsNowEmpty"));
 					
 				}
@@ -154,8 +151,7 @@ public class GameInteractionCommand extends Command {
 		
 		try{
 			
-			GamePool gamepool = (GamePool)getBuffer().get(
-					Ressources.BUFFER_GAMEPOOL);
+			GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
 			
 			int wantedRoll = 1;
 			
@@ -212,7 +208,7 @@ public class GameInteractionCommand extends Command {
 		GamePool gamepool = null;
 		
 		try{
-			gamepool = (GamePool)getBuffer().get(Ressources.BUFFER_GAMEPOOL);
+			gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
 		}
 		catch(NullPointerException e){}
 		

@@ -34,7 +34,7 @@ public abstract class CommandConfirmed extends Command {
 									buildVCommand(CONFIRM),
 									buildVCommand(CANCEL)), false);
 			
-			getBuffer().push(this, BUFFER_CONFIRMATION);
+			remember(this, BUFFER_CONFIRMATION);
 			
 		}
 		

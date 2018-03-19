@@ -60,24 +60,24 @@ public class CommandMusic extends Command {
 		if(getGuild() == null)
 			return;
 		
-		if(!isPlaying() && getContent() != null){
-			
-			VoiceChannel voiceChannel = getGuild().getMember(getUser())
-					.getVoiceState().getChannel();
-			
-			if(voiceChannel == null){
-				sendInfoMessage(lang("PlayNotConnected"));
-				return;
-			}
-			
-			getGuild().getAudioManager().openAudioConnection(voiceChannel);
-			
-		}
-		
 		if(getContent() == null && !MusicManager.get().hasPlayer(getGuild())){
 			new BotError(this, lang("PlayNoContent"));
 		}
 		else{
+			
+			if(!isPlaying() && getContent() != null){
+				
+				VoiceChannel voiceChannel = getGuild().getMember(getUser())
+						.getVoiceState().getChannel();
+				
+				if(voiceChannel == null){
+					sendInfoMessage(lang("PlayNotConnected"));
+					return;
+				}
+				
+				connect(voiceChannel);
+				
+			}
 			
 			if(getContent() != null){
 				MusicManager.get().loadTrack(this, getContent());

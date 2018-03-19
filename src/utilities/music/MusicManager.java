@@ -58,11 +58,13 @@ public class MusicManager {
 			
 			player.getAudioPlayer().destroy();
 			
-			if(player.getGuild().getAudioManager().getConnectedChannel() != null){
-				player.getGuild().getAudioManager().closeAudioConnection();
+			if(player.isConnectedToVoiceChannel()){
+				player.closeConnection();
 			}
 			
 			players.remove(command.getGuildId());
+			
+			command.disconnect();
 			
 		}
 		

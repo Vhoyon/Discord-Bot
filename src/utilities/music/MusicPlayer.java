@@ -1,6 +1,7 @@
 package utilities.music;
 
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -62,6 +63,18 @@ public class MusicPlayer {
 	
 	public synchronized int getNumberOfTracks(){
 		return this.getListener().getTracks().size();
+	}
+	
+	public VoiceChannel getConnectedChannel(){
+		return getGuild().getAudioManager().getConnectedChannel();
+	}
+	
+	public boolean isConnectedToVoiceChannel(){
+		return this.getConnectedChannel() != null;
+	}
+	
+	public void closeConnection(){
+		this.getGuild().getAudioManager().closeAudioConnection();
 	}
 	
 }

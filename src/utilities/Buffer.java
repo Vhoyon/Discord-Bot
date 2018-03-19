@@ -10,14 +10,14 @@ public class Buffer {
 		private String associatedName;
 		private String guildID;
 		
-		public BufferObject(String associatedName){
-			this(null, associatedName);
+		public BufferObject(String associatedName, String guildId){
+			this(null, associatedName, guildId);
 		}
 		
-		public BufferObject(Object object, String associatedName){
+		public BufferObject(Object object, String associatedName, String guildId){
 			this.object = object;
 			this.associatedName = associatedName;
-			this.guildID = latestGuildID;
+			this.guildID = guildId;
 		}
 		
 		public Object getObject(){
@@ -45,7 +45,7 @@ public class Buffer {
 				
 				BufferObject bufrObj = (BufferObject)obj;
 				
-				if(latestGuildID.equals(bufrObj.getGuildID())){
+				if(getGuildID().equals(bufrObj.getGuildID())){
 					
 					if(getName() != null)
 						isEqual = getName().equals(bufrObj.getName());
@@ -62,33 +62,33 @@ public class Buffer {
 		
 	}
 	
-	private ArrayList<BufferObject> memory;
-	private String latestGuildID;
+	private static Buffer buffer;
 	
-	public Buffer(){
+	private ArrayList<BufferObject> memory;
+	
+	private Buffer(){
 		memory = new ArrayList<>();
 	}
 	
-	public void setLatestGuildID(String guildID){
-		this.latestGuildID = guildID;
+	public static Buffer get(){
+		if(buffer == null)
+			buffer = new Buffer();
+		
+		return buffer;
 	}
 	
-	public String getLatestGuildID(){
-		return latestGuildID;
-	}
-	
-	public boolean push(Object object, String associatedName){
+	public boolean push(Object object, String associatedName, String guildId){
 		
 		boolean isNewObject = true;
 		
 		int index = -1;
 		
 		if(associatedName != null)
-			index = memory.indexOf(new BufferObject(associatedName));
+			index = memory.indexOf(new BufferObject(associatedName, guildId));
 		
 		if(index == -1){
 			
-			memory.add(new BufferObject(object, associatedName));
+			memory.add(new BufferObject(object, associatedName, guildId));
 			
 		}
 		else{
@@ -105,24 +105,23 @@ public class Buffer {
 		
 	}
 	
-	public boolean push(Object object){
-		return push(object, null);
-	}
-	
 	public Object get(int index) throws IndexOutOfBoundsException{
 		return memory.get(index).getObject();
 	}
 	
-	public Object get(String associatedName) throws NullPointerException{
+	public Object get(String associatedName, String guildId)
+			throws NullPointerException{
 		
 		try{
-			return get(memory.indexOf(new BufferObject(associatedName)));
+			return get(memory
+					.indexOf(new BufferObject(associatedName, guildId)));
 		}
 		
 		catch(ArrayIndexOutOfBoundsException e){
 			throw new NullPointerException(
 					"No object with the associated name \"" + associatedName
-							+ "\" found in the buffer.");
+							+ "\" found in the buffer for the Guild ID \""
+							+ guildId + "\".");
 		}
 		
 	}
@@ -142,8 +141,8 @@ public class Buffer {
 		
 	}
 	
-	public boolean remove(String associatedName){
-		return remove(memory.indexOf(new BufferObject(associatedName)));
+	public boolean remove(String associatedName, String guildId){
+		return remove(memory.indexOf(new BufferObject(associatedName, guildId)));
 	}
 	
 }

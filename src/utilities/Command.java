@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public abstract class Command implements Commands, Ressources, Emojis, Utils {
@@ -58,11 +59,7 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	}
 	
 	public Buffer getBuffer(){
-		
-		buffer.setLatestGuildID(getGuildId());
-		
 		return buffer;
-		
 	}
 	
 	public void setBuffer(Buffer buffer){
@@ -70,15 +67,15 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	}
 	
 	public boolean remember(Object object, String associatedName){
-		return getBuffer().push(object, associatedName);
+		return getBuffer().push(object, associatedName, getGuildId());
 	}
 	
 	public Object getMemory(String associatedName) throws NullPointerException{
-		return getBuffer().get(associatedName);
+		return getBuffer().get(associatedName, getGuildId());
 	}
 	
 	public boolean forget(String associatedName){
-		return getBuffer().remove(associatedName);
+		return getBuffer().remove(associatedName, getGuildId());
 	}
 	
 	public boolean hasMemory(String associatedName){
@@ -169,6 +166,28 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 	
 	public boolean stopAction(){
 		return false;
+	}
+	
+	public void connect(VoiceChannel voiceChannel){
+		getGuild().getAudioManager().openAudioConnection(voiceChannel);
+		
+		remember(voiceChannel, BUFFER_VOICE_CHANNEL);
+	}
+	
+	public VoiceChannel getConnectedVoiceChannel(){
+		return getGuild().getAudioManager().getConnectedChannel();
+	}
+	
+	public void disconnect(){
+		
+		if(getConnectedVoiceChannel() != null){
+			
+			getGuild().getAudioManager().closeAudioConnection();
+			
+		}
+		
+		forget(BUFFER_VOICE_CHANNEL);
+		
 	}
 	
 	public String sendMessage(String messageToSend){
@@ -280,18 +299,17 @@ public abstract class Command implements Commands, Ressources, Emojis, Utils {
 		return isFullString ? this.getDictionary().getString(key) : lang(key);
 	}
 	
-	public String lang(boolean isFullString, String key,
-			Object... replacements){
+	public String lang(boolean isFullString, String key, Object... replacements){
 		return isFullString ? getDictionary().getString(key, replacements)
 				: lang(key, replacements);
 	}
 	
 	public String lang(String shortKey){
-		return lang(false, getClass().getSimpleName() + shortKey);
+		return lang(true, getClass().getSimpleName() + shortKey);
 	}
 	
 	public String lang(String shortKey, Object... replacements){
-		return lang(false, getClass().getSimpleName() + shortKey, replacements);
+		return lang(true, getClass().getSimpleName() + shortKey, replacements);
 	}
 	
 	public void log(String message){

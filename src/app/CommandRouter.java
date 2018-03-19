@@ -42,14 +42,14 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 		
 		try{
 			
-			Object object = buffer.get(BUFFER_LANG);
-			dict = (Dictionary)object;
+			Object bufferedDict = buffer.get(BUFFER_LANG, event.getGuild().getId());
+			dict = (Dictionary)bufferedDict;
 			
 		}
 		catch(NullPointerException e){
 			
 			dict = new Dictionary();
-			buffer.push(dict, BUFFER_LANG);
+			buffer.push(dict, BUFFER_LANG, event.getGuild().getId());
 			
 		}
 		
@@ -92,14 +92,12 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 					
 					this.setName(request.getCommand() + commandGuildID);
 					
-					buffer.setLatestGuildID(commandGuildID);
-					
 					boolean confirmationConfirmed = false;
 					
 					try{
 						
 						Object needsConfirmation = buffer
-								.get(BUFFER_CONFIRMATION);
+								.get(BUFFER_CONFIRMATION, commandGuildID);
 						
 						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 						if(request.getCommand().equals(CONFIRM)){
@@ -115,7 +113,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 							
 						}
 						
-						buffer.remove(BUFFER_CONFIRMATION);
+						buffer.remove(BUFFER_CONFIRMATION, commandGuildID);
 						
 					}
 					catch(NullPointerException e){}

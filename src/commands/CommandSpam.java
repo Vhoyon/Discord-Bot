@@ -19,7 +19,7 @@ public class CommandSpam extends Command {
 			if(getContent() != null)
 				numberOfSpam = Integer.parseInt(content[0]);
 			
-			getBuffer().push(true, BUFFER_SPAM);
+			remember(true, BUFFER_SPAM);
 			
 			boolean hasCustomMessage = content != null && content.length == 2;
 			
@@ -33,7 +33,7 @@ public class CommandSpam extends Command {
 						}
 						catch(InterruptedException e){}
 					
-					if(!(boolean)getBuffer().get(BUFFER_SPAM))
+					if(!(boolean)getMemory(BUFFER_SPAM))
 						break;
 					
 					if(hasCustomMessage)
@@ -48,7 +48,7 @@ public class CommandSpam extends Command {
 				// Was probably removed by the stopAction.
 			}
 			finally{
-				getBuffer().remove(BUFFER_SPAM);
+				forget(BUFFER_SPAM);
 			}
 			
 		}

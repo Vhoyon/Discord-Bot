@@ -2,6 +2,9 @@ package app;
 
 import utilities.*;
 import utilities.interfaces.Ressources;
+import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -19,7 +22,7 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 	private Buffer buffer;
 	
 	public MessageListener(){
-		buffer = new Buffer();
+		buffer = Buffer.get();
 	}
 	
 	@Override
@@ -34,6 +37,46 @@ public class MessageListener extends ListenerAdapter implements Ressources {
 			
 		}
 		
+	}
+	
+	@Override
+	public void onGuildVoiceLeave(GuildVoiceLeaveEvent event){
+		super.onGuildVoiceLeave(event);
+		
+		// No events from bots
+		if(!event.getMember().getUser().isBot()){
+			
+			try{
+				
+				VoiceChannel playerVoiceChannel = (VoiceChannel)buffer.get(
+						BUFFER_VOICE_CHANNEL, event.getGuild().getId());
+				
+				System.out.println(playerVoiceChannel);
+				
+				if(playerVoiceChannel.equals(event.getChannelLeft())){
+					System.out.println("test leaves from same lel");
+				}
+				else{
+					System.out.println("fuk");
+				}
+				
+			}
+			catch(NullPointerException e){
+				System.out.println("hehe");
+			}
+			
+		}
+		
+		
+	}
+	
+	@Override
+	public void onGuildVoiceMove(GuildVoiceMoveEvent event){
+		super.onGuildVoiceMove(event);
+		
+		event.getChannelLeft();
+		
+		System.out.println("test moves between channels");
 	}
 	
 }

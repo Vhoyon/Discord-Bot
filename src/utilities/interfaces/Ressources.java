@@ -13,10 +13,11 @@ public interface Ressources {
 	
 	String PREFIX = "!!";
 	
-	String BUFFER_CONFIRMATION = "confirmation";
-	String BUFFER_GAMEPOOL = "GamePool";
+	String BUFFER_CONFIRMATION = "CONFIRMATION";
+	String BUFFER_GAMEPOOL = "GAMEPOOL";
 	String BUFFER_SPAM = "SPAM_CONDITION";
 	String BUFFER_LANG = "LANGUAGE";
+	String BUFFER_VOICE_CHANNEL = "VOICE_CHANNEL";
 	
 	Language[] languages =
 	{

@@ -18,8 +18,8 @@ public class CommandStop extends Command {
 			
 			if(getContent() == null){
 				
-				getBuffer().get(BUFFER_SPAM);
-				getBuffer().push(false, BUFFER_SPAM);
+				getMemory(BUFFER_SPAM);
+				remember(false, BUFFER_SPAM);
 				sendInfoMessage(lang("SavedFromSpam", EMOJI_OK_HAND));
 				
 			}
