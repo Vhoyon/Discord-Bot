@@ -36,7 +36,7 @@ public class CommandLanguage extends Command {
 				remember(changedDictionary, BUFFER_LANG);
 				
 				sendInfoMessage(String.format(langChangeMessage,
-						changedDictionary.getString("LanguageName")));
+						changedDictionary.getDirectString("LanguageName")));
 				
 			}
 			

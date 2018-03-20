@@ -81,8 +81,8 @@ public class MusicManager {
 			
 			@Override
 			public void trackLoaded(AudioTrack track){
-				command.sendMessage(command.lang(true,
-						"MusicManagerTrackLoaded", track.getInfo().title));
+				command.sendMessage(command.lang("MusicManagerTrackLoaded",
+						track.getInfo().title));
 				
 				player.playTrack(track);
 			}
@@ -93,15 +93,14 @@ public class MusicManager {
 				StringBuilder builder = new StringBuilder();
 				
 				builder.append(
-						command.lang(true, "MusicManagerPlaylistLoaded",
+						command.lang("MusicManagerPlaylistLoaded",
 								playlist.getName())).append("\n");
 				
 				for(int i = 0; i < playlist.getTracks().size(); i++){
 					AudioTrack track = playlist.getTracks().get(i);
 					
 					builder.append("\n").append(
-							command.lang(true,
-									"MusicManagerPlaylistAddedTrackInfo",
+							command.lang("MusicManagerPlaylistAddedTrackInfo",
 									(i + 1), track.getInfo().title));
 					
 					player.playTrack(track);
@@ -113,14 +112,13 @@ public class MusicManager {
 			
 			@Override
 			public void noMatches(){
-				command.sendMessage(command.lang(true, "MusicManagerNoMatch",
-						source));
+				command.sendMessage(command.lang("MusicManagerNoMatch", source));
 			}
 			
 			@Override
 			public void loadFailed(FriendlyException exeption){
-				command.sendMessage(command.lang(true,
-						"MusicManagerLoadFailed", exeption.getMessage()));
+				command.sendMessage(command.lang("MusicManagerLoadFailed",
+						exeption.getMessage()));
 			}
 			
 		});

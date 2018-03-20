@@ -32,30 +32,43 @@ public class Dictionary implements Utils {
 		
 	}
 	
-	public String getString(String key, Object... replacements){
-		return format(this.getString(key), replacements);
+	public String getDirectString(String key, Object... replacements){
+		return getString(key, null, replacements);
 	}
 	
-	public String getString(String key){
+	public String getDirectString(String key){
+		return getString(key, null);
+	}
+	
+	public String getString(String key, String possiblePrefix,
+			Object... replacements){
+		return format(this.getString(key, possiblePrefix), replacements);
+	}
+	
+	public String getString(String key, String possiblePrefix){
 		
 		if(key == null){
 			throw new IllegalArgumentException(
 					"The \"key\" parameter cannot be null!");
 		}
 		
-		String string;
+		String string = null;
+		
+		// TODO : Look for alternatives to imbricated try/catches
 		
 		try{
 			try{
 				
-				string = resources.getString(key);
+				string = tryGetString(resources, key, possiblePrefix);
 				
-				if(string.length() == 0)
+				if(string == null || string.length() == 0)
 					throw new NullPointerException();
 				
 			}
 			catch(MissingResourceException e){
-				string = getDefaultLanguageResources().getString(key);
+				
+				string = tryGetString(getDefaultLanguageResources(), key,
+						possiblePrefix);
 				
 				if(isDebugging())
 					Logger.log("Key \""
@@ -63,10 +76,12 @@ public class Dictionary implements Utils {
 							+ "\" is missing in the resource file for the language \""
 							+ locale.getLanguage() + "_" + locale.getCountry()
 							+ "\".");
+				
 			}
 			catch(NullPointerException e){
 				
-				string = getDefaultLanguageResources().getString(key);
+				string = tryGetString(getDefaultLanguageResources(), key,
+						possiblePrefix);
 				
 				if(isDebugging())
 					Logger.log("Key \""
@@ -79,10 +94,28 @@ public class Dictionary implements Utils {
 		}
 		catch(MissingResourceException e){
 			
-			string = null;
-			
-			Logger.log("Key \"" + key
+			Logger.log("Key \""
+					+ key
 					+ "\" is not in the default resource file - what's up with that?");
+			
+		}
+		
+		return string;
+		
+	}
+	
+	private String tryGetString(ResourceBundle resources, String key,
+			String possiblePrefix) throws MissingResourceException{
+		
+		String string = null;
+		
+		try{
+			string = resources.getString(key);
+		}
+		catch(MissingResourceException e){
+			
+			if(possiblePrefix != null)
+				string = resources.getString(possiblePrefix + key);
 			
 		}
 		

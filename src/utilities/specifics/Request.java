@@ -308,12 +308,12 @@ public class Request {
 			String pluralTester;
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = dict.getString("RequestParamStartSingle");
+				pluralTester = dict.getDirectString("RequestParamStartSingle");
 			else
-				pluralTester = dict.getString("RequestParamStartMultiple");
+				pluralTester = dict.getDirectString("RequestParamStartMultiple");
 			
 			StringBuilder message = new StringBuilder(pluralTester + " "
-					+ dict.getString("RequestParamStartFollowing") + " ");
+					+ dict.getDirectString("RequestParamStartFollowing") + " ");
 			
 			for(int i = 0; i < duplicateParams.size(); i++){
 				
@@ -326,12 +326,12 @@ public class Request {
 			}
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = dict.getString("RequestEndMessageSingle");
+				pluralTester = dict.getDirectString("RequestEndMessageSingle");
 			else
-				pluralTester = dict.getString("RequestEndMessageMultiple");
+				pluralTester = dict.getDirectString("RequestEndMessageMultiple");
 			
 			message.append("\n*"
-					+ String.format(dict.getString("RequestEndMessage"),
+					+ String.format(dict.getDirectString("RequestEndMessage"),
 							pluralTester) + "*");
 			
 			this.error = new BotError(message.toString(), false);

@@ -29,8 +29,7 @@ public abstract class CommandConfirmed extends Command {
 			sendInfoMessage(
 					getConfMessage()
 							+ "\n\n"
-							+ lang(true,
-									"CommandConfirmedCustomAndConfirmMessage",
+							+ lang("CommandConfirmedCustomAndConfirmMessage",
 									buildVCommand(CONFIRM),
 									buildVCommand(CANCEL)), false);
 			

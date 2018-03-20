@@ -177,8 +177,7 @@ public class CommandMusic extends Command {
 						new CommandConfirmed(this){
 							@Override
 							public String getConfMessage(){
-								return lang(true,
-										"CommandMusicSkipOverflowConfirm",
+								return lang("CommandMusicSkipOverflowConfirm",
 										skipAmount, player.getNumberOfTracks());
 							}
 							

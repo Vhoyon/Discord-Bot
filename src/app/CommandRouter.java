@@ -62,11 +62,11 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 	}
 	
 	public String getString(String key){
-		return dict.getString(key);
+		return dict.getDirectString(key);
 	}
 	
 	public String getString(String key, Object... replacements){
-		return dict.getString(key, replacements);
+		return dict.getDirectString(key, replacements);
 	}
 	
 	public void log(String message){
@@ -350,7 +350,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 				@Override
 				public void action(){
 					
-					sendMessage(lang(true, "TestingReplacements", event
+					sendMessage(lang("TestingReplacements", event
 							.getAuthor().getName()));
 					
 				}
