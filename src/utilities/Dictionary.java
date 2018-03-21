@@ -114,8 +114,10 @@ public class Dictionary implements Utils {
 		}
 		catch(MissingResourceException e){
 			
-			if(possiblePrefix != null)
-				string = resources.getString(possiblePrefix + key);
+			if(possiblePrefix == null || possiblePrefix.length() == 0)
+				throw e;
+			
+			string = resources.getString(possiblePrefix + key);
 			
 		}
 		
