@@ -28,29 +28,52 @@ public class Logger extends Module {
 		separator = "-";
 	}
 	
+	public static void setSeparator(String newSeparator){
+		separator = newSeparator;
+	}
+	
 	public static void setOutputs(Loggable... outputs){
 		Logger.outputs = new ArrayList<>(Arrays.asList(outputs));
 	}
 	
-	public static void setSeparator(String newSeparator){
-		separator = newSeparator;
+	public static boolean addOutput(Loggable output){
+		
+		if(outputs.contains(output)){
+			return false;
+		}
+		
+		return outputs.add(output);
+		
+	}
+	
+	public static boolean removeOutput(Loggable output){
+		return outputs.remove(output);
+	}
+	
+	public static Loggable removeOutput(int index){
+		try{
+			return outputs.remove(index);
+		}
+		catch(IndexOutOfBoundsException e){
+			return null;
+		}
 	}
 	
 	public static void log(String message){
 		log(message, null, true);
 	}
 	
-	public static void log(String message, boolean appendDate){
-		log(message, null, appendDate);
-	}
-	
 	public static void log(String message, LogType logType){
 		log(message, logType, true);
 	}
 	
+	public static void log(String message, boolean appendDate){
+		log(message, null, appendDate);
+	}
+	
 	public static void log(String message, LogType logType, boolean appendDate){
 		
-		if(outputs == null && !hasIssuedWarning){
+		if(outputs.isEmpty() && !hasIssuedWarning){
 			hasIssuedWarning = true;
 			
 			System.out
