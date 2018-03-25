@@ -23,6 +23,8 @@ public class Main {
 		
 		try{
 			
+//			System.out.println(Arrays.toString(args));
+			
 			Framework.build();
 			
 			String botToken = Environment.getVar("BOT_TOKEN");

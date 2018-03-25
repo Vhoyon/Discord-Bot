@@ -11,12 +11,10 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 
 import vendor.modules.Environment;
 import vendor.modules.Logger;
+import vendor.objects.LoggableJTextArea;
 
 public abstract class MainConsole extends JFrame {
 	
@@ -24,7 +22,7 @@ public abstract class MainConsole extends JFrame {
 	
 	private JButton actionButton;
 	
-	private JTextArea log;
+	private LoggableJTextArea log;
 	
 	public MainConsole(boolean isDebug){
 		
@@ -40,7 +38,7 @@ public abstract class MainConsole extends JFrame {
 				super.windowClosing(e);
 			}
 		});
-
+		
 		setSize(500, 300);
 		setLocationRelativeTo(null);
 		
@@ -100,34 +98,28 @@ public abstract class MainConsole extends JFrame {
 		
 		panel.add(actionButton, c);
 		
-		log = new JTextArea(1, 0);
-		log.setEditable(false);
-		log.setLineWrap(true);
-		Logger.setTextArea(log);
-		JScrollPane pane = new JScrollPane(log);
-		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		log = new LoggableJTextArea(1, 0);
+		Logger.setOutputs(log);
 		
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridheight = 3;
-		c.gridwidth =4;
+		c.gridwidth = 4;
 		
-		panel.add(pane, c);
-
+		panel.add(log.scrollPane, c);
+		
 		add(panel);
 		
 		setVisible(true);
-
+		
 		if(isDebug){
-			String clientId = Environment.getVar("CLIENT_ID",
-					null);
+			String clientId = Environment.getVar("CLIENT_ID", null);
 			
 			if(clientId != null){
 				Logger.log("Link to join the bot to a server :\n\n"
 						+ "https://discordapp.com/oauth2/authorize?&client_id="
-						+ clientId
-						+ "&scope=bot&permissions=0", false);
+						+ clientId + "&scope=bot&permissions=0", false);
 			}
 		}
 		

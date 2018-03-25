@@ -2,49 +2,97 @@ package vendor.modules;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
-import javax.swing.JTextArea;
-
 import vendor.abstracts.Module;
+import vendor.interfaces.Loggable;
 
 public class Logger extends Module {
 	
-	private static JTextArea textArea;
+	public static enum LogType{
+		INFO, WARNING, ERROR
+	}
+	
+	private static ArrayList<Loggable> outputs;
+	
+	private static boolean hasIssuedWarning;
+	
+	private static String separator;
 	
 	@Override
-	public void build() throws Exception{}
+	public void build() throws Exception{
+		outputs = new ArrayList<>();
+		hasIssuedWarning = false;
+		separator = "-";
+	}
 	
-	public static void setTextArea(JTextArea textAreaToLogIn){
-		textArea = textAreaToLogIn;
+	public static void setOutputs(Loggable... outputs){
+		Logger.outputs = new ArrayList<>(Arrays.asList(outputs));
+	}
+	
+	public static void setSeparator(String newSeparator){
+		separator = newSeparator;
 	}
 	
 	public static void log(String message){
-		log(message, true);
+		log(message, null, true);
 	}
 	
 	public static void log(String message, boolean appendDate){
+		log(message, null, appendDate);
+	}
+	
+	public static void log(String message, LogType logType){
+		log(message, logType, true);
+	}
+	
+	public static void log(String message, LogType logType, boolean appendDate){
 		
-		if(textArea == null){
-			new Exception("The logger hasn't been attached to a JTextArea yet!")
-					.printStackTrace();
+		if(outputs == null && !hasIssuedWarning){
+			hasIssuedWarning = true;
 			
-			return;
+			System.out
+					.println("[LOGGER WARNING] The Logger hasn't had any outputs attached and a logging call has been made - using the System's output by default. This warning will only be shown once.\n");
 		}
+		
+		StringBuilder builder = new StringBuilder();
+		
+		boolean hasAddedPrefix = false;
 		
 		if(appendDate){
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			Date date = new Date();
 			
-			textArea.append("[" + dateFormat.format(date) + "] - ");
+			builder.append("[").append(dateFormat.format(date)).append("] ");
+			
+			hasAddedPrefix = true;
 		}
-		//		else{
-		//			textArea.append("\n");
-		//		}
 		
-		textArea.append(message + "\n\n");
+		if(logType != null){
+			builder.append("[").append(logType).append("] ");
+			
+			hasAddedPrefix = true;
+		}
 		
-		textArea.setCaretPosition(textArea.getDocument().getLength());
+		if(hasAddedPrefix){
+			builder.append(separator).append(" ");
+		}
+		
+		builder.append(message);
+		
+		String logText = builder.toString();
+		
+		if(outputs == null){
+			System.out.println(logText);
+		}
+		else{
+			for(Loggable loggable : outputs){
+				loggable.log(logText);
+			}
+		}
+		
 	}
 	
 }
