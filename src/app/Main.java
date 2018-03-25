@@ -50,7 +50,7 @@ public class Main {
 					}
 					catch(LoginException | IllegalArgumentException
 							| InterruptedException e){
-						Logger.log(e.getMessage(), LogType.ERROR);
+						Logger.log(e);
 					}
 					
 				}

@@ -124,6 +124,10 @@ public class Logger extends Module {
 		}
 	}
 	
+	public static void log(Exception e){
+		log(e.getMessage(), LogType.ERROR);
+	}
+	
 	public static void log(String message){
 		log(message, (String)null, true);
 	}
