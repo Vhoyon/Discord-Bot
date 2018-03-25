@@ -6,6 +6,7 @@ import ui.MainConsole;
 import vendor.Framework;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -35,7 +36,7 @@ public class Main {
 				@Override
 				public void onStart(){
 					
-					Logger.log("Starting the bot...");
+					Logger.log("Starting the bot...", LogType.INFO);
 					
 					try{
 						
@@ -44,12 +45,12 @@ public class Main {
 						jda.addEventListener(new MessageListener());
 						jda.setAutoReconnect(true);
 						
-						Logger.log("Bot started!");
+						Logger.log("Bot started!", LogType.INFO);
 						
 					}
 					catch(LoginException | IllegalArgumentException
 							| InterruptedException e){
-						Logger.log(e.getMessage());
+						Logger.log(e.getMessage(), LogType.ERROR);
 					}
 					
 				}
@@ -59,13 +60,13 @@ public class Main {
 					
 					if(jda != null){
 						
-						Logger.log("Shutting down the bot...");
+						Logger.log("Shutting down the bot...", LogType.INFO);
 						
 						jda.shutdownNow();
 						
 						jda = null;
 						
-						Logger.log("Bot has been shutdown!");
+						Logger.log("Bot has been shutdown!", LogType.INFO);
 						
 					}
 					

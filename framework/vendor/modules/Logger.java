@@ -11,6 +11,12 @@ import vendor.interfaces.Loggable;
 
 public class Logger extends Module {
 	
+	/**
+	 * The type of logging to prepend to the log message.
+	 * <p>
+	 * Take note that will be added to the message is literally the enum's
+	 * value.
+	 */
 	public static enum LogType{
 		INFO, WARNING, ERROR
 	}
@@ -28,14 +34,39 @@ public class Logger extends Module {
 		separator = "-";
 	}
 	
+	/**
+	 * Sets the separator for logs that has a prefix before the message.
+	 * <p>
+	 * Set to <code>null</code> if you don't want any separator.
+	 * 
+	 * @param newSeparator
+	 */
 	public static void setSeparator(String newSeparator){
 		separator = newSeparator;
 	}
 	
+	/**
+	 * Overwrite the output list with those passed as parameters.
+	 * 
+	 * @param outputs
+	 *            Objects implementing the {@link vendor.interfaces.Loggable
+	 *            Loggable} interface which are meant to receive logs from the
+	 *            Logger module.
+	 */
 	public static void setOutputs(Loggable... outputs){
 		Logger.outputs = new ArrayList<>(Arrays.asList(outputs));
 	}
 	
+	/**
+	 * Adds an output to the already existing output list for the Logger module.
+	 * 
+	 * @param output
+	 *            Object implementing the {@link vendor.interfaces.Loggable
+	 *            Loggable} interface which is meant to receive logs from the
+	 *            Logger module.
+	 * @return <code>true</code> if the output was added successfully,
+	 *         <code>false</code> if the output is already in the outputs list.
+	 */
 	public static boolean addOutput(Loggable output){
 		
 		if(outputs.contains(output)){
@@ -46,10 +77,44 @@ public class Logger extends Module {
 		
 	}
 	
+	/**
+	 * Adds multiple outputs to the already existing output list for the Logger
+	 * module.
+	 * 
+	 * @param outputs
+	 *            Objects implementing the {@link vendor.interfaces.Loggable
+	 *            Loggable} interface which are meant to receive logs from the
+	 *            Logger module.
+	 */
+	public static void addOutputs(Loggable... outputs){
+		for(Loggable output : outputs){
+			Logger.addOutput(output);
+		}
+	}
+	
+	/**
+	 * Removes an output from the output list for the Logger module.
+	 * 
+	 * @param output
+	 *            Object implementing the {@link vendor.interfaces.Loggable
+	 *            Loggable} interface.
+	 * @return <code>true</code> if the output was in the list and has been
+	 *         removed, <code>false</code> if the output is not in the list.
+	 */
 	public static boolean removeOutput(Loggable output){
 		return outputs.remove(output);
 	}
 	
+	/**
+	 * Removes an output from the output list by it's index for the Logger
+	 * module.
+	 * 
+	 * @param index
+	 *            The position of the output in the internal list.
+	 * @return The {@link vendor.interfaces.Loggable Loggable} object found at
+	 *         this position, or <code>null</code> if the index is out of
+	 *         bounds.
+	 */
 	public static Loggable removeOutput(int index){
 		try{
 			return outputs.remove(index);
@@ -60,7 +125,7 @@ public class Logger extends Module {
 	}
 	
 	public static void log(String message){
-		log(message, null, true);
+		log(message, (String)null, true);
 	}
 	
 	public static void log(String message, LogType logType){
@@ -68,10 +133,14 @@ public class Logger extends Module {
 	}
 	
 	public static void log(String message, boolean appendDate){
-		log(message, null, appendDate);
+		log(message, (String)null, appendDate);
 	}
 	
 	public static void log(String message, LogType logType, boolean appendDate){
+		log(message, logType.toString(), appendDate);
+	}
+	
+	public static void log(String message, String logType, boolean appendDate){
 		
 		if(outputs.isEmpty() && !hasIssuedWarning){
 			hasIssuedWarning = true;
@@ -100,7 +169,13 @@ public class Logger extends Module {
 		}
 		
 		if(hasAddedPrefix){
-			builder.append(separator).append(" ");
+			
+			if(separator != null){
+				builder.append(separator);
+			}
+			
+			builder.append(" ");
+			
 		}
 		
 		builder.append(message);
@@ -111,8 +186,8 @@ public class Logger extends Module {
 			System.out.println(logText);
 		}
 		else{
-			for(Loggable loggable : outputs){
-				loggable.log(logText);
+			for(Loggable output : outputs){
+				output.log(logText);
 			}
 		}
 		
