@@ -19,6 +19,16 @@ public interface Commands {
 		return "`" + buildCommand(command) + "`";
 	}
 	
+	/**
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in Ressources
+	 *         followed by the <i>parameter</i> parameter.
+	 */
+	public default String buildParameter(String parameter){
+		return Ressources.PARAMETER_PREFIX + parameter;
+	}
+
+	String TEST = "test";
+	
 	String HELLO = "hello";
 	String HELP = "help";
 	String CLEAR = "clear";
@@ -30,7 +40,6 @@ public interface Commands {
 	String GAME_ROLL = "game_roll";
 	String GAME_ROLL_ALT = "roll";
 	String GAME_LIST = "game_list";
-	String TEST = "test";
 	String CONFIRM = "confirm";
 	String TERMINATE = "terminate";
 	String CANCEL = "cancel";

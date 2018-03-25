@@ -12,6 +12,7 @@ import utilities.Language;
 public interface Ressources {
 	
 	String PREFIX = "!!";
+	String PARAMETER_PREFIX = "--";
 	
 	String BUFFER_CONFIRMATION = "CONFIRMATION";
 	String BUFFER_GAMEPOOL = "GAMEPOOL";

@@ -118,7 +118,7 @@ public class CommandRouter extends Thread implements Ressources, Commands,
 					}
 					catch(NullPointerException e){}
 					
-					if((command = request.getErrorMessage()) != null){
+					if((command = request.getError()) != null){
 						command.setContext(event);
 						command.action();
 						command = null;

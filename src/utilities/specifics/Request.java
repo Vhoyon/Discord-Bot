@@ -14,16 +14,14 @@ public class Request {
 	
 	public class Parameter {
 		
-		public final static String PREFIX = "--";
-		
 		private String parameter;
 		private String parameterContent;
 		
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			if(!parameter.matches(PREFIX + ".+"))
-				this.parameter = PREFIX + parameter;
+			if(!parameter.matches(getParametersPrefix() + ".+"))
+				this.parameter = getParametersPrefix() + parameter;
 			else
 				this.parameter = parameter;
 		}
@@ -35,18 +33,18 @@ public class Request {
 		}
 		
 		public String getParameter(){
-			return parameter.substring(PREFIX.length());
+			return parameter.substring(getParametersPrefix().length());
 		}
 		
 		public String getParameterContent(){
 			if(parameterContent == null)
 				return null;
 			else
-				return parameterContent.replaceAll("\"", "");
+				return parameterContent;
 		}
 		
 		protected void setParameterContent(String parameterContent){
-			this.parameterContent = parameterContent;
+			this.parameterContent = parameterContent.replaceAll("\"", "");
 		}
 		
 		@Override
@@ -75,21 +73,30 @@ public class Request {
 	
 	private String command;
 	private String content;
-	private ArrayList<Parameter> parameters;
 	private Dictionary dict;
+	
+	private ArrayList<Parameter> parameters;
+	private String parametersPrefix;
 	
 	private AbstractBotError error;
 	
 	public Request(String receivedMessage, Dictionary dictionary){
+		this(receivedMessage, dictionary, Ressources.PARAMETER_PREFIX);
+	}
+	
+	public Request(String receivedMessage, Dictionary dictionary,
+			String parametersPrefix){
 		
 		this.dict = dictionary;
+		
+		this.parametersPrefix = parametersPrefix;
 		
 		String[] messageSplit = splitCommandAndContent(receivedMessage);
 		
 		setCommand(messageSplit[0]);
 		setContent(messageSplit[1]);
 		
-		if(content != null){
+		if(getContent() != null){
 			
 			// Test if content contains parameters.
 			// The params must be right after command for it to trigger.
@@ -116,7 +123,7 @@ public class Request {
 				String possibleParam = possibleParams.get(i);
 				
 				// If string is structured as a parameter, create it.
-				if(possibleParam.matches(Parameter.PREFIX + "[^\\s]+")){
+				if(possibleParam.matches(getParametersPrefix() + "[^\\s]+")){
 					
 					Parameter newParam = new Parameter(possibleParam);
 					
@@ -141,8 +148,8 @@ public class Request {
 							
 							// If the following String isn't another param, set
 							// said String as the content for the current param.
-							if(!possibleParamContent.matches(Parameter.PREFIX
-									+ "[^\\s]+")){
+							if(!possibleParamContent
+									.matches(getParametersPrefix() + "[^\\s]+")){
 								
 								newParam.setParameterContent(possibleParamContent);
 								
@@ -173,7 +180,7 @@ public class Request {
 			}
 			
 			if(getContent() != null)
-				setContent(getContent().trim());
+				setContent(getContent().trim().replaceAll("\"", ""));
 			
 			handleDuplicateParameter(duplicateParams);
 			
@@ -235,8 +242,16 @@ public class Request {
 		
 	}
 	
-	public AbstractBotError getErrorMessage(){
+	public String getParametersPrefix(){
+		return parametersPrefix;
+	}
+	
+	public AbstractBotError getError(){
 		return error;
+	}
+	
+	public boolean hasErrors(){
+		return error != null;
 	}
 	
 	public boolean isParameterPresent(Parameter... parameters){
@@ -310,7 +325,8 @@ public class Request {
 			if(duplicateParams.size() == 1)
 				pluralTester = dict.getDirectString("RequestParamStartSingle");
 			else
-				pluralTester = dict.getDirectString("RequestParamStartMultiple");
+				pluralTester = dict
+						.getDirectString("RequestParamStartMultiple");
 			
 			StringBuilder message = new StringBuilder(pluralTester + " "
 					+ dict.getDirectString("RequestParamStartFollowing") + " ");
@@ -328,7 +344,8 @@ public class Request {
 			if(duplicateParams.size() == 1)
 				pluralTester = dict.getDirectString("RequestEndMessageSingle");
 			else
-				pluralTester = dict.getDirectString("RequestEndMessageMultiple");
+				pluralTester = dict
+						.getDirectString("RequestEndMessageMultiple");
 			
 			message.append("\n*"
 					+ String.format(dict.getDirectString("RequestEndMessage"),

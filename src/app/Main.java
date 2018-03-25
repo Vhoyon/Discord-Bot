@@ -3,6 +3,8 @@ package app;
 import javax.security.auth.login.LoginException;
 
 import ui.MainConsole;
+import utilities.Dictionary;
+import utilities.specifics.Request;
 import vendor.Framework;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
@@ -24,7 +26,13 @@ public class Main {
 		
 		try{
 			
-			//			System.out.println(Arrays.toString(args));
+			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
+			
+			Request programRequest = new Request(requestableArgs, new Dictionary(), "-");
+			
+			if(programRequest.hasErrors()){
+				System.out.println(programRequest.getError().getMessage());
+			}
 			
 			Framework.build();
 			
@@ -86,6 +94,24 @@ public class Main {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private static String convertArgsToString(String[] args){
+		StringBuilder builder = new StringBuilder();
+		
+		for(String arg : args){
+			
+			if(arg.startsWith("-")){
+				builder.append(arg);
+			}
+			else{
+				builder.append("\"").append(arg).append("\"");
+			}
+			
+			builder.append(" ");
+		}
+		
+		return builder.toString();
 	}
 	
 }

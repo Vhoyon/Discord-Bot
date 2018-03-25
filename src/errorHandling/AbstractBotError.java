@@ -104,13 +104,16 @@ public abstract class AbstractBotError extends Command {
 	@Override
 	public void action(){
 		
-		String messageToSend = emoji + " ** "
-				+ format(errorMessage, replacements) + " **";
+		String messageToSend = emoji + " ** " + getMessage() + " **";
 		
 		sendErrorMessage(messageToSend);
 		
 	}
 	
 	protected abstract void sendErrorMessage(String messageToSend);
+	
+	public String getMessage(){
+		return format(errorMessage, replacements);
+	}
 	
 }

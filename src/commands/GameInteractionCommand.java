@@ -6,7 +6,6 @@ import java.util.Random;
 import errorHandling.BotError;
 import utilities.Command;
 import utilities.specifics.GamePool;
-import utilities.specifics.Request;
 
 public class GameInteractionCommand extends Command {
 	
@@ -246,7 +245,7 @@ public class GameInteractionCommand extends Command {
 		case REMOVE:
 			message = lang("ErrorRemoveUsage", buildVCommand(GAME_REMOVE
 					+ " [game name]"), buildVCommand(GAME_REMOVE + " "
-					+ Request.Parameter.PREFIX + "all"));
+					+ buildParameter("all")));
 			break;
 		default:
 			message = lang("ErrorUndefined");
