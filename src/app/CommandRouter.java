@@ -25,7 +25,7 @@ import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
 import errorHandling.exceptions.NoCommandException;
 
-public class CommandRouter extends Thread implements Ressources, Commands,
+public class CommandRouter extends Thread implements Resources, Commands,
 		Emojis, Utils {
 	
 	private MessageReceivedEvent event;

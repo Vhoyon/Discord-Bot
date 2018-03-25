@@ -1,7 +1,7 @@
 package app;
 
 import utilities.*;
-import utilities.interfaces.Ressources;
+import utilities.interfaces.Resources;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  *         Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
  *         l'utilisateur et appele les classes necessaires
  */
-public class MessageListener extends ListenerAdapter implements Ressources {
+public class MessageListener extends ListenerAdapter implements Resources {
 	
 	private Buffer buffer;
 	

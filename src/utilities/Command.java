@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public abstract class Command implements Commands, Ressources, Emojis, Utils {
+public abstract class Command implements Commands, Resources, Emojis, Utils {
 	
 	private Buffer buffer;
 	private MessageReceivedEvent event;

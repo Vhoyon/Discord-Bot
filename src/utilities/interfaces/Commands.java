@@ -7,7 +7,7 @@ public interface Commands {
 	 *         followed by the <i>commandName</i> parameter.
 	 */
 	public default String buildCommand(String command){
-		return Ressources.PREFIX + command;
+		return Resources.PREFIX + command;
 	}
 	
 	/**
@@ -24,7 +24,7 @@ public interface Commands {
 	 *         followed by the <i>parameter</i> parameter.
 	 */
 	public default String buildParameter(String parameter){
-		return Ressources.PARAMETER_PREFIX + parameter;
+		return Resources.PARAMETER_PREFIX + parameter;
 	}
 
 	String TEST = "test";

@@ -9,7 +9,7 @@ import utilities.Language;
  *         Contient les constantes du bot
  *
  */
-public interface Ressources {
+public interface Resources {
 	
 	String PREFIX = "!!";
 	String PARAMETER_PREFIX = "--";

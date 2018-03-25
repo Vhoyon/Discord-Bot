@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import utilities.Dictionary;
-import utilities.interfaces.Ressources;
+import utilities.interfaces.Resources;
 import errorHandling.AbstractBotError;
 import errorHandling.BotError;
 import errorHandling.exceptions.NoParameterContentException;
@@ -81,7 +81,7 @@ public class Request {
 	private AbstractBotError error;
 	
 	public Request(String receivedMessage, Dictionary dictionary){
-		this(receivedMessage, dictionary, Ressources.PARAMETER_PREFIX);
+		this(receivedMessage, dictionary, Resources.PARAMETER_PREFIX);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
@@ -189,7 +189,7 @@ public class Request {
 	}
 	
 	public String getCommand(){
-		return command.substring(Ressources.PREFIX.length());
+		return command.substring(Resources.PREFIX.length());
 	}
 	
 	public String getCommandNoFormat(){
