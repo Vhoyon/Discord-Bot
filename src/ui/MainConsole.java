@@ -33,7 +33,11 @@ public abstract class MainConsole extends JFrame {
 		addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e){
-				onStop();
+				
+				try{
+					onStop();
+				}
+				catch(Exception e1){}
 				
 				super.windowClosing(e);
 			}
@@ -64,10 +68,18 @@ public abstract class MainConsole extends JFrame {
 					new Thread(){
 						@Override
 						public void run(){
-							onStart();
 							
-							button.setText("Stop");
+							try{
+								onStart();
+								
+								button.setText("Stop");
+							}
+							catch(Exception e){
+								Logger.log(e);
+							}
+							
 							button.setEnabled(true);
+							
 						}
 					}.start();
 					
@@ -77,10 +89,18 @@ public abstract class MainConsole extends JFrame {
 					new Thread(){
 						@Override
 						public void run(){
-							onStop();
 							
-							button.setText("Start");
+							try{
+								onStop();
+								
+								button.setText("Start");
+							}
+							catch(Exception e){
+								Logger.log(e);
+							}
+							
 							button.setEnabled(true);
+							
 						}
 					}.start();
 					
@@ -125,8 +145,8 @@ public abstract class MainConsole extends JFrame {
 		
 	}
 	
-	public abstract void onStart();
+	public abstract void onStart() throws Exception;
 	
-	public abstract void onStop();
+	public abstract void onStop() throws Exception;
 	
 }

@@ -24,7 +24,7 @@ public class Main {
 		
 		try{
 			
-//			System.out.println(Arrays.toString(args));
+			//			System.out.println(Arrays.toString(args));
 			
 			Framework.build();
 			
@@ -34,7 +34,7 @@ public class Main {
 			
 			new MainConsole(isDebug){
 				@Override
-				public void onStart(){
+				public void onStart() throws Exception{
 					
 					Logger.log("Starting the bot...", LogType.INFO);
 					
@@ -48,15 +48,18 @@ public class Main {
 						Logger.log("Bot started!", LogType.INFO);
 						
 					}
-					catch(LoginException | IllegalArgumentException
-							| InterruptedException e){
-						Logger.log(e);
+					catch(LoginException e){
+						
+						// TODO : Show a new window that asks for a good bot token
+						
+						throw e;
+						
 					}
 					
 				}
 				
 				@Override
-				public void onStop(){
+				public void onStop() throws Exception{
 					
 					if(jda != null){
 						
@@ -68,6 +71,11 @@ public class Main {
 						
 						Logger.log("Bot has been shutdown!", LogType.INFO);
 						
+					}
+					else{
+						Logger.log(
+								"The JDA was already closed, no action was taken.",
+								LogType.INFO);
 					}
 					
 				}
