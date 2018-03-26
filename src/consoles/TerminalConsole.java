@@ -9,22 +9,11 @@ import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 
-public abstract class TerminalConsole implements Console {
-	
-	private class Terminal implements Loggable {
-		
-		@Override
-		public void log(String logText){
-			
-			System.out.println(logText + "\n");
-			
-		}
-		
-	}
+public abstract class TerminalConsole implements Console, Loggable {
 	
 	public TerminalConsole(){
 		
-		Logger.setOutputs(new Terminal());
+		Logger.setOutputs(this);
 		
 		Logger.log("Welcome to the Discord Bot terminal console!", false);
 		
@@ -34,6 +23,27 @@ public abstract class TerminalConsole implements Console {
 			
 			br = new BufferedReader(new InputStreamReader(System.in));
 			
+			try{
+				
+				Thread.sleep(100);
+				System.err.println();
+				
+				Thread.sleep(200);
+				
+				System.out.print("Initialising");
+				Thread.sleep(333);
+				
+				System.out.print(".");
+				Thread.sleep(333);
+				
+				System.out.print(".");
+				Thread.sleep(333);
+				
+				System.out.println(".\nInitialised!");
+				Thread.sleep(333);
+			}
+			catch(InterruptedException e){}
+			
 			while(true){
 				
 				System.out.print("> ");
@@ -41,6 +51,8 @@ public abstract class TerminalConsole implements Console {
 				String input = br.readLine();
 				
 				handleInput(input);
+				
+				System.out.println();
 				
 			}
 			
@@ -61,6 +73,18 @@ public abstract class TerminalConsole implements Console {
 		
 	}
 	
+	@Override
+	public void log(String logText, String logType, boolean hasAppendedDate){
+		
+		if("ERROR".equals(logType)){
+			System.err.println(logText);
+		}
+		else{
+			System.out.println(logText);
+		}
+		
+	}
+	
 	private void handleInput(String input){
 		
 		if(input == null || input.length() == 0)
@@ -77,7 +101,7 @@ public abstract class TerminalConsole implements Console {
 			}
 			
 			break;
-			
+		
 		case "stop":
 			
 			try{

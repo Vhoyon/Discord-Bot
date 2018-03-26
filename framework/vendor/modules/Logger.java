@@ -161,13 +161,13 @@ public class Logger extends Module {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			Date date = new Date();
 			
-			builder.append("[").append(dateFormat.format(date)).append("] ");
+			builder.append("[").append(dateFormat.format(date)).append("]");
 			
 			hasAddedPrefix = true;
 		}
 		
 		if(logType != null){
-			builder.append("[").append(logType).append("] ");
+			builder.append("[").append(logType).append("]");
 			
 			hasAddedPrefix = true;
 		}
@@ -175,14 +175,14 @@ public class Logger extends Module {
 		if(hasAddedPrefix){
 			
 			if(separator != null){
-				builder.append(separator);
+				builder.append(" ").append(separator);
 			}
 			
 			builder.append(" ");
 			
 		}
 		
-		builder.append(message);
+		builder.append(message.replaceFirst("^\\s+", ""));
 		
 		String logText = builder.toString();
 		
@@ -191,7 +191,7 @@ public class Logger extends Module {
 		}
 		else{
 			for(Loggable output : outputs){
-				output.log(logText);
+				output.log(logText, logType, appendDate);
 			}
 		}
 		

@@ -34,7 +34,7 @@ public class LoggableJTextArea extends JTextArea implements Loggable {
 	}
 	
 	@Override
-	public void log(String logText){
+	public void log(String logText, String logType, boolean hasAppendedDate){
 		append(logText);
 		
 		append("\n");

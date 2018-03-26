@@ -54,8 +54,6 @@ public class Dictionary implements Utils {
 		
 		String string = null;
 		
-		// TODO : Look for alternatives to imbricated try/catches
-		
 		try{
 			try{
 				
@@ -96,7 +94,7 @@ public class Dictionary implements Utils {
 			
 			Logger.log("Key \""
 					+ key
-					+ "\" is not in the default resource file - what's up with that?");
+					+ "\" is not in any resource file - what's up with that?");
 			
 		}
 		
