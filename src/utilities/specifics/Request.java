@@ -254,17 +254,17 @@ public class Request {
 		return error != null;
 	}
 	
-	public boolean isParameterPresent(Parameter... parameters){
+	public boolean hasParameter(Parameter... parameters){
 		
 		for(Parameter parameter : parameters)
-			if(this.isParameterPresent(parameter))
+			if(this.hasParameter(parameter))
 				return true;
 		
 		return false;
 		
 	}
 	
-	public boolean isParameterPresent(Parameter parameter){
+	public boolean hasParameter(Parameter parameter){
 		try{
 			return this.getParameters().contains(parameter);
 		}
@@ -273,11 +273,11 @@ public class Request {
 		}
 	}
 	
-	public boolean isParameterPresent(String parameterName){
-		return isParameterPresent(new Parameter(parameterName));
+	public boolean hasParameter(String parameterName){
+		return hasParameter(new Parameter(parameterName));
 	}
 	
-	public boolean isParameterPresent(String... parameterNames){
+	public boolean hasParameter(String... parameterNames){
 		
 		ArrayList<Parameter> params = new ArrayList<>();
 		
@@ -285,7 +285,7 @@ public class Request {
 			params.add(new Parameter(paramName));
 		}
 		
-		return isParameterPresent(params.toArray(new Parameter[0]));
+		return hasParameter(params.toArray(new Parameter[0]));
 		
 	}
 	

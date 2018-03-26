@@ -112,7 +112,7 @@ public class GameInteractionCommand extends Command {
 				
 				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
 				
-				if(isParameterPresent("all")){
+				if(hasParameter("all")){
 					
 					do{
 						gamepool.remove(0);

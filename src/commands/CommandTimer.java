@@ -17,15 +17,15 @@ public class CommandTimer extends Command {
 		
 		try{
 			// seconds = Integer.parseInt(constraints[0]);
-			if(isParameterPresent("h")){
+			if(hasParameter("h")){
 				hours = Integer.parseInt(getParameter("h")
 						.getParameterContent());
 			}
-			if(isParameterPresent("m")){
+			if(hasParameter("m")){
 				minutes = Integer.parseInt(getParameter("m")
 						.getParameterContent());
 			}
-			if(isParameterPresent("s")){
+			if(hasParameter("s")){
 				seconds = Integer.parseInt(getParameter("s")
 						.getParameterContent());
 			}

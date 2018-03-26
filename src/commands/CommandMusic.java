@@ -218,7 +218,7 @@ public class CommandMusic extends Command {
 			return;
 		}
 		
-		if(isParameterPresent("a", "all")){
+		if(hasParameter("a", "all")){
 			skipAll = true;
 		}
 		

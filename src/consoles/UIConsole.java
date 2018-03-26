@@ -1,4 +1,4 @@
-package ui;
+package consoles;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,11 +12,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import vendor.modules.Environment;
+import vendor.interfaces.Console;
 import vendor.modules.Logger;
 import vendor.objects.LoggableJTextArea;
 
-public abstract class MainConsole extends JFrame {
+public abstract class UIConsole extends JFrame implements Console {
 	
 	//	private MainConsole console;
 	
@@ -24,7 +24,7 @@ public abstract class MainConsole extends JFrame {
 	
 	private LoggableJTextArea log;
 	
-	public MainConsole(boolean isDebug){
+	public UIConsole(){
 		
 		super();
 		
@@ -133,20 +133,6 @@ public abstract class MainConsole extends JFrame {
 		
 		setVisible(true);
 		
-		if(isDebug){
-			String clientId = Environment.getVar("CLIENT_ID", null);
-			
-			if(clientId != null){
-				Logger.log("Link to join the bot to a server :\n\n"
-						+ "https://discordapp.com/oauth2/authorize?&client_id="
-						+ clientId + "&scope=bot&permissions=0", false);
-			}
-		}
-		
 	}
-	
-	public abstract void onStart() throws Exception;
-	
-	public abstract void onStop() throws Exception;
 	
 }

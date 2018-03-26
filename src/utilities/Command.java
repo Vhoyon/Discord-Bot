@@ -138,20 +138,20 @@ public abstract class Command implements Commands, Resources, Emojis, Utils {
 		return this.getRequest().getParameter(parameterName);
 	}
 	
-	public boolean isParameterPresent(Parameter parameter){
-		return this.getRequest().isParameterPresent(parameter);
+	public boolean hasParameter(Parameter parameter){
+		return this.getRequest().hasParameter(parameter);
 	}
 	
-	public boolean isParameterPresent(Parameter... parameter){
-		return this.getRequest().isParameterPresent(parameter);
+	public boolean hasParameter(Parameter... parameter){
+		return this.getRequest().hasParameter(parameter);
 	}
 	
-	public boolean isParameterPresent(String parameterName){
-		return this.getRequest().isParameterPresent(parameterName);
+	public boolean hasParameter(String parameterName){
+		return this.getRequest().hasParameter(parameterName);
 	}
 	
-	public boolean isParameterPresent(String... parameterNames){
-		return this.getRequest().isParameterPresent(parameterNames);
+	public boolean hasParameter(String... parameterNames){
+		return this.getRequest().hasParameter(parameterNames);
 	}
 	
 	public void setDictionary(Dictionary dictionary){
