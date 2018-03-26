@@ -1,8 +1,13 @@
 package consoles;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import vendor.interfaces.Console;
 import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
 
 public abstract class TerminalConsole implements Console {
 	
@@ -23,9 +28,97 @@ public abstract class TerminalConsole implements Console {
 		
 		Logger.log("Welcome to the Discord Bot terminal console!", false);
 		
-		// TODO : Handle inputting commands from the temrinal using a BufferedReader
-		// This todo is actually quite important has it defines the thread behavior
-		// and will keep the bot alive as long as the terminal is open.
+		BufferedReader br = null;
+		
+		try{
+			
+			br = new BufferedReader(new InputStreamReader(System.in));
+			
+			while(true){
+				
+				System.out.print("> ");
+				
+				String input = br.readLine();
+				
+				handleInput(input);
+				
+			}
+			
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		finally{
+			if(br != null){
+				try{
+					br.close();
+				}
+				catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+	
+	private void handleInput(String input){
+		
+		if(input == null || input.length() == 0)
+			return;
+		
+		switch(input){
+		case "start":
+			
+			try{
+				onStart();
+			}
+			catch(Exception e){
+				Logger.log(e);
+			}
+			
+			break;
+			
+		case "stop":
+			
+			try{
+				onStop();
+			}
+			catch(Exception e){
+				Logger.log(e);
+			}
+			
+			break;
+		case "restart":
+			
+			try{
+				onStop();
+				
+				onStart();
+			}
+			catch(Exception e){
+				Logger.log(e);
+			}
+			
+			break;
+		case "exit":
+			
+			try{
+				onStop();
+			}
+			catch(Exception e){}
+			
+			Logger.log("Thanks for using the bot!", LogType.INFO);
+			
+			System.exit(0);
+			
+			break;
+		default:
+			
+			Logger.log("No command with the name \"" + input + "\"!",
+					LogType.WARNING, false);
+			
+			break;
+		}
 		
 	}
 	
