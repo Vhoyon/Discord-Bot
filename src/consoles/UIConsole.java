@@ -28,6 +28,11 @@ public abstract class UIConsole extends JFrame implements Console {
 		
 		super();
 		
+	}
+	
+	@Override
+	public void initialize(){
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		addWindowListener(new WindowAdapter(){
@@ -133,7 +138,7 @@ public abstract class UIConsole extends JFrame implements Console {
 		
 		setVisible(true);
 		
-		onReady();
+		onInitialized();
 		
 	}
 	

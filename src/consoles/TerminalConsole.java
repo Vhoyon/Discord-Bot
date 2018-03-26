@@ -11,7 +11,10 @@ import vendor.modules.Logger.LogType;
 
 public abstract class TerminalConsole implements Console, Loggable {
 	
-	public TerminalConsole(){
+	public TerminalConsole(){}
+	
+	@Override
+	public void initialize(){
 		
 		Logger.setOutputs(this);
 		
@@ -45,7 +48,7 @@ public abstract class TerminalConsole implements Console, Loggable {
 			}
 			catch(InterruptedException e){}
 			
-			onReady();
+			onInitialized();
 			
 			boolean canContinue;
 			

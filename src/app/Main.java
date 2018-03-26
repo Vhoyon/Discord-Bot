@@ -7,6 +7,7 @@ import consoles.UIConsole;
 import utilities.Dictionary;
 import utilities.specifics.Request;
 import vendor.Framework;
+import vendor.interfaces.Console;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
@@ -40,11 +41,11 @@ public class Main {
 			
 			String botToken = Environment.getVar("BOT_TOKEN");
 			
-			boolean isDebug = Environment.getVar("DEBUG");
+			Console console = null;
 			
 			if(programRequest.hasParameter("t", "terminal")){
 				
-				new TerminalConsole(){
+				console = new TerminalConsole(){
 					@Override
 					public void onStart() throws Exception{
 						startBot(botToken);
@@ -56,15 +57,15 @@ public class Main {
 					}
 					
 					@Override
-					public void onReady(){
-						logLinkIfDebug(isDebug);
+					public void onInitialized(){
+						logLinkIfDebug();
 					}
 				};
 				
 			}
 			else{
 				
-				new UIConsole(){
+				console = new UIConsole(){
 					@Override
 					public void onStart() throws Exception{
 						startBot(botToken);
@@ -76,12 +77,15 @@ public class Main {
 					}
 					
 					@Override
-					public void onReady(){
-						logLinkIfDebug(isDebug);
+					public void onInitialized(){
+						logLinkIfDebug();
 					}
 				};
 				
 			}
+
+			// CAREFUL : This call blocks the main thread!
+			console.initialize();
 			
 		}
 		catch(Exception e){
@@ -134,7 +138,9 @@ public class Main {
 		
 	}
 	
-	private static void logLinkIfDebug(boolean isDebug){
+	private static void logLinkIfDebug(){
+		
+		boolean isDebug = Environment.getVar("DEBUG");
 		
 		if(isDebug){
 			String clientId = Environment.getVar("CLIENT_ID", null);

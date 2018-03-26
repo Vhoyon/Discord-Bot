@@ -6,6 +6,8 @@ public interface Console {
 	
 	public void onStop() throws Exception;
 	
-	public void onReady();
+	public void onInitialized();
+	
+	public void initialize();
 	
 }
