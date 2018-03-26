@@ -24,6 +24,8 @@ public class Main {
 	
 	private static JDA jda;
 	
+	private static String botToken;
+	
 	public static void main(String[] args){
 		
 		try{
@@ -39,7 +41,7 @@ public class Main {
 			
 			Framework.build();
 			
-			String botToken = Environment.getVar("BOT_TOKEN");
+			botToken = Environment.getVar("BOT_TOKEN");
 			
 			Console console = null;
 			
@@ -48,7 +50,7 @@ public class Main {
 				console = new TerminalConsole(){
 					@Override
 					public void onStart() throws Exception{
-						startBot(botToken);
+						startBot(this);
 					}
 					
 					@Override
@@ -68,7 +70,7 @@ public class Main {
 				console = new UIConsole(){
 					@Override
 					public void onStart() throws Exception{
-						startBot(botToken);
+						startBot(this);
 					}
 					
 					@Override
@@ -83,7 +85,9 @@ public class Main {
 				};
 				
 			}
-
+			
+			Logger.setSeparator(null);
+			
 			// CAREFUL : This call blocks the main thread!
 			console.initialize();
 			
@@ -94,27 +98,39 @@ public class Main {
 		
 	}
 	
-	private static void startBot(String botToken) throws Exception{
+	private static void startBot(Console console) throws Exception{
 		
-		Logger.log("Starting the bot...", LogType.INFO);
+		boolean success = false;
 		
-		try{
+		do{
 			
-			jda = new JDABuilder(AccountType.BOT).setToken(botToken)
-					.buildBlocking();
-			jda.addEventListener(new MessageListener());
-			jda.setAutoReconnect(true);
+			Logger.log("Starting the bot...", LogType.INFO);
 			
-			Logger.log("Bot started!", LogType.INFO);
+			try{
+				
+				jda = new JDABuilder(AccountType.BOT).setToken(botToken)
+						.buildBlocking();
+				jda.addEventListener(new MessageListener());
+				jda.setAutoReconnect(true);
+				
+				Logger.log("Bot started!", LogType.INFO);
+				
+				success = true;
+				
+			}
+			catch(LoginException e){
+				
+				botToken = console
+						.getInput("The bot token provided is invalid. Please enter a valid token here :");
+				
+				if(botToken == null || botToken.length() == 0)
+					throw e;
+				
+				Logger.log("Application's Bot Token has been set to : " + botToken, LogType.INFO);
+				
+			}
 			
-		}
-		catch(LoginException e){
-			
-			// TODO : Show a new window that asks for a good bot token
-			
-			throw e;
-			
-		}
+		}while(!success);
 		
 	}
 	
@@ -148,7 +164,7 @@ public class Main {
 			if(clientId != null){
 				Logger.log("Link to join the bot to a server :\n\n"
 						+ "https://discordapp.com/oauth2/authorize?&client_id="
-						+ clientId + "&scope=bot&permissions=0" + "\n", false);
+						+ clientId + "&scope=bot&permissions=0", false);
 			}
 		}
 		

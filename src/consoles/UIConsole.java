@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import vendor.interfaces.Console;
@@ -140,6 +141,13 @@ public abstract class UIConsole extends JFrame implements Console {
 		
 		onInitialized();
 		
+	}
+
+	@Override
+	public String getInput(String message){
+		// TODO : Open alert box with input field here
+		
+		return JOptionPane.showInputDialog(this, message);
 	}
 	
 }

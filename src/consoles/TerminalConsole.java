@@ -11,7 +11,11 @@ import vendor.modules.Logger.LogType;
 
 public abstract class TerminalConsole implements Console, Loggable {
 	
-	public TerminalConsole(){}
+	private BufferedReader reader;
+	
+	public TerminalConsole(){
+		reader = null;
+	}
 	
 	@Override
 	public void initialize(){
@@ -20,11 +24,7 @@ public abstract class TerminalConsole implements Console, Loggable {
 		
 		Logger.log("Welcome to the Discord Bot terminal console!", false);
 		
-		BufferedReader br = null;
-		
 		try{
-			
-			br = new BufferedReader(new InputStreamReader(System.in));
 			
 			try{
 				
@@ -48,30 +48,25 @@ public abstract class TerminalConsole implements Console, Loggable {
 			}
 			catch(InterruptedException e){}
 			
+			reader = new BufferedReader(new InputStreamReader(System.in));
+			
 			onInitialized();
 			
-			boolean canContinue;
+			boolean canContinue = true;
 			
 			do{
 				
-				System.out.print("> ");
-				
-				String input = br.readLine();
+				String input = getInput(">");
 				
 				canContinue = handleInput(input);
-				
-				System.out.println();
 				
 			}while(canContinue);
 			
 		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
 		finally{
-			if(br != null){
+			if(reader != null){
 				try{
-					br.close();
+					reader.close();
 				}
 				catch(IOException e){
 					e.printStackTrace();
@@ -83,20 +78,36 @@ public abstract class TerminalConsole implements Console, Loggable {
 	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
+		System.out.println(logText);
 		
-		if("ERROR".equals(logType)){
+//		logToChannel(logText, logType);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param logText
+	 * @param logType
+	 */
+	@SuppressWarnings("unused")
+	private void logToChannel(String logText, String logType){
+		
+		if("ERROR".equals(logType))
 			System.err.println(logText);
-		}
-		else{
+		else
 			System.out.println(logText);
-		}
 		
 	}
 	
 	private boolean handleInput(String input){
 		
-		if(input == null || input.length() == 0)
+		if(input == null)
 			return true;
+		
+		if(input.length() == 0){
+			Logger.log("The input cannot be empty!", LogType.ERROR);
+			
+			return true;
+		}
 		
 		switch(input){
 		case "start":
@@ -152,6 +163,23 @@ public abstract class TerminalConsole implements Console, Loggable {
 		}
 		
 		return true;
+		
+	}
+	
+	@Override
+	public String getInput(String message){
+		
+		System.out.println();
+		System.out.print(message + " ");
+		
+		try{
+			return reader.readLine();
+		}
+		catch(IOException e){
+			Logger.log(e);
+			
+			return null;
+		}
 		
 	}
 	

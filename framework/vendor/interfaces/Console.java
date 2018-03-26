@@ -10,4 +10,6 @@ public interface Console {
 	
 	public void initialize();
 	
+	public String getInput(String message);
+	
 }
