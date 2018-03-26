@@ -54,7 +54,8 @@ public class Logger extends Module {
 	 *            Logger module.
 	 */
 	public static void setOutputs(Loggable... outputs){
-		Logger.outputs = new ArrayList<>(Arrays.asList(outputs));
+		if(outputs != null)
+			Logger.outputs = new ArrayList<>(Arrays.asList(outputs));
 	}
 	
 	/**
@@ -149,7 +150,7 @@ public class Logger extends Module {
 		if(outputs.isEmpty() && !hasIssuedWarning){
 			hasIssuedWarning = true;
 			
-			System.out
+			System.err
 					.println("[LOGGER WARNING] The Logger hasn't had any outputs attached and a logging call has been made - using the System's output by default. This warning will only be shown once.\n");
 		}
 		
@@ -186,7 +187,7 @@ public class Logger extends Module {
 		
 		String logText = builder.toString();
 		
-		if(outputs == null){
+		if(outputs.size() == 0){
 			System.out.println(logText);
 		}
 		else{

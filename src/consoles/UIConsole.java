@@ -133,6 +133,8 @@ public abstract class UIConsole extends JFrame implements Console {
 		
 		setVisible(true);
 		
+		onReady();
+		
 	}
 	
 }

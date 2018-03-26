@@ -29,7 +29,8 @@ public class Main {
 			
 			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
 			
-			Request programRequest = new Request(requestableArgs, new Dictionary(), "-");
+			Request programRequest = new Request(requestableArgs,
+					new Dictionary(), "-");
 			
 			if(programRequest.hasErrors()){
 				System.out.println(programRequest.getError().getMessage());
@@ -46,12 +47,17 @@ public class Main {
 				new TerminalConsole(){
 					@Override
 					public void onStart() throws Exception{
-						start(botToken);
+						startBot(botToken);
 					}
 					
 					@Override
 					public void onStop() throws Exception{
-						stop();
+						stopBot();
+					}
+					
+					@Override
+					public void onReady(){
+						logLinkIfDebug(isDebug);
 					}
 				};
 				
@@ -61,25 +67,20 @@ public class Main {
 				new UIConsole(){
 					@Override
 					public void onStart() throws Exception{
-						start(botToken);
+						startBot(botToken);
 					}
 					
 					@Override
 					public void onStop() throws Exception{
-						stop();
+						stopBot();
+					}
+					
+					@Override
+					public void onReady(){
+						logLinkIfDebug(isDebug);
 					}
 				};
 				
-			}
-			
-			if(isDebug){
-				String clientId = Environment.getVar("CLIENT_ID", null);
-				
-				if(clientId != null){
-					Logger.log("Link to join the bot to a server :\n\n"
-							+ "https://discordapp.com/oauth2/authorize?&client_id="
-							+ clientId + "&scope=bot&permissions=0", false);
-				}
 			}
 			
 		}
@@ -89,14 +90,14 @@ public class Main {
 		
 	}
 	
-	private static void start(String botToken) throws Exception{
+	private static void startBot(String botToken) throws Exception{
 		
 		Logger.log("Starting the bot...", LogType.INFO);
 		
 		try{
 			
-			jda = new JDABuilder(AccountType.BOT)
-					.setToken(botToken).buildBlocking();
+			jda = new JDABuilder(AccountType.BOT).setToken(botToken)
+					.buildBlocking();
 			jda.addEventListener(new MessageListener());
 			jda.setAutoReconnect(true);
 			
@@ -113,7 +114,7 @@ public class Main {
 		
 	}
 	
-	private static void stop() throws Exception{
+	private static void stopBot() throws Exception{
 		
 		if(jda != null){
 			
@@ -127,9 +128,22 @@ public class Main {
 			
 		}
 		else{
-			Logger.log(
-					"The JDA was already closed, no action was taken.",
+			Logger.log("The JDA was already closed, no action was taken.",
 					LogType.INFO);
+		}
+		
+	}
+	
+	private static void logLinkIfDebug(boolean isDebug){
+		
+		if(isDebug){
+			String clientId = Environment.getVar("CLIENT_ID", null);
+			
+			if(clientId != null){
+				Logger.log("Link to join the bot to a server :\n\n"
+						+ "https://discordapp.com/oauth2/authorize?&client_id="
+						+ clientId + "&scope=bot&permissions=0" + "\n", false);
+			}
 		}
 		
 	}

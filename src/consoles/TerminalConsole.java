@@ -30,7 +30,7 @@ public abstract class TerminalConsole implements Console, Loggable {
 				
 				Thread.sleep(200);
 				
-				System.out.print("Initialising");
+				System.out.print("Initializing");
 				Thread.sleep(333);
 				
 				System.out.print(".");
@@ -39,22 +39,27 @@ public abstract class TerminalConsole implements Console, Loggable {
 				System.out.print(".");
 				Thread.sleep(333);
 				
-				System.out.println(".\nInitialised!");
+				System.out.println(".\nInitialized!\n");
 				Thread.sleep(333);
+				
 			}
 			catch(InterruptedException e){}
 			
-			while(true){
+			onReady();
+			
+			boolean canContinue;
+			
+			do{
 				
 				System.out.print("> ");
 				
 				String input = br.readLine();
 				
-				handleInput(input);
+				canContinue = handleInput(input);
 				
 				System.out.println();
 				
-			}
+			}while(canContinue);
 			
 		}
 		catch(IOException e){
@@ -85,10 +90,10 @@ public abstract class TerminalConsole implements Console, Loggable {
 		
 	}
 	
-	private void handleInput(String input){
+	private boolean handleInput(String input){
 		
 		if(input == null || input.length() == 0)
-			return;
+			return true;
 		
 		switch(input){
 		case "start":
@@ -133,9 +138,8 @@ public abstract class TerminalConsole implements Console, Loggable {
 			
 			Logger.log("Thanks for using the bot!", LogType.INFO);
 			
-			System.exit(0);
+			return false;
 			
-			break;
 		default:
 			
 			Logger.log("No command with the name \"" + input + "\"!",
@@ -143,6 +147,8 @@ public abstract class TerminalConsole implements Console, Loggable {
 			
 			break;
 		}
+		
+		return true;
 		
 	}
 	
