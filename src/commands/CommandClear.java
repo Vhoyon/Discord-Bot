@@ -10,12 +10,9 @@ import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 /**
+ * Classe qui permet d'effacer tout les messages dans le chat ou on l'invoque.
  * 
  * @author Stephano
- *
- *         Classe qui permet d'effacer tout les messages dans le chat ou on
- *         l'invoque
- *
  */
 public class CommandClear extends Command {
 	

@@ -3,14 +3,10 @@ package commands;
 import utilities.Command;
 
 /**
+ * Classe qui envois un message a l'utilisateur qui demande de l'aide avec une
+ * liste complète des commandes.
  * 
  * @author Stephano
- *
- * <br>
- * <br>
- *         Classe qui envois un message a l'utilisateur qui demande de l'aide
- *         avec une liste complète des commandes
- *
  */
 
 public class CommandHelp extends Command {
