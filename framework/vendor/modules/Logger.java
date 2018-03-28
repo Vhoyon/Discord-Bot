@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import vendor.abstracts.Module;
 import vendor.interfaces.Loggable;
@@ -156,6 +158,26 @@ public class Logger extends Module {
 		
 		StringBuilder builder = new StringBuilder();
 		
+		Matcher matcher = Pattern.compile("^(\\^)?(\\s)+").matcher(message);
+		
+		if(matcher.find()){
+			int whitespaceStartIndex = matcher.start();
+			int whitespaceEndIndex = matcher.end();
+			
+			if(message.startsWith("^")){
+				message = message.substring(1);
+			}
+			else{
+				String beforehandWhitespace = message.substring(
+						whitespaceStartIndex, whitespaceEndIndex);
+				
+				builder.append(beforehandWhitespace);
+				
+				message = message.substring(whitespaceEndIndex);
+			}
+			
+		}
+		
 		boolean hasAddedPrefix = false;
 		
 		if(appendDate){
@@ -183,7 +205,7 @@ public class Logger extends Module {
 			
 		}
 		
-		builder.append(message.replaceFirst("^\\s+", ""));
+		builder.append(message);
 		
 		String logText = builder.toString();
 		
