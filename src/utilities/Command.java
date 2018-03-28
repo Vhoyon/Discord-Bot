@@ -6,6 +6,7 @@ import errorHandling.exceptions.*;
 import utilities.interfaces.*;
 import utilities.specifics.Request;
 import utilities.specifics.Request.Parameter;
+import vendor.interfaces.LinkableCommand;
 import vendor.modules.Logger;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.PrivateChannel;
@@ -14,7 +15,8 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public abstract class Command implements Commands, Resources, Emojis, Utils {
+public abstract class Command implements Commands, Resources, Emojis, Utils,
+		LinkableCommand {
 	
 	private Buffer buffer;
 	private MessageReceivedEvent event;
