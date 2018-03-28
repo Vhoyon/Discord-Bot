@@ -158,22 +158,37 @@ public class Logger extends Module {
 		
 		StringBuilder builder = new StringBuilder();
 		
-		Matcher matcher = Pattern.compile("^(\\^)?(\\s)+").matcher(message);
+		Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
+				message);
 		
 		if(matcher.find()){
+			
 			int whitespaceStartIndex = matcher.start();
 			int whitespaceEndIndex = matcher.end();
 			
-			if(message.startsWith("^")){
-				message = message.substring(1);
-			}
-			else{
-				String beforehandWhitespace = message.substring(
-						whitespaceStartIndex, whitespaceEndIndex);
+			String beforehandWhitespace = message.substring(
+					whitespaceStartIndex, whitespaceEndIndex);
+			
+			if(!message.startsWith("^")){
+				message = message.substring(whitespaceEndIndex);
 				
 				builder.append(beforehandWhitespace);
+			}
+			else{
+				message = message.substring(1);
 				
-				message = message.substring(whitespaceEndIndex);
+				int secondCaretPos = message.indexOf("^");
+				
+				// No second caret
+				if(secondCaretPos != -1){
+					
+					message = message.substring(secondCaretPos + 1);
+					
+					builder.append(beforehandWhitespace.substring(1,
+							secondCaretPos + 1));
+					
+				}
+				
 			}
 			
 		}
@@ -219,5 +234,4 @@ public class Logger extends Module {
 		}
 		
 	}
-	
 }
