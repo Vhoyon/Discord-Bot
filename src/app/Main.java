@@ -163,7 +163,7 @@ public class Main {
 			
 			if(clientId != null){
 				Logger.log("Link to join the bot to a server :\n\n"
-						+ "https://discordapp.com/oauth2/authorize?&client_id="
+						+ "https://discordapp.com/oauth2/authorize?client_id="
 						+ clientId + "&scope=bot&permissions=0", false);
 			}
 		}

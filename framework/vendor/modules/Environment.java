@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import vendor.Framework;
 import vendor.abstracts.Module;
@@ -15,6 +18,10 @@ import errorHandling.exceptions.BadFileContentException;
 public class Environment extends Module {
 	
 	private static HashMap<String, String> envVars;
+	
+	private final String WARNINGS = "WARNINGS";
+	private final String SPACED_KEY_ERRORS = "SPACED_KEY_ERRORS";
+	private final String LINE_ERRORS = "LINE_ERRORS";
 	
 	public void build() throws Exception{
 		
@@ -34,31 +41,52 @@ public class Environment extends Module {
 			
 			for(int i = 1; (line = reader.readLine()) != null; i++){
 				
-				if(line.length() > 0 && !line.startsWith("#")){
+				// Remove comment from line if there's content in the line
+				if(line.length() != 0){
+					Matcher matcher = Pattern.compile("(\\s)*#.*")
+							.matcher(line);
+					int index = matcher.find() ? matcher.start() : -1;
 					
-					String[] keyValue = line.split("=", 2);
+					if(index != -1)
+						line = line.substring(0, index);
+				}
+				
+				if(line.length() != 0){
+					
+					String[] keyValue = line.trim().split("=", 2);
 					
 					if(keyValue.length != 2){
-						throw new BadFileContentException(
-								"A variable is not well formatted on line "
-										+ i
-										+ ". Please follow the \"KEY=value\" format.");
+						
+						addError(LINE_ERRORS, "Line " + i + ": \"" + line
+								+ "\"");
+						
 					}
 					else{
 						
 						if(keyValue[1].length() == 0){
-							System.out.println("The variable keyed \""
+							addWarning(WARNINGS, "The variable keyed \""
 									+ keyValue[0] + "\" at line " + i
 									+ " is empty, is that supposed to be..?");
 						}
 						
+						if(keyValue[0].contains(" ")){
+							
+							addError(SPACED_KEY_ERRORS, "Line " + i + ": \""
+									+ line + "\"");
+							
+						}
+						
 					}
 					
-					envVars.put(keyValue[0].toLowerCase(), keyValue[1]);
+					if(!hasErrors()){
+						envVars.put(keyValue[0].toLowerCase(), keyValue[1]);
+					}
 					
 				}
 				
 			}
+			
+			handleIssues();
 			
 		}
 		catch(IOException | NullPointerException e){
@@ -105,6 +133,68 @@ public class Environment extends Module {
 		}
 		
 		return (EnvVar)(String)value;
+	}
+	
+	@Override
+	protected void handleIssuesLogic() throws Exception{
+		
+		StringBuilder builder = new StringBuilder();
+		
+		if(!hasErrors()){
+			
+			builder.append("WARNINGS!");
+			
+			ArrayList<String> warnings = getWarnings(WARNINGS);
+			
+			if(warnings != null){
+				
+				builder.append("\n");
+				
+				for(String warning : warnings){
+					builder.append("\n").append(warning);
+				}
+				
+			}
+			
+			System.err.println(builder.append("\n").toString());
+			
+		}
+		else{
+			
+			builder.append("ERRORS!");
+			
+			ArrayList<String> spaceErrors = getErrors(SPACED_KEY_ERRORS);
+			
+			if(spaceErrors != null){
+				
+				builder.append("\n\nSome keys ("
+						+ spaceErrors.size()
+						+ ") has space(s) in them : Keys must NOT contain spaces.\n");
+				
+				for(String error : spaceErrors){
+					builder.append("\n").append(error);
+				}
+				
+			}
+			
+			ArrayList<String> lineErrors = getErrors(LINE_ERRORS);
+			
+			if(lineErrors != null){
+				
+				builder.append("\n\nSome variables ("
+						+ lineErrors.size()
+						+ ") are not well formatted. Please follow the \"KEY=value\" format.\n");
+				
+				for(String error : lineErrors){
+					builder.append("\n").append(error);
+				}
+				
+			}
+			
+			throw new BadFileContentException(builder.toString());
+			
+		}
+		
 	}
 	
 }

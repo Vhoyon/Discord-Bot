@@ -34,7 +34,7 @@ public class Framework {
 					}
 					catch(Exception e){
 						
-						errors.append(module.getLoadingErrorMessage(e) + "\n");
+						errors.append(module.getLoadingErrorMessage(e) + "\n\n");
 						
 					}
 					
