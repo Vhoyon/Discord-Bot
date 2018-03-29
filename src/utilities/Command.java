@@ -2,6 +2,7 @@ package utilities;
 
 import java.util.ArrayList;
 
+import app.CommandRouter;
 import errorHandling.exceptions.*;
 import utilities.interfaces.*;
 import utilities.specifics.Request;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public abstract class Command extends Translatable implements Commands,
 		Resources, Emojis, Utils, LinkableCommand {
 	
+	private CommandRouter router;
 	private Buffer buffer;
 	private MessageReceivedEvent event;
 	private Guild guild;
@@ -29,6 +31,7 @@ public abstract class Command extends Translatable implements Commands,
 	public Command(){}
 	
 	public Command(Command commandToCopy){
+		setRouter(commandToCopy.getRouter());
 		setContext(commandToCopy.getEvent());
 		setBuffer(commandToCopy.getBuffer());
 		setGuild(commandToCopy.getGuild());
@@ -62,6 +65,14 @@ public abstract class Command extends Translatable implements Commands,
 		
 	}
 	
+	public CommandRouter getRouter(){
+		return router;
+	}
+
+	public void setRouter(CommandRouter router){
+		this.router = router;
+	}
+
 	public Buffer getBuffer(){
 		return buffer;
 	}

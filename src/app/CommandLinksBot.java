@@ -16,8 +16,8 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		
 		return new CommandLinksContainer(new Link[]
 		{
-//			new LinkParams(new Link(SimpleTextCommand.class, HELLO),
-//					(Object[])null),
+			//			new LinkParams(new Link(SimpleTextCommand.class, HELLO),
+			//					(Object[])null),
 			
 			new Link(CommandHelp.class, HELP),
 			
@@ -51,6 +51,8 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			new LinkParams(new Link(SimpleTextCommand.class, TERMINATE),
 					lang("TERMINATE")),
 			
+			new Link(CommandStop.class, STOP),
+			
 			new LinkParams(new Link(GameInteractionCommand.class, GAME),
 					GameInteractionCommand.CommandType.INITIAL),
 			
@@ -81,8 +83,6 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			}
 			
 		};
-		
-		// new Link(CommandStop.class, STOP), // TODO Particular ~ will need to refactor STOP
 		
 	}
 	

@@ -1,7 +1,5 @@
 package app;
 
-import java.util.Set;
-
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.*;
@@ -35,7 +33,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 		try{
 			
-			Object bufferedDict = buffer.get(BUFFER_LANG, event.getGuild().getId());
+			Object bufferedDict = buffer.get(BUFFER_LANG, event.getGuild()
+					.getId());
 			dict = (Dictionary)bufferedDict;
 			
 		}
@@ -93,8 +92,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					try{
 						
-						Object needsConfirmation = buffer
-								.get(BUFFER_CONFIRMATION, commandGuildID);
+						Object needsConfirmation = buffer.get(
+								BUFFER_CONFIRMATION, commandGuildID);
 						
 						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 						if(request.getCommand().equals(CONFIRM)){
@@ -123,8 +122,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					if(!confirmationConfirmed){
 						
-						if(isCommandRunning(request.getCommand(),
-								commandGuildID)){
+						if(CommandsThreadManager.isCommandRunning(
+								request.getCommand(), commandGuildID, this)){
 							command = new BotError(getString(
 									"CommandIsRunningError",
 									request.getCommand()));
@@ -140,6 +139,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 				
 				try{
 					
+					command.setRouter(this);
 					command.setContext(event);
 					command.setBuffer(buffer);
 					command.setRequest(request);
@@ -158,62 +158,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			
 		}
 		
-	}
-	
-	/**
-	 * Method that determines whether a command is running by scanning all the
-	 * threads used in the server of the <code>guildID</code> parameter, looking
-	 * for the desired <code>command</code> parameter.
-	 * 
-	 * @param commandName
-	 *            The command name to search for.
-	 * @param guildID
-	 *            The server's <code>guildID</code> required to search for
-	 *            commands running in said server.
-	 * @return The command found with all of it's attribute in a
-	 *         <code>Command</code> object, <code>null</code> if the command
-	 *         wasn't found.
-	 */
-	private Command getCommandRunning(String commandName, String guildID){
-		
-		Command commandFound = null;
-		
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-		
-		for(Thread thread : threadArray){
-			
-			if(thread instanceof CommandRouter && !thread.equals(this)
-					&& thread.getName().equals(commandName + guildID)){
-				
-				commandFound = ((CommandRouter)thread).getCommand();
-				break;
-				
-			}
-			
-		}
-		
-		return commandFound;
-		
-	}
-	
-	/**
-	 * Method that quickly tells if a command is running based off its name in
-	 * the guild provided in parameters.
-	 * <p>
-	 * Internally, this uses the method <code>getCommandRunning()</code> and
-	 * tests if that returns <code>null</code> or not.
-	 * 
-	 * @param commandName
-	 *            The command name to search for.
-	 * @param guildID
-	 *            The server's <code>guildID</code> required to search for
-	 *            commands running in said server.
-	 * @return <code>true</code> if the command is running in the specified
-	 *         guild id, <code>false</code> otherwise.
-	 */
-	private boolean isCommandRunning(String commandName, String guildID){
-		return getCommandRunning(commandName, guildID) != null;
 	}
 	
 	/**
@@ -277,25 +221,25 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 		command = (Command)commandLinks.initiateLink(commandName);
 		
-//		case HELLO:
-//			command = new SimpleTextCommand(getString("HelloResponse"), event
-//					.getAuthor().getName());
-//			break;
-//		case STOP:
-//			command = new CommandStop(getCommandRunning(request.getContent(),
-//					guildId));
-//			break;
-//		case TEST:
-//			command = new Command(){
-//				@Override
-//				public void action(){
-//					
-//					sendMessage(lang("TestingReplacements", event
-//							.getAuthor().getName()));
-//					
-//				}
-//			};
-//			break;
+		//		case HELLO:
+		//			command = new SimpleTextCommand(getString("HelloResponse"), event
+		//					.getAuthor().getName());
+		//			break;
+		//		case STOP:
+		//			command = new CommandStop(getCommandRunning(request.getContent(),
+		//					guildId));
+		//			break;
+		//		case TEST:
+		//			command = new Command(){
+		//				@Override
+		//				public void action(){
+		//					
+		//					sendMessage(lang("TestingReplacements", event
+		//							.getAuthor().getName()));
+		//					
+		//				}
+		//			};
+		//			break;
 		
 		return command;
 	}
