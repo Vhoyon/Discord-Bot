@@ -1,10 +1,10 @@
-package utilities;
+package vendor.objects;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import utilities.interfaces.Utils;
+import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 
 public class Dictionary implements Utils {

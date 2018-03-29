@@ -1,8 +1,8 @@
 package commands;
 
 import utilities.Command;
-import utilities.Dictionary;
 import utilities.Language;
+import vendor.objects.Dictionary;
 import errorHandling.BotError;
 
 public class CommandLanguage extends Command {

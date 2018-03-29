@@ -7,17 +7,11 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.*;
 import utilities.interfaces.*;
 import utilities.specifics.*;
+import vendor.interfaces.Emojis;
+import vendor.interfaces.Utils;
 import vendor.modules.Logger;
-import vendor.objects.CommandLinker;
-import commands.CommandClear;
-import commands.CommandHelp;
-import commands.CommandLanguage;
-import commands.CommandMusic;
-import commands.CommandSpam;
-import commands.CommandStop;
-import commands.CommandTimer;
-import commands.GameInteractionCommand;
-import commands.GameInteractionCommand.CommandType;
+import vendor.objects.CommandLinksContainer;
+import vendor.objects.Dictionary;
 import commands.SimpleTextCommand;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
@@ -31,9 +25,10 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	private Buffer buffer;
 	private Command command;
 	private Dictionary dict;
+	private CommandLinksContainer commandLinks;
 	
 	public CommandRouter(MessageReceivedEvent event, String messageRecu,
-			Buffer buffer){
+			Buffer buffer, CommandsRepository commandsRepo){
 		
 		this.event = event;
 		this.buffer = buffer;
@@ -50,6 +45,10 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			buffer.push(dict, BUFFER_LANG, event.getGuild().getId());
 			
 		}
+		
+		commandsRepo.setDictionary(dict);
+		
+		commandLinks = commandsRepo.getContainer();
 		
 		this.request = new Request(messageRecu, dict);
 		
@@ -276,9 +275,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 		Command command = null;
 		
-		CommandLinker links = CommandsRepository.create(dict);
-		
-		links.initiateLink(commandName);
+		command = (Command)commandLinks.initiateLink(commandName);
 		
 //		switch(commandName){
 //		case HELLO:

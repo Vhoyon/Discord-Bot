@@ -20,13 +20,14 @@ public interface Commands {
 	}
 	
 	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in Ressources
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
+	 *         Ressources
 	 *         followed by the <i>parameter</i> parameter.
 	 */
 	public default String buildParameter(String parameter){
 		return Resources.PARAMETER_PREFIX + parameter;
 	}
-
+	
 	String TEST = "test";
 	
 	String HELLO = "hello";

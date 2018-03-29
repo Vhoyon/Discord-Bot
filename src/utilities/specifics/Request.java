@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import utilities.Dictionary;
 import utilities.interfaces.Resources;
+import vendor.objects.Dictionary;
 import errorHandling.AbstractBotError;
 import errorHandling.BotError;
 import errorHandling.exceptions.NoParameterContentException;

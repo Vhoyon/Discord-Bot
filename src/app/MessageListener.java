@@ -20,9 +20,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class MessageListener extends ListenerAdapter implements Resources {
 	
 	private Buffer buffer;
+	private CommandsRepository commandsRepo;
 	
 	public MessageListener(){
 		buffer = Buffer.get();
+		
+		commandsRepo = new CommandsRepository(new CommandLinksBot());
 	}
 	
 	@Override
@@ -33,7 +36,7 @@ public class MessageListener extends ListenerAdapter implements Resources {
 		// Bots doesn't need attention...
 		if(!event.getAuthor().isBot()){
 			
-			new CommandRouter(event, messageRecu, buffer).start();
+			new CommandRouter(event, messageRecu, buffer, commandsRepo).start();
 			
 		}
 		

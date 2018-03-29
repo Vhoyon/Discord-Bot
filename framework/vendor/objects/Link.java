@@ -1,7 +1,6 @@
 package vendor.objects;
 
 import vendor.interfaces.LinkableCommand;
-import vendor.modules.Logger;
 
 public class Link {
 	
@@ -14,17 +13,8 @@ public class Link {
 		this.calls = calls;
 	}
 	
-	public void initiate(){
-		
-		try{
-			
-			LinkableCommand command = classToLink.newInstance();
-			
-		}
-		catch(InstantiationException | IllegalAccessException e){
-			Logger.log(e);
-		}
-		
+	public LinkableCommand initiate() throws Exception{
+		return classToLink.newInstance();
 	}
 	
 	public boolean hasCall(String call){
