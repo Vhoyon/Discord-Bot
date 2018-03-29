@@ -42,10 +42,10 @@ public class MessageListener extends ListenerAdapter implements Resources {
 		
 	}
 	
-//	@Override
-//	public void onGuildVoiceLeave(GuildVoiceLeaveEvent event){
-//		super.onGuildVoiceLeave(event);
-//		
+	@Override
+	public void onGuildVoiceLeave(GuildVoiceLeaveEvent event){
+		super.onGuildVoiceLeave(event);
+		
 //		// No events from bots
 //		if(!event.getMember().getUser().isBot()){
 //			
@@ -69,17 +69,17 @@ public class MessageListener extends ListenerAdapter implements Resources {
 //			}
 //			
 //		}
-//		
-//		
-//	}
-//	
-//	@Override
-//	public void onGuildVoiceMove(GuildVoiceMoveEvent event){
-//		super.onGuildVoiceMove(event);
-//		
+		
+		
+	}
+	
+	@Override
+	public void onGuildVoiceMove(GuildVoiceMoveEvent event){
+		super.onGuildVoiceMove(event);
+		
 //		event.getChannelLeft();
 //		
 //		System.out.println("test moves between channels");
-//	}
+	}
 	
 }

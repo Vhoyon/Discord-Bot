@@ -16,13 +16,60 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		
 		return new CommandLinksContainer(new Link[]
 		{
-			new Link(CommandClear.class, CLEAR),
+//			new LinkParams(new Link(SimpleTextCommand.class, HELLO),
+//					(Object[])null),
+			
 			new Link(CommandHelp.class, HELP),
-			new Link(CommandLanguage.class, LANG, LANGUAGE),
-			new Link(CommandTimer.class, TIMER),
-			new Link(CommandSpam.class, SPAM),
+			
 			new LinkParams(new Link(CommandMusic.class, MUSIC_PLAY),
-					CommandMusic.CommandType.PLAY)
+					CommandMusic.CommandType.PLAY),
+			
+			new LinkParams(new Link(CommandMusic.class, MUSIC_PAUSE),
+					CommandMusic.CommandType.PAUSE),
+			
+			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP),
+					CommandMusic.CommandType.SKIP),
+			
+			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP_ALL1,
+					MUSIC_SKIP_ALL2, MUSIC_SKIP_ALL3),
+			
+			CommandMusic.CommandType.SKIP_ALL),
+			
+			new LinkParams(new Link(CommandMusic.class, MUSIC_DISCONNECT),
+					CommandMusic.CommandType.DISCONNECT),
+			
+			new LinkParams(new Link(CommandMusic.class, MUSIC_VOLUME),
+					CommandMusic.CommandType.VOLUME),
+			
+			new LinkParams(new Link(CommandMusic.class, MUSIC_LIST),
+					CommandMusic.CommandType.LIST),
+			
+			new Link(CommandClear.class, CLEAR),
+			
+			new Link(CommandSpam.class, SPAM),
+			
+			new LinkParams(new Link(SimpleTextCommand.class, TERMINATE),
+					lang("TERMINATE")),
+			
+			new LinkParams(new Link(GameInteractionCommand.class, GAME),
+					GameInteractionCommand.CommandType.INITIAL),
+			
+			new LinkParams(new Link(GameInteractionCommand.class, GAME_ADD),
+					GameInteractionCommand.CommandType.ADD),
+			
+			new LinkParams(new Link(GameInteractionCommand.class, GAME_REMOVE),
+					GameInteractionCommand.CommandType.REMOVE),
+			
+			new LinkParams(new Link(GameInteractionCommand.class, GAME_ROLL,
+					GAME_ROLL_ALT), GameInteractionCommand.CommandType.ROLL),
+			
+			new LinkParams(new Link(GameInteractionCommand.class, GAME_LIST),
+					GameInteractionCommand.CommandType.LIST),
+			
+			new Link(CommandTimer.class, TIMER),
+			
+			new Link(CommandLanguage.class, LANG, LANGUAGE),
+		
 		}){
 			
 			@Override
@@ -34,6 +81,8 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			}
 			
 		};
+		
+		// new Link(CommandStop.class, STOP), // TODO Particular ~ will need to refactor STOP
 		
 	}
 	

@@ -9,7 +9,6 @@ public abstract class CommandLinksContainer {
 	
 	private static HashMap<String, Link> linkMap;
 	
-	@SafeVarargs
 	/**
 	 * The latest links commands will always replace the first command call.
 	 * @param links

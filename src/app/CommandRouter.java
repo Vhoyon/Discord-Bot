@@ -277,72 +277,13 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 		command = (Command)commandLinks.initiateLink(commandName);
 		
-//		switch(commandName){
 //		case HELLO:
 //			command = new SimpleTextCommand(getString("HelloResponse"), event
 //					.getAuthor().getName());
 //			break;
-//		case HELP:
-//			command = new CommandHelp();
-//			break;
-//		case MUSIC_PLAY:
-//			command = new CommandMusic(CommandMusic.CommandType.PLAY);
-//			break;
-//		case MUSIC_PAUSE:
-//			command = new CommandMusic(CommandMusic.CommandType.PAUSE);
-//			break;
-//		case MUSIC_SKIP:
-//			command = new CommandMusic(CommandMusic.CommandType.SKIP);
-//			break;
-//		case MUSIC_SKIP_ALL1:
-//		case MUSIC_SKIP_ALL2:
-//		case MUSIC_SKIP_ALL3:
-//			command = new CommandMusic(CommandMusic.CommandType.SKIP_ALL);
-//			break;
-//		case MUSIC_DISCONNECT:
-//			command = new CommandMusic(CommandMusic.CommandType.DISCONNECT);
-//			break;
-//		case MUSIC_VOLUME:
-//			command = new CommandMusic(CommandMusic.CommandType.VOLUME);
-//			break;
-//		case MUSIC_LIST:
-//			command = new CommandMusic(CommandMusic.CommandType.LIST);
-//			break;
-//		case CLEAR:
-//			command = new CommandClear();
-//			break;
-//		case SPAM:
-//			command = new CommandSpam();
-//			break;
-//		case TERMINATE:
-//			command = new SimpleTextCommand(getString("TERMINATE"));
-//			break;
 //		case STOP:
 //			command = new CommandStop(getCommandRunning(request.getContent(),
 //					guildId));
-//			break;
-//		case GAME:
-//			command = new GameInteractionCommand(CommandType.INITIAL);
-//			break;
-//		case GAME_ADD:
-//			command = new GameInteractionCommand(CommandType.ADD);
-//			break;
-//		case GAME_REMOVE:
-//			command = new GameInteractionCommand(CommandType.REMOVE);
-//			break;
-//		case GAME_ROLL:
-//		case GAME_ROLL_ALT:
-//			command = new GameInteractionCommand(CommandType.ROLL);
-//			break;
-//		case GAME_LIST:
-//			command = new GameInteractionCommand(CommandType.LIST);
-//			break;
-//		case TIMER:
-//			command = new CommandTimer();
-//			break;
-//		case LANGUAGE:
-//		case LANG:
-//			command = new CommandLanguage();
 //			break;
 //		case TEST:
 //			command = new Command(){
@@ -355,11 +296,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 //				}
 //			};
 //			break;
-//		default:
-//			command = new BotError(getString("NoActionForCommand",
-//					buildVCommand(request.getCommand())), false);
-//			break;
-//		}
 		
 		return command;
 	}
