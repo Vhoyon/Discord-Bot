@@ -1,8 +1,6 @@
-package utilities;
+package vendor.objects;
 
 import vendor.abstracts.CommandsLinker;
-import vendor.objects.CommandLinksContainer;
-import vendor.objects.Dictionary;
 
 public class CommandsRepository {
 	

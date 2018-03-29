@@ -16,8 +16,7 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		
 		return new CommandLinksContainer(new Link[]
 		{
-			//			new LinkParams(new Link(SimpleTextCommand.class, HELLO),
-			//					(Object[])null),
+			new Link(CommandHello.class, HELLO),
 			
 			new Link(CommandHelp.class, HELP),
 			
@@ -32,8 +31,7 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			
 			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP_ALL1,
 					MUSIC_SKIP_ALL2, MUSIC_SKIP_ALL3),
-			
-			CommandMusic.CommandType.SKIP_ALL),
+					CommandMusic.CommandType.SKIP_ALL),
 			
 			new LinkParams(new Link(CommandMusic.class, MUSIC_DISCONNECT),
 					CommandMusic.CommandType.DISCONNECT),

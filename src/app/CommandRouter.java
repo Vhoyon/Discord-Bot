@@ -9,6 +9,7 @@ import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.CommandLinksContainer;
+import vendor.objects.CommandsRepository;
 import vendor.objects.Dictionary;
 import commands.SimpleTextCommand;
 import errorHandling.BotError;
@@ -65,14 +66,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		return dict.getDirectString(key, replacements);
 	}
 	
-	public void log(String message){
-		Logger.log(message);
-	}
-	
-	public void log(String message, boolean appendDate){
-		Logger.log(message, appendDate);
-	}
-	
 	@Override
 	public void run(){
 		
@@ -122,15 +115,20 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					if(!confirmationConfirmed){
 						
-						if(CommandsThreadManager.isCommandRunning(
-								request.getCommand(), commandGuildID, this)){
+						String commandName = request.getCommand();
+						
+						if(CommandsThreadManager.isCommandRunning(commandName,
+								commandGuildID, this)){
+							
 							command = new BotError(getString(
-									"CommandIsRunningError",
-									request.getCommand()));
+									"CommandIsRunningError", commandName));
+							
 						}
 						else{
-							command = buildCommandFromName(
-									request.getCommand(), commandGuildID);
+							
+							command = (Command)commandLinks
+									.initiateLink(commandName);
+							
 						}
 						
 					}
@@ -153,7 +151,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			}
 			catch(NoCommandException e){
 				if(isDebugging())
-					log(e.getMessage());
+					Logger.log(e);
 			}
 			
 		}
@@ -202,8 +200,12 @@ public class CommandRouter extends Thread implements Resources, Commands,
 				
 				if(request.getCommand().equals(PREFIX)){
 					
-					command = new SimpleTextCommand(
-							getString("MessageIsOnlyPrefixResponse"));
+					command = new SimpleTextCommand(){
+						@Override
+						public String getTextToSend(){
+							return getString("MessageIsOnlyPrefixResponse");
+						}
+					};
 					
 				}
 				
@@ -215,32 +217,4 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 	}
 	
-	private Command buildCommandFromName(String commandName, String guildId){
-		
-		Command command = null;
-		
-		command = (Command)commandLinks.initiateLink(commandName);
-		
-		//		case HELLO:
-		//			command = new SimpleTextCommand(getString("HelloResponse"), event
-		//					.getAuthor().getName());
-		//			break;
-		//		case STOP:
-		//			command = new CommandStop(getCommandRunning(request.getContent(),
-		//					guildId));
-		//			break;
-		//		case TEST:
-		//			command = new Command(){
-		//				@Override
-		//				public void action(){
-		//					
-		//					sendMessage(lang("TestingReplacements", event
-		//							.getAuthor().getName()));
-		//					
-		//				}
-		//			};
-		//			break;
-		
-		return command;
-	}
 }

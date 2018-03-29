@@ -1,64 +1,24 @@
 package commands;
 
-import utilities.Command;
+import utilities.specifics.AbstractTextCommand;
 
-public class SimpleTextCommand extends Command {
-	
-	private enum TextType{
-		SIMPLE, INFO_LINE, INFO_BLOCK
-	}
-	
-	private TextType textType;
-	private String textToSend;
-	
-	private String[] replacements;
-	
-	private SimpleTextCommand(String textToSend, TextType textType,
-			String... replacements){
-		
-		this.textToSend = textToSend;
-		this.textType = textType;
-		this.replacements = replacements;
-		
-	}
-	
-	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner,
-			String... replacements){
-		
-		this(textToSend, TextType.INFO_LINE, replacements);
-		
-		if(!isInfoOneLiner)
-			this.textType = TextType.INFO_BLOCK;
-		
-	}
-	
-	public SimpleTextCommand(String textToSend, boolean isInfoOneLiner){
-		this(textToSend, isInfoOneLiner, (String[])null);
-	}
-	
-	public SimpleTextCommand(String textToSend, String... replacements){
-		this(textToSend, TextType.SIMPLE, replacements);
-	}
-	
-	public SimpleTextCommand(String textToSend){
-		this(textToSend, (String[])null);
-	}
+public abstract class SimpleTextCommand extends AbstractTextCommand {
 	
 	@Override
-	public void action(){
+	protected void sendMessageMethod(String textToSend, TextType textType){
 		
 		switch(textType){
 		case SIMPLE:
-			sendMessage(String.format(textToSend, (Object[])replacements));
+			sendMessage(textToSend);
 			break;
 		case INFO_LINE:
-			sendInfoMessage(String.format(textToSend, (Object[])replacements));
+			sendInfoMessage(textToSend);
 			break;
 		case INFO_BLOCK:
-			sendInfoMessage(String.format(textToSend, (Object[])replacements),
-					false);
+			sendInfoMessage(textToSend, false);
 			break;
 		}
 		
 	}
+	
 }
