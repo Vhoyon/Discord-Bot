@@ -7,8 +7,6 @@ import vendor.modules.Logger;
 
 public abstract class CommandLinksContainer {
 	
-//	private Link[] links;
-	
 	private static HashMap<String, Link> linkMap;
 	
 	@SafeVarargs
@@ -17,7 +15,6 @@ public abstract class CommandLinksContainer {
 	 * @param links
 	 */
 	public CommandLinksContainer(Link... links){
-//		this.links = links;
 		
 		linkMap = new HashMap<>();
 		
@@ -32,6 +29,7 @@ public abstract class CommandLinksContainer {
 			}
 			
 		}
+		
 	}
 	
 	public LinkableCommand initiateLink(String commandName){

@@ -14,7 +14,7 @@ public class Link {
 	}
 	
 	public LinkableCommand initiate() throws Exception{
-		return classToLink.newInstance();
+		return getClassToLink().newInstance();
 	}
 	
 	public boolean hasCall(String call){
@@ -30,6 +30,10 @@ public class Link {
 	
 	public String[] getCalls(){
 		return this.calls;
+	}
+	
+	protected Class<? extends LinkableCommand> getClassToLink(){
+		return classToLink;
 	}
 	
 }

@@ -126,7 +126,8 @@ public class Main {
 				if(botToken == null || botToken.length() == 0)
 					throw e;
 				
-				Logger.log("Application's Bot Token has been set to : " + botToken, LogType.INFO);
+				Logger.log("Application's Bot Token has been set to : "
+						+ botToken, LogType.INFO);
 				
 			}
 			

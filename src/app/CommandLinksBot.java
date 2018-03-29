@@ -1,15 +1,13 @@
 package app;
 
-import commands.CommandClear;
-import commands.CommandHelp;
-import commands.CommandLanguage;
-import commands.CommandTimer;
+import commands.*;
 import errorHandling.BotError;
 import utilities.interfaces.Commands;
 import vendor.abstracts.CommandsLinker;
 import vendor.interfaces.LinkableCommand;
 import vendor.objects.CommandLinksContainer;
 import vendor.objects.Link;
+import vendor.objects.LinkParams;
 
 public class CommandLinksBot extends CommandsLinker implements Commands {
 	
@@ -21,7 +19,10 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			new Link(CommandClear.class, CLEAR),
 			new Link(CommandHelp.class, HELP),
 			new Link(CommandLanguage.class, LANG, LANGUAGE),
-			new Link(CommandTimer.class, TIMER)
+			new Link(CommandTimer.class, TIMER),
+			new Link(CommandSpam.class, SPAM),
+			new LinkParams(new Link(CommandMusic.class, MUSIC_PLAY),
+					CommandMusic.CommandType.PLAY)
 		}){
 			
 			@Override
