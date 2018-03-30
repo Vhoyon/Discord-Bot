@@ -9,17 +9,29 @@ import vendor.modules.Logger;
 
 public class Dictionary implements Utils {
 	
-	private String defaultLang = "en";
-	private String defaultCountry = "US";
+	private static final String DEFAULT_LANG = "en";
+	private static final String DEFAULT_COUNTRY = "US";
+	
+	private static final String DEFAULT_DIRECTORY = "lang";
 	
 	private ResourceBundle resources;
 	private Locale locale;
 	
+	private String directory;
+	
 	public Dictionary(){
-		
-		locale = new Locale(defaultLang, defaultCountry);
+		this.locale = new Locale(DEFAULT_LANG, DEFAULT_COUNTRY);
+		this.directory = DEFAULT_DIRECTORY;
 		this.resources = getDefaultLanguageResources();
-		
+	}
+	
+	private String getDirectory(){
+		return this.directory;
+	}
+	
+	private void setDirectory(String directory){
+		if(!getDirectory().equals(directory))
+			this.directory = directory;
 	}
 	
 	public void setLanguage(String lang, String country){
@@ -51,6 +63,8 @@ public class Dictionary implements Utils {
 			throw new IllegalArgumentException(
 					"The \"key\" parameter cannot be null!");
 		}
+		
+		key = handleKey(key);
 		
 		String string = null;
 		
@@ -92,13 +106,45 @@ public class Dictionary implements Utils {
 		}
 		catch(MissingResourceException e){
 			
-			Logger.log("Key \""
-					+ key
+			Logger.log("Key \"" + key
 					+ "\" is not in any resource file - what's up with that?");
 			
 		}
 		
 		return string;
+		
+	}
+	
+	private String handleKey(String key){
+		
+		if(!key.contains(".")){
+			
+			setDirectory(DEFAULT_DIRECTORY);
+			
+			return key;
+			
+		}
+		else{
+			
+			StringBuilder builder = new StringBuilder();
+			
+			String[] structure = key.split("\\.");
+			
+			for(int i = 0; i < structure.length - 1; i++){
+				
+				builder.append(structure[i]);
+				
+				if(i < structure.length - 1 - 1){
+					builder.append(".");
+				}
+				
+			}
+			
+			setDirectory(builder.toString());
+			
+			return structure[structure.length - 1];
+			
+		}
 		
 	}
 	
@@ -123,16 +169,16 @@ public class Dictionary implements Utils {
 		
 	}
 	
+	private ResourceBundle getDefaultLanguageResources(){
+		return getLanguageResources(DEFAULT_LANG, DEFAULT_COUNTRY);
+	}
+	
 	private ResourceBundle getLanguageResources(String lang, String country){
 		return getLanguageResources(new Locale(lang, country));
 	}
 	
 	private ResourceBundle getLanguageResources(Locale locale){
-		return ResourceBundle.getBundle("lang.DiscordBot", locale);
-	}
-	
-	private ResourceBundle getDefaultLanguageResources(){
-		return getLanguageResources(defaultLang, defaultCountry);
+		return ResourceBundle.getBundle(getDirectory() + ".strings", locale);
 	}
 	
 }

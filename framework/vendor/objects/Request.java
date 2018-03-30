@@ -71,9 +71,13 @@ public class Request implements Utils {
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
 	public final static String DEFAULT_PARAMETER_PREFIX = "-";
 	
+	private final static String DEFAULT_LANG_DIRECTORY = "vendor.lang";
+	
 	private String command;
 	private String content;
+	
 	private Dictionary dict;
+	private String langDirectory;
 	
 	private String commandPrefix;
 	
@@ -87,15 +91,22 @@ public class Request implements Utils {
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String parameterPrefix){
+			String parametersPrefix){
 		this(receivedMessage, dictionary, DEFAULT_COMMAND_PREFIX,
-				parameterPrefix);
+				parametersPrefix);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
 			String commandPrefix, String parametersPrefix){
+		this(receivedMessage, dictionary, commandPrefix,
+				parametersPrefix, DEFAULT_LANG_DIRECTORY);
+	}
+	
+	public Request(String receivedMessage, Dictionary dictionary,
+			String commandPrefix, String parametersPrefix, String langDirectory){
 		
 		this.dict = dictionary;
+		this.langDirectory = langDirectory;
 		
 		this.commandPrefix = commandPrefix;
 		
@@ -338,13 +349,13 @@ public class Request implements Utils {
 			String pluralTester;
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = dict.getDirectString("RequestParamStartSingle");
+				pluralTester = dict.getDirectString(langDirectory + ".RequestParamStartSingle");
 			else
 				pluralTester = dict
-						.getDirectString("RequestParamStartMultiple");
+						.getDirectString(langDirectory + ".RequestParamStartMultiple");
 			
 			StringBuilder message = new StringBuilder(pluralTester + " "
-					+ dict.getDirectString("RequestParamStartFollowing") + " ");
+					+ dict.getDirectString(langDirectory + ".RequestParamStartFollowing") + " ");
 			
 			for(int i = 0; i < duplicateParams.size(); i++){
 				
@@ -357,13 +368,13 @@ public class Request implements Utils {
 			}
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = dict.getDirectString("RequestEndMessageSingle");
+				pluralTester = dict.getDirectString(langDirectory + ".RequestEndMessageSingle");
 			else
 				pluralTester = dict
-						.getDirectString("RequestEndMessageMultiple");
+						.getDirectString(langDirectory + ".RequestEndMessageMultiple");
 			
 			message.append("\n*"
-					+ format(dict.getDirectString("RequestEndMessage"),
+					+ format(dict.getDirectString(langDirectory + ".RequestEndMessage"),
 							pluralTester) + "*");
 			
 			this.error = message.toString();
