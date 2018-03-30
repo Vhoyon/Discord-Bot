@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
 
 public class Dictionary implements Utils {
 	
@@ -83,11 +84,13 @@ public class Dictionary implements Utils {
 						possiblePrefix);
 				
 				if(isDebugging())
-					Logger.log("Key \""
-							+ key
-							+ "\" is missing in the resource file for the language \""
-							+ locale.getLanguage() + "_" + locale.getCountry()
-							+ "\".");
+					Logger.log(
+							"Key \""
+									+ key
+									+ "\" is missing in the resource file for the language \""
+									+ locale.getLanguage() + "_"
+									+ locale.getCountry() + "\".",
+							LogType.WARNING);
 				
 			}
 			catch(NullPointerException e){
@@ -96,18 +99,21 @@ public class Dictionary implements Utils {
 						possiblePrefix);
 				
 				if(isDebugging())
-					Logger.log("Key \""
-							+ key
-							+ "\" is empty in the resource file for the language \""
-							+ locale.getLanguage() + "_" + locale.getCountry()
-							+ "\".");
+					Logger.log(
+							"Key \""
+									+ key
+									+ "\" is empty in the resource file for the language \""
+									+ locale.getLanguage() + "_"
+									+ locale.getCountry() + "\".",
+							LogType.WARNING);
 				
 			}
 		}
 		catch(MissingResourceException e){
 			
 			Logger.log("Key \"" + key
-					+ "\" is not in any resource file - what's up with that?");
+					+ "\" is not in any resource file - what's up with that?",
+					LogType.WARNING);
 			
 		}
 		
