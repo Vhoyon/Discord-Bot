@@ -1,4 +1,4 @@
-package utilities.interfaces;
+package vendor.interfaces;
 
 public interface Emojis {
 	

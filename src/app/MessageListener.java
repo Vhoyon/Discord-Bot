@@ -2,6 +2,7 @@ package app;
 
 import utilities.*;
 import utilities.interfaces.Resources;
+import vendor.objects.CommandsRepository;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
@@ -20,9 +21,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class MessageListener extends ListenerAdapter implements Resources {
 	
 	private Buffer buffer;
+	private CommandsRepository commandsRepo;
 	
 	public MessageListener(){
 		buffer = Buffer.get();
+		
+		commandsRepo = new CommandsRepository(new CommandLinksBot());
 	}
 	
 	@Override
@@ -33,7 +37,7 @@ public class MessageListener extends ListenerAdapter implements Resources {
 		// Bots doesn't need attention...
 		if(!event.getAuthor().isBot()){
 			
-			new CommandRouter(event, messageRecu, buffer).start();
+			new CommandRouter(event, messageRecu, buffer, commandsRepo).start();
 			
 		}
 		
@@ -43,29 +47,29 @@ public class MessageListener extends ListenerAdapter implements Resources {
 	public void onGuildVoiceLeave(GuildVoiceLeaveEvent event){
 		super.onGuildVoiceLeave(event);
 		
-		// No events from bots
-		if(!event.getMember().getUser().isBot()){
-			
-			try{
-				
-				VoiceChannel playerVoiceChannel = (VoiceChannel)buffer.get(
-						BUFFER_VOICE_CHANNEL, event.getGuild().getId());
-				
-				System.out.println(playerVoiceChannel);
-				
-				if(playerVoiceChannel.equals(event.getChannelLeft())){
-					System.out.println("test leaves from same lel");
-				}
-				else{
-					System.out.println("fuk");
-				}
-				
-			}
-			catch(NullPointerException e){
-				System.out.println("hehe");
-			}
-			
-		}
+//		// No events from bots
+//		if(!event.getMember().getUser().isBot()){
+//			
+//			try{
+//				
+//				VoiceChannel playerVoiceChannel = (VoiceChannel)buffer.get(
+//						BUFFER_VOICE_CHANNEL, event.getGuild().getId());
+//				
+//				System.out.println(playerVoiceChannel);
+//				
+//				if(playerVoiceChannel.equals(event.getChannelLeft())){
+//					System.out.println("test leaves from same lel");
+//				}
+//				else{
+//					System.out.println("fuk");
+//				}
+//				
+//			}
+//			catch(NullPointerException e){
+//				System.out.println("hehe");
+//			}
+//			
+//		}
 		
 		
 	}
@@ -74,9 +78,9 @@ public class MessageListener extends ListenerAdapter implements Resources {
 	public void onGuildVoiceMove(GuildVoiceMoveEvent event){
 		super.onGuildVoiceMove(event);
 		
-		event.getChannelLeft();
-		
-		System.out.println("test moves between channels");
+//		event.getChannelLeft();
+//		
+//		System.out.println("test moves between channels");
 	}
 	
 }

@@ -4,13 +4,14 @@ import javax.security.auth.login.LoginException;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
-import utilities.Dictionary;
-import utilities.specifics.Request;
+import utilities.specifics.CommandsThreadManager;
 import vendor.Framework;
 import vendor.interfaces.Console;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
+import vendor.objects.Dictionary;
+import vendor.objects.Request;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -33,10 +34,10 @@ public class Main {
 			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
 			
 			Request programRequest = new Request(requestableArgs,
-					new Dictionary(), "-");
+					new Dictionary());
 			
-			if(programRequest.hasErrors()){
-				System.out.println(programRequest.getError().getMessage());
+			if(programRequest.hasError()){
+				System.out.println(programRequest.getError());
 			}
 			
 			Framework.build();
@@ -126,7 +127,8 @@ public class Main {
 				if(botToken == null || botToken.length() == 0)
 					throw e;
 				
-				Logger.log("Application's Bot Token has been set to : " + botToken, LogType.INFO);
+				Logger.log("Application's Bot Token has been set to : "
+						+ botToken, LogType.INFO);
 				
 			}
 			
@@ -139,6 +141,8 @@ public class Main {
 		if(jda != null){
 			
 			Logger.log("Shutting down the bot...", LogType.INFO);
+			
+			CommandsThreadManager.stopAllCommands();
 			
 			jda.shutdownNow();
 			

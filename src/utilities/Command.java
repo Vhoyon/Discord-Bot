@@ -2,11 +2,16 @@ package utilities;
 
 import java.util.ArrayList;
 
-import errorHandling.exceptions.*;
+import app.CommandRouter;
 import utilities.interfaces.*;
-import utilities.specifics.Request;
-import utilities.specifics.Request.Parameter;
+import vendor.abstracts.Translatable;
+import vendor.exceptions.NoParameterContentException;
+import vendor.interfaces.Emojis;
+import vendor.interfaces.LinkableCommand;
+import vendor.interfaces.Utils;
 import vendor.modules.Logger;
+import vendor.objects.Request;
+import vendor.objects.Request.Parameter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -14,17 +19,19 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public abstract class Command implements Commands, Resources, Emojis, Utils {
+public abstract class Command extends Translatable implements Commands,
+		Resources, Emojis, Utils, LinkableCommand {
 	
+	private CommandRouter router;
 	private Buffer buffer;
 	private MessageReceivedEvent event;
 	private Guild guild;
 	private Request request;
-	private Dictionary dictionary;
 	
 	public Command(){}
 	
 	public Command(Command commandToCopy){
+		setRouter(commandToCopy.getRouter());
 		setContext(commandToCopy.getEvent());
 		setBuffer(commandToCopy.getBuffer());
 		setGuild(commandToCopy.getGuild());
@@ -58,6 +65,14 @@ public abstract class Command implements Commands, Resources, Emojis, Utils {
 		
 	}
 	
+	public CommandRouter getRouter(){
+		return router;
+	}
+
+	public void setRouter(CommandRouter router){
+		this.router = router;
+	}
+
 	public Buffer getBuffer(){
 		return buffer;
 	}
@@ -152,14 +167,6 @@ public abstract class Command implements Commands, Resources, Emojis, Utils {
 	
 	public boolean hasParameter(String... parameterNames){
 		return this.getRequest().hasParameter(parameterNames);
-	}
-	
-	public void setDictionary(Dictionary dictionary){
-		this.dictionary = dictionary;
-	}
-	
-	public Dictionary getDictionary(){
-		return dictionary;
 	}
 	
 	public abstract void action();
@@ -293,61 +300,6 @@ public abstract class Command implements Commands, Resources, Emojis, Utils {
 	
 	public void editMessage(String messageToEdit, String messageId){
 		getTextContext().editMessageById(messageId, messageToEdit).complete();
-	}
-	
-	public String lang(boolean isFullString, String key){
-		return isFullString ? this.getDictionary().getDirectString(key)
-				: lang(key);
-	}
-	
-	/**
-	 * Legacy method to directly get resources with the key supplied without
-	 * testing for class possibility. Also applies a formatting to replace
-	 * variables in the lang resource that has been returned.
-	 * <p>
-	 * <b>PLEASE NOTE</b> : This does not give much of a performance boost as it
-	 * uses the same methods internally - it does however skips a ressource
-	 * check, which is the <i>only</i> reason why this method is not deprecated.
-	 * 
-	 * @param key
-	 *            The key to search the resource lang files for.
-	 * @param replacements
-	 *            Replacements values for String formatting (change variables in
-	 *            the Strings).
-	 * @return The language String found in the resources with the variables
-	 *         replaced, or <code>null</code> if there is absolutely no string
-	 *         found in the resources.
-	 * @see {@link #langDirect(String key)}
-	 */
-	public String langDirect(String key, Object... replacements){
-		return getDictionary().getDirectString(key, replacements);
-	}
-	
-	/**
-	 * Legacy method to directly get resources with the key supplied without
-	 * testing for class possibility.
-	 * <p>
-	 * <b>PLEASE NOTE</b> : This does not give much of a performance boost as it
-	 * uses the same methods internally - it does however skips a ressource
-	 * check, which is the <i>only</i> reason why this method is not deprecated.
-	 * 
-	 * @param key
-	 *            The key to search the resource lang files for.
-	 * @return The language String found in the resources, or <code>null</code>
-	 *         if there is absolutely no string found in the resources.
-	 * @see {@link #langDirect(String key, Object... replacements)}
-	 */
-	public String langDirect(String key){
-		return getDictionary().getDirectString(key);
-	}
-	
-	public String lang(String key){
-		return getDictionary().getString(key, getClass().getSimpleName());
-	}
-	
-	public String lang(String key, Object... replacements){
-		return getDictionary().getString(key, getClass().getSimpleName(),
-				replacements);
 	}
 	
 	public void log(String message){

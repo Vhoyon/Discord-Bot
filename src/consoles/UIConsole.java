@@ -19,8 +19,6 @@ import vendor.objects.LoggableJTextArea;
 
 public abstract class UIConsole extends JFrame implements Console {
 	
-	//	private MainConsole console;
-	
 	private JButton actionButton;
 	
 	private LoggableJTextArea log;
@@ -145,8 +143,6 @@ public abstract class UIConsole extends JFrame implements Console {
 
 	@Override
 	public String getInput(String message){
-		// TODO : Open alert box with input field here
-		
 		return JOptionPane.showInputDialog(this, message);
 	}
 	

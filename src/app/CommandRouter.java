@@ -1,29 +1,21 @@
 package app;
 
-import java.util.Set;
-
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-
 import utilities.*;
+import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
+import vendor.exceptions.NoCommandException;
+import vendor.interfaces.Emojis;
+import vendor.interfaces.Utils;
 import vendor.modules.Logger;
-
-import commands.CommandClear;
-import commands.CommandHelp;
-import commands.CommandLanguage;
-import commands.CommandMusic;
-import commands.CommandSpam;
-import commands.CommandStop;
-import commands.CommandTimer;
-import commands.GameInteractionCommand;
-import commands.GameInteractionCommand.CommandType;
-import commands.SimpleTextCommand;
-
+import vendor.objects.CommandLinksContainer;
+import vendor.objects.CommandsRepository;
+import vendor.objects.Dictionary;
+import vendor.objects.Request;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
-import errorHandling.exceptions.NoCommandException;
 
 public class CommandRouter extends Thread implements Resources, Commands,
 		Emojis, Utils {
@@ -33,16 +25,18 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	private Buffer buffer;
 	private Command command;
 	private Dictionary dict;
+	private CommandLinksContainer commandLinks;
 	
 	public CommandRouter(MessageReceivedEvent event, String messageRecu,
-			Buffer buffer){
+			Buffer buffer, CommandsRepository commandsRepo){
 		
 		this.event = event;
 		this.buffer = buffer;
 		
 		try{
 			
-			Object bufferedDict = buffer.get(BUFFER_LANG, event.getGuild().getId());
+			Object bufferedDict = buffer.get(BUFFER_LANG, event.getGuild()
+					.getId());
 			dict = (Dictionary)bufferedDict;
 			
 		}
@@ -53,7 +47,12 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			
 		}
 		
-		this.request = new Request(messageRecu, dict);
+		commandsRepo.setDictionary(dict);
+		
+		commandLinks = commandsRepo.getContainer();
+		
+		this.request = new Request(messageRecu, dict, Resources.PREFIX,
+				Resources.PARAMETER_PREFIX);
 		
 	}
 	
@@ -67,14 +66,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	
 	public String getString(String key, Object... replacements){
 		return dict.getDirectString(key, replacements);
-	}
-	
-	public void log(String message){
-		Logger.log(message);
-	}
-	
-	public void log(String message, boolean appendDate){
-		Logger.log(message, appendDate);
 	}
 	
 	@Override
@@ -96,8 +87,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					try{
 						
-						Object needsConfirmation = buffer
-								.get(BUFFER_CONFIRMATION, commandGuildID);
+						Object needsConfirmation = buffer.get(
+								BUFFER_CONFIRMATION, commandGuildID);
 						
 						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 						if(request.getCommand().equals(CONFIRM)){
@@ -118,7 +109,9 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					}
 					catch(NullPointerException e){}
 					
-					if((command = request.getError()) != null){
+					if(request.hasError()){
+						command = new BotError(request.getError(), false);
+						
 						command.setContext(event);
 						command.action();
 						command = null;
@@ -126,15 +119,20 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					if(!confirmationConfirmed){
 						
-						if(isCommandRunning(request.getCommand(),
-								commandGuildID)){
+						String commandName = request.getCommand();
+						
+						if(CommandsThreadManager.isCommandRunning(commandName,
+								commandGuildID, this)){
+							
 							command = new BotError(getString(
-									"CommandIsRunningError",
-									request.getCommand()));
+									"CommandIsRunningError", commandName));
+							
 						}
 						else{
-							command = buildCommandFromName(
-									request.getCommand(), commandGuildID);
+							
+							command = (Command)commandLinks
+									.initiateLink(commandName);
+							
 						}
 						
 					}
@@ -143,6 +141,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 				
 				try{
 					
+					command.setRouter(this);
 					command.setContext(event);
 					command.setBuffer(buffer);
 					command.setRequest(request);
@@ -156,67 +155,11 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			}
 			catch(NoCommandException e){
 				if(isDebugging())
-					log(e.getMessage());
+					Logger.log(e);
 			}
 			
 		}
 		
-	}
-	
-	/**
-	 * Method that determines whether a command is running by scanning all the
-	 * threads used in the server of the <code>guildID</code> parameter, looking
-	 * for the desired <code>command</code> parameter.
-	 * 
-	 * @param commandName
-	 *            The command name to search for.
-	 * @param guildID
-	 *            The server's <code>guildID</code> required to search for
-	 *            commands running in said server.
-	 * @return The command found with all of it's attribute in a
-	 *         <code>Command</code> object, <code>null</code> if the command
-	 *         wasn't found.
-	 */
-	private Command getCommandRunning(String commandName, String guildID){
-		
-		Command commandFound = null;
-		
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-		
-		for(Thread thread : threadArray){
-			
-			if(thread instanceof CommandRouter && !thread.equals(this)
-					&& thread.getName().equals(commandName + guildID)){
-				
-				commandFound = ((CommandRouter)thread).getCommand();
-				break;
-				
-			}
-			
-		}
-		
-		return commandFound;
-		
-	}
-	
-	/**
-	 * Method that quickly tells if a command is running based off its name in
-	 * the guild provided in parameters.
-	 * <p>
-	 * Internally, this uses the method <code>getCommandRunning()</code> and
-	 * tests if that returns <code>null</code> or not.
-	 * 
-	 * @param commandName
-	 *            The command name to search for.
-	 * @param guildID
-	 *            The server's <code>guildID</code> required to search for
-	 *            commands running in said server.
-	 * @return <code>true</code> if the command is running in the specified
-	 *         guild id, <code>false</code> otherwise.
-	 */
-	private boolean isCommandRunning(String commandName, String guildID){
-		return getCommandRunning(commandName, guildID) != null;
 	}
 	
 	/**
@@ -232,7 +175,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	 * <p>
 	 * In another case where the received message in a server is only "
 	 * <code>!!</code>" (the <code><i>PREFIX</i></code> value), a
-	 * {@link commands.SimpleTextCommand SimpleTextCommand} command is created
+	 * {@link utilities.abstracts.SimpleTextCommand SimpleTextCommand} command is created
 	 * that will send the message
 	 * "<i>... you wanted to call upon me or...?</i>".
 	 * 
@@ -261,8 +204,12 @@ public class CommandRouter extends Thread implements Resources, Commands,
 				
 				if(request.getCommand().equals(PREFIX)){
 					
-					command = new SimpleTextCommand(
-							getString("MessageIsOnlyPrefixResponse"));
+					command = new SimpleTextCommand(){
+						@Override
+						public String getTextToSend(){
+							return getString("MessageIsOnlyPrefixResponse");
+						}
+					};
 					
 				}
 				
@@ -274,94 +221,4 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 	}
 	
-	private Command buildCommandFromName(String commandName, String guildId){
-		
-		Command command;
-		
-		switch(commandName){
-		case HELLO:
-			command = new SimpleTextCommand(getString("HelloResponse"), event
-					.getAuthor().getName());
-			break;
-		case HELP:
-			command = new CommandHelp();
-			break;
-		case MUSIC_PLAY:
-			command = new CommandMusic(CommandMusic.CommandType.PLAY);
-			break;
-		case MUSIC_PAUSE:
-			command = new CommandMusic(CommandMusic.CommandType.PAUSE);
-			break;
-		case MUSIC_SKIP:
-			command = new CommandMusic(CommandMusic.CommandType.SKIP);
-			break;
-		case MUSIC_SKIP_ALL1:
-		case MUSIC_SKIP_ALL2:
-		case MUSIC_SKIP_ALL3:
-			command = new CommandMusic(CommandMusic.CommandType.SKIP_ALL);
-			break;
-		case MUSIC_DISCONNECT:
-			command = new CommandMusic(CommandMusic.CommandType.DISCONNECT);
-			break;
-		case MUSIC_VOLUME:
-			command = new CommandMusic(CommandMusic.CommandType.VOLUME);
-			break;
-		case MUSIC_LIST:
-			command = new CommandMusic(CommandMusic.CommandType.LIST);
-			break;
-		case CLEAR:
-			command = new CommandClear();
-			break;
-		case SPAM:
-			command = new CommandSpam();
-			break;
-		case TERMINATE:
-			command = new SimpleTextCommand(getString("TERMINATE"));
-			break;
-		case STOP:
-			command = new CommandStop(getCommandRunning(request.getContent(),
-					guildId));
-			break;
-		case GAME:
-			command = new GameInteractionCommand(CommandType.INITIAL);
-			break;
-		case GAME_ADD:
-			command = new GameInteractionCommand(CommandType.ADD);
-			break;
-		case GAME_REMOVE:
-			command = new GameInteractionCommand(CommandType.REMOVE);
-			break;
-		case GAME_ROLL:
-		case GAME_ROLL_ALT:
-			command = new GameInteractionCommand(CommandType.ROLL);
-			break;
-		case GAME_LIST:
-			command = new GameInteractionCommand(CommandType.LIST);
-			break;
-		case TIMER:
-			command = new CommandTimer();
-			break;
-		case LANGUAGE:
-		case LANG:
-			command = new CommandLanguage();
-			break;
-		case TEST:
-			command = new Command(){
-				@Override
-				public void action(){
-					
-					sendMessage(lang("TestingReplacements", event
-							.getAuthor().getName()));
-					
-				}
-			};
-			break;
-		default:
-			command = new BotError(getString("NoActionForCommand",
-					buildVCommand(request.getCommand())), false);
-			break;
-		}
-		
-		return command;
-	}
 }

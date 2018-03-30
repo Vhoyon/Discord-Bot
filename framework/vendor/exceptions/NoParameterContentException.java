@@ -1,4 +1,4 @@
-package errorHandling.exceptions;
+package vendor.exceptions;
 
 public class NoParameterContentException extends Exception {
 	public NoParameterContentException(String commandName){

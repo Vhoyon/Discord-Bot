@@ -1,4 +1,4 @@
-package errorHandling;
+package utilities.abstracts;
 
 import utilities.Command;
 

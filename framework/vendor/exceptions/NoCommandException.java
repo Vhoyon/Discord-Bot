@@ -1,4 +1,4 @@
-package errorHandling.exceptions;
+package vendor.exceptions;
 
 public class NoCommandException extends Exception {
 	public NoCommandException(){

@@ -1,4 +1,4 @@
-package utilities;
+package utilities.abstracts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
