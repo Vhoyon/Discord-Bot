@@ -1,6 +1,7 @@
 package errorHandling;
 
-import framework.Command;
+import utilities.Command;
+import utilities.abstracts.AbstractBotError;
 
 public class BotErrorPrivate extends AbstractBotError {
 	

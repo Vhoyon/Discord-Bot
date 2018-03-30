@@ -2,38 +2,45 @@ package commands;
 
 import java.util.List;
 
+import utilities.Command;
+import utilities.specifics.CommandConfirmed;
 import errorHandling.BotError;
-import framework.specifics.CommandConfirmed;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 /**
+ * Classe qui permet d'effacer tout les messages dans le chat ou on l'invoque.
  * 
  * @author Stephano
- *
- *         Classe qui permet d'effacer tout les messages dans le chat ou on
- *         l'invoque
- *
  */
-public class CommandClear extends CommandConfirmed {
+public class CommandClear extends Command {
 	
 	@Override
-	public String getConfMessage(){
-		return getStringEz("ConfirmMessage");
-	}
-	
-	@Override
-	public void confirmed(){
+	public void action(){
 		
-		try{
+		new CommandConfirmed(this){
 			
-			fullClean();
+			@Override
+			public String getConfMessage(){
+				return lang("ConfirmMessage");
+			}
 			
-		}
-		catch(PermissionException e){
-			sendMessage(getStringEz("NoPermission"));
-		}
+			@Override
+			public void confirmed(){
+				
+				try{
+					
+					fullClean();
+					
+				}
+				catch(PermissionException e){
+					sendMessage(lang("NoPermission"));
+				}
+				
+			}
+			
+		};
 		
 	}
 	
@@ -64,7 +71,7 @@ public class CommandClear extends CommandConfirmed {
 		}while(!vide);
 		
 		if(hadErrors)
-			new BotError(this, getStringEz("CannotBulkDeleteOld"));
+			new BotError(this, lang("CannotBulkDeleteOld"));
 		
 	}
 	

@@ -1,7 +1,8 @@
 package commands;
 
-import errorHandling.exceptions.NoParameterContentException;
-import framework.Command;
+import utilities.Command;
+import vendor.exceptions.NoParameterContentException;
+import errorHandling.BotError;
 
 public class CommandTimer extends Command {
 	
@@ -17,48 +18,54 @@ public class CommandTimer extends Command {
 		
 		try{
 			// seconds = Integer.parseInt(constraints[0]);
-			if(isParameterPresent("h")){
+			if(hasParameter("h")){
 				hours = Integer.parseInt(getParameter("h")
 						.getParameterContent());
 			}
-			if(isParameterPresent("m")){
+			if(hasParameter("m")){
 				minutes = Integer.parseInt(getParameter("m")
 						.getParameterContent());
 			}
-			if(isParameterPresent("s")){
+			if(hasParameter("s")){
 				seconds = Integer.parseInt(getParameter("s")
 						.getParameterContent());
+			}
+			
+			if(!hasParameter("h", "m", "s")){
+				throw new NullPointerException();
+			}
+			
+			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
+			String timerMessageId = null;
+			// long totalTime = (seconds * 1000);
+			// long temps = System.currentTimeMillis();
+			timerMessageId = sendMessage(hours + "hours " + minutes + " minutes "
+					+ seconds + " seconds");
+			
+			for(int i = totalTime; i >= 0 && isAlive; i--){
+				
+				if(i < totalTime){
+					timeConstruct(i);
+					editMessage(timeRef[0] + "hours " + timeRef[1] + " minutes "
+							+ timeRef[2] + " seconds", timerMessageId);
+				}
+				
+				if(i == 0){
+					sendMessage("TimerEnded");
+				}
+				try{
+					Thread.sleep(1000);
+				}
+				catch(InterruptedException e){}
 			}
 			
 		}
 		catch(NullPointerException e){
 			sendMessage("You must give an amount of time to the "
-					+ buildVCommand("timer") + " command for it too count");
+					+ buildVCommand("timer") + " command for it to count");
 		}
-		catch(NumberFormatException | NoParameterContentException e){}
-		
-		int totalTime = (hours * 3600) + (minutes * 60) + seconds;
-		String timerMessageId = null;
-		// long totalTime = (seconds * 1000);
-		// long temps = System.currentTimeMillis();
-		timerMessageId = sendMessage(hours + "hours " + minutes
-				+ " minutes " + seconds + " seconds");
-		
-		for(int i = totalTime; i >= 0 && isAlive; i--){
-			
-			if(i < totalTime){
-				timeConstruct(i);
-				editMessage(timeRef[0] + "hours " + timeRef[1] + " minutes "
-						+ timeRef[2] + " seconds", timerMessageId);
-			}
-			
-			if(i == 0){
-				sendMessage("TimerEnded");
-			}
-			try{
-				Thread.sleep(1000);
-			}
-			catch(InterruptedException e){}
+		catch(NumberFormatException | NoParameterContentException e){
+			new BotError(this, "One of the value provided isn't a number!");
 		}
 		
 	}

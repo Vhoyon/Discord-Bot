@@ -1,6 +1,6 @@
 package commands;
 
-import framework.Command;
+import utilities.Command;
 
 public class CommandSpam extends Command {
 	
@@ -19,7 +19,7 @@ public class CommandSpam extends Command {
 			if(getContent() != null)
 				numberOfSpam = Integer.parseInt(content[0]);
 			
-			getBuffer().push(true, BUFFER_SPAM);
+			remember(true, BUFFER_SPAM);
 			
 			boolean hasCustomMessage = content != null && content.length == 2;
 			
@@ -33,13 +33,13 @@ public class CommandSpam extends Command {
 						}
 						catch(InterruptedException e){}
 					
-					if(!(boolean)getBuffer().get(BUFFER_SPAM))
+					if(!(boolean)getMemory(BUFFER_SPAM))
 						break;
 					
 					if(hasCustomMessage)
 						sendMessage(content[1]);
 					else
-						sendMessage(getStringEz("Spam") + " #" + (i + 1));
+						sendMessage(lang("Spam") + " #" + (i + 1));
 					
 				}
 				
@@ -48,27 +48,26 @@ public class CommandSpam extends Command {
 				// Was probably removed by the stopAction.
 			}
 			finally{
-				getBuffer().remove(BUFFER_SPAM);
+				forget(BUFFER_SPAM);
 			}
 			
 		}
 		catch(NumberFormatException e){
 			
-			String commandStart = getStringEz("UsageStart");
+			String commandStart = lang("UsageStart");
 			String command = buildCommand(SPAM);
 			
-			String command1 = String.format(commandStart, command)
-					+ " : "
-					+ String.format(getStringEz("UsageFirstLine"), numberOfSpam);
+			String command1 = String.format(commandStart, command) + " : "
+					+ String.format(lang("UsageFirstLine"), numberOfSpam);
 			String command2 = String.format(commandStart, command
 					+ " [number of times to spam]")
-					+ " : " + getStringEz("UsageSecondLine");
+					+ " : " + lang("UsageSecondLine");
 			String command3 = String.format(commandStart, command
 					+ " [number of times to spam] [custom message]")
-					+ " : " + getStringEz("UsageThirdLine");
+					+ " : " + lang("UsageThirdLine");
 			
-			sendMessage(getString("Usage") + " :\n" + command1 + "\n"
-					+ command2 + "\n" + command3);
+			sendMessage(lang(true, "Usage") + " :\n" + command1 + "\n" + command2
+					+ "\n" + command3);
 			
 		}
 		

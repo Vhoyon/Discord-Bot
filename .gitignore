@@ -1,2 +1,10 @@
 /bin/
 /target/
+
+/res/.env
+
+/.vscode/
+/.idea/
+
+Bot.iml
+DiscordBot.iml

@@ -1,16 +1,12 @@
 package commands;
 
-import framework.Command;
+import utilities.Command;
 
 /**
+ * Classe qui envois un message a l'utilisateur qui demande de l'aide avec une
+ * liste complète des commandes.
  * 
  * @author Stephano
- *
- * <br>
- * <br>
- *         Classe qui envois un message a l'utilisateur qui demande de l'aide
- *         avec une liste complète des commandes
- *
  */
 
 public class CommandHelp extends Command {
@@ -18,8 +14,8 @@ public class CommandHelp extends Command {
 	@Override
 	public void action(){
 		
-		sendPrivateMessage(getStringEz("Content"));
-		sendInfoMessage(getStringEz("HelpSentMessage"));
+		sendPrivateMessage(lang("Content"));
+		sendInfoMessage(lang("HelpSentMessage"));
 		
 	}
 	
