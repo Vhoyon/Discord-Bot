@@ -26,8 +26,7 @@ public class CommandsThreadManager {
 	public static Command getCommandRunning(String commandName, String guildID,
 			CommandRouter router){
 		
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+		Thread[] threadArray = getThreadsArray();
 		
 		for(Thread thread : threadArray){
 			
@@ -62,6 +61,27 @@ public class CommandsThreadManager {
 	public static boolean isCommandRunning(String commandName, String guildID,
 			CommandRouter router){
 		return getCommandRunning(commandName, guildID, router) != null;
+	}
+	
+	public static void stopAllCommands(){
+		
+		Thread[] threadArray = getThreadsArray();
+		
+		for(Thread thread : threadArray){
+			
+			if(thread instanceof CommandRouter){
+				
+				((CommandRouter)thread).getCommand().stopAction(); 
+				
+			}
+			
+		}
+		
+	}
+	
+	private static Thread[] getThreadsArray(){
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		return threadSet.toArray(new Thread[threadSet.size()]);
 	}
 	
 }

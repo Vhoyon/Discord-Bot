@@ -4,6 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
+import utilities.specifics.CommandsThreadManager;
 import vendor.Framework;
 import vendor.interfaces.Console;
 import vendor.modules.Environment;
@@ -140,6 +141,8 @@ public class Main {
 		if(jda != null){
 			
 			Logger.log("Shutting down the bot...", LogType.INFO);
+			
+			CommandsThreadManager.stopAllCommands();
 			
 			jda.shutdownNow();
 			
