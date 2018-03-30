@@ -63,7 +63,9 @@ public class CommandsThreadManager {
 		return getCommandRunning(commandName, guildID, router) != null;
 	}
 	
-	public static void stopAllCommands(){
+	public static int stopAllCommands(){
+		
+		int numberOfCommandsStopped = 0;
 		
 		Thread[] threadArray = getThreadsArray();
 		
@@ -71,11 +73,14 @@ public class CommandsThreadManager {
 			
 			if(thread instanceof CommandRouter){
 				
-				((CommandRouter)thread).getCommand().stopAction(); 
+				if(((CommandRouter)thread).getCommand().stopAction())
+					numberOfCommandsStopped++;
 				
 			}
 			
 		}
+		
+		return numberOfCommandsStopped;
 		
 	}
 	

@@ -142,7 +142,13 @@ public class Main {
 			
 			Logger.log("Shutting down the bot...", LogType.INFO);
 			
-			CommandsThreadManager.stopAllCommands();
+			int numberOfStoppedCommands = CommandsThreadManager
+					.stopAllCommands();
+			
+			if(numberOfStoppedCommands != 0)
+				Logger.log("Stopped " + numberOfStoppedCommands
+						+ " running commands before stopping the bot.",
+						LogType.INFO);
 			
 			jda.shutdownNow();
 			
