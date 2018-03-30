@@ -1,6 +1,6 @@
 package utilities.interfaces;
 
-import utilities.Language;
+import vendor.objects.Language;
 
 /**
  * 

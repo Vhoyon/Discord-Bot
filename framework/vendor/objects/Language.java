@@ -1,4 +1,4 @@
-package utilities;
+package vendor.objects;
 
 public class Language {
 	
