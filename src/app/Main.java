@@ -4,13 +4,13 @@ import javax.security.auth.login.LoginException;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
-import utilities.specifics.Request;
 import vendor.Framework;
 import vendor.interfaces.Console;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 import vendor.objects.Dictionary;
+import vendor.objects.Request;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -33,10 +33,10 @@ public class Main {
 			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
 			
 			Request programRequest = new Request(requestableArgs,
-					new Dictionary(), "-");
+					new Dictionary());
 			
-			if(programRequest.hasErrors()){
-				System.out.println(programRequest.getError().getMessage());
+			if(programRequest.hasError()){
+				System.out.println(programRequest.getError());
 			}
 			
 			Framework.build();

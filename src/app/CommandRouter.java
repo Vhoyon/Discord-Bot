@@ -12,6 +12,7 @@ import vendor.modules.Logger;
 import vendor.objects.CommandLinksContainer;
 import vendor.objects.CommandsRepository;
 import vendor.objects.Dictionary;
+import vendor.objects.Request;
 import commands.SimpleTextCommand;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
@@ -50,7 +51,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 		commandLinks = commandsRepo.getContainer();
 		
-		this.request = new Request(messageRecu, dict);
+		this.request = new Request(messageRecu, dict, Resources.PREFIX,
+				Resources.PARAMETER_PREFIX);
 		
 	}
 	
@@ -107,7 +109,9 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					}
 					catch(NullPointerException e){}
 					
-					if((command = request.getError()) != null){
+					if(request.hasError()){
+						command = new BotError(request.getError(), false);
+						
 						command.setContext(event);
 						command.action();
 						command = null;

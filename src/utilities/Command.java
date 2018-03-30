@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import app.CommandRouter;
 import utilities.interfaces.*;
-import utilities.specifics.Request;
-import utilities.specifics.Request.Parameter;
 import vendor.abstracts.Translatable;
 import vendor.exceptions.NoParameterContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
+import vendor.objects.Request;
+import vendor.objects.Request.Parameter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;

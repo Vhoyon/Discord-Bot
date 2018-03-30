@@ -1,16 +1,13 @@
-package utilities.specifics;
+package vendor.objects;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import utilities.interfaces.Resources;
 import vendor.exceptions.NoParameterContentException;
-import vendor.objects.Dictionary;
-import errorHandling.AbstractBotError;
-import errorHandling.BotError;
+import vendor.interfaces.Utils;
 
-public class Request {
+public class Request implements Utils {
 	
 	public class Parameter {
 		
@@ -71,23 +68,36 @@ public class Request {
 		
 	}
 	
+	public final static String DEFAULT_COMMAND_PREFIX = "!";
+	public final static String DEFAULT_PARAMETER_PREFIX = "-";
+	
 	private String command;
 	private String content;
 	private Dictionary dict;
 	
+	private String commandPrefix;
+	
 	private ArrayList<Parameter> parameters;
 	private String parametersPrefix;
 	
-	private AbstractBotError error;
+	private String error;
 	
 	public Request(String receivedMessage, Dictionary dictionary){
-		this(receivedMessage, dictionary, Resources.PARAMETER_PREFIX);
+		this(receivedMessage, dictionary, DEFAULT_PARAMETER_PREFIX);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String parametersPrefix){
+			String parameterPrefix){
+		this(receivedMessage, dictionary, DEFAULT_COMMAND_PREFIX,
+				parameterPrefix);
+	}
+	
+	public Request(String receivedMessage, Dictionary dictionary,
+			String commandPrefix, String parametersPrefix){
 		
 		this.dict = dictionary;
+		
+		this.commandPrefix = commandPrefix;
 		
 		this.parametersPrefix = parametersPrefix;
 		
@@ -189,7 +199,7 @@ public class Request {
 	}
 	
 	public String getCommand(){
-		return command.substring(Resources.PREFIX.length());
+		return command.substring(getCommandPrefix().length());
 	}
 	
 	public String getCommandNoFormat(){
@@ -211,6 +221,10 @@ public class Request {
 		else
 			this.content = content;
 		
+	}
+	
+	public String getCommandPrefix(){
+		return this.commandPrefix;
 	}
 	
 	public ArrayList<Parameter> getParameters(){
@@ -246,11 +260,11 @@ public class Request {
 		return parametersPrefix;
 	}
 	
-	public AbstractBotError getError(){
-		return error;
+	public String getError(){
+		return this.error;
 	}
 	
-	public boolean hasErrors(){
+	public boolean hasError(){
 		return error != null;
 	}
 	
@@ -299,18 +313,19 @@ public class Request {
 	
 	private String[] splitCommandAndContent(String command){
 		
-		// Remove leading / trailing spaces (leading spaces are removed anyway)
-		String[] splitted = command.trim().replaceAll("\\s+", " ")
+		// Remove leading / trailing spaces, as well as shrinking consecutives
+		// whitespace.
+		// Also, this adds a space at the end to force the split to be at least
+		// of size 2, which means there will always be a command and some
+		// content.
+		String[] splitted = command.trim().replaceAll("\\s+", " ").concat(" ")
 				.split(" ", 2);
 		
-		if(splitted.length == 1){
-			// TODO : Find better way you lazy basterd.
-			String actualCommand = splitted[0];
-			splitted = new String[2];
-			splitted[0] = actualCommand;
-		}
-		
 		splitted[0] = splitted[0].toLowerCase();
+		
+		if(splitted[1].length() != 0){
+			splitted[1] = splitted[1].trim();
+		}
 		
 		return splitted;
 		
@@ -348,10 +363,10 @@ public class Request {
 						.getDirectString("RequestEndMessageMultiple");
 			
 			message.append("\n*"
-					+ String.format(dict.getDirectString("RequestEndMessage"),
+					+ format(dict.getDirectString("RequestEndMessage"),
 							pluralTester) + "*");
 			
-			this.error = new BotError(message.toString(), false);
+			this.error = message.toString();
 			
 		}
 		
