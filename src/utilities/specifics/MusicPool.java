@@ -1,6 +1,6 @@
 package utilities.specifics;
 
-import utilities.Pool;
+import utilities.abstracts.Pool;
 
 public class MusicPool extends Pool<Music> {
 	

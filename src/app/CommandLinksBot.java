@@ -46,8 +46,7 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			
 			new Link(CommandSpam.class, SPAM),
 			
-			new LinkParams(new Link(SimpleTextCommand.class, TERMINATE),
-					lang("TERMINATE")),
+			new Link(CommandTerminate.class, TERMINATE),
 			
 			new Link(CommandStop.class, STOP),
 			

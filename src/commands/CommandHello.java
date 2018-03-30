@@ -1,5 +1,7 @@
 package commands;
 
+import utilities.abstracts.SimpleTextCommand;
+
 public class CommandHello extends SimpleTextCommand {
 
 	@Override

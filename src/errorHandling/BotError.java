@@ -1,6 +1,7 @@
 package errorHandling;
 
 import utilities.Command;
+import utilities.abstracts.AbstractBotError;
 
 public class BotError extends AbstractBotError {
 	

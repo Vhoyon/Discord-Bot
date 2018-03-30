@@ -1,6 +1,4 @@
-package commands;
-
-import utilities.specifics.AbstractTextCommand;
+package utilities.abstracts;
 
 public abstract class SimpleTextCommand extends AbstractTextCommand {
 	

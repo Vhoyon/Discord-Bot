@@ -1,4 +1,4 @@
-package utilities.specifics;
+package utilities.abstracts;
 
 import utilities.Command;
 

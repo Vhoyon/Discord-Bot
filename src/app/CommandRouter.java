@@ -3,6 +3,7 @@ package app;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.*;
+import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
 import vendor.exceptions.NoCommandException;
@@ -13,7 +14,6 @@ import vendor.objects.CommandLinksContainer;
 import vendor.objects.CommandsRepository;
 import vendor.objects.Dictionary;
 import vendor.objects.Request;
-import commands.SimpleTextCommand;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
 
@@ -175,7 +175,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	 * <p>
 	 * In another case where the received message in a server is only "
 	 * <code>!!</code>" (the <code><i>PREFIX</i></code> value), a
-	 * {@link commands.SimpleTextCommand SimpleTextCommand} command is created
+	 * {@link utilities.abstracts.SimpleTextCommand SimpleTextCommand} command is created
 	 * that will send the message
 	 * "<i>... you wanted to call upon me or...?</i>".
 	 * 
