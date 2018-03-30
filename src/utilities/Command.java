@@ -3,11 +3,11 @@ package utilities;
 import java.util.ArrayList;
 
 import app.CommandRouter;
-import errorHandling.exceptions.*;
 import utilities.interfaces.*;
 import utilities.specifics.Request;
 import utilities.specifics.Request.Parameter;
 import vendor.abstracts.Translatable;
+import vendor.exceptions.NoParameterContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;

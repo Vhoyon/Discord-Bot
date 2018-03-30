@@ -1,4 +1,4 @@
-package errorHandling.exceptions;
+package vendor.exceptions;
 
 public class BadParameterException extends Exception {
 	public BadParameterException(){

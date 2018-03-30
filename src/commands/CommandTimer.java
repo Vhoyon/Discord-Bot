@@ -1,8 +1,8 @@
 package commands;
 
 import utilities.Command;
+import vendor.exceptions.NoParameterContentException;
 import errorHandling.BotError;
-import errorHandling.exceptions.NoParameterContentException;
 
 public class CommandTimer extends Command {
 	

@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.*;
 import utilities.interfaces.*;
 import utilities.specifics.*;
+import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
@@ -14,7 +15,6 @@ import vendor.objects.Dictionary;
 import commands.SimpleTextCommand;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
-import errorHandling.exceptions.NoCommandException;
 
 public class CommandRouter extends Thread implements Resources, Commands,
 		Emojis, Utils {

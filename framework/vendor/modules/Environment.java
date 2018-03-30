@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import vendor.Framework;
 import vendor.abstracts.Module;
-import errorHandling.exceptions.BadFileContentException;
+import vendor.exceptions.BadFileContentException;
 
 public class Environment extends Module {
 	

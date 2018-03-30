@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import utilities.interfaces.Resources;
+import vendor.exceptions.NoParameterContentException;
 import vendor.objects.Dictionary;
 import errorHandling.AbstractBotError;
 import errorHandling.BotError;
-import errorHandling.exceptions.NoParameterContentException;
 
 public class Request {
 	

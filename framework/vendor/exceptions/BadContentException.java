@@ -1,4 +1,4 @@
-package errorHandling.exceptions;
+package vendor.exceptions;
 
 public class BadContentException extends Exception {
 	public BadContentException(){

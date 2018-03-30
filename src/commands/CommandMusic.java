@@ -4,13 +4,13 @@ import utilities.Command;
 import utilities.music.MusicManager;
 import utilities.music.MusicPlayer;
 import utilities.specifics.CommandConfirmed;
+import vendor.exceptions.BadContentException;
+import vendor.exceptions.BadParameterException;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
-import errorHandling.exceptions.BadContentException;
-import errorHandling.exceptions.BadParameterException;
 
 public class CommandMusic extends Command {
 	
