@@ -44,7 +44,7 @@ public class Main {
 			
 			botToken = Environment.getVar("BOT_TOKEN");
 			
-			Console console = null;
+			Console console;
 			
 			if(programRequest.hasParameter("t", "terminal")){
 				

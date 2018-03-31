@@ -24,18 +24,16 @@ public class Framework {
 				Class<?> moduleClass = Class.forName("vendor.modules."
 						+ formattedModuleName);
 				
-				if(Module.class.equals(moduleClass.getSuperclass())){
+				if(Module.class.isAssignableFrom(moduleClass)){
 					
-					Module module = (Module)moduleClass
-							.newInstance();
-					
+					Module module = (Module)moduleClass.newInstance();
+
 					try{
 						module.build();
 					}
 					catch(Exception e){
-						
-						errors.append(module.getLoadingErrorMessage(e) + "\n\n");
-						
+						errors.append(module.getLoadingErrorMessage(e)).append(
+								"\n\n");
 					}
 					
 				}
@@ -43,7 +41,8 @@ public class Framework {
 			}
 			catch(ClassNotFoundException | InstantiationException
 					| IllegalAccessException e){
-				errors.append("Module \"" + e.getMessage() + "\" not found." + "\n");
+				errors.append("Module \"").append(e.getMessage())
+						.append("\" not found.").append("\n");
 			}
 			
 		}

@@ -222,7 +222,7 @@ public abstract class Command extends Translatable implements Commands,
 		if(getUser().hasPrivateChannel()){
 			
 			if(messageToSend == null){
-				log("The bot attempted to send a null message - probably a fail safe, but concerning nontheless...");
+				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
 				
 				return null;
 			}
