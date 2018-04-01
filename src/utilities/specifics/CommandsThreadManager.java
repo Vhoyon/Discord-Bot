@@ -84,6 +84,20 @@ public class CommandsThreadManager {
 		
 	}
 	
+	public static boolean hasRunningCommands(){
+		
+		Thread[] threadArray = getThreadsArray();
+		
+		for(Thread thread : threadArray){
+			if(thread instanceof CommandRouter){
+				return true;
+			}
+		}
+
+		return false;
+		
+	}
+	
 	private static Thread[] getThreadsArray(){
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		return threadSet.toArray(new Thread[threadSet.size()]);

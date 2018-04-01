@@ -144,5 +144,9 @@ public class Buffer {
 	public boolean remove(String associatedName, String guildId){
 		return remove(memory.indexOf(new BufferObject(associatedName, guildId)));
 	}
+
+	public void emptyMemory(){
+		memory = new ArrayList<>();
+	}
 	
 }

@@ -2,14 +2,24 @@ package vendor.interfaces;
 
 public interface Console {
 	
-	public void onStart() throws Exception;
+	enum QuestionType{
+		YES_NO, YES_NO_CANCEL
+	}
+
+	int NO = 0;
+	int YES = 1;
+	int CANCEL = 2;
+
+	void onStart() throws Exception;
 	
-	public void onStop() throws Exception;
+	void onStop() throws Exception;
 	
-	public void onInitialized();
+	void onInitialized();
 	
-	public void initialize();
+	void initialize();
 	
-	public String getInput(String message);
+	String getInput(String message);
+	
+	int getConfirmation(String question, QuestionType questionType);
 	
 }

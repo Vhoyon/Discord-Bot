@@ -1,5 +1,6 @@
 /bin/
 /target/
+/out/
 
 /res/.env
 
@@ -9,3 +10,4 @@
 Bot.iml
 Bot.eml
 DiscordBot.iml
+/src/META-INF/MANIFEST.MF

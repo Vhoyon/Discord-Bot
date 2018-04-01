@@ -4,6 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
+import utilities.Buffer;
 import utilities.specifics.CommandsThreadManager;
 import vendor.Framework;
 import vendor.interfaces.Console;
@@ -56,7 +57,7 @@ public class Main {
 					
 					@Override
 					public void onStop() throws Exception{
-						stopBot();
+						stopBot(this);
 					}
 					
 					@Override
@@ -76,7 +77,7 @@ public class Main {
 					
 					@Override
 					public void onStop() throws Exception{
-						stopBot();
+						stopBot(this);
 					}
 					
 					@Override
@@ -136,25 +137,53 @@ public class Main {
 		
 	}
 	
-	private static void stopBot() throws Exception{
+	private static void stopBot(Console console) throws Exception{
 		
 		if(jda != null){
 			
 			Logger.log("Shutting down the bot...", LogType.INFO);
 			
-			int numberOfStoppedCommands = CommandsThreadManager
-					.stopAllCommands();
+			boolean canStopBot = true;
 			
-			if(numberOfStoppedCommands != 0)
-				Logger.log("Stopped " + numberOfStoppedCommands
-						+ " running commands before stopping the bot.",
-						LogType.INFO);
+			if(CommandsThreadManager.hasRunningCommands()){
+				
+				int conf = console
+						.getConfirmation(
+								"There are running commands, are you sure you want to stop the bot?",
+								Console.QuestionType.YES_NO);
+				
+				if(conf == Console.NO){
+					canStopBot = false;
+				}
+				else{
+
+					int numberOfStoppedCommands = CommandsThreadManager
+							.stopAllCommands();
+					
+					Logger.log("Stopped " + numberOfStoppedCommands
+							+ " running commands before stopping the bot.",
+							LogType.INFO);
+					
+				}
+				
+			}
 			
-			jda.shutdownNow();
-			
-			jda = null;
-			
-			Logger.log("Bot has been shutdown!", LogType.INFO);
+			if(!canStopBot){
+				
+				throw new Exception("Bot not stopped.");
+				
+			}
+			else{
+				
+				jda.shutdownNow();
+				
+				jda = null;
+
+				Buffer.get().emptyMemory();
+
+				Logger.log("Bot has been shutdown!", LogType.INFO);
+				
+			}
 			
 		}
 		else{

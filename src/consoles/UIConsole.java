@@ -145,5 +145,10 @@ public abstract class UIConsole extends JFrame implements Console {
 	public String getInput(String message){
 		return JOptionPane.showInputDialog(this, message);
 	}
-	
+
+	@Override
+	public int getConfirmation(String question, QuestionType questionType) {
+		// TODO : Implement Confirmation UI (with JOptionPane?)
+		return YES;
+	}
 }
