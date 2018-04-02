@@ -139,5 +139,8 @@ public abstract class UIConsole extends AbstractUIConsole {
 		onInitialized();
 		
 	}
-
+	
+	@Override
+	public void onExit(){}
+	
 }

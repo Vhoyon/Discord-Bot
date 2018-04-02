@@ -73,4 +73,9 @@ public abstract class TerminalConsole extends AbstractTerminalConsole {
 		
 	}
 	
+	@Override
+	public void onExit(){
+		Logger.log("Thanks for using the bot!", LogType.INFO, false);
+	}
+	
 }

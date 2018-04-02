@@ -13,6 +13,8 @@ public interface Console {
 	void onStart() throws Exception;
 	
 	void onStop() throws Exception;
+
+	void onExit() throws Exception;
 	
 	void onInitialized();
 	

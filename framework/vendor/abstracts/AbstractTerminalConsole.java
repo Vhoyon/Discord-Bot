@@ -88,6 +88,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			
 			try{
 				onStop();
+
+				onExit();
 				
 				return false;
 			}
