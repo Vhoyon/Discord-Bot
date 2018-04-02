@@ -41,8 +41,7 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	
 	@Override
 	public int getConfirmation(String question, QuestionType questionType){
-		// TODO : Implement Confirmation UI (with JOptionPane?)
-		
+
 		int jOptionType;
 		
 		switch(questionType){
