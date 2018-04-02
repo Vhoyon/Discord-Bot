@@ -1,21 +1,22 @@
 package vendor.modules;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import consoles.TerminalConsole;
 import vendor.Framework;
 import vendor.abstracts.Module;
 import vendor.exceptions.BadFileContentException;
 
 public class Environment extends Module {
+	
+	private static final String ENV_FILE_NAME = ".env";
+	private static final String ENV_EXAMPLE_FILE_NAME = "example.env";
 	
 	private static HashMap<String, String> envVars;
 	
@@ -27,13 +28,7 @@ public class Environment extends Module {
 		
 		try{
 			
-			InputStream inputStream = Framework.class
-					.getResourceAsStream("/.env");
-			
-			InputStreamReader streamReader = new InputStreamReader(inputStream,
-					StandardCharsets.UTF_8);
-			
-			BufferedReader reader = new BufferedReader(streamReader);
+			BufferedReader reader = getEnvFile();
 			
 			envVars = new HashMap<>();
 			
@@ -89,9 +84,9 @@ public class Environment extends Module {
 			handleIssues();
 			
 		}
-		catch(IOException | NullPointerException e){
+		catch(IOException e){
 			throw new FileNotFoundException(
-					"The environment file \".env\" was not found or is unavailable at this time.");
+					"An unexpected problem happened while reading the line of the file.");
 		}
 		
 	}
@@ -194,6 +189,110 @@ public class Environment extends Module {
 			throw new BadFileContentException(builder.toString());
 			
 		}
+		
+	}
+	
+	private BufferedReader getEnvFile(){
+		
+		InputStream inputStream;
+		
+		try{
+			
+			String systemEnvFilePath = Framework.runnableSystemPath()
+					+ ENV_FILE_NAME;
+			
+			inputStream = new FileInputStream(new File(systemEnvFilePath));
+			
+		}
+		catch(FileNotFoundException e){
+			
+			inputStream = Framework.class.getResourceAsStream("/"
+					+ ENV_FILE_NAME);
+			
+			if(inputStream == null){
+				
+				TerminalConsole console = new TerminalConsole(){
+					@Override
+					public void onStart() throws Exception{
+						
+						int choice = getConfirmation(
+								"No environment file has been detected, do you want to create one now?",
+								QuestionType.YES_NO);
+						
+						switch(choice){
+						case YES:
+							
+							try{
+								
+								String envFilePath = buildSystemEnvFile();
+								
+								Logger.log(
+										"Please go fill the environment file with your own informations and start this program again!",
+										Logger.LogType.INFO, false);
+								
+								Logger.log("Path of the file created : \""
+										+ envFilePath + "\"", false);
+								
+							}
+							catch(IOException e){
+								Logger.log(e);
+							}
+							
+							break;
+						case NO:
+							Logger.log("No environment added, bot stopping.",
+									Logger.LogType.INFO, false);
+							break;
+						}
+						
+					}
+					
+					@Override
+					public void onStop() throws Exception{}
+					
+					@Override
+					public void onInitialized(){}
+				};
+				
+				Logger.setOutputs(console);
+				
+				try{
+					console.onStart();
+				}
+				catch(Exception nothing){}
+				finally{
+					System.exit(0);
+				}
+				
+			}
+			
+		}
+		
+		InputStreamReader streamReader = new InputStreamReader(inputStream,
+				StandardCharsets.UTF_8);
+		
+		BufferedReader reader = new BufferedReader(streamReader);
+		
+		return reader;
+		
+	}
+	
+	private String buildSystemEnvFile() throws IOException{
+		
+		InputStream exampleFileStream = Framework.class.getResourceAsStream("/"
+				+ ENV_EXAMPLE_FILE_NAME);
+		
+		byte[] buffer = new byte[exampleFileStream.available()];
+		exampleFileStream.read(buffer);
+		
+		String systemEnvFilePath = Framework.runnableSystemPath()
+				+ ENV_FILE_NAME;
+		
+		File targetFile = new File(systemEnvFilePath);
+		OutputStream outStream = new FileOutputStream(targetFile);
+		outStream.write(buffer);
+		
+		return systemEnvFilePath;
 		
 	}
 	

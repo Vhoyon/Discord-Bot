@@ -14,7 +14,7 @@ public abstract class TerminalConsole implements Console, Loggable {
 	private BufferedReader reader;
 	
 	public TerminalConsole(){
-		reader = null;
+		reader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
 	@Override
@@ -47,8 +47,6 @@ public abstract class TerminalConsole implements Console, Loggable {
 				
 			}
 			catch(InterruptedException e){}
-			
-			reader = new BufferedReader(new InputStreamReader(System.in));
 			
 			onInitialized();
 			
