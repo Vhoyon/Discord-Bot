@@ -194,23 +194,11 @@ public class Environment extends Module {
 	
 	private BufferedReader getEnvFile(){
 		
-		String systemPath = Environment.class.getProtectionDomain()
-				.getCodeSource().getLocation().getPath();
-		
-		try{
-			systemPath = URLDecoder.decode(systemPath, "UTF-8");
-		}
-		catch(UnsupportedEncodingException e){}
-		
-		final String decodedSystemPath = systemPath;
-		
 		InputStream inputStream;
 		
 		try{
 			
-			File runner = new File(decodedSystemPath);
-			
-			String systemEnvFilePath = runner.getParent() + File.separator
+			String systemEnvFilePath = Framework.runnableSystemPath()
 					+ ENV_FILE_NAME;
 			
 			inputStream = new FileInputStream(new File(systemEnvFilePath));
@@ -236,11 +224,14 @@ public class Environment extends Module {
 							
 							try{
 								
-								buildSystemEnvFile(decodedSystemPath);
+								String envFilePath = buildSystemEnvFile();
 								
 								Logger.log(
 										"Please go fill the environment file with your own informations and start this program again!",
 										Logger.LogType.INFO, false);
+								
+								Logger.log("Path of the file created : \""
+										+ envFilePath + "\"", false);
 								
 							}
 							catch(IOException e){
@@ -286,22 +277,22 @@ public class Environment extends Module {
 		
 	}
 	
-	private void buildSystemEnvFile(String systemPath) throws IOException{
+	private String buildSystemEnvFile() throws IOException{
 		
 		InputStream exampleFileStream = Framework.class.getResourceAsStream("/"
 				+ ENV_EXAMPLE_FILE_NAME);
 		
 		byte[] buffer = new byte[exampleFileStream.available()];
 		exampleFileStream.read(buffer);
-
-		File runner = new File(systemPath);
-
-		String systemEnvFilePath = runner.getParent() + File.separator
+		
+		String systemEnvFilePath = Framework.runnableSystemPath()
 				+ ENV_FILE_NAME;
 		
 		File targetFile = new File(systemEnvFilePath);
 		OutputStream outStream = new FileOutputStream(targetFile);
 		outStream.write(buffer);
+		
+		return systemEnvFilePath;
 		
 	}
 	
