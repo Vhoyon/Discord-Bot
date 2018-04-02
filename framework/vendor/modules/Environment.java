@@ -15,6 +15,9 @@ import vendor.exceptions.BadFileContentException;
 
 public class Environment extends Module {
 	
+	private static final String ENV_FILE_NAME = ".env";
+	private static final String ENV_EXAMPLE_FILE_NAME = "example.env";
+	
 	private static HashMap<String, String> envVars;
 	
 	private final String WARNINGS = "WARNINGS";
@@ -204,11 +207,19 @@ public class Environment extends Module {
 		InputStream inputStream;
 		
 		try{
-			inputStream = new FileInputStream(decodedSystemPath);
+			
+			File runner = new File(decodedSystemPath);
+			
+			String systemEnvFilePath = runner.getParent() + File.separator
+					+ ENV_FILE_NAME;
+			
+			inputStream = new FileInputStream(new File(systemEnvFilePath));
+			
 		}
 		catch(FileNotFoundException e){
 			
-			inputStream = Framework.class.getResourceAsStream("/.env");
+			inputStream = Framework.class.getResourceAsStream("/"
+					+ ENV_FILE_NAME);
 			
 			if(inputStream == null){
 				
@@ -222,11 +233,20 @@ public class Environment extends Module {
 						
 						switch(choice){
 						case YES:
-							buildSystemEnvFile(decodedSystemPath);
 							
-							Logger.log(
-									"Please go fill the environment file with your own informations and start this program again!",
-									Logger.LogType.INFO, false);
+							try{
+								
+								buildSystemEnvFile(decodedSystemPath);
+								
+								Logger.log(
+										"Please go fill the environment file with your own informations and start this program again!",
+										Logger.LogType.INFO, false);
+								
+							}
+							catch(IOException e){
+								Logger.log(e);
+							}
+							
 							break;
 						case NO:
 							Logger.log("No environment added, bot stopping.",
@@ -266,8 +286,23 @@ public class Environment extends Module {
 		
 	}
 	
-	private void buildSystemEnvFile(String systemPath){
-		// TODO : Copy example.env to systemPath's .env file.
+	private void buildSystemEnvFile(String systemPath) throws IOException{
+		
+		InputStream exampleFileStream = Framework.class.getResourceAsStream("/"
+				+ ENV_EXAMPLE_FILE_NAME);
+		
+		byte[] buffer = new byte[exampleFileStream.available()];
+		exampleFileStream.read(buffer);
+
+		File runner = new File(systemPath);
+
+		String systemEnvFilePath = runner.getParent() + File.separator
+				+ ENV_FILE_NAME;
+		
+		File targetFile = new File(systemEnvFilePath);
+		OutputStream outStream = new FileOutputStream(targetFile);
+		outStream.write(buffer);
+		
 	}
 	
 }
