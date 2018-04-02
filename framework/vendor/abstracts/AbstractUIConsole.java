@@ -16,6 +16,20 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	
 	public AbstractUIConsole(){
 		super();
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e){
+				try{
+					onStop();
+				}
+				catch(Exception e1){}
+
+				super.windowClosing(e);
+			}
+		});
 	}
 	
 	@Override

@@ -26,21 +26,6 @@ public abstract class UIConsole extends AbstractUIConsole {
 	@Override
 	public void initialize(){
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		addWindowListener(new WindowAdapter(){
-			@Override
-			public void windowClosing(WindowEvent e){
-				
-				try{
-					onStop();
-				}
-				catch(Exception e1){}
-				
-				super.windowClosing(e);
-			}
-		});
-		
 		setSize(500, 300);
 		setLocationRelativeTo(null);
 		
