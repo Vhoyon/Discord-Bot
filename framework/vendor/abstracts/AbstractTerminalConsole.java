@@ -88,7 +88,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			
 			try{
 				onStop();
-
+				
 				onExit();
 				
 				return false;
@@ -124,7 +124,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			
 			return null;
 		}
-
+		
 	}
 	
 	@Override
@@ -167,7 +167,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		do{
 			
 			String input = getInput(question + choiceBuilder.toString()).trim();
-
+			
 			System.out.println();
 			
 			if(input.length() == 0){
@@ -198,4 +198,17 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		}
 		
 	}
+	
+	@Override
+	public void onStart() throws Exception{}
+	
+	@Override
+	public void onStop() throws Exception{}
+	
+	@Override
+	public void onInitialized(){}
+	
+	@Override
+	public void onExit() throws Exception{}
+	
 }
