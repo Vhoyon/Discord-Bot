@@ -1,16 +1,14 @@
 package vendor.modules;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import consoles.TerminalConsole;
 import vendor.Framework;
 import vendor.abstracts.Module;
 import vendor.exceptions.BadFileContentException;
@@ -27,13 +25,7 @@ public class Environment extends Module {
 		
 		try{
 			
-			InputStream inputStream = Framework.class
-					.getResourceAsStream("/.env");
-			
-			InputStreamReader streamReader = new InputStreamReader(inputStream,
-					StandardCharsets.UTF_8);
-			
-			BufferedReader reader = new BufferedReader(streamReader);
+			BufferedReader reader = getEnvFile();
 			
 			envVars = new HashMap<>();
 			
@@ -89,9 +81,9 @@ public class Environment extends Module {
 			handleIssues();
 			
 		}
-		catch(IOException | NullPointerException e){
+		catch(IOException e){
 			throw new FileNotFoundException(
-					"The environment file \".env\" was not found or is unavailable at this time.");
+					"An unexpected problem happened while reading the line of the file.");
 		}
 		
 	}
@@ -195,6 +187,87 @@ public class Environment extends Module {
 			
 		}
 		
+	}
+	
+	private BufferedReader getEnvFile(){
+		
+		String systemPath = Environment.class.getProtectionDomain()
+				.getCodeSource().getLocation().getPath();
+		
+		try{
+			systemPath = URLDecoder.decode(systemPath, "UTF-8");
+		}
+		catch(UnsupportedEncodingException e){}
+		
+		final String decodedSystemPath = systemPath;
+		
+		InputStream inputStream;
+		
+		try{
+			inputStream = new FileInputStream(decodedSystemPath);
+		}
+		catch(FileNotFoundException e){
+			
+			inputStream = Framework.class.getResourceAsStream("/.env");
+			
+			if(inputStream == null){
+				
+				TerminalConsole console = new TerminalConsole(){
+					@Override
+					public void onStart() throws Exception{
+						
+						int choice = getConfirmation(
+								"No environment file has been detected, do you want to create one now?",
+								QuestionType.YES_NO);
+						
+						switch(choice){
+						case YES:
+							buildSystemEnvFile(decodedSystemPath);
+							
+							Logger.log(
+									"Please go fill the environment file with your own informations and start this program again!",
+									Logger.LogType.INFO, false);
+							break;
+						case NO:
+							Logger.log("No environment added, bot stopping.",
+									Logger.LogType.INFO, false);
+							break;
+						}
+						
+					}
+					
+					@Override
+					public void onStop() throws Exception{}
+					
+					@Override
+					public void onInitialized(){}
+				};
+				
+				Logger.setOutputs(console);
+				
+				try{
+					console.onStart();
+				}
+				catch(Exception nothing){}
+				finally{
+					System.exit(0);
+				}
+				
+			}
+			
+		}
+		
+		InputStreamReader streamReader = new InputStreamReader(inputStream,
+				StandardCharsets.UTF_8);
+		
+		BufferedReader reader = new BufferedReader(streamReader);
+		
+		return reader;
+		
+	}
+	
+	private void buildSystemEnvFile(String systemPath){
+		// TODO : Copy example.env to systemPath's .env file.
 	}
 	
 }
