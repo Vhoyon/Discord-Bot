@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 import vendor.Framework;
 import vendor.abstracts.AbstractTerminalConsole;
-import vendor.abstracts.AbstractUIConsole;
 import vendor.abstracts.Module;
 import vendor.exceptions.BadFileContentException;
 import vendor.interfaces.Console;
+import vendor.ui.NotificationUI;
 
 public class Environment extends Module {
 	
@@ -226,12 +226,7 @@ public class Environment extends Module {
 				}
 				else{
 					
-					console = new AbstractUIConsole(){
-						@Override
-						public void initialize(){
-							
-						}
-					};
+					console = new NotificationUI();
 					
 				}
 				

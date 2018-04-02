@@ -1,14 +1,16 @@
 package vendor.interfaces;
 
+import javax.swing.JOptionPane;
+
 public interface Console {
 	
 	enum QuestionType{
 		YES_NO, YES_NO_CANCEL
 	}
 
-	int NO = 0;
-	int YES = 1;
-	int CANCEL = 2;
+	int YES = JOptionPane.YES_OPTION;
+	int NO = JOptionPane.NO_OPTION;
+	int CANCEL = JOptionPane.CANCEL_OPTION;
 
 	void onStart() throws Exception;
 	
