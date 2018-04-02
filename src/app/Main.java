@@ -58,6 +58,8 @@ public class Main {
 					@Override
 					public void onStop() throws Exception{
 						stopBot(this);
+
+						Logger.log("Thanks for using the bot!", LogType.INFO);
 					}
 					
 					@Override

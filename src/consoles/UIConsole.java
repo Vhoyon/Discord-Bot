@@ -13,20 +13,19 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import vendor.abstracts.AbstractUIConsole;
 import vendor.interfaces.Console;
 import vendor.modules.Logger;
 import vendor.objects.LoggableJTextArea;
 
-public abstract class UIConsole extends JFrame implements Console {
+public abstract class UIConsole extends AbstractUIConsole {
 	
 	private JButton actionButton;
 	
 	private LoggableJTextArea log;
 	
 	public UIConsole(){
-		
 		super();
-		
 	}
 	
 	@Override
@@ -141,14 +140,4 @@ public abstract class UIConsole extends JFrame implements Console {
 		
 	}
 
-	@Override
-	public String getInput(String message){
-		return JOptionPane.showInputDialog(this, message);
-	}
-
-	@Override
-	public int getConfirmation(String question, QuestionType questionType) {
-		// TODO : Implement Confirmation UI (with JOptionPane?)
-		return YES;
-	}
 }
