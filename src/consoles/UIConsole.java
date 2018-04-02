@@ -5,16 +5,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import vendor.abstracts.AbstractUIConsole;
-import vendor.interfaces.Console;
 import vendor.modules.Logger;
 import vendor.objects.LoggableJTextArea;
 

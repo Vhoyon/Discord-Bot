@@ -1,12 +1,8 @@
 package consoles;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import vendor.abstracts.AbstractTerminalConsole;
-import vendor.interfaces.Console;
-import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 
