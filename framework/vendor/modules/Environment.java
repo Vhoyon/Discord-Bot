@@ -1,17 +1,18 @@
 package vendor.modules;
 
 import java.io.*;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import consoles.TerminalConsole;
 import vendor.Framework;
+import vendor.abstracts.AbstractTerminalConsole;
+import vendor.abstracts.AbstractUIConsole;
 import vendor.abstracts.Module;
 import vendor.exceptions.BadFileContentException;
+import vendor.interfaces.Console;
 
 public class Environment extends Module {
 	
@@ -211,53 +212,33 @@ public class Environment extends Module {
 			
 			if(inputStream == null){
 				
-				TerminalConsole console = new TerminalConsole(){
-					@Override
-					public void onStart() throws Exception{
-						
-						int choice = getConfirmation(
-								"No environment file has been detected, do you want to create one now?",
-								QuestionType.YES_NO);
-						
-						switch(choice){
-						case YES:
-							
-							try{
-								
-								String envFilePath = buildSystemEnvFile();
-								
-								Logger.log(
-										"Please go fill the environment file with your own informations and start this program again!",
-										Logger.LogType.INFO, false);
-								
-								Logger.log("Path of the file created : \""
-										+ envFilePath + "\"", false);
-								
-							}
-							catch(IOException e){
-								Logger.log(e);
-							}
-							
-							break;
-						case NO:
-							Logger.log("No environment added, bot stopping.",
-									Logger.LogType.INFO, false);
-							break;
-						}
-						
-					}
-					
-					@Override
-					public void onStop() throws Exception{}
-					
-					@Override
-					public void onInitialized(){}
-				};
+				Console console;
 				
-				Logger.setOutputs(console);
+				if(Framework.isRunningFromTerminal()){
+					
+					console = new AbstractTerminalConsole(){
+						@Override
+						public void initialize(){
+							Logger.setOutputs(this);
+						}
+					};
+					
+				}
+				else{
+					
+					console = new AbstractUIConsole(){
+						@Override
+						public void initialize(){
+							
+						}
+					};
+					
+				}
 				
 				try{
-					console.onStart();
+					console.initialize();
+					
+					confirmEnvFileCreation(console);
 				}
 				catch(Exception nothing){}
 				finally{
@@ -274,6 +255,41 @@ public class Environment extends Module {
 		BufferedReader reader = new BufferedReader(streamReader);
 		
 		return reader;
+		
+	}
+	
+	private void confirmEnvFileCreation(Console console){
+		
+		int choice = console
+				.getConfirmation(
+						"No environment file has been detected, do you want to create one now?",
+						Console.QuestionType.YES_NO);
+		
+		switch(choice){
+		case Console.YES:
+			
+			try{
+				
+				String envFilePath = buildSystemEnvFile();
+				
+				Logger.log(
+						"Please go fill the environment file with your own informations and start this program again!"
+								+ "\n"
+								+ "Path of the file created : \""
+								+ envFilePath + "\"", Logger.LogType.INFO,
+						false);
+				
+			}
+			catch(IOException e){
+				Logger.log(e);
+			}
+			
+			break;
+		case Console.NO:
+			Logger.log("No environment added, bot stopping.",
+					Logger.LogType.INFO, false);
+			break;
+		}
 		
 	}
 	
