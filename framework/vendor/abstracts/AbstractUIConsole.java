@@ -30,6 +30,8 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 				super.windowClosing(e);
 			}
 		});
+
+		setLocationRelativeTo(null);
 	}
 	
 	@Override
@@ -55,7 +57,7 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 		
 		int choice = JOptionPane.showConfirmDialog(this, question,
 				"Hey, gotta confirm this!", jOptionType);
-		
+
 		return choice;
 		
 	}

@@ -27,7 +27,6 @@ public abstract class UIConsole extends AbstractUIConsole {
 	public void initialize(){
 		
 		setSize(500, 300);
-		setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel(new GridBagLayout());
 		
