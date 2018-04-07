@@ -18,14 +18,19 @@ public class Link {
 	}
 	
 	public boolean hasCall(String call){
-		for(int i = 0; i < getCalls().length; i++){
+
+		if(call != null && call.length() != 0){
 			
-			if(getCalls()[i].equals(call))
-				return true;
+			String[] definedCalls = getCalls();
+			
+			for(String definedCall : definedCalls)
+				if(definedCall.equals(call))
+					return true;
 			
 		}
 		
 		return false;
+
 	}
 	
 	public String[] getCalls(){

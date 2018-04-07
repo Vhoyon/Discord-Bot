@@ -306,4 +306,9 @@ public abstract class Command extends Translatable implements Commands,
 		Logger.log(message);
 	}
 	
+	@Override
+	public String getParameterPrefix(){
+		return Resources.PARAMETER_PREFIX;
+	}
+	
 }
