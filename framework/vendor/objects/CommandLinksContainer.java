@@ -1,13 +1,14 @@
 package vendor.objects;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import vendor.interfaces.LinkableCommand;
 import vendor.modules.Logger;
 
 public abstract class CommandLinksContainer {
 	
-	private static HashMap<String, Link> linkMap;
+	private TreeMap<String, Link> linkMap;
 	
 	/**
 	 * The latest links commands will always replace the first command call.
@@ -15,7 +16,7 @@ public abstract class CommandLinksContainer {
 	 */
 	public CommandLinksContainer(Link... links){
 		
-		linkMap = new HashMap<>();
+		linkMap = new TreeMap<>();
 		
 		for(Link link : links){
 			
@@ -52,5 +53,9 @@ public abstract class CommandLinksContainer {
 	}
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);
+
+	public TreeMap<String, Link> getLinkMap(){
+		return this.linkMap;
+	}
 	
 }

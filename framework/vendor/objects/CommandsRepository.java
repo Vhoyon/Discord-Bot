@@ -14,12 +14,15 @@ public class CommandsRepository {
 	
 	public void setDictionary(Dictionary dict){
 		this.dict = dict;
-	}
-	
-	public CommandLinksContainer getContainer(){
 		commandsLinker.setDictionary(dict);
-		
+	}
+
+	public CommandLinksContainer getContainer(){
 		return commandsLinker.getContainer();
 	}
-	
+
+	public String getFullHelpString(){
+		return commandsLinker.getFullHelpString();
+	}
+
 }
