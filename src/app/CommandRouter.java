@@ -44,7 +44,11 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		catch(NullPointerException e){
 			
 			dict = new Dictionary();
-			buffer.push(dict, BUFFER_LANG, event.getGuild().getId());
+			
+			try{
+				buffer.push(dict, BUFFER_LANG, event.getGuild().getId());
+			}
+			catch(NullPointerException e1){}
 			
 		}
 		
