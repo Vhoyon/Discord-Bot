@@ -7,7 +7,7 @@ public class Link {
 	private Class<? extends LinkableCommand> classToLink;
 	private String[] calls;
 	
-	public Link(Class<? extends LinkableCommand> command, String... calls){
+	public Link(Class<? extends LinkableCommand> command){
 		this.classToLink = command;
 		
 		this.calls = calls;

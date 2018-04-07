@@ -3,6 +3,8 @@ package vendor.interfaces;
 import vendor.objects.ParametersHelp;
 
 public interface LinkableCommand {
+
+	String[] getCalls();
 	
 	default String getCommandDescription(){
 		return null;
