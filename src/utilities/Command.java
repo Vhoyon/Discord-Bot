@@ -68,11 +68,11 @@ public abstract class Command extends Translatable implements Commands,
 	public CommandRouter getRouter(){
 		return router;
 	}
-
+	
 	public void setRouter(CommandRouter router){
 		this.router = router;
 	}
-
+	
 	public Buffer getBuffer(){
 		return buffer;
 	}

@@ -32,7 +32,7 @@ public class Link {
 		return this.calls;
 	}
 	
-	protected Class<? extends LinkableCommand> getClassToLink(){
+	public Class<? extends LinkableCommand> getClassToLink(){
 		return classToLink;
 	}
 	

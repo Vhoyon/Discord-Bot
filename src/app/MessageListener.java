@@ -10,13 +10,10 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
+ * Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
+ * l'utilisateur et appele les classes necessaires
  * 
  * @author Stephano
- *
- * <br>
- * <br>
- *         Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
- *         l'utilisateur et appele les classes necessaires
  */
 public class MessageListener extends ListenerAdapter implements Resources {
 	

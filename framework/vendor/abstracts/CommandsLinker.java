@@ -8,9 +8,15 @@ import java.util.TreeMap;
 
 public abstract class CommandsLinker extends Translatable {
 	
+	private static String fullHelpString;
+	
 	public abstract CommandLinksContainer getContainer();
 	
 	public String getFullHelpString(){
+		
+		if(fullHelpString != null){
+			return fullHelpString;
+		}
 		
 		CommandLinksContainer container = getContainer();
 		
@@ -33,13 +39,30 @@ public abstract class CommandsLinker extends Translatable {
 				builder.append("\t");
 			}
 			
-			builder.append("- ").append(key);
+			builder.append("~ `!!").append(key).append("`");
+			
+			if(!isSubstitute){
+				
+				try{
+					
+					String helpString = link.initiate().getHelpString();
+					
+					if(helpString != null){
+						builder.append(" : ").append(helpString);
+					}
+					
+				}
+				catch(Exception e){}
+				
+			}
 			
 			builder.append("\n");
 			
 		});
+
+		fullHelpString = builder.toString();
 		
-		return builder.toString();
+		return fullHelpString;
 		
 	}
 	

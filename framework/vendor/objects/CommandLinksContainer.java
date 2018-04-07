@@ -1,6 +1,5 @@
 package vendor.objects;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import vendor.interfaces.LinkableCommand;

@@ -25,6 +25,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	private Buffer buffer;
 	private Command command;
 	private Dictionary dict;
+	private CommandsRepository commandsRepo;
 	private CommandLinksContainer commandLinks;
 	
 	public CommandRouter(MessageReceivedEvent event, String messageRecu,
@@ -49,7 +50,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 		commandsRepo.setDictionary(dict);
 		
-		commandLinks = commandsRepo.getContainer();
+		this.commandsRepo = commandsRepo;
+		this.commandLinks = commandsRepo.getContainer();
 		
 		this.request = new Request(messageRecu, dict, Resources.PREFIX,
 				Resources.PARAMETER_PREFIX);
@@ -58,6 +60,10 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	
 	public Command getCommand(){
 		return command;
+	}
+	
+	public CommandsRepository getCommandsRepo(){
+		return this.commandsRepo;
 	}
 	
 	public String getString(String key){
@@ -175,8 +181,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	 * <p>
 	 * In another case where the received message in a server is only "
 	 * <code>!!</code>" (the <code><i>PREFIX</i></code> value), a
-	 * {@link utilities.abstracts.SimpleTextCommand SimpleTextCommand} command is created
-	 * that will send the message
+	 * {@link utilities.abstracts.SimpleTextCommand SimpleTextCommand} command
+	 * is created that will send the message
 	 * "<i>... you wanted to call upon me or...?</i>".
 	 * 
 	 * @return <code>null</code> if valid; a command to execute otherwise.
