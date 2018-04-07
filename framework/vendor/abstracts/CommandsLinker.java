@@ -8,9 +8,17 @@ import java.util.TreeMap;
 
 public abstract class CommandsLinker extends Translatable {
 	
+	private static CommandLinksContainer container;
 	private static String fullHelpString;
 	
-	public abstract CommandLinksContainer getContainer();
+	public abstract CommandLinksContainer createLinksContainer();
+	
+	public CommandLinksContainer getContainer(){
+		if(container != null)
+			return container;
+		
+		return container = createLinksContainer();
+	}
 	
 	public String getFullHelpString(){
 		
@@ -39,7 +47,7 @@ public abstract class CommandsLinker extends Translatable {
 				builder.append("\t");
 			}
 			
-			builder.append("~ `!!").append(key).append("`");
+			builder.append("~ ").append(formatCommand(key));
 			
 			if(!isSubstitute){
 				
@@ -48,7 +56,8 @@ public abstract class CommandsLinker extends Translatable {
 					String helpString = link.initiate().getHelpString();
 					
 					if(helpString != null){
-						builder.append(" : ").append(helpString);
+						builder.append(" : ").append(
+								formatHelpString(helpString));
 					}
 					
 				}
@@ -59,11 +68,19 @@ public abstract class CommandsLinker extends Translatable {
 			builder.append("\n");
 			
 		});
-
+		
 		fullHelpString = builder.toString();
 		
 		return fullHelpString;
 		
+	}
+	
+	public String formatCommand(String command){
+		return command;
+	}
+	
+	public String formatHelpString(String helpString){
+		return helpString;
 	}
 	
 }

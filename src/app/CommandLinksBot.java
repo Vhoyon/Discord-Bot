@@ -12,7 +12,7 @@ import vendor.objects.LinkParams;
 public class CommandLinksBot extends CommandsLinker implements Commands {
 	
 	@Override
-	public CommandLinksContainer getContainer(){
+	public CommandLinksContainer createLinksContainer(){
 		
 		return new CommandLinksContainer(new Link[]
 		{
@@ -82,5 +82,9 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		};
 		
 	}
-	
+
+	@Override
+	public String formatCommand(String command) {
+		return buildVCommand(command);
+	}
 }
