@@ -20,28 +20,20 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			
 			new Link(CommandHelp.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_PLAY),
-					CommandMusic.CommandType.PLAY),
+			new Link(CommandMusicPlay.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_PAUSE),
-					CommandMusic.CommandType.PAUSE),
+			new Link(CommandMusicPause.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP),
-					CommandMusic.CommandType.SKIP),
+			new Link(CommandMusicSkip.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP_ALL1,
-					MUSIC_SKIP_ALL2, MUSIC_SKIP_ALL3),
-					CommandMusic.CommandType.SKIP_ALL),
+			new Link(CommandMusicSkipAll.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_DISCONNECT),
-					CommandMusic.CommandType.DISCONNECT),
+			new Link(CommandMusicDisconnect.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_VOLUME),
-					CommandMusic.CommandType.VOLUME),
+			new Link(CommandMusicVolume.class),
 			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_LIST),
-					CommandMusic.CommandType.LIST),
-			
+			new Link(CommandMusicList.class),
+
 			new Link(CommandClear.class),
 			
 			new Link(CommandSpam.class),
