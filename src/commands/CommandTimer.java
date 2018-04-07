@@ -39,8 +39,8 @@ public class CommandTimer extends Command {
 			String timerMessageId = null;
 			// long totalTime = (seconds * 1000);
 			// long temps = System.currentTimeMillis();
-			timerMessageId = sendMessage(hours + "hours " + minutes
-					+ " minutes " + seconds + " seconds");
+			timerMessageId = sendMessage(String.format("%02d", hours) + ":" + String.format("%02d", minutes)
+					+ ":" + String.format("%02d", seconds));
 			
 			try{
 				
@@ -48,8 +48,8 @@ public class CommandTimer extends Command {
 					
 					if(i < totalTime){
 						timeConstruct(i);
-						editMessage(timeRef[0] + "hours " + timeRef[1]
-								+ " minutes " + timeRef[2] + " seconds",
+						editMessage(String.format("%02d", timeRef[0]) + ":" + String.format("%02d", timeRef[1])
+								+ ":" + String.format("%02d", timeRef[2]),
 								timerMessageId);
 					}
 					
