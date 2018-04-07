@@ -75,4 +75,11 @@ public class CommandClear extends Command {
 		
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			CLEAR
+		};
+	}
 }

@@ -16,9 +16,9 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		
 		return new CommandLinksContainer(new Link[]
 		{
-			new Link(CommandHello.class, HELLO),
+			new Link(CommandHello.class),
 			
-			new Link(CommandHelp.class, HELP),
+			new Link(CommandHelp.class),
 			
 			new LinkParams(new Link(CommandMusic.class, MUSIC_PLAY),
 					CommandMusic.CommandType.PLAY),
@@ -42,13 +42,13 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			new LinkParams(new Link(CommandMusic.class, MUSIC_LIST),
 					CommandMusic.CommandType.LIST),
 			
-			new Link(CommandClear.class, CLEAR),
+			new Link(CommandClear.class),
 			
-			new Link(CommandSpam.class, SPAM),
+			new Link(CommandSpam.class),
 			
-			new Link(CommandTerminate.class, TERMINATE),
+			new Link(CommandTerminate.class),
 			
-			new Link(CommandStop.class, STOP),
+			new Link(CommandStop.class),
 			
 			new LinkParams(new Link(GameInteractionCommand.class, GAME),
 					GameInteractionCommand.CommandType.INITIAL),
@@ -65,9 +65,9 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			new LinkParams(new Link(GameInteractionCommand.class, GAME_LIST),
 					GameInteractionCommand.CommandType.LIST),
 			
-			new Link(CommandTimer.class, TIMER),
+			new Link(CommandTimer.class),
 			
-			new Link(CommandLanguage.class, LANG, LANGUAGE),
+			new Link(CommandLanguage.class),
 		
 		}){
 			
@@ -82,9 +82,9 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		};
 		
 	}
-
+	
 	@Override
-	public String formatCommand(String command) {
+	public String formatCommand(String command){
 		return buildVCommand(command);
 	}
 }

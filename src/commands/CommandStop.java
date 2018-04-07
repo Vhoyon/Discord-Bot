@@ -50,4 +50,12 @@ public class CommandStop extends Command {
 		}
 		
 	}
+	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			STOP
+		};
+	}
 }

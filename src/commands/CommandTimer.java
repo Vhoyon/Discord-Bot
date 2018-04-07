@@ -39,8 +39,9 @@ public class CommandTimer extends Command {
 			String timerMessageId = null;
 			// long totalTime = (seconds * 1000);
 			// long temps = System.currentTimeMillis();
-			timerMessageId = sendMessage(String.format("%02d", hours) + ":" + String.format("%02d", minutes)
-					+ ":" + String.format("%02d", seconds));
+			timerMessageId = sendMessage(String.format("%02d", hours) + ":"
+					+ String.format("%02d", minutes) + ":"
+					+ String.format("%02d", seconds));
 			
 			try{
 				
@@ -48,8 +49,9 @@ public class CommandTimer extends Command {
 					
 					if(i < totalTime){
 						timeConstruct(i);
-						editMessage(String.format("%02d", timeRef[0]) + ":" + String.format("%02d", timeRef[1])
-								+ ":" + String.format("%02d", timeRef[2]),
+						editMessage(String.format("%02d", timeRef[0]) + ":"
+								+ String.format("%02d", timeRef[1]) + ":"
+								+ String.format("%02d", timeRef[2]),
 								timerMessageId);
 					}
 					
@@ -100,4 +102,11 @@ public class CommandTimer extends Command {
 		return true;
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			TIMER
+		};
+	}
 }

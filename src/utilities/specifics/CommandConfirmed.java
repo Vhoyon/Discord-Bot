@@ -61,4 +61,11 @@ public abstract class CommandConfirmed extends Command {
 		return super.lang(shortKey, replacements);
 	}
 	
+	@Override
+	public String[] getCalls(){
+		if(inceptionCommand == null)
+			return null;
+		
+		return inceptionCommand.getCalls();
+	}
 }

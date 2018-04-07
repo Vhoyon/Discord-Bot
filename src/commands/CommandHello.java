@@ -3,7 +3,7 @@ package commands;
 import utilities.abstracts.SimpleTextCommand;
 
 public class CommandHello extends SimpleTextCommand {
-
+	
 	@Override
 	public String getTextToSend(){
 		return lang("HelloResponse", getUsername());
@@ -14,4 +14,11 @@ public class CommandHello extends SimpleTextCommand {
 		return true;
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			HELLO
+		};
+	}
 }

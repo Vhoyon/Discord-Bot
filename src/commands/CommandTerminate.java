@@ -9,4 +9,11 @@ public class CommandTerminate extends SimpleTextCommand {
 		return lang("TERMINATE");
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			TERMINATE
+		};
+	}
 }
