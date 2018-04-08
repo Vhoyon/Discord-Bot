@@ -9,7 +9,7 @@ public class LinkParams extends Link {
 	private Object[] params;
 	
 	public LinkParams(Link link, Object... params){
-		super(link.getClassToLink(), link.getCalls());
+		super(link.getClassToLink());
 		
 		this.params = params;
 	}

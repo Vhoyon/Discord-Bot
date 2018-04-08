@@ -116,4 +116,8 @@ public abstract class AbstractBotError extends Command {
 		return format(errorMessage, replacements);
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return null;
+	}
 }
