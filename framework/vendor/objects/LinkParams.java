@@ -15,7 +15,7 @@ public class LinkParams extends Link {
 	}
 	
 	@Override
-	public LinkableCommand initiate() throws Exception{
+	public LinkableCommand getInstance() throws Exception{
 		
 		@SuppressWarnings("rawtypes")
 		ArrayList<Class> classes = new ArrayList<>();

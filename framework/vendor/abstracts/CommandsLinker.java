@@ -53,7 +53,7 @@ public abstract class CommandsLinker extends Translatable {
 				
 				try{
 					
-					String helpString = link.initiate().getCommandDescription();
+					String helpString = link.getInstance().getCommandDescription();
 					
 					if(helpString != null){
 						builder.append(" : ").append(

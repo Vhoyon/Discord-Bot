@@ -11,14 +11,14 @@ public class Link {
 		this.classToLink = command;
 		
 		try{
-			LinkableCommand commandInstance = initiate();
+			LinkableCommand commandInstance = getInstance();
 			
 			this.calls = commandInstance.getCalls();
 		}
 		catch(Exception e){}
 	}
 	
-	public LinkableCommand initiate() throws Exception{
+	public LinkableCommand getInstance() throws Exception{
 		return getClassToLink().newInstance();
 	}
 	

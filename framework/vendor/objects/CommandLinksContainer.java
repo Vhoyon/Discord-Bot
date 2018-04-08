@@ -63,7 +63,7 @@ public abstract class CommandLinksContainer {
 				return whenCommandNotFound(commandName);
 			}
 			else{
-				return link.initiate();
+				return link.getInstance();
 			}
 			
 		}
