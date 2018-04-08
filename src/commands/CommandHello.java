@@ -21,4 +21,10 @@ public class CommandHello extends SimpleTextCommand {
 			HELLO
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Being polite is my top priority!";
+	}
+
 }

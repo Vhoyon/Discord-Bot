@@ -1,6 +1,9 @@
 package commands;
 
+import errorHandling.BotError;
 import utilities.Command;
+import vendor.exceptions.CommandNotFoundException;
+import vendor.modules.Logger;
 
 /**
  * Classe qui envois un message a l'utilisateur qui demande de l'aide avec une
@@ -14,10 +17,41 @@ public class CommandHelp extends Command {
 	@Override
 	public void action(){
 		
-		String test = getRouter().getCommandsRepo().getFullHelpString();
+		String content = getContent();
 		
-		sendPrivateMessage(test);
-		sendInfoMessage(lang("HelpSentMessage"));
+		if(content == null){
+			
+			String test = getRouter().getCommandsRepo().getFullHelpString();
+			
+			sendPrivateMessage(test);
+			sendInfoMessage(lang("HelpSentMessage"));
+			
+		}
+		else{
+			
+			try{
+				
+				Command commandToExplain = (Command)getRouter()
+						.getCommandsRepo().getContainer().findCommand(content);
+				
+				StringBuilder builder = new StringBuilder();
+				
+				String helpString = commandToExplain.getHelp("Usage : "
+						+ buildVCommand(content) + ".", null);
+				
+				builder.append(helpString);
+				
+				sendMessage(builder.toString());
+				
+			}
+			catch(CommandNotFoundException e){
+				new BotError(this, e.getMessage());
+			}
+			catch(Exception e){
+				Logger.log(e);
+			}
+			
+		}
 		
 	}
 	

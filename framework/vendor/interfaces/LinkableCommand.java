@@ -27,15 +27,47 @@ public interface LinkableCommand {
 		return null;
 	}
 	
-	default String getHelp(){
+	default String getHelp(String textWhenNoDescription,
+			String textWhenNoParameters){
+		
+		String commandDescription = getCommandDescription();
+		ParametersHelp[] parametersHelp = getParametersDescriptions();
 		
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append(getCommandDescription()).append("\n");
+		if(commandDescription == null){
+			if(textWhenNoDescription != null)
+				builder.append(textWhenNoDescription);
+		}
+		else{
+			builder.append(commandDescription);
+		}
 		
-		ParametersHelp[] parametersDescriptions = getParametersDescriptions();
-		
-		for(int i = 0; i < parametersDescriptions.length; i++){
+		if(parametersHelp == null){
+			if(textWhenNoParameters != null)
+				builder.append("\n\t").append(textWhenNoParameters);
+		}
+		else{
+			
+			String paramsSeparator = ", ";
+			
+			for(ParametersHelp paramHelp : parametersHelp){
+				
+				builder.append("\n").append("\t- ");
+				
+				for(String param : paramHelp.getParamVariants()){
+					builder.append(param).append(paramsSeparator);
+				}
+				
+				builder.substring(0,
+						builder.length() - paramsSeparator.length());
+				
+				String paramHelpDescription = paramHelp
+						.getParameterDescription();
+				if(paramHelpDescription != null)
+					builder.append(" : ").append(paramHelpDescription);
+				
+			}
 			
 		}
 		

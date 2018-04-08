@@ -2,6 +2,7 @@ package vendor.objects;
 
 import java.util.TreeMap;
 
+import vendor.exceptions.CommandNotFoundException;
 import vendor.interfaces.LinkableCommand;
 import vendor.modules.Logger;
 
@@ -57,7 +58,7 @@ public abstract class CommandLinksContainer {
 	public LinkableCommand initiateLink(String commandName){
 		try{
 			
-			Link link = linkMap.get(commandName);
+			Link link = findLink(commandName);
 			
 			if(link == null){
 				return whenCommandNotFound(commandName);
@@ -78,6 +79,25 @@ public abstract class CommandLinksContainer {
 	
 	public TreeMap<String, Link> getLinkMap(){
 		return this.linkMap;
+	}
+	
+	public Link findLink(String commandName){
+		return getLinkMap().get(commandName);
+	}
+	
+	public LinkableCommand findCommand(String commandName) throws Exception{
+		
+		Link link = findLink(commandName);
+		
+		if(link == null){
+			throw new CommandNotFoundException(commandName);
+		}
+		else{
+			
+			return link.getInstance();
+			
+		}
+		
 	}
 	
 }
