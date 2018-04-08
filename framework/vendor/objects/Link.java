@@ -10,7 +10,12 @@ public class Link {
 	public Link(Class<? extends LinkableCommand> command){
 		this.classToLink = command;
 		
-		this.calls = calls;
+		try{
+			LinkableCommand commandInstance = initiate();
+			
+			this.calls = commandInstance.getCalls();
+		}
+		catch(Exception e){}
 	}
 	
 	public LinkableCommand initiate() throws Exception{
@@ -18,7 +23,7 @@ public class Link {
 	}
 	
 	public boolean hasCall(String call){
-
+		
 		if(call != null && call.length() != 0){
 			
 			String[] definedCalls = getCalls();
@@ -30,7 +35,7 @@ public class Link {
 		}
 		
 		return false;
-
+		
 	}
 	
 	public String[] getCalls(){
