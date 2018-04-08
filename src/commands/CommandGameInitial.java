@@ -14,7 +14,7 @@ public class CommandGameInitial extends GameInteractionCommands {
 		if(getContent() == null){
 			new BotError(this, lang("ErrorUsage",
 					buildVCommand(getDefaultCall()
-							+ " [game 1],[game 2],[game 3],[...]")));
+							+ " [game 1],[game 2],[game 3],[...]")), false);
 		}
 		else{
 			

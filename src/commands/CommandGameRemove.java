@@ -13,7 +13,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 			new BotError(this, lang("ErrorUsage",
 					buildVCommand(getDefaultCall() + " [game name]"),
 					buildVCommand(getDefaultCall() + " "
-							+ buildParameter("all"))));
+							+ buildParameter("all"))), false);
 		}
 		else{
 			
