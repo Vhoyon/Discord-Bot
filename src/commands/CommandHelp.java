@@ -36,8 +36,9 @@ public class CommandHelp extends Command {
 				
 				StringBuilder builder = new StringBuilder();
 				
-				String helpString = commandToExplain.getHelp("Usage : "
-						+ buildVCommand(content) + ".", null);
+				String helpString = commandToExplain.getHelp(
+						"*Available parameters :*", "Usage : "
+								+ buildVCommand(content) + ".", null);
 				
 				builder.append(helpString);
 				
@@ -45,7 +46,8 @@ public class CommandHelp extends Command {
 				
 			}
 			catch(CommandNotFoundException e){
-				new BotError(this, e.getMessage());
+				new BotError(this, "The command " + buildVCommand(content)
+						+ "does not exist!");
 			}
 			catch(Exception e){
 				Logger.log(e);
