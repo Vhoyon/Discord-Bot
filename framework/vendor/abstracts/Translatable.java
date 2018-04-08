@@ -19,6 +19,11 @@ public abstract class Translatable {
 				: lang(key);
 	}
 	
+	public String lang(boolean isFullString, String key, Object... replacements){
+		return isFullString ? this.getDictionary().getDirectString(key,
+				replacements) : lang(key, replacements);
+	}
+	
 	/**
 	 * Legacy method to directly get resources with the key supplied without
 	 * testing for class possibility. Also applies a formatting to replace
