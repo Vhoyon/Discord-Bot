@@ -7,7 +7,6 @@ import vendor.abstracts.CommandsLinker;
 import vendor.interfaces.LinkableCommand;
 import vendor.objects.CommandLinksContainer;
 import vendor.objects.Link;
-import vendor.objects.LinkParams;
 
 public class CommandLinksBot extends CommandsLinker implements Commands {
 	
@@ -16,6 +15,7 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		
 		return new CommandLinksContainer(new Link[]
 		{
+			
 			new Link(CommandHello.class),
 			
 			new Link(CommandHelp.class),
@@ -33,7 +33,7 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			new Link(CommandMusicVolume.class),
 			
 			new Link(CommandMusicList.class),
-
+			
 			new Link(CommandClear.class),
 			
 			new Link(CommandSpam.class),
@@ -42,20 +42,15 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 			
 			new Link(CommandStop.class),
 			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME),
-					GameInteractionCommand.CommandType.INITIAL),
+			new Link(CommandGameInitial.class),
 			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_ADD),
-					GameInteractionCommand.CommandType.ADD),
+			new Link(CommandGameAdd.class),
 			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_REMOVE),
-					GameInteractionCommand.CommandType.REMOVE),
+			new Link(CommandGameRemove.class),
 			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_ROLL,
-					GAME_ROLL_ALT), GameInteractionCommand.CommandType.ROLL),
+			new Link(CommandGameRoll.class),
 			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_LIST),
-					GameInteractionCommand.CommandType.LIST),
+			new Link(CommandGameList.class),
 			
 			new Link(CommandTimer.class),
 			
@@ -79,4 +74,5 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 	public String formatCommand(String command){
 		return buildVCommand(command);
 	}
+
 }

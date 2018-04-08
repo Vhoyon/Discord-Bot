@@ -3,13 +3,22 @@ package vendor.interfaces;
 import vendor.objects.ParametersHelp;
 
 public interface LinkableCommand {
-
+	
 	String[] getCalls();
+	
+	default String getDefaultCall(){
+		String[] calls = getCalls();
+		
+		if(calls == null)
+			return null;
+		
+		return calls[0];
+	}
 	
 	default String getCommandDescription(){
 		return null;
 	}
-
+	
 	default String getParameterPrefix(){
 		return "-";
 	}

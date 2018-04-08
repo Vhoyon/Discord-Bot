@@ -1,0 +1,66 @@
+package commands;
+
+import utilities.abstracts.GameInteractionCommands;
+import utilities.specifics.GamePool;
+import errorHandling.BotError;
+
+public class CommandGameRemove extends GameInteractionCommands {
+	
+	@Override
+	public void action(){
+		
+		if(getContent() == null){
+			new BotError(this, lang("ErrorUsage",
+					buildVCommand(getDefaultCall() + " [game name]"),
+					buildVCommand(getDefaultCall() + " "
+							+ buildParameter("all"))));
+		}
+		else{
+			
+			try{
+				
+				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
+				
+				if(hasParameter("all")){
+					
+					do{
+						gamepool.remove(0);
+					}while(!gamepool.isEmpty());
+					
+				}
+				else{
+					
+					if(gamepool.remove(getContent()))
+						sendMessage(lang("RemovedGameSuccessMessage",
+								getContent()));
+					else
+						new BotError(this, lang("ErrorNoSuchGame",
+								buildVCommand(GAME_LIST)));
+					
+				}
+				
+				if(gamepool.isEmpty()){
+					
+					forget(BUFFER_GAMEPOOL);
+					sendMessage(lang("IsNowEmpty"));
+					
+				}
+				
+			}
+			catch(NullPointerException e){
+				sendInfoMessage(lang("ErrorEmptyPool"));
+			}
+			
+		}
+		
+	}
+	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			GAME_REMOVE
+		};
+	}
+	
+}
