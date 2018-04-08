@@ -60,11 +60,8 @@ public interface LinkableCommand {
 						.append(formatParameter(paramHelp.getParam()));
 				
 				for(String param : paramHelp.getParamVariants()){
-					builder.append(param).append(paramsSeparator);
+					builder.append(paramsSeparator).append(formatParameter(param));
 				}
-				
-				builder.substring(0,
-						builder.length() - paramsSeparator.length());
 				
 				String paramHelpDescription = paramHelp
 						.getParameterDescription();
