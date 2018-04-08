@@ -3,6 +3,7 @@ package commands;
 import utilities.Command;
 import vendor.exceptions.NoParameterContentException;
 import errorHandling.BotError;
+import vendor.objects.ParametersHelp;
 
 public class CommandTimer extends Command {
 	
@@ -109,4 +110,20 @@ public class CommandTimer extends Command {
 			TIMER
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Setup a timer and the bot will send a message when it's over!";
+	}
+
+	@Override
+	public ParametersHelp[] getParametersDescriptions(){
+		return new ParametersHelp[]
+		{
+			new ParametersHelp("Sets the hours of the timer.", "h"),
+			new ParametersHelp("Sets the minutes of the timer.", "m"),
+			new ParametersHelp("Sets the seconds of the timer.", "s"),
+		};
+	}
+	
 }
