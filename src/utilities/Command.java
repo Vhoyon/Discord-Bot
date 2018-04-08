@@ -307,8 +307,8 @@ public abstract class Command extends Translatable implements Commands,
 	}
 	
 	@Override
-	public String getParameterPrefix(){
-		return Resources.PARAMETER_PREFIX;
+	public String formatParameter(String parameterToFormat){
+		return buildVParameter(parameterToFormat);
 	}
-	
+
 }

@@ -28,6 +28,15 @@ public interface Commands {
 		return Resources.PARAMETER_PREFIX + parameter;
 	}
 	
+	/**
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
+	 *         Ressources
+	 *         followed by the <i>parameter</i> parameter.
+	 */
+	public default String buildVParameter(String parameter){
+		return "`" + buildParameter(parameter) + "`";
+	}
+	
 	String TEST = "test";
 	
 	String HELLO = "hello";

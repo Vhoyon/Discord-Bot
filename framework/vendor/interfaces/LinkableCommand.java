@@ -19,16 +19,12 @@ public interface LinkableCommand {
 		return null;
 	}
 	
-	default String getParameterPrefix(){
-		return "-";
-	}
-	
 	default ParametersHelp[] getParametersDescriptions(){
 		return null;
 	}
 	
-	default String getHelp(String textWhenNoDescription,
-			String textWhenNoParameters){
+	default String getHelp(String textWhenParametersAvailable,
+			String textWhenNoDescription, String textWhenNoParameters){
 		
 		String commandDescription = getCommandDescription();
 		ParametersHelp[] parametersHelp = getParametersDescriptions();
@@ -51,9 +47,13 @@ public interface LinkableCommand {
 			
 			String paramsSeparator = ", ";
 			
+			if(textWhenParametersAvailable != null)
+				builder.append("\n").append(textWhenParametersAvailable);
+			
 			for(ParametersHelp paramHelp : parametersHelp){
 				
-				builder.append("\n").append("\t- ");
+				builder.append("\n").append("\t")
+						.append(formatParameter(paramHelp.getParam()));
 				
 				for(String param : paramHelp.getParamVariants()){
 					builder.append(param).append(paramsSeparator);
@@ -73,6 +73,10 @@ public interface LinkableCommand {
 		
 		return builder.toString();
 		
+	}
+	
+	default String formatParameter(String parameterToFormat){
+		return "-" + parameterToFormat;
 	}
 	
 }
