@@ -11,9 +11,30 @@ public abstract class CommandLinksContainer {
 	
 	/**
 	 * The latest links commands will always replace the first command call.
+	 * 
 	 * @param links
 	 */
 	public CommandLinksContainer(Link... links){
+		initializeContainer(links);
+	}
+	
+	/**
+	 * The latest links commands will always replace the first command call.
+	 *
+	 * @param commands
+	 */
+	@SafeVarargs
+	public CommandLinksContainer(Class<? extends LinkableCommand>... commands){
+		Link[] links = new Link[commands.length];
+		
+		for(int i = 0; i < commands.length; i++){
+			links[i] = new Link(commands[i]);
+		}
+		
+		initializeContainer(links);
+	}
+	
+	private void initializeContainer(Link[] links){
 		
 		linkMap = new TreeMap<>();
 		
@@ -21,10 +42,12 @@ public abstract class CommandLinksContainer {
 			
 			String[] calls = link.getCalls();
 			
-			for(String call : calls){
-				
-				linkMap.put(call, link);
-				
+			if(calls != null){
+				for(String call : calls){
+					
+					linkMap.put(call, link);
+					
+				}
 			}
 			
 		}
@@ -52,7 +75,7 @@ public abstract class CommandLinksContainer {
 	}
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);
-
+	
 	public TreeMap<String, Link> getLinkMap(){
 		return this.linkMap;
 	}

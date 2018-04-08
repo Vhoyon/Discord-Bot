@@ -6,70 +6,34 @@ import utilities.interfaces.Commands;
 import vendor.abstracts.CommandsLinker;
 import vendor.interfaces.LinkableCommand;
 import vendor.objects.CommandLinksContainer;
-import vendor.objects.Link;
-import vendor.objects.LinkParams;
 
 public class CommandLinksBot extends CommandsLinker implements Commands {
 	
 	@Override
 	public CommandLinksContainer createLinksContainer(){
 		
-		return new CommandLinksContainer(new Link[]
-		{
-			new Link(CommandHello.class, HELLO),
-			
-			new Link(CommandHelp.class, HELP),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_PLAY),
-					CommandMusic.CommandType.PLAY),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_PAUSE),
-					CommandMusic.CommandType.PAUSE),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP),
-					CommandMusic.CommandType.SKIP),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_SKIP_ALL1,
-					MUSIC_SKIP_ALL2, MUSIC_SKIP_ALL3),
-					CommandMusic.CommandType.SKIP_ALL),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_DISCONNECT),
-					CommandMusic.CommandType.DISCONNECT),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_VOLUME),
-					CommandMusic.CommandType.VOLUME),
-			
-			new LinkParams(new Link(CommandMusic.class, MUSIC_LIST),
-					CommandMusic.CommandType.LIST),
-			
-			new Link(CommandClear.class, CLEAR),
-			
-			new Link(CommandSpam.class, SPAM),
-			
-			new Link(CommandTerminate.class, TERMINATE),
-			
-			new Link(CommandStop.class, STOP),
-			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME),
-					GameInteractionCommand.CommandType.INITIAL),
-			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_ADD),
-					GameInteractionCommand.CommandType.ADD),
-			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_REMOVE),
-					GameInteractionCommand.CommandType.REMOVE),
-			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_ROLL,
-					GAME_ROLL_ALT), GameInteractionCommand.CommandType.ROLL),
-			
-			new LinkParams(new Link(GameInteractionCommand.class, GAME_LIST),
-					GameInteractionCommand.CommandType.LIST),
-			
-			new Link(CommandTimer.class, TIMER),
-			
-			new Link(CommandLanguage.class, LANG, LANGUAGE),
-		
-		}){
+		return new CommandLinksContainer(
+			CommandHello.class,
+			CommandHelp.class,
+			CommandMusicPlay.class,
+			CommandMusicPause.class,
+			CommandMusicSkip.class,
+			CommandMusicSkipAll.class,
+			CommandMusicDisconnect.class,
+			CommandMusicVolume.class,
+			CommandMusicList.class,
+			CommandClear.class,
+			CommandSpam.class,
+			CommandTerminate.class,
+			CommandStop.class,
+			CommandGameInitial.class,
+			CommandGameAdd.class,
+			CommandGameRemove.class,
+			CommandGameRoll.class,
+			CommandGameList.class,
+			CommandTimer.class,
+			CommandLanguage.class
+		){
 			
 			@Override
 			public LinkableCommand whenCommandNotFound(String commandName){
@@ -82,9 +46,10 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 		};
 		
 	}
-
+	
 	@Override
-	public String formatCommand(String command) {
+	public String formatCommand(String command){
 		return buildVCommand(command);
 	}
+	
 }

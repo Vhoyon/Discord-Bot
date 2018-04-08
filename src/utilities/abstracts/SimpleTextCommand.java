@@ -18,5 +18,9 @@ public abstract class SimpleTextCommand extends AbstractTextCommand {
 		}
 		
 	}
-	
+
+	@Override
+	public String[] getCalls() {
+		return null;
+	}
 }

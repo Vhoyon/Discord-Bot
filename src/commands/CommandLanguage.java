@@ -57,4 +57,11 @@ public class CommandLanguage extends Command {
 		
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			LANG, LANGUAGE
+		};
+	}
 }

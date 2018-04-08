@@ -13,7 +13,7 @@ public class CommandHelp extends Command {
 	
 	@Override
 	public void action(){
-
+		
 		String test = getRouter().getCommandsRepo().getFullHelpString();
 		
 		sendPrivateMessage(test);
@@ -21,4 +21,11 @@ public class CommandHelp extends Command {
 		
 	}
 	
+	@Override
+	public String[] getCalls(){
+		return new String[]
+		{
+			HELP
+		};
+	}
 }
