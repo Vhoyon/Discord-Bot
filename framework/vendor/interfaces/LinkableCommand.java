@@ -24,19 +24,23 @@ public interface LinkableCommand {
 	}
 	
 	default String getHelp(String textWhenParametersAvailable,
-			String textWhenNoDescription, String textWhenNoParameters){
+			String textHeader, String textWhenNoParameters){
 		
 		String commandDescription = getCommandDescription();
 		ParametersHelp[] parametersHelp = getParametersDescriptions();
 		
 		StringBuilder builder = new StringBuilder();
 		
-		if(commandDescription == null){
-			if(textWhenNoDescription != null)
-				builder.append(textWhenNoDescription);
-		}
-		else{
+		if(textHeader != null)
+			builder.append(textHeader).append("\n");
+		
+		if(commandDescription != null){
+			
+			if(textHeader != null)
+				builder.append("\t");
+			
 			builder.append(commandDescription);
+			
 		}
 		
 		if(parametersHelp == null){
