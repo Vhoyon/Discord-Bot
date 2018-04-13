@@ -11,17 +11,31 @@ public class CommandStop extends Command {
 		
 		if(getContent() == null){
 			
-			try{
-				
-				getMemory(BUFFER_SPAM);
-				
-				remember(false, BUFFER_SPAM);
-				
-				sendInfoMessage(lang("SavedFromSpam", EMOJI_OK_HAND));
-				
-			}
-			catch(NullPointerException e){
+			Command commandToStop = CommandsThreadManager
+					.getLatestRunningCommandExcept(this, getGuildId());
+			
+			if(commandToStop == null){
 				sendMessage(lang("BotCantStop"));
+			}
+			else{
+				
+				boolean stopSuccess = commandToStop.stopAction();
+				
+				if(stopSuccess){
+
+					sendInfoMessage("Command "
+							+ buildVCommand(commandToStop.getCommandName())
+							+ " successfully stopped!");
+
+				}
+				else{
+					
+					new BotError(this, "The command "
+							+ buildVCommand(commandToStop.getCommandName())
+							+ " did not successfully stopped!");
+					
+				}
+				
 			}
 			
 		}
@@ -58,4 +72,5 @@ public class CommandStop extends Command {
 			STOP
 		};
 	}
+	
 }
