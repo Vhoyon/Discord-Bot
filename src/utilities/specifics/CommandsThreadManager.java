@@ -25,22 +25,33 @@ public class CommandsThreadManager {
 	 *         wasn't found.
 	 */
 	public static Command getCommandRunning(String commandName, String guildID,
-			CommandRouter router){
+			CommandRouter inRouter){
 		
-		Thread[] threadArray = getThreadsArray();
+		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
-		for(Thread thread : threadArray){
-			
-			if(thread instanceof CommandRouter && !thread.equals(router)
-					&& thread.getName().equals(commandName + guildID)){
-				
-				return ((CommandRouter)thread).getCommand();
-				
-			}
-			
-		}
+		for(CommandRouter router : routers)
+			if(!router.equals(inRouter)
+					&& router.getName().equals(commandName + guildID))
+				return router.getCommand();
 		
 		return null;
+		
+	}
+	
+	public static Command getLatestRunningCommand(String guildID){
+		
+		Stack<CommandRouter> guildRouters = getRunningCommandRoutersOfGuild(guildID);
+		
+		if(guildRouters.empty()){
+			return null;
+		}
+		else{
+			
+			CommandRouter latestRouter = guildRouters.pop();
+			
+			return latestRouter.getCommand();
+			
+		}
 		
 	}
 	
@@ -68,18 +79,11 @@ public class CommandsThreadManager {
 		
 		int numberOfCommandsStopped = 0;
 		
-		Thread[] threadArray = getThreadsArray();
+		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
-		for(Thread thread : threadArray){
-			
-			if(thread instanceof CommandRouter){
-				
-				if(((CommandRouter)thread).getCommand().stopAction())
-					numberOfCommandsStopped++;
-				
-			}
-			
-		}
+		for(CommandRouter router : routers)
+			if(router.getCommand().stopAction())
+				numberOfCommandsStopped++;
 		
 		return numberOfCommandsStopped;
 		
