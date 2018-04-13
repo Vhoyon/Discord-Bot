@@ -20,7 +20,7 @@ public abstract class CommandsLinker extends Translatable {
 		return container = createLinksContainer();
 	}
 	
-	public String getFullHelpString(){
+	public String getFullHelpString(String textHeader){
 		
 		if(fullHelpString != null){
 			return fullHelpString;
@@ -30,7 +30,9 @@ public abstract class CommandsLinker extends Translatable {
 		
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("Available commands:").append("\n\n");
+		if(textHeader != null){
+			builder.append(textHeader).append("\n\n");
+		}
 		
 		TreeMap<String, Link> linksMap = container.getLinkMap();
 		
@@ -53,7 +55,8 @@ public abstract class CommandsLinker extends Translatable {
 				
 				try{
 					
-					String helpString = link.getInstance().getCommandDescription();
+					String helpString = link.getInstance()
+							.getCommandDescription();
 					
 					if(helpString != null){
 						builder.append(" : ").append(

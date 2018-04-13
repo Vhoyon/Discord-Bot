@@ -21,8 +21,8 @@ public class CommandsRepository {
 		return commandsLinker.getContainer();
 	}
 
-	public String getFullHelpString(){
-		return commandsLinker.getFullHelpString();
+	public String getFullHelpString(String textHeader){
+		return commandsLinker.getFullHelpString(textHeader);
 	}
 
 }

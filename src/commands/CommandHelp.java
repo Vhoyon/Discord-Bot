@@ -21,9 +21,9 @@ public class CommandHelp extends Command {
 		
 		if(content == null){
 			
-			String test = getRouter().getCommandsRepo().getFullHelpString();
+			String fullHelpString = getRouter().getCommandsRepo().getFullHelpString("Available commands :");
 			
-			sendPrivateMessage(test);
+			sendPrivateMessage(fullHelpString);
 			sendInfoMessage(lang("HelpSentMessage"));
 			
 		}
