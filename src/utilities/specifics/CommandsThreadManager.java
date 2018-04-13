@@ -38,9 +38,26 @@ public class CommandsThreadManager {
 		
 	}
 	
+	public static Command getLatestRunningCommand(){
+		
+		Stack<CommandRouter> routers = getRunningCommandRouters();
+		
+		if(routers.empty()){
+			return null;
+		}
+		else{
+			
+			CommandRouter latestRouter = routers.pop();
+			
+			return latestRouter.getCommand();
+			
+		}
+		
+	}
+	
 	public static Command getLatestRunningCommand(String guildID){
 		
-		Stack<CommandRouter> guildRouters = getRunningCommandRoutersOfGuild(guildID);
+		Stack<CommandRouter> guildRouters = getRunningCommandRouters(guildID);
 		
 		if(guildRouters.empty()){
 			return null;
@@ -110,8 +127,7 @@ public class CommandsThreadManager {
 		
 	}
 	
-	private static Stack<CommandRouter> getRunningCommandRoutersOfGuild(
-			String guildID){
+	private static Stack<CommandRouter> getRunningCommandRouters(String guildID){
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
 		Stack<CommandRouter> guildRouters = new Stack<>();
