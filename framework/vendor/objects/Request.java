@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import vendor.abstracts.Translatable;
 import vendor.exceptions.NoParameterContentException;
 import vendor.interfaces.Utils;
 
-public class Request implements Utils {
+public class Request extends Translatable implements Utils {
 	
 	public class Parameter {
 		
@@ -71,12 +72,11 @@ public class Request implements Utils {
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
 	public final static String DEFAULT_PARAMETER_PREFIX = "-";
 	
-	private final static String DEFAULT_LANG_DIRECTORY = "vendor.lang";
+	private final static String DEFAULT_LANG_DIRECTORY = "/vendor.lang.strings";
 	
 	private String command;
 	private String content;
 	
-	private Dictionary dict;
 	private String langDirectory;
 	
 	private String commandPrefix;
@@ -98,14 +98,14 @@ public class Request implements Utils {
 	
 	public Request(String receivedMessage, Dictionary dictionary,
 			String commandPrefix, String parametersPrefix){
-		this(receivedMessage, dictionary, commandPrefix,
-				parametersPrefix, DEFAULT_LANG_DIRECTORY);
+		this(receivedMessage, dictionary, commandPrefix, parametersPrefix,
+				DEFAULT_LANG_DIRECTORY);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
 			String commandPrefix, String parametersPrefix, String langDirectory){
 		
-		this.dict = dictionary;
+		this.setDictionary(dictionary);
 		this.langDirectory = langDirectory;
 		
 		this.commandPrefix = commandPrefix;
@@ -349,33 +349,40 @@ public class Request implements Utils {
 			String pluralTester;
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = dict.getDirectString(langDirectory + ".RequestParamStartSingle");
+				pluralTester = langDirect(langDirectory
+						+ ".RequestParamStartSingle");
 			else
-				pluralTester = dict
-						.getDirectString(langDirectory + ".RequestParamStartMultiple");
+				pluralTester = langDirect(langDirectory
+						+ ".RequestParamStartMultiple");
 			
-			StringBuilder message = new StringBuilder(pluralTester + " "
-					+ dict.getDirectString(langDirectory + ".RequestParamStartFollowing") + " ");
+			StringBuilder message = new StringBuilder();
+			
+			message.append(pluralTester)
+					.append(" ")
+					.append(langDirect(langDirectory
+							+ ".RequestParamStartFollowing")).append(" ");
 			
 			for(int i = 0; i < duplicateParams.size(); i++){
 				
 				if(duplicateParams.size() != 1)
-					message.append("\n" + (i + 1) + ". ");
+					message.append("\n").append(i + 1).append(". ");
 				
-				message.append("`" + duplicateParams.get(i).getParameter()
-						+ "`");
+				message.append("`")
+						.append(duplicateParams.get(i).getParameter())
+						.append("`");
 				
 			}
 			
 			if(duplicateParams.size() == 1)
-				pluralTester = dict.getDirectString(langDirectory + ".RequestEndMessageSingle");
+				pluralTester = langDirect(langDirectory
+						+ ".RequestEndMessageSingle");
 			else
-				pluralTester = dict
-						.getDirectString(langDirectory + ".RequestEndMessageMultiple");
+				pluralTester = langDirect(langDirectory
+						+ ".RequestEndMessageMultiple");
 			
-			message.append("\n*"
-					+ format(dict.getDirectString(langDirectory + ".RequestEndMessage"),
-							pluralTester) + "*");
+			message.append("\n*")
+					.append(langDirect(langDirectory + ".RequestEndMessage",
+							pluralTester)).append("*");
 			
 			this.error = message.toString();
 			
