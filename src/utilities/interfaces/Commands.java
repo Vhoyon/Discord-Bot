@@ -16,13 +16,12 @@ public interface Commands {
 	 *         "<b>`</b>" tick, meaning the visual will be like code in Discord.
 	 */
 	public default String buildVCommand(String command){
-		return "`" + buildCommand(command) + "`";
+		return buildVText(buildCommand(command));
 	}
 	
 	/**
 	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources
-	 *         followed by the <i>parameter</i> parameter.
+	 *         Ressources followed by the <i>parameter</i> parameter.
 	 */
 	public default String buildParameter(String parameter){
 		return Resources.PARAMETER_PREFIX + parameter;
@@ -30,11 +29,18 @@ public interface Commands {
 	
 	/**
 	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources
-	 *         followed by the <i>parameter</i> parameter.
+	 *         Ressources followed by the <i>parameter</i> parameter.
 	 */
 	public default String buildVParameter(String parameter){
-		return "`" + buildParameter(parameter) + "`";
+		return buildVText(buildParameter(parameter));
+	}
+	
+	/**
+	 * @return A String that contains the <i>text</i> parameter enclosed with
+	 *         <b>`</b>".
+	 */
+	public default String buildVText(String text){
+		return "`" + text + "`";
 	}
 	
 	String TEST = "test";
