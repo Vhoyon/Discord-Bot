@@ -14,15 +14,20 @@ public class Dictionary implements Utils {
 	private static final String DEFAULT_COUNTRY = "US";
 	
 	private static final String DEFAULT_DIRECTORY = "lang";
+	private static final String DEFAULT_FILE_NAME = "strings";
+	
+	private static final String ROOT_CHAR = "/";
 	
 	private ResourceBundle resources;
 	private Locale locale;
+	private String currentResourcesPath;
 	
 	private String directory;
+	private String fileName;
 	
 	public Dictionary(){
-		this.locale = new Locale(DEFAULT_LANG, DEFAULT_COUNTRY);
 		this.directory = DEFAULT_DIRECTORY;
+		this.fileName = DEFAULT_FILE_NAME;
 		this.resources = getDefaultLanguageResources();
 	}
 	
@@ -33,6 +38,26 @@ public class Dictionary implements Utils {
 	private void setDirectory(String directory){
 		if(!getDirectory().equals(directory))
 			this.directory = directory;
+	}
+	
+	private String getFileName(){
+		return this.fileName;
+	}
+	
+	private void setFileName(String fileName){
+		if(!getFileName().equals(fileName))
+			this.fileName = fileName;
+	}
+	
+	private String getResourcePath(){
+		String resourcePath = "";
+		
+		if(getDirectory() != null || getDirectory().length() != 0)
+			resourcePath += getDirectory() + ".";
+		
+		resourcePath += getFileName();
+		
+		return resourcePath;
 	}
 	
 	public void setLanguage(String lang, String country){
@@ -66,6 +91,8 @@ public class Dictionary implements Utils {
 		}
 		
 		key = handleKey(key);
+		
+		handleResourcesUpdate();
 		
 		String string = null;
 		
@@ -123,9 +150,10 @@ public class Dictionary implements Utils {
 	
 	private String handleKey(String key){
 		
-		if(!key.contains(".")){
+		if(!key.startsWith(ROOT_CHAR) && !key.contains(".")){
 			
 			setDirectory(DEFAULT_DIRECTORY);
+			setFileName(DEFAULT_FILE_NAME);
 			
 			return key;
 			
@@ -134,21 +162,45 @@ public class Dictionary implements Utils {
 			
 			StringBuilder builder = new StringBuilder();
 			
+			if(!key.startsWith(ROOT_CHAR)){
+				builder.append(DEFAULT_DIRECTORY).append(".");
+			}
+			else{
+				key = key.substring(1);
+			}
+			
+			String simplifiedKey;
+			
 			String[] structure = key.split("\\.");
 			
-			for(int i = 0; i < structure.length - 1; i++){
+			if(structure.length == 1){
 				
-				builder.append(structure[i]);
+				setFileName(DEFAULT_FILE_NAME);
+				simplifiedKey = key;
 				
-				if(i < structure.length - 1 - 1){
-					builder.append(".");
+			}
+			else{
+				
+				// Don't set the directory structure for either the file name and the key.
+				for(int i = 0; i < structure.length - 2; i++){
+					
+					if(i != 0){
+						builder.append(".");
+					}
+					
+					builder.append(structure[i]);
+					
 				}
+				
+				setFileName(structure[structure.length - 2]);
+				
+				simplifiedKey = structure[structure.length - 1];
 				
 			}
 			
 			setDirectory(builder.toString());
 			
-			return structure[structure.length - 1];
+			return simplifiedKey;
 			
 		}
 		
@@ -157,7 +209,7 @@ public class Dictionary implements Utils {
 	private String tryGetString(ResourceBundle resources, String key,
 			String possiblePrefix) throws MissingResourceException{
 		
-		String string = null;
+		String string;
 		
 		try{
 			string = resources.getString(key);
@@ -175,16 +227,30 @@ public class Dictionary implements Utils {
 		
 	}
 	
+	private void handleResourcesUpdate(){
+		
+		if(!getResourcePath().equals(currentResourcesPath)){
+			
+			this.resources = getLanguageResources(this.locale);
+			
+			this.currentResourcesPath = getResourcePath();
+			
+		}
+		
+	}
+	
 	private ResourceBundle getDefaultLanguageResources(){
 		return getLanguageResources(DEFAULT_LANG, DEFAULT_COUNTRY);
 	}
 	
 	private ResourceBundle getLanguageResources(String lang, String country){
-		return getLanguageResources(new Locale(lang, country));
+		this.locale = new Locale(lang, country);
+		
+		return getLanguageResources(this.locale);
 	}
 	
 	private ResourceBundle getLanguageResources(Locale locale){
-		return ResourceBundle.getBundle(getDirectory() + ".strings", locale);
+		return ResourceBundle.getBundle(this.getResourcePath(), locale);
 	}
 	
 }
