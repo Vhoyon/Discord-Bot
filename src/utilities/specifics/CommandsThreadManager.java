@@ -1,6 +1,7 @@
 package utilities.specifics;
 
 import java.util.Set;
+import java.util.Stack;
 
 import utilities.Command;
 import app.CommandRouter;
@@ -85,17 +86,37 @@ public class CommandsThreadManager {
 	}
 	
 	public static boolean hasRunningCommands(){
+		return !getRunningCommandRouters().empty();
+	}
+	
+	private static Stack<CommandRouter> getRunningCommandRouters(){
 		
-		Thread[] threadArray = getThreadsArray();
+		Thread[] threads = getThreadsArray();
 		
-		for(Thread thread : threadArray){
-			if(thread instanceof CommandRouter){
-				return true;
-			}
-		}
-
-		return false;
+		Stack<CommandRouter> routers = new Stack<>();
 		
+		for(Thread thread : threads)
+			if(thread instanceof CommandRouter)
+				routers.add((CommandRouter)thread);
+		
+		if(routers.size() == 0)
+			routers = null;
+		
+		return routers;
+		
+	}
+	
+	private static Stack<CommandRouter> getRunningCommandRoutersOfGuild(
+			String guildID){
+		Stack<CommandRouter> routers = getRunningCommandRouters();
+		
+		Stack<CommandRouter> guildRouters = new Stack<>();
+		
+		for(CommandRouter router : routers)
+			if(router.getName().matches("^.*\\Q" + guildID + "\\E$"))
+				guildRouters.push(router);
+		
+		return guildRouters;
 	}
 	
 	private static Thread[] getThreadsArray(){
