@@ -49,7 +49,7 @@ public class CommandLinksBot extends CommandsLinker implements Commands {
 	
 	@Override
 	public String formatCommand(String command){
-		return buildVCommand(command);
+		return "`" + command + "`";
 	}
 	
 }
