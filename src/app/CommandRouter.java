@@ -132,7 +132,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						String commandName = request.getCommand();
 						
 						if(CommandsThreadManager.isCommandRunning(commandName,
-								commandChannelID, this)){
+								commandGuildID + "_" + commandChannelID, this)){
 							
 							command = new BotError(getString(
 									"CommandIsRunningError", commandName));

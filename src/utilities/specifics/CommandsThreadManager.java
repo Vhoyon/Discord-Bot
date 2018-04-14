@@ -31,7 +31,7 @@ public class CommandsThreadManager {
 		
 		for(CommandRouter router : routers)
 			if(!router.equals(inRouter)
-					&& router.getName().equals(commandName + commandID))
+					&& router.getName().equals(commandName + "_" + commandID))
 				return router.getCommand();
 		
 		return null;
