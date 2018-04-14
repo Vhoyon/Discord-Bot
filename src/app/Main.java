@@ -11,6 +11,7 @@ import vendor.interfaces.Console;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
+import vendor.modules.Metrics;
 import vendor.objects.Dictionary;
 import vendor.objects.Request;
 import net.dv8tion.jda.core.AccountType;
@@ -114,6 +115,8 @@ public class Main {
 						.buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
+
+				Metrics.startClock();
 				
 				Logger.log("Bot started!", LogType.INFO);
 				
@@ -182,6 +185,8 @@ public class Main {
 				Buffer.get().emptyMemory();
 
 				Logger.log("Bot has been shutdown!", LogType.INFO);
+
+				Metrics.stopClock();
 				
 			}
 			

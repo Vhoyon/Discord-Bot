@@ -17,7 +17,7 @@ public class Framework {
 	
 	private static String[] modules =
 	{
-		"Environment", "Logger"
+		"Environment", "Logger", "Metrics"
 	};
 	
 	public static boolean isRunningFromTerminal(){

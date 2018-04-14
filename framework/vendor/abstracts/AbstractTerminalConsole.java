@@ -8,6 +8,7 @@ import vendor.interfaces.Console;
 import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
+import vendor.modules.Metrics;
 
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
@@ -83,6 +84,13 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				Logger.log(e);
 			}
 			
+			break;
+		case "uptime":
+
+			long milliseconds = Metrics.getUptime();
+
+			Logger.log("The bot has been up for " + milliseconds + " milliseconds!");
+
 			break;
 		case "exit":
 			
