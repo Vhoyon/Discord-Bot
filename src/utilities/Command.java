@@ -141,7 +141,7 @@ public abstract class Command extends Translatable implements Commands,
 	}
 	
 	public String getId(){
-		return getGuildId() + "_" + getTextChannelId();
+		return Utils.buildKey(getGuildId(), getTextChannelId());
 	}
 	
 	public Request getRequest(){

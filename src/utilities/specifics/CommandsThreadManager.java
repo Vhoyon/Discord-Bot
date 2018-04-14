@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import utilities.Command;
 import app.CommandRouter;
+import vendor.interfaces.Utils;
 
 public class CommandsThreadManager {
 	
@@ -31,7 +32,8 @@ public class CommandsThreadManager {
 		
 		for(CommandRouter router : routers)
 			if(!router.equals(inRouter)
-					&& router.getName().equals(commandName + "_" + commandID))
+					&& router.getName().equals(
+							Utils.buildKey(commandName, commandID)))
 				return router.getCommand();
 		
 		return null;
