@@ -12,26 +12,26 @@ public class CommandsThreadManager {
 	
 	/**
 	 * Method that determines whether a command is running by scanning all the
-	 * threads used in the server of the <code>guildID</code> parameter, looking
-	 * for the desired <code>command</code> parameter.
+	 * threads used in the server of the <code>commandID</code> parameter,
+	 * looking for the desired <code>command</code> parameter.
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
-	 * @param guildID
-	 *            The server's <code>guildID</code> required to search for
-	 *            commands running in said server.
+	 * @param commandID
+	 *            The server's <code>commandID</code> required to search for
+	 *            commands running in said server's text channel.
 	 * @return The command found with all of it's attribute in a
 	 *         <code>Command</code> object, <code>null</code> if the command
 	 *         wasn't found.
 	 */
-	public static Command getCommandRunning(String commandName, String guildID,
-			CommandRouter inRouter){
+	public static Command getCommandRunning(String commandName,
+			String commandID, CommandRouter inRouter){
 		
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
 		for(CommandRouter router : routers)
 			if(!router.equals(inRouter)
-					&& router.getName().equals(commandName + guildID))
+					&& router.getName().equals(commandName + commandID))
 				return router.getCommand();
 		
 		return null;
@@ -99,9 +99,9 @@ public class CommandsThreadManager {
 	}
 	
 	public static Command getLatestRunningCommandExcept(
-			Command commandToIgnore, String guildID){
+			Command commandToIgnore, String commandID){
 		
-		Stack<CommandRouter> guildRouters = getRunningCommandRouters(guildID);
+		Stack<CommandRouter> guildRouters = getRunningCommandRouters(commandID);
 		
 		if(guildRouters.empty()){
 			return null;
@@ -134,15 +134,15 @@ public class CommandsThreadManager {
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
-	 * @param guildID
-	 *            The server's <code>guildID</code> required to search for
+	 * @param commandID
+	 *            The server's <code>commandID</code> required to search for
 	 *            commands running in said server.
 	 * @return <code>true</code> if the command is running in the specified
-	 *         guild id, <code>false</code> otherwise.
+	 *         command id, <code>false</code> otherwise.
 	 */
-	public static boolean isCommandRunning(String commandName, String guildID,
-			CommandRouter router){
-		return getCommandRunning(commandName, guildID, router) != null;
+	public static boolean isCommandRunning(String commandName,
+			String commandID, CommandRouter router){
+		return getCommandRunning(commandName, commandID, router) != null;
 	}
 	
 	public static int stopAllCommands(){
@@ -175,13 +175,14 @@ public class CommandsThreadManager {
 		return routers;
 	}
 	
-	private static Stack<CommandRouter> getRunningCommandRouters(String guildID){
+	private static Stack<CommandRouter> getRunningCommandRouters(
+			String commandID){
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
 		Stack<CommandRouter> guildRouters = new Stack<>();
 		
 		for(CommandRouter router : routers)
-			if(router.getName().matches("^.*\\Q" + guildID + "\\E$"))
+			if(router.getName().matches("^.*\\Q" + commandID + "\\E$"))
 				guildRouters.push(router);
 		
 		return guildRouters;

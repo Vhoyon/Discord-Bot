@@ -12,7 +12,7 @@ public class CommandStop extends Command {
 		if(getContent() == null){
 			
 			Command commandToStop = CommandsThreadManager
-					.getLatestRunningCommandExcept(this, getGuildId());
+					.getLatestRunningCommandExcept(this, getId());
 			
 			if(commandToStop == null){
 				sendMessage(lang("BotCantStop"));
@@ -22,11 +22,11 @@ public class CommandStop extends Command {
 				boolean stopSuccess = commandToStop.stopAction();
 				
 				if(stopSuccess){
-
+					
 					sendInfoMessage("Command "
 							+ buildVCommand(commandToStop.getCommandName())
 							+ " successfully stopped!");
-
+					
 				}
 				else{
 					
@@ -42,7 +42,7 @@ public class CommandStop extends Command {
 		else{
 			
 			Command commandToStop = CommandsThreadManager.getCommandRunning(
-					getContent(), getGuildId(), getRouter());
+					getContent(), getId(), getRouter());
 			
 			if(commandToStop == null){
 				

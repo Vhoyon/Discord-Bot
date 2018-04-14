@@ -82,15 +82,15 @@ public abstract class Command extends Translatable implements Commands,
 	}
 	
 	public boolean remember(Object object, String associatedName){
-		return getBuffer().push(object, associatedName, getGuildId());
+		return getBuffer().push(object, associatedName, getId());
 	}
 	
 	public Object getMemory(String associatedName) throws NullPointerException{
-		return getBuffer().get(associatedName, getGuildId());
+		return getBuffer().get(associatedName, getId());
 	}
 	
 	public boolean forget(String associatedName){
-		return getBuffer().remove(associatedName, getGuildId());
+		return getBuffer().remove(associatedName, getId());
 	}
 	
 	public boolean hasMemory(String associatedName){
@@ -112,16 +112,20 @@ public abstract class Command extends Translatable implements Commands,
 		this.guild = event.getGuild();
 	}
 	
-	protected TextChannel getTextContext(){
-		return event.getTextChannel();
-	}
-	
 	public User getUser(){
 		return getEvent().getAuthor();
 	}
 	
 	public String getUsername(){
 		return getUser().getName();
+	}
+	
+	protected TextChannel getTextContext(){
+		return event.getTextChannel();
+	}
+	
+	public String getTextChannelId(){
+		return getTextContext().getId();
 	}
 	
 	public Guild getGuild(){
@@ -133,7 +137,11 @@ public abstract class Command extends Translatable implements Commands,
 	}
 	
 	public String getGuildId(){
-		return getTextContext().getId();
+		return getGuild().getId();
+	}
+	
+	public String getId(){
+		return getGuildId() + "_" + getTextChannelId();
 	}
 	
 	public Request getRequest(){
