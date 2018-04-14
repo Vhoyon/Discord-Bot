@@ -8,14 +8,23 @@ import vendor.interfaces.Console;
 import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
-import vendor.modules.Metrics;
+import vendor.objects.CommandsRepository;
+import vendor.objects.TerminalCommandsLinker;
 
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	protected BufferedReader reader;
 	
+	private CommandsRepository commandsRepo;
+	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
+		
+		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
+	}
+	
+	public CommandsRepository getCommandsRepo(){
+		return commandsRepo;
 	}
 	
 	@Override
@@ -43,78 +52,22 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	protected boolean handleInput(String input){
 		
 		if(input == null)
-			return true;
+			return false;
 		
 		if(input.length() == 0){
 			Logger.log("The input cannot be empty!", LogType.ERROR);
 			
-			return true;
+			return false;
 		}
 		
-		switch(input){
-		case "start":
-			
-			try{
-				onStart();
-			}
-			catch(Exception e){
-				Logger.log(e);
-			}
-			
-			break;
+		AbstractTerminalCommand command = (AbstractTerminalCommand)commandsRepo
+				.getContainer().initiateLink(input);
 		
-		case "stop":
-			
-			try{
-				onStop();
-			}
-			catch(Exception e){
-				Logger.log(e);
-			}
-			
-			break;
-		case "restart":
-			
-			try{
-				onStop();
-				
-				onStart();
-			}
-			catch(Exception e){
-				Logger.log(e);
-			}
-			
-			break;
-		case "uptime":
-
-			long milliseconds = Metrics.getUptime();
-
-			Logger.log("The bot has been up for " + milliseconds + " milliseconds!");
-
-			break;
-		case "exit":
-			
-			try{
-				onStop();
-				
-				onExit();
-				
-				return false;
-			}
-			catch(Exception e){
-				Logger.log(e);
-			}
-			
-			break;
-		default:
-			
-			Logger.log("No command with the name \"" + input + "\"!",
-					LogType.WARNING, false);
-			
-			break;
-		}
+		command.setConsole(this);
 		
-		return true;
+		command.action();
+		
+		return command.doesStopTerminal();
 		
 	}
 	
@@ -168,7 +121,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		choiceBuilder.append(")");
 		
-		boolean isValidInput = false;
+		boolean doesCommandStopsBot = false;
 		
 		String formattedInput = null;
 		
@@ -185,14 +138,14 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				
 				formattedInput = input.substring(0, 1).toLowerCase();
 				
-				for(int i = 0; i < choices.length && !isValidInput; i++){
+				for(int i = 0; i < choices.length && !doesCommandStopsBot; i++){
 					if(choices[i].equals(formattedInput))
-						isValidInput = true;
+						doesCommandStopsBot = true;
 				}
 				
 			}
 			
-		}while(!isValidInput);
+		}while(!doesCommandStopsBot);
 		
 		switch(formattedInput){
 		case "n":

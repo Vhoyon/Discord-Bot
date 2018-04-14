@@ -45,15 +45,15 @@ public abstract class TerminalConsole extends AbstractTerminalConsole {
 			
 			onInitialized();
 			
-			boolean canContinue;
+			boolean shouldStop;
 			
 			do{
 				
 				String input = getInput(">");
 				
-				canContinue = handleInput(input);
+				shouldStop = handleInput(input);
 				
-			}while(canContinue);
+			}while(!shouldStop);
 			
 		}
 		finally{
