@@ -10,7 +10,6 @@ import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
-import vendor.objects.CommandLinksContainer;
 import vendor.objects.CommandsRepository;
 import vendor.objects.Dictionary;
 import vendor.objects.Request;
@@ -26,7 +25,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	private Command command;
 	private Dictionary dict;
 	private CommandsRepository commandsRepo;
-	private CommandLinksContainer commandLinks;
 	
 	public CommandRouter(MessageReceivedEvent event, String messageRecu,
 			Buffer buffer, CommandsRepository commandsRepo){
@@ -55,7 +53,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		commandsRepo.setDictionary(dict);
 		
 		this.commandsRepo = commandsRepo;
-		this.commandLinks = commandsRepo.getContainer();
 		
 		this.request = new Request(messageRecu, dict, Resources.PREFIX,
 				Resources.PARAMETER_PREFIX);
@@ -90,8 +87,8 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					String commandGuildID = event.getGuild().getId();
 					String commandChannelID = event.getTextChannel().getId();
 					
-					this.setName(request.getCommand() + "_" + commandGuildID
-							+ "_" + commandChannelID);
+					this.setName(Utils.buildKey(request.getCommand(),
+							commandGuildID, commandChannelID));
 					
 					boolean confirmationConfirmed = false;
 					
@@ -131,8 +128,9 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						
 						String commandName = request.getCommand();
 						
-						if(CommandsThreadManager.isCommandRunning(commandName,
-								commandGuildID + "_" + commandChannelID, this)){
+						if(CommandsThreadManager
+								.isCommandRunning(commandName, Utils.buildKey(
+										commandGuildID, commandChannelID), this)){
 							
 							command = new BotError(getString(
 									"CommandIsRunningError", commandName));
@@ -140,7 +138,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						}
 						else{
 							
-							command = (Command)commandLinks
+							command = (Command)commandsRepo.getContainer()
 									.initiateLink(commandName);
 							
 						}
