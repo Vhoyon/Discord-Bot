@@ -2,7 +2,7 @@ package vendor.interfaces;
 
 import vendor.objects.ParametersHelp;
 
-public interface LinkableCommand {
+public interface LinkableCommand extends Command {
 	
 	String[] getCalls();
 	
@@ -60,7 +60,8 @@ public interface LinkableCommand {
 						.append(formatParameter(paramHelp.getParam()));
 				
 				for(String param : paramHelp.getParamVariants()){
-					builder.append(paramsSeparator).append(formatParameter(param));
+					builder.append(paramsSeparator).append(
+							formatParameter(param));
 				}
 				
 				String paramHelpDescription = paramHelp

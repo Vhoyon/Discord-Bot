@@ -177,8 +177,6 @@ public abstract class Command extends Translatable implements Commands,
 		return this.getRequest().hasParameter(parameterNames);
 	}
 	
-	public abstract void action();
-	
 	public boolean stopAction(){
 		return false;
 	}
