@@ -71,59 +71,60 @@ public class CommandsThreadManager {
 		}
 		
 	}
-
+	
 	public static Command getLatestRunningCommandExcept(Command commandToIgnore){
-
+		
 		Stack<CommandRouter> guildRouters = getRunningCommandRouters();
-
+		
 		if(guildRouters.empty()){
 			return null;
 		}
 		else{
-
+			
 			CommandRouter latestRouter = guildRouters.pop();
-
-			if (latestRouter.getCommand().equals(commandToIgnore)){
-				if (guildRouters.empty()){
+			
+			if(latestRouter.getCommand().equals(commandToIgnore)){
+				if(guildRouters.empty()){
 					return null;
 				}
 				else{
 					latestRouter = guildRouters.pop();
 				}
 			}
-
+			
 			return latestRouter.getCommand();
-
+			
 		}
-
+		
 	}
-
-	public static Command getLatestRunningCommandExcept(Command commandToIgnore, String guildID){
-
+	
+	public static Command getLatestRunningCommandExcept(
+			Command commandToIgnore, String guildID){
+		
 		Stack<CommandRouter> guildRouters = getRunningCommandRouters(guildID);
-
+		
 		if(guildRouters.empty()){
 			return null;
 		}
 		else{
-
+			
 			CommandRouter latestRouter = guildRouters.pop();
-
-			if (latestRouter.getCommand().equals(commandToIgnore)){
-				if (guildRouters.empty()){
+			
+			if(latestRouter.getCommand().equals(commandToIgnore)){
+				if(guildRouters.empty()){
 					return null;
 				}
 				else{
 					latestRouter = guildRouters.pop();
 				}
 			}
-
+			
 			return latestRouter.getCommand();
-
+			
 		}
-
+		
 	}
-
+	
 	/**
 	 * Method that quickly tells if a command is running based off its name in
 	 * the guild provided in parameters.
@@ -170,7 +171,7 @@ public class CommandsThreadManager {
 		for(Thread thread : threads)
 			if(thread instanceof CommandRouter)
 				routers.add((CommandRouter)thread);
-
+		
 		return routers;
 	}
 	
