@@ -4,19 +4,19 @@ import vendor.modules.Environment;
 
 public interface Utils {
 	
-	public default String format(String stringToFormat, Object... replacements){
+	default String format(String stringToFormat, Object... replacements){
 		return String.format(stringToFormat, replacements);
 	}
 	
-	public default boolean isDebugging(){
+	default boolean isDebugging(){
 		return env("DEBUG", false);
 	}
 	
-	public default <EnvVar> EnvVar env(String key, Object defaultValue){
+	default <EnvVar> EnvVar env(String key, Object defaultValue){
 		return Environment.getVar(key, defaultValue);
 	}
 	
-	public default <EnvVar> EnvVar env(String key){
+	default <EnvVar> EnvVar env(String key){
 		return env(key, null);
 	}
 	
