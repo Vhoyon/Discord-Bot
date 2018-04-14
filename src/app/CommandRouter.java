@@ -85,20 +85,20 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			
 			try{
 				
-				String commandGuildID = null;
-				
 				if((command = validateMessage()) == null){
 					
-					commandGuildID = event.getGuild().getId();
+					String commandGuildID = event.getGuild().getId();
+					String commandChannelID = event.getTextChannel().getId();
 					
-					this.setName(request.getCommand() + commandGuildID);
+					this.setName(request.getCommand() + "_" + commandGuildID
+							+ "_" + commandChannelID);
 					
 					boolean confirmationConfirmed = false;
 					
 					try{
 						
 						Object needsConfirmation = buffer.get(
-								BUFFER_CONFIRMATION, commandGuildID);
+								BUFFER_CONFIRMATION, commandChannelID);
 						
 						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 						if(request.getCommand().equals(CONFIRM)){
@@ -114,7 +114,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 							
 						}
 						
-						buffer.remove(BUFFER_CONFIRMATION, commandGuildID);
+						buffer.remove(BUFFER_CONFIRMATION, commandChannelID);
 						
 					}
 					catch(NullPointerException e){}
@@ -132,7 +132,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						String commandName = request.getCommand();
 						
 						if(CommandsThreadManager.isCommandRunning(commandName,
-								commandGuildID, this)){
+								commandChannelID, this)){
 							
 							command = new BotError(getString(
 									"CommandIsRunningError", commandName));

@@ -133,7 +133,7 @@ public abstract class Command extends Translatable implements Commands,
 	}
 	
 	public String getGuildId(){
-		return getGuild().getId();
+		return getTextContext().getId();
 	}
 	
 	public Request getRequest(){
@@ -310,5 +310,5 @@ public abstract class Command extends Translatable implements Commands,
 	public String formatParameter(String parameterToFormat){
 		return buildVParameter(parameterToFormat);
 	}
-
+	
 }
