@@ -3,7 +3,6 @@ package app;
 import utilities.*;
 import utilities.interfaces.Resources;
 import vendor.objects.CommandsRepository;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -23,7 +22,7 @@ public class MessageListener extends ListenerAdapter implements Resources {
 	public MessageListener(){
 		buffer = Buffer.get();
 		
-		commandsRepo = new CommandsRepository(new CommandLinksBot());
+		commandsRepo = new CommandsRepository(new BotCommandsLinker());
 	}
 	
 	@Override

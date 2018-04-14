@@ -7,7 +7,7 @@ import vendor.abstracts.CommandsLinker;
 import vendor.interfaces.LinkableCommand;
 import vendor.objects.CommandLinksContainer;
 
-public class CommandLinksBot extends CommandsLinker implements Commands {
+public class BotCommandsLinker extends CommandsLinker implements Commands {
 	
 	@Override
 	public CommandLinksContainer createLinksContainer(){
