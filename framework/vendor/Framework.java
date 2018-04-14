@@ -5,11 +5,13 @@ import vendor.abstracts.Module;
 import java.awt.*;
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.Date;
 
 public class Framework {
 	
 	private static boolean IS_RUNNING_FROM_TERMINAL;
 	private static String RUNNABLE_SYSTEM_PATH;
+	private static Date BUILD_STARTED_AT;
 	
 	private Framework(){}
 	
@@ -24,6 +26,10 @@ public class Framework {
 
 	public static String runnableSystemPath(){
 		return RUNNABLE_SYSTEM_PATH;
+	}
+
+	public static Date buildStartedAt(){
+		return BUILD_STARTED_AT;
 	}
 	
 	public static void build() throws Exception{
@@ -73,6 +79,7 @@ public class Framework {
 		
 		IS_RUNNING_FROM_TERMINAL = getIsRunningFromTerminal();
 		RUNNABLE_SYSTEM_PATH = getRunnableFolderPath();
+		BUILD_STARTED_AT = getBuildStartedAt();
 		
 	}
 	
@@ -98,6 +105,10 @@ public class Framework {
 		
 		return decoratedSystemPath;
 		
+	}
+
+	private static Date getBuildStartedAt(){
+		return new Date();
 	}
 	
 }
