@@ -62,7 +62,7 @@ public class Main {
 					
 					@Override
 					public void onInitialized(){
-						logLinkIfDebug();
+						logLink();
 					}
 				};
 				
@@ -82,7 +82,7 @@ public class Main {
 					
 					@Override
 					public void onInitialized(){
-						logLinkIfDebug();
+						logLink();
 					}
 				};
 				
@@ -193,20 +193,16 @@ public class Main {
 		
 	}
 	
-	private static void logLinkIfDebug(){
+	private static void logLink(){
 		
-		boolean isDebug = Environment.getVar("DEBUG");
-		
-		if(isDebug){
-			String clientId = Environment.getVar("CLIENT_ID", null);
-			
-			if(clientId != null){
-				Logger.log("Link to join the bot to a server :\n\n"
-						+ "https://discordapp.com/oauth2/authorize?client_id="
-						+ clientId + "&scope=bot&permissions=0", false);
-			}
+		String clientId = Environment.getVar("CLIENT_ID", null);
+
+		if(clientId != null){
+			Logger.log("Link to join the bot to a server :\n\n"
+					+ "https://discordapp.com/oauth2/authorize?client_id="
+					+ clientId + "&scope=bot&permissions=0", false);
 		}
-		
+
 	}
 	
 	private static String convertArgsToString(String[] args){
