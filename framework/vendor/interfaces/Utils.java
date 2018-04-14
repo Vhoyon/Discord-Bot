@@ -19,5 +19,14 @@ public interface Utils {
 	default <EnvVar> EnvVar env(String key){
 		return env(key, null);
 	}
+
+	static String buildKey(String baseKey, String... additionalKeys){
+		StringBuilder keyBuilder = new StringBuilder(baseKey);
+
+		for (String additionalKey : additionalKeys)
+			keyBuilder.append("_").append(additionalKey);
+
+		return keyBuilder.toString();
+	}
 	
 }
