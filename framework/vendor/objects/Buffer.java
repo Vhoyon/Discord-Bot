@@ -25,7 +25,9 @@ public class Buffer {
 		
 		String objectKey = Utils.buildKey(key, associatedName);
 		
-		boolean isNewObject = memory.put(objectKey, object) == null;
+		boolean isNewObject = memory.containsKey(objectKey);
+		
+		memory.put(objectKey, object);
 		
 		return isNewObject;
 		
@@ -36,16 +38,20 @@ public class Buffer {
 		
 		String objectKey = Utils.buildKey(key, associatedName);
 		
-		Object memoryObject = memory.get(objectKey);
+		boolean hasObject = memory.containsKey(objectKey);
 		
-		if(memoryObject == null){
+		if(!hasObject){
 			throw new NullPointerException(
 					"No object with the associated name \"" + associatedName
 							+ "\" found in the buffer for the Command ID \""
 							+ key + "\".");
 		}
 		else{
+			
+			Object memoryObject = memory.get(objectKey);
+			
 			return memoryObject;
+			
 		}
 		
 	}
@@ -54,7 +60,9 @@ public class Buffer {
 		
 		String objectKey = Utils.buildKey(key, associatedName);
 		
-		boolean hasRemovedObject = memory.remove(objectKey) != null;
+		boolean hasRemovedObject = memory.containsKey(objectKey);
+
+		memory.remove(objectKey);
 		
 		return hasRemovedObject;
 		
