@@ -107,17 +107,19 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			};
 			break;
 		}
+
+		String choiceSeparator = " / ";
 		
 		StringBuilder choiceBuilder = new StringBuilder();
 		
 		choiceBuilder.append(" (");
 		
 		for(String possibility : choices){
-			choiceBuilder.append(possibility).append(" / ");
+			choiceBuilder.append(possibility).append(choiceSeparator);
 		}
 		
 		choiceBuilder
-				.delete(choiceBuilder.length() - 3, choiceBuilder.length());
+				.delete(choiceBuilder.length() - choiceSeparator.length(), choiceBuilder.length());
 		
 		choiceBuilder.append(")");
 		
