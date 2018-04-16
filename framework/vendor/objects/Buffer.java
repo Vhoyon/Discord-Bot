@@ -8,17 +8,16 @@ public class Buffer {
 		
 		private Object object;
 		private String associatedName;
-		private String id;
+		private String key;
 		
-		public BufferObject(String associatedName, String commandId){
-			this(null, associatedName, commandId);
+		public BufferObject(String associatedName, String key){
+			this(null, associatedName, key);
 		}
 		
-		public BufferObject(Object object, String associatedName,
-				String commandId){
+		public BufferObject(Object object, String associatedName, String key){
 			this.object = object;
 			this.associatedName = associatedName;
-			this.id = commandId;
+			this.key = key;
 		}
 		
 		public Object getObject(){
@@ -33,8 +32,8 @@ public class Buffer {
 			return this.associatedName;
 		}
 		
-		public String getId(){
-			return id;
+		public String getKey(){
+			return key;
 		}
 		
 		@Override
@@ -42,11 +41,11 @@ public class Buffer {
 			
 			boolean isEqual = false;
 			
-			if(this.getId() != null && obj instanceof BufferObject){
+			if(this.getKey() != null && obj instanceof BufferObject){
 				
 				BufferObject bufrObj = (BufferObject)obj;
 				
-				if(getId().equals(bufrObj.getId())){
+				if(getKey().equals(bufrObj.getKey())){
 					
 					if(getName() != null)
 						isEqual = getName().equals(bufrObj.getName());
@@ -78,18 +77,18 @@ public class Buffer {
 		return buffer;
 	}
 	
-	public boolean push(Object object, String associatedName, String commandId){
+	public boolean push(Object object, String associatedName, String key){
 		
 		boolean isNewObject = true;
 		
 		int index = -1;
 		
 		if(associatedName != null)
-			index = memory.indexOf(new BufferObject(associatedName, commandId));
+			index = memory.indexOf(new BufferObject(associatedName, key));
 		
 		if(index == -1){
 			
-			memory.add(new BufferObject(object, associatedName, commandId));
+			memory.add(new BufferObject(object, associatedName, key));
 			
 		}
 		else{
@@ -110,19 +109,18 @@ public class Buffer {
 		return memory.get(index).getObject();
 	}
 	
-	public Object get(String associatedName, String commandId)
+	public Object get(String associatedName, String key)
 			throws NullPointerException{
 		
 		try{
-			return get(memory.indexOf(new BufferObject(associatedName,
-					commandId)));
+			return get(memory.indexOf(new BufferObject(associatedName, key)));
 		}
 		
 		catch(ArrayIndexOutOfBoundsException e){
 			throw new NullPointerException(
 					"No object with the associated name \"" + associatedName
 							+ "\" found in the buffer for the Command ID \""
-							+ commandId + "\".");
+							+ key + "\".");
 		}
 		
 	}
@@ -130,7 +128,7 @@ public class Buffer {
 	public boolean remove(int index){
 		
 		boolean success = true;
-
+		
 		try{
 			memory.remove(index);
 		}
@@ -142,9 +140,9 @@ public class Buffer {
 		
 	}
 	
-	public boolean remove(String associatedName, String commandId){
+	public boolean remove(String associatedName, String key){
 		return remove(memory
-				.indexOf(new BufferObject(associatedName, commandId)));
+				.indexOf(new BufferObject(associatedName, key)));
 	}
 	
 	public void emptyMemory(){
