@@ -184,9 +184,9 @@ public class CommandsThreadManager {
 		Stack<CommandRouter> guildRouters = new Stack<>();
 		
 		for(CommandRouter router : routers)
-			if(router.getName().matches("^.*\\Q" + commandID + "\\E$"))
+			if(router.getName().contains(commandID))
 				guildRouters.push(router);
-		
+
 		return guildRouters;
 	}
 	
