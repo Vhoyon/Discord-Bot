@@ -10,6 +10,7 @@ import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
+import vendor.objects.Buffer;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import net.dv8tion.jda.core.entities.Guild;

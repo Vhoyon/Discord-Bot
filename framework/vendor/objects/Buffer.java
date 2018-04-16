@@ -1,4 +1,4 @@
-package utilities;
+package vendor.objects;
 
 import java.util.ArrayList;
 
@@ -130,7 +130,7 @@ public class Buffer {
 	public boolean remove(int index){
 		
 		boolean success = true;
-		
+
 		try{
 			memory.remove(index);
 		}

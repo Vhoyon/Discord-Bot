@@ -10,6 +10,7 @@ import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
+import vendor.objects.Buffer;
 import vendor.objects.CommandsRepository;
 import vendor.objects.Dictionary;
 import vendor.objects.Request;
