@@ -8,8 +8,8 @@ import java.util.TreeMap;
 
 public abstract class CommandsLinker extends Translatable {
 	
-	private static CommandLinksContainer container;
-	private static String fullHelpString;
+	private CommandLinksContainer container;
+	private String fullHelpString;
 	
 	public abstract CommandLinksContainer createLinksContainer();
 	
