@@ -1,7 +1,7 @@
 package app;
 
-import utilities.*;
 import utilities.interfaces.Resources;
+import vendor.objects.Buffer;
 import vendor.objects.CommandsRepository;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;

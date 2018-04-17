@@ -4,7 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
-import utilities.Buffer;
+import vendor.objects.Buffer;
 import utilities.specifics.CommandsThreadManager;
 import vendor.Framework;
 import vendor.interfaces.Console;

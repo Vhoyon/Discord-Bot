@@ -1,6 +1,7 @@
 package commands;
 
 import utilities.Command;
+import utilities.specifics.CommandConfirmed;
 import utilities.specifics.CommandsThreadManager;
 import errorHandling.BotError;
 
@@ -19,22 +20,19 @@ public class CommandStop extends Command {
 			}
 			else{
 				
-				boolean stopSuccess = commandToStop.stopAction();
-				
-				if(stopSuccess){
+				new CommandConfirmed(this){
+					@Override
+					public String getConfMessage(){
+						return "Please confirm that you want to stop the "
+								+ buildVCommand(commandToStop.getCommandName())
+								+ " command.";
+					}
 					
-					sendInfoMessage("Command "
-							+ buildVCommand(commandToStop.getCommandName())
-							+ " successfully stopped!");
-					
-				}
-				else{
-					
-					new BotError(this, "The command "
-							+ buildVCommand(commandToStop.getCommandName())
-							+ " did not successfully stopped!");
-					
-				}
+					@Override
+					public void confirmed(){
+						stopCommandLogic(commandToStop);
+					}
+				};
 				
 			}
 			
@@ -45,22 +43,24 @@ public class CommandStop extends Command {
 					getContent(), getId(), getRouter());
 			
 			if(commandToStop == null){
-				
 				new BotError(this, lang("NoCommandToStopMessage", getContent()));
-				
 			}
 			else{
-				
-				if(commandToStop.stopAction())
-					sendInfoMessage(lang("CommandFullyStoppedMessage",
-							getContent(), EMOJI_OK_HAND));
-				else{
-					new BotError(this, lang("CommandNotStoppedMessage",
-							getContent()), true);
-				}
-				
+				stopCommandLogic(commandToStop);
 			}
 			
+		}
+		
+	}
+	
+	private void stopCommandLogic(Command commandToStop){
+		
+		if(commandToStop.stopAction())
+			sendInfoMessage(lang("CommandFullyStoppedMessage",
+					commandToStop.getCommandName(), EMOJI_OK_HAND));
+		else{
+			new BotError(this, lang("CommandNotStoppedMessage",
+					commandToStop.getCommandName()), true);
 		}
 		
 	}
