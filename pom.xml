@@ -15,6 +15,12 @@
         </excludes>
       </resource>
       <resource>
+        <directory>framework</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+      <resource>
         <directory>res</directory>
         <excludes>
           <exclude>.env</exclude>
