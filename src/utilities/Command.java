@@ -284,17 +284,10 @@ public abstract class Command extends Translatable implements Commands,
 	
 	public String groupAndSendMessages(String... messages){
 		
-		StringBuilder messageToSend = new StringBuilder();
+		StringBuilder messageToSend = new StringBuilder(messages[0]);
 		
-		for(int i = 0; i < messages.length; i++){
-			
-			messageToSend.append(messages[i]);
-			
-			if(i < messages.length - 1){
-				messageToSend.append("\n");
-			}
-			
-		}
+		for(int i = 1; i < messages.length; i++)
+			messageToSend.append("\n").append(messages[i]);
 		
 		return sendMessage(messageToSend.toString());
 		
