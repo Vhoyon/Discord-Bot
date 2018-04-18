@@ -298,8 +298,13 @@ public abstract class Command extends Translatable implements Commands,
 				.toArray(new String[messages.size()]));
 	}
 	
-	public void editMessage(String messageToEdit, String messageId){
-		getTextContext().editMessageById(messageId, messageToEdit).complete();
+	public String editMessage(String messageId, String newMessage){
+		return getTextContext().editMessageById(messageId, newMessage)
+				.complete().getId();
+	}
+	
+	public void editMessageQueue(String messageId, String newMessage){
+		getTextContext().editMessageById(messageId, newMessage).queue();
 	}
 	
 	public void log(String message){
