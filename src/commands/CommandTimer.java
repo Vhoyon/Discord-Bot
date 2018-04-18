@@ -18,6 +18,11 @@ public class CommandTimer extends Command {
 		int minutes = 0;
 		
 		try{
+			
+			if(!hasParameter("h", "m", "s")){
+				throw new NullPointerException();
+			}
+			
 			// seconds = Integer.parseInt(constraints[0]);
 			if(hasParameter("h")){
 				hours = Integer.parseInt(getParameter("h")
@@ -32,36 +37,28 @@ public class CommandTimer extends Command {
 						.getParameterContent());
 			}
 			
-			if(!hasParameter("h", "m", "s")){
-				throw new NullPointerException();
-			}
-			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
 			String timerMessageId = null;
 			// long totalTime = (seconds * 1000);
 			// long temps = System.currentTimeMillis();
-			timerMessageId = sendMessage(String.format("%02d", hours) + ":"
-					+ String.format("%02d", minutes) + ":"
-					+ String.format("%02d", seconds));
+			timerMessageId = sendMessage(formatDate(timeRef[0], timeRef[1],
+					timeRef[2]));
 			
 			try{
 				
 				for(int i = totalTime; i >= 0 && isAlive; i--){
 					
 					if(i < totalTime){
+						Thread.sleep(1000);
+						
 						timeConstruct(i);
-						editMessage(String.format("%02d", timeRef[0]) + ":"
-								+ String.format("%02d", timeRef[1]) + ":"
-								+ String.format("%02d", timeRef[2]),
-								timerMessageId);
+						editMessageQueue(timerMessageId,
+								formatDate(timeRef[0], timeRef[1], timeRef[2]));
 					}
 					
-					if(i == 0){
-						sendMessage("TimerEnded");
-					}
-					
-					Thread.sleep(1000);
 				}
+
+				sendMessage("TimerEnded");
 				
 			}
 			catch(InterruptedException e){}
@@ -97,6 +94,10 @@ public class CommandTimer extends Command {
 		
 	}
 	
+	private String formatDate(int hours, int minutes, int seconds){
+		return format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
+	
 	@Override
 	public boolean stopAction(){
 		isAlive = false;
@@ -110,12 +111,12 @@ public class CommandTimer extends Command {
 			TIMER
 		};
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Setup a timer and the bot will send a message when it's over!";
 	}
-
+	
 	@Override
 	public ParametersHelp[] getParametersDescriptions(){
 		return new ParametersHelp[]
