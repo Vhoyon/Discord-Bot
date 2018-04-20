@@ -47,4 +47,9 @@ public class CommandMusicVolume extends MusicCommands {
 			MUSIC_VOLUME
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Change the volume of the music that the bot plays";
+	}
 }

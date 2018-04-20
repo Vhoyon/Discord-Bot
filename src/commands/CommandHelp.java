@@ -64,4 +64,9 @@ public class CommandHelp extends Command {
 			HELP
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Well you just used this command.So ;)";
+	}
 }

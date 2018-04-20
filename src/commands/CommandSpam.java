@@ -89,4 +89,9 @@ public class CommandSpam extends Command {
 			SPAM
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "This command sends the specified amount of the specified message in a text channel";
+	}
 }

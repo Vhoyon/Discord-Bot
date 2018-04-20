@@ -27,4 +27,9 @@ public class CommandMusicSkipAll extends MusicCommands {
 			MUSIC_SKIP_ALL1, MUSIC_SKIP_ALL2, MUSIC_SKIP_ALL3
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Skip all the songs in a playlist";
+	}
 }

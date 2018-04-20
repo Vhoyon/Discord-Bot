@@ -55,4 +55,10 @@ public class CommandMusicList extends MusicCommands {
 			MUSIC_LIST
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Display a list of all the music that you have in the music list";
+
+	}
 }

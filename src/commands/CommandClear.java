@@ -82,4 +82,10 @@ public class CommandClear extends Command {
 			CLEAR
 		};
 	}
+
+	@Override
+	public String getCommandDescription(){
+		return "Clear all the messages that in the text channel you execute the command!";
+	}
+
 }

@@ -72,5 +72,9 @@ public class CommandGameRoll extends GameInteractionCommands {
 			GAME_ROLL, GAME_ROLL_ALT
 		};
 	}
-	
+
+	@Override
+	public String getCommandDescription() {
+		return "Use this command tu select a random game from your list when you don't know what to play.";
+	}
 }

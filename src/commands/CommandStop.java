@@ -72,5 +72,9 @@ public class CommandStop extends Command {
 			STOP
 		};
 	}
-	
+
+	@Override
+	public String getCommandDescription() {
+		return "This command stops the specified command";
+	}
 }

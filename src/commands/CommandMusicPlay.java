@@ -63,4 +63,9 @@ public class CommandMusicPlay extends MusicCommands {
 			MUSIC_PLAY
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Start a song by giving a youtube link or restart a paused song by not giving a link";
+	}
 }

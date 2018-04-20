@@ -50,5 +50,10 @@ public class CommandGameInitial extends GameInteractionCommands {
 			GAME
 		};
 	}
+
+	@Override
+	public String getCommandDescription(){
+		return "Create a list of games that you usually play!";
+	}
 	
 }

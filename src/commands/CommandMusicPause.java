@@ -41,4 +41,9 @@ public class CommandMusicPause extends MusicCommands {
 			MUSIC_PAUSE
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Stop the music until you start it back up";
+	}
 }

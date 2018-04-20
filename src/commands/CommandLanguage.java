@@ -64,4 +64,9 @@ public class CommandLanguage extends Command {
 			LANG, LANGUAGE
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Change the language of the bot";
+	}
 }

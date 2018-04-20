@@ -42,5 +42,9 @@ public class CommandGameList extends GameInteractionCommands {
 			GAME_LIST
 		};
 	}
-	
+
+	@Override
+	public String getCommandDescription() {
+		return "Display a list of all the games that you have in the games list";
+	}
 }

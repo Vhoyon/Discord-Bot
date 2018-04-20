@@ -16,4 +16,9 @@ public class CommandTerminate extends SimpleTextCommand {
 			TERMINATE
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Terminate the bot";
+	}
 }

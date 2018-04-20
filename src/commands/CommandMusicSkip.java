@@ -116,4 +116,9 @@ public class CommandMusicSkip extends MusicCommands {
 			MUSIC_SKIP
 		};
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Skip the song that is currently playing";
+	}
 }

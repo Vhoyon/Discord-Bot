@@ -62,5 +62,9 @@ public class CommandGameRemove extends GameInteractionCommands {
 			GAME_REMOVE
 		};
 	}
-	
+
+	@Override
+	public String getCommandDescription() {
+		return "Remove a game form the game list";
+	}
 }
