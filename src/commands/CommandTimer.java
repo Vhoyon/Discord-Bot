@@ -57,8 +57,9 @@ public class CommandTimer extends Command {
 					}
 					
 				}
-
-				sendMessage("TimerEnded");
+				
+				if(isAlive)
+					sendMessage("TimerEnded");
 				
 			}
 			catch(InterruptedException e){}
