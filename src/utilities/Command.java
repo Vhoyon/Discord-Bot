@@ -157,9 +157,9 @@ public abstract class Command extends Translatable implements Commands,
 		return this.getRequest().getParameters();
 	}
 	
-	public Parameter getParameter(String parameterName)
+	public Parameter getParameter(String... parameterNames)
 			throws NoContentException {
-		return this.getRequest().getParameter(parameterName);
+		return this.getRequest().getParameter(parameterNames);
 	}
 	
 	public boolean hasParameter(Parameter parameter){
