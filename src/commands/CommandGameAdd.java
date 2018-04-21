@@ -26,8 +26,9 @@ public class CommandGameAdd extends GameInteractionCommands {
 			}
 			catch(NullPointerException e){
 				
-				sendInfoMessage(lang("ErrorNoPoolCreated", buildVCommand(GAME
-						+ " [game 1],[game 2],[...]")));
+				new BotError(this, lang("ErrorNoPoolCreated",
+						buildVCommand(GAME + " [game 1],[game 2],[...]")),
+						false);
 				
 			}
 			
@@ -42,11 +43,10 @@ public class CommandGameAdd extends GameInteractionCommands {
 			GAME_ADD
 		};
 	}
-
+	
 	@Override
 	public String getCommandDescription(){
 		return "Add a game to the list of game!";
 	}
-
-
+	
 }
