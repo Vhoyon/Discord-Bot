@@ -242,28 +242,28 @@ public class Request extends Translatable implements Utils {
 		return parameters;
 	}
 	
-	public Parameter getParameter(String parameterName)
-			throws NoContentException {
-		
-		Parameter parameterFound = null;
+	public Parameter getParameter(String... parameterNames)
+			throws NoContentException{
+
+		if (parameterNames == null || parameterNames.length == 0)
+			throw new IllegalArgumentException("The parametersName parameter cannot be null / empty!");
 		
 		try{
+
 			for(Parameter parameter : parameters){
-				
-				if(parameter.getParameter().equals(parameterName)){
-					
-					parameterFound = parameter;
-					break;
-					
+				for(String parameterName : parameterNames){
+					if(parameter.getParameter().equals(parameterName)){
+						return parameter;
+					}
 				}
-				
 			}
+
 		}
 		catch(NullPointerException e){
 			throw new NoContentException(getCommand());
 		}
 		
-		return parameterFound;
+		throw new NoContentException(getCommand());
 		
 	}
 	
