@@ -19,13 +19,13 @@ public class CommandTimer extends Command {
 		
 		try{
 			
-			if(!hasParameter("h", "m", "s")){
+			if(!hasParameter("h", "m", "s", "hours")){
 				throw new NullPointerException();
 			}
 			
 			// seconds = Integer.parseInt(constraints[0]);
-			if(hasParameter("h")){
-				hours = Integer.parseInt(getParameter("h")
+			if(hasParameter("h", "hours")){
+				hours = Integer.parseInt(getParameter("h", "hours")
 						.getParameterContent());
 			}
 			if(hasParameter("m")){
