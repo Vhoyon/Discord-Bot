@@ -1,7 +1,7 @@
 package commands;
 
 import utilities.Command;
-import vendor.exceptions.NoParameterContentException;
+import vendor.exceptions.NoContentException;
 import errorHandling.BotError;
 import vendor.objects.ParametersHelp;
 
@@ -68,7 +68,7 @@ public class CommandTimer extends Command {
 			sendMessage("You must give an amount of time to the "
 					+ buildVCommand("timer") + " command for it to count");
 		}
-		catch(NumberFormatException | NoParameterContentException e){
+		catch(NumberFormatException | NoContentException e){
 			new BotError(this, "One of the value provided isn't a number!");
 		}
 		

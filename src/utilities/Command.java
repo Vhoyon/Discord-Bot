@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import app.CommandRouter;
 import utilities.interfaces.*;
 import vendor.abstracts.Translatable;
-import vendor.exceptions.NoParameterContentException;
+import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;
@@ -158,7 +158,7 @@ public abstract class Command extends Translatable implements Commands,
 	}
 	
 	public Parameter getParameter(String parameterName)
-			throws NoParameterContentException{
+			throws NoContentException {
 		return this.getRequest().getParameter(parameterName);
 	}
 	

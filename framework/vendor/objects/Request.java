@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import vendor.abstracts.Translatable;
-import vendor.exceptions.NoParameterContentException;
+import vendor.exceptions.NoContentException;
 import vendor.interfaces.Utils;
 
 public class Request extends Translatable implements Utils {
@@ -243,7 +243,7 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public Parameter getParameter(String parameterName)
-			throws NoParameterContentException{
+			throws NoContentException {
 		
 		Parameter parameterFound = null;
 		
@@ -260,7 +260,7 @@ public class Request extends Translatable implements Utils {
 			}
 		}
 		catch(NullPointerException e){
-			throw new NoParameterContentException(getCommand());
+			throw new NoContentException(getCommand());
 		}
 		
 		return parameterFound;
