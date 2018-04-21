@@ -1,6 +1,7 @@
 package utilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import app.CommandRouter;
 import utilities.interfaces.*;
@@ -153,21 +154,13 @@ public abstract class Command extends Translatable implements Commands,
 		this.request = request;
 	}
 	
-	public ArrayList<Parameter> getParameters(){
+	public HashMap<String, Parameter> getParameters(){
 		return this.getRequest().getParameters();
 	}
 	
 	public Parameter getParameter(String... parameterNames)
-			throws NoContentException {
+			throws NoContentException{
 		return this.getRequest().getParameter(parameterNames);
-	}
-	
-	public boolean hasParameter(Parameter parameter){
-		return this.getRequest().hasParameter(parameter);
-	}
-	
-	public boolean hasParameter(Parameter... parameter){
-		return this.getRequest().hasParameter(parameter);
 	}
 	
 	public boolean hasParameter(String parameterName){

@@ -1,6 +1,7 @@
 package vendor.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,8 +19,8 @@ public class Request extends Translatable implements Utils {
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			if(!parameter.matches(getParametersPrefix() + ".+"))
-				this.parameter = getParametersPrefix() + parameter;
+			if(parameter.matches(getParametersPrefix() + ".+"))
+				this.parameter = parameter.substring(getParametersPrefix().length());
 			else
 				this.parameter = parameter;
 		}
@@ -31,7 +32,7 @@ public class Request extends Translatable implements Utils {
 		}
 		
 		public String getParameter(){
-			return parameter.substring(getParametersPrefix().length());
+			return parameter;
 		}
 		
 		public String getParameterContent(){
@@ -81,7 +82,7 @@ public class Request extends Translatable implements Utils {
 	
 	private String commandPrefix;
 	
-	private ArrayList<Parameter> parameters;
+	private HashMap<String, Parameter> parameters;
 	private String parametersPrefix;
 	
 	private String error;
@@ -123,7 +124,7 @@ public class Request extends Translatable implements Utils {
 			// The params must be right after command for it to trigger.
 			//				if(content.matches("(" + Parameter.PREFIX + ".+)+")){
 			
-			parameters = new ArrayList<>();
+			parameters = new HashMap<>();
 			
 			// Splits the content : Search for all spaces, except thoses
 			// in double quotes and put all what's found in the
@@ -154,7 +155,7 @@ public class Request extends Translatable implements Utils {
 					paramStartPos = getContent().indexOf(possibleParam);
 					paramEndPos = paramStartPos + possibleParam.length();
 					
-					if(parameters.contains(newParam)){
+					if(parameters.containsValue(newParam)){
 						
 						if(!duplicateParams.contains(newParam))
 							duplicateParams.add(newParam);
@@ -187,7 +188,7 @@ public class Request extends Translatable implements Utils {
 							canRoll = false;
 						}
 						
-						parameters.add(newParam);
+						parameters.put(newParam.getParameter(), newParam);
 						
 					}
 					
@@ -238,26 +239,28 @@ public class Request extends Translatable implements Utils {
 		return this.commandPrefix;
 	}
 	
-	public ArrayList<Parameter> getParameters(){
+	public HashMap<String, Parameter> getParameters(){
 		return parameters;
 	}
 	
 	public Parameter getParameter(String... parameterNames)
 			throws NoContentException{
-
-		if (parameterNames == null || parameterNames.length == 0)
-			throw new IllegalArgumentException("The parametersName parameter cannot be null / empty!");
+		
+		if(parameterNames == null || parameterNames.length == 0)
+			throw new IllegalArgumentException(
+					"The parametersName parameter cannot be null / empty!");
 		
 		try{
-
-			for(Parameter parameter : parameters){
-				for(String parameterName : parameterNames){
-					if(parameter.getParameter().equals(parameterName)){
-						return parameter;
-					}
-				}
+			
+			for(String parameterName : parameterNames){
+				
+				Parameter paramFound = getParameters().get(parameterName);
+				
+				if(paramFound != null)
+					return paramFound;
+				
 			}
-
+			
 		}
 		catch(NullPointerException e){
 			throw new NoContentException(getCommand());
@@ -279,47 +282,27 @@ public class Request extends Translatable implements Utils {
 		return error != null;
 	}
 	
-	public boolean hasParameter(Parameter... parameters){
+	public boolean hasParameter(String parameterName){
+		return getParameters().containsKey(parameterName);
+	}
+	
+	public boolean hasParameter(String... parameterNames){
 		
-		for(Parameter parameter : parameters)
-			if(this.hasParameter(parameter))
+		for(String parameterName : parameterNames)
+			if(this.hasParameter(parameterName))
 				return true;
 		
 		return false;
 		
 	}
 	
-	public boolean hasParameter(Parameter parameter){
-		try{
-			return this.getParameters().contains(parameter);
-		}
-		catch(NullPointerException e){
-			return false;
-		}
-	}
-	
-	public boolean hasParameter(String parameterName){
-		return hasParameter(new Parameter(parameterName));
-	}
-	
-	public boolean hasParameter(String... parameterNames){
-		
-		ArrayList<Parameter> params = new ArrayList<>();
-		
-		for(String paramName : parameterNames){
-			params.add(new Parameter(paramName));
-		}
-		
-		return hasParameter(params.toArray(new Parameter[0]));
-		
-	}
-	
 	public boolean addParameter(String paramName){
-		return this.getParameters().add(new Parameter(paramName));
+		return this.getParameters().put(paramName, new Parameter(paramName)) == null;
 	}
 	
 	public boolean addParameter(String paramName, String paramContent){
-		return this.getParameters().add(new Parameter(paramName, paramContent));
+		return this.getParameters().put(paramName,
+				new Parameter(paramName, paramContent)) == null;
 	}
 	
 	private String[] splitCommandAndContent(String command){
