@@ -21,7 +21,8 @@ public class CommandHelp extends Command {
 		
 		if(content == null){
 			
-			String fullHelpString = getRouter().getCommandsRepo().getFullHelpString("Available commands :");
+			String fullHelpString = getRouter().getCommandsRepo()
+					.getFullHelpString("Available commands :");
 			
 			sendPrivateMessage(fullHelpString);
 			sendInfoMessage(lang("HelpSentMessage"));
@@ -38,7 +39,7 @@ public class CommandHelp extends Command {
 				
 				String helpString = commandToExplain.getHelp(
 						"*Available parameters :*", "Usage : "
-								+ buildVCommand(content) + ".", null);
+								+ commandToExplain.getUsage() + ".", null);
 				
 				builder.append(helpString);
 				
@@ -64,9 +65,9 @@ public class CommandHelp extends Command {
 			HELP
 		};
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Well you just used this command.So ;)";
 	}
 }

@@ -308,5 +308,9 @@ public abstract class Command extends Translatable implements Commands,
 	public String formatParameter(String parameterToFormat){
 		return buildVParameter(parameterToFormat);
 	}
+
+	public String getUsage(){
+		return buildVCommand(getCommandName());
+	}
 	
 }
