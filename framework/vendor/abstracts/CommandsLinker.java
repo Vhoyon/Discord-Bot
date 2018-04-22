@@ -49,7 +49,13 @@ public abstract class CommandsLinker extends Translatable {
 				builder.append("\t");
 			}
 			
-			builder.append("~ ").append(formatCommand(key));
+			String prependChars = getPrependChars();
+			
+			if(prependChars != null){
+				builder.append(prependChars);
+			}
+			
+			builder.append(formatCommand(key));
 			
 			if(!isSubstitute){
 				
@@ -84,6 +90,10 @@ public abstract class CommandsLinker extends Translatable {
 	
 	public String formatHelpString(String helpString){
 		return helpString;
+	}
+	
+	public String getPrependChars(){
+		return "~ ";
 	}
 	
 }
