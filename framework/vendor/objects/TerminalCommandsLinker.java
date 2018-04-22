@@ -14,9 +14,10 @@ public class TerminalCommandsLinker extends CommandsLinker {
 		return new CommandLinksContainer(
 		        CommandStart.class,
                 CommandStop.class,
-				CommandUptime.class,
                 CommandRestart.class,
-                CommandExit.class
+                CommandExit.class,
+				CommandUptime.class,
+				CommandNumberOfServers.class
         ){
 			
 			@Override

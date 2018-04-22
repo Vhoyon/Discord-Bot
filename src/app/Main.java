@@ -117,6 +117,7 @@ public class Main {
 				jda.setAutoReconnect(true);
 
 				Metrics.startClock();
+				Metrics.setJDA(jda);
 				
 				Logger.log("Bot started!", LogType.INFO);
 				
@@ -187,6 +188,7 @@ public class Main {
 				Logger.log("Bot has been shutdown!", LogType.INFO);
 
 				Metrics.stopClock();
+				Metrics.setJDA(null);
 				
 			}
 			
