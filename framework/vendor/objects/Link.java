@@ -41,6 +41,10 @@ public class Link {
 	public String[] getCalls(){
 		return this.calls;
 	}
+
+	public String getDefaultCall(){
+		return getCalls()[0];
+	}
 	
 	public Class<? extends LinkableCommand> getClassToLink(){
 		return classToLink;

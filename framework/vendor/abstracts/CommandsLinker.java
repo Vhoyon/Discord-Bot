@@ -4,6 +4,7 @@ import vendor.objects.CommandLinksContainer;
 import vendor.objects.Link;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 public abstract class CommandsLinker extends Translatable {
@@ -34,54 +35,73 @@ public abstract class CommandsLinker extends Translatable {
 			builder.append(textHeader).append("\n\n");
 		}
 		
-		TreeMap<String, Link> linksMap = container.getLinkMap();
+		HashMap<String, Link> linksMap = container.getLinkMap();
 		
-		ArrayList<Link> links = new ArrayList<>();
+		TreeMap<String, Link> defaultCommands = new TreeMap<>();
 		
 		linksMap.forEach((key, link) -> {
 			
-			boolean isSubstitute = links.contains(link);
+			boolean isSubstitute = defaultCommands.containsKey(link.getDefaultCall());
 			
 			if(!isSubstitute){
-				links.add(link);
+				defaultCommands.put(link.getDefaultCall(), link);
 			}
-			else{
-				builder.append("\t");
-			}
-			
-			String prependChars = getPrependChars();
-			
+
+		});
+		
+		String prependChars = getPrependChars();
+		
+		defaultCommands.forEach((key, link) -> {
+
 			if(prependChars != null){
-				builder.append(prependChars);
+				builder.append(formatWholeCommand(key));
 			}
-			
-			builder.append(formatCommand(key));
-			
-			if(!isSubstitute){
-				
-				try{
-					
-					String helpString = link.getInstance()
-							.getCommandDescription();
-					
-					if(helpString != null){
-						builder.append(" : ").append(
-								formatHelpString(helpString));
-					}
-					
+			else {
+				builder.append(formatCommand(key));
+			}
+
+			try{
+
+				String helpString = link.getInstance()
+						.getCommandDescription();
+
+				if(helpString != null){
+					builder.append(" : ").append(
+							formatHelpString(helpString));
 				}
-				catch(Exception e){}
+
+			}
+			catch(Exception e){}
+
+			builder.append("\n");
+
+			String[] calls = link.getCalls();
+			
+			for(int i = 1; i < calls.length; i++){
+				
+				builder.append("\t");
+
+				if(prependChars != null){
+					builder.append(formatWholeCommand(calls[i]));
+				}
+				else {
+					builder.append(formatCommand(calls[i]));
+				}
+				
+				builder.append("\n");
 				
 			}
-			
-			builder.append("\n");
 			
 		});
 		
-		fullHelpString = builder.toString();
+		fullHelpString = builder.toString().trim();
 		
 		return fullHelpString;
 		
+	}
+
+	private String formatWholeCommand(String command){
+		return getPrependChars() + formatCommand(command);
 	}
 	
 	public String formatCommand(String command){
