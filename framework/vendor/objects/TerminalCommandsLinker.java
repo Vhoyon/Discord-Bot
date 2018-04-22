@@ -12,6 +12,7 @@ public class TerminalCommandsLinker extends CommandsLinker {
 	public CommandLinksContainer createLinksContainer(){
 		
 		return new CommandLinksContainer(
+				CommandHelp.class,
 		        CommandStart.class,
                 CommandStop.class,
                 CommandRestart.class,
