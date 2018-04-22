@@ -3,7 +3,6 @@ package vendor.abstracts;
 import vendor.objects.CommandLinksContainer;
 import vendor.objects.Link;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -41,52 +40,50 @@ public abstract class CommandsLinker extends Translatable {
 		
 		linksMap.forEach((key, link) -> {
 			
-			boolean isSubstitute = defaultCommands.containsKey(link.getDefaultCall());
+			boolean isSubstitute = defaultCommands.containsKey(link
+					.getDefaultCall());
 			
 			if(!isSubstitute){
 				defaultCommands.put(link.getDefaultCall(), link);
 			}
-
+			
 		});
 		
 		String prependChars = getPrependChars();
 		
 		defaultCommands.forEach((key, link) -> {
-
-			if(prependChars != null){
-				builder.append(formatWholeCommand(key));
-			}
-			else {
-				builder.append(formatCommand(key));
-			}
-
+			
+			String wholeCommandString = formatWholeCommand(prependChars, key);
+			
+			String wholeHelpString = null;
+			
 			try{
 
-				String helpString = link.getInstance()
-						.getCommandDescription();
-
-				if(helpString != null){
-					builder.append(" : ").append(
-							formatHelpString(helpString));
-				}
-
+				// Try to get the help string of a link
+				String helpString = link.getInstance().getCommandDescription();
+				
+				wholeHelpString = formatHelpString(helpString);
+				
 			}
 			catch(Exception e){}
-
-			builder.append("\n");
-
-			String[] calls = link.getCalls();
 			
+			if(wholeHelpString == null){
+				builder.append(wholeCommandString);
+			}
+			else{
+				builder.append(formatWholeHelpLine(wholeCommandString,
+						wholeHelpString));
+			}
+			
+			builder.append("\n");
+			
+			String[] calls = link.getCalls();
+
+			// Add all of the non default calls of a link as a variant
 			for(int i = 1; i < calls.length; i++){
 				
-				builder.append("\t");
-
-				if(prependChars != null){
-					builder.append(formatWholeCommand(calls[i]));
-				}
-				else {
-					builder.append(formatCommand(calls[i]));
-				}
+				builder.append(formatVariant(formatWholeCommand(prependChars,
+						calls[i])));
 				
 				builder.append("\n");
 				
@@ -99,9 +96,17 @@ public abstract class CommandsLinker extends Translatable {
 		return fullHelpString;
 		
 	}
-
-	private String formatWholeCommand(String command){
-		return getPrependChars() + formatCommand(command);
+	
+	private String formatWholeCommand(String prependChars, String command){
+		if(prependChars == null)
+			return formatCommand(command);
+		
+		return prependChars + formatCommand(command);
+	}
+	
+	public String formatWholeHelpLine(String wholeCommandString,
+			String wholeHelpString){
+		return wholeCommandString + " : " + wholeHelpString;
 	}
 	
 	public String formatCommand(String command){
@@ -110,6 +115,10 @@ public abstract class CommandsLinker extends Translatable {
 	
 	public String formatHelpString(String helpString){
 		return helpString;
+	}
+	
+	public String formatVariant(String variant){
+		return "\t" + variant;
 	}
 	
 	public String getPrependChars(){
