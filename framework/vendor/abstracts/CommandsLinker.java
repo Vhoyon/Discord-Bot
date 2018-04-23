@@ -50,6 +50,7 @@ public abstract class CommandsLinker extends Translatable {
 		});
 		
 		String prependChars = getPrependChars();
+		String prependCharsVariants = getPrependCharsForVariants();
 		
 		defaultCommands.forEach((key, link) -> {
 			
@@ -82,7 +83,7 @@ public abstract class CommandsLinker extends Translatable {
 			// Add all of the non default calls of a link as a variant
 			for(int i = 1; i < calls.length; i++){
 				
-				builder.append(formatVariant(formatWholeCommand(prependChars,
+				builder.append(formatVariant(formatWholeCommand(prependCharsVariants,
 						calls[i])));
 				
 				builder.append("\n");
@@ -123,6 +124,10 @@ public abstract class CommandsLinker extends Translatable {
 	
 	public String getPrependChars(){
 		return "~ ";
+	}
+	
+	public String getPrependCharsForVariants(){
+		return getPrependChars();
 	}
 	
 }
