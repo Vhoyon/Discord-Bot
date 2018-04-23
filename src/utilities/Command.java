@@ -30,9 +30,15 @@ public abstract class Command extends Translatable implements Commands,
 	private Guild guild;
 	private Request request;
 	
-	public Command(){}
+	private boolean isAlive;
+	
+	public Command(){
+		isAlive = true;
+	}
 	
 	public Command(Command commandToCopy){
+		this();
+		
 		setRouter(commandToCopy.getRouter());
 		setContext(commandToCopy.getEvent());
 		setBuffer(commandToCopy.getBuffer());
@@ -152,6 +158,14 @@ public abstract class Command extends Translatable implements Commands,
 	
 	public void setRequest(Request request){
 		this.request = request;
+	}
+	
+	public boolean isAlive(){
+		return this.isAlive;
+	}
+	
+	public void kill(){
+		this.isAlive = false;
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
