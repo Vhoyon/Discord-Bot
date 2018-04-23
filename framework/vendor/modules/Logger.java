@@ -149,6 +149,12 @@ public class Logger extends Module {
 	
 	public static void log(String message, String logType, boolean appendDate){
 		
+		if(message == null || message.length() == 0){
+			message = "Empty message given, using fail-safe error reporting.";
+			logType = LogType.ERROR.toString();
+			appendDate = true;
+		}
+		
 		if(outputs.isEmpty() && !hasIssuedWarning){
 			hasIssuedWarning = true;
 			
@@ -234,4 +240,5 @@ public class Logger extends Module {
 		}
 		
 	}
+	
 }
