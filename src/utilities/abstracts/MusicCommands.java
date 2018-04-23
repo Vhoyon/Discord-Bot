@@ -1,9 +1,9 @@
 package utilities.abstracts;
 
 import errorHandling.BotError;
-import utilities.Command;
+import utilities.BotCommand;
 
-public abstract class MusicCommands extends Command {
+public abstract class MusicCommands extends BotCommand {
 	
 	public Boolean canSkipAll(boolean skipAll){
 		

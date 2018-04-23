@@ -3,7 +3,7 @@ package utilities.music;
 import java.util.HashMap;
 import java.util.Map;
 
-import utilities.Command;
+import utilities.BotCommand;
 import net.dv8tion.jda.core.entities.Guild;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -50,7 +50,7 @@ public class MusicManager {
 		
 	}
 	
-	public synchronized void emptyPlayer(Command command){
+	public synchronized void emptyPlayer(BotCommand command){
 		
 		if(this.hasPlayer(command.getGuild())){
 			
@@ -70,7 +70,7 @@ public class MusicManager {
 		
 	}
 	
-	public void loadTrack(final Command command, final String source){
+	public void loadTrack(final BotCommand command, final String source){
 		
 		MusicPlayer player = getPlayer(command.getGuild());
 		

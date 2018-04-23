@@ -21,7 +21,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public abstract class Command extends Translatable implements Commands,
+public abstract class BotCommand extends Translatable implements Commands,
 		Resources, Emojis, Utils, LinkableCommand {
 	
 	private CommandRouter router;
@@ -32,11 +32,11 @@ public abstract class Command extends Translatable implements Commands,
 	
 	private boolean isAlive;
 	
-	public Command(){
+	public BotCommand(){
 		isAlive = true;
 	}
 	
-	public Command(Command commandToCopy){
+	public BotCommand(BotCommand commandToCopy){
 		this();
 		
 		setRouter(commandToCopy.getRouter());

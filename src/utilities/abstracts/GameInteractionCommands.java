@@ -1,7 +1,7 @@
 package utilities.abstracts;
 
-import utilities.Command;
+import utilities.BotCommand;
 
-public abstract class GameInteractionCommands extends Command {
+public abstract class GameInteractionCommands extends BotCommand {
 	
 }

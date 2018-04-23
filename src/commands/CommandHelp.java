@@ -1,7 +1,7 @@
 package commands;
 
 import errorHandling.BotError;
-import utilities.Command;
+import utilities.BotCommand;
 import vendor.exceptions.CommandNotFoundException;
 import vendor.modules.Logger;
 
@@ -12,7 +12,7 @@ import vendor.modules.Logger;
  * @author Stephano
  */
 
-public class CommandHelp extends Command {
+public class CommandHelp extends BotCommand {
 	
 	@Override
 	public void action(){
@@ -32,7 +32,7 @@ public class CommandHelp extends Command {
 			
 			try{
 				
-				Command commandToExplain = (Command)getRouter()
+				BotCommand commandToExplain = (BotCommand)getRouter()
 						.getCommandsRepo().getContainer().findCommand(content);
 				
 				StringBuilder builder = new StringBuilder();

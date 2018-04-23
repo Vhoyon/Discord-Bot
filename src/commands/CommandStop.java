@@ -1,18 +1,18 @@
 package commands;
 
-import utilities.Command;
+import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import utilities.specifics.CommandsThreadManager;
 import errorHandling.BotError;
 
-public class CommandStop extends Command {
+public class CommandStop extends BotCommand {
 	
 	@Override
 	public void action(){
 		
 		if(getContent() == null){
 			
-			Command commandToStop = CommandsThreadManager
+			BotCommand commandToStop = CommandsThreadManager
 					.getLatestRunningCommandExcept(this, getId());
 			
 			if(commandToStop == null){
@@ -39,7 +39,7 @@ public class CommandStop extends Command {
 		}
 		else{
 			
-			Command commandToStop = CommandsThreadManager.getCommandRunning(
+			BotCommand commandToStop = CommandsThreadManager.getCommandRunning(
 					getContent(), getId(), getRouter());
 			
 			if(commandToStop == null){
@@ -53,7 +53,7 @@ public class CommandStop extends Command {
 		
 	}
 	
-	private void stopCommandLogic(Command commandToStop){
+	private void stopCommandLogic(BotCommand commandToStop){
 		
 		if(commandToStop.stopAction())
 			sendInfoMessage(lang("CommandFullyStoppedMessage",

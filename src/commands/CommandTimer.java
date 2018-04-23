@@ -1,11 +1,11 @@
 package commands;
 
-import utilities.Command;
+import utilities.BotCommand;
 import vendor.exceptions.NoContentException;
 import errorHandling.BotError;
 import vendor.objects.ParametersHelp;
 
-public class CommandTimer extends Command {
+public class CommandTimer extends BotCommand {
 	
 	private int[] timeRef = new int[3];
 	private boolean isAlive = true;

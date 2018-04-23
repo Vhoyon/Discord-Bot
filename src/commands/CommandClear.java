@@ -2,7 +2,7 @@ package commands;
 
 import java.util.List;
 
-import utilities.Command;
+import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Message;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  * 
  * @author Stephano
  */
-public class CommandClear extends Command {
+public class CommandClear extends BotCommand {
 	
 	@Override
 	public void action(){

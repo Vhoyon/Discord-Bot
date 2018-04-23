@@ -3,7 +3,7 @@ package utilities.specifics;
 import java.util.Set;
 import java.util.Stack;
 
-import utilities.Command;
+import utilities.BotCommand;
 import app.CommandRouter;
 import vendor.interfaces.Utils;
 
@@ -25,8 +25,8 @@ public class CommandsThreadManager {
 	 *         <code>Command</code> object, <code>null</code> if the command
 	 *         wasn't found.
 	 */
-	public static Command getCommandRunning(String commandName,
-			String commandID, CommandRouter inRouter){
+	public static BotCommand getCommandRunning(String commandName,
+											   String commandID, CommandRouter inRouter){
 		
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
@@ -40,7 +40,7 @@ public class CommandsThreadManager {
 		
 	}
 	
-	public static Command getLatestRunningCommand(){
+	public static BotCommand getLatestRunningCommand(){
 		
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
@@ -57,7 +57,7 @@ public class CommandsThreadManager {
 		
 	}
 	
-	public static Command getLatestRunningCommand(String guildID){
+	public static BotCommand getLatestRunningCommand(String guildID){
 		
 		Stack<CommandRouter> guildRouters = getRunningCommandRouters(guildID);
 		
@@ -74,7 +74,7 @@ public class CommandsThreadManager {
 		
 	}
 	
-	public static Command getLatestRunningCommandExcept(Command commandToIgnore){
+	public static BotCommand getLatestRunningCommandExcept(BotCommand commandToIgnore){
 		
 		Stack<CommandRouter> guildRouters = getRunningCommandRouters();
 		
@@ -100,8 +100,8 @@ public class CommandsThreadManager {
 		
 	}
 	
-	public static Command getLatestRunningCommandExcept(
-			Command commandToIgnore, String commandID){
+	public static BotCommand getLatestRunningCommandExcept(
+			BotCommand commandToIgnore, String commandID){
 		
 		Stack<CommandRouter> guildRouters = getRunningCommandRouters(commandID);
 		

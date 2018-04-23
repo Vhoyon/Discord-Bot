@@ -23,7 +23,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	private MessageReceivedEvent event;
 	private Request request;
 	private Buffer buffer;
-	private Command command;
+	private BotCommand command;
 	private Dictionary dict;
 	private CommandsRepository commandsRepo;
 	
@@ -60,7 +60,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 	}
 	
-	public Command getCommand(){
+	public BotCommand getCommand(){
 		return command;
 	}
 	
@@ -144,7 +144,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						}
 						else{
 							
-							command = (Command)commandsRepo.getContainer()
+							command = (BotCommand)commandsRepo.getContainer()
 									.initiateLink(commandName);
 							
 						}
@@ -197,9 +197,9 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	 * @throws NoCommandException
 	 *             Generic exception thrown if the message isn't a command.
 	 */
-	private Command validateMessage() throws NoCommandException{
+	private BotCommand validateMessage() throws NoCommandException{
 		
-		Command command = null;
+		BotCommand command = null;
 		
 		// Only interactions are through a server, no single conversations permitted!
 		if(event.isFromType(ChannelType.PRIVATE)){

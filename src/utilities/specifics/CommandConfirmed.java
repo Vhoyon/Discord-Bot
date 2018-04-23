@@ -1,14 +1,14 @@
 package utilities.specifics;
 
-import utilities.Command;
+import utilities.BotCommand;
 
-public abstract class CommandConfirmed extends Command {
+public abstract class CommandConfirmed extends BotCommand {
 	
-	private Command inceptionCommand = null;
+	private BotCommand inceptionCommand = null;
 	
 	public CommandConfirmed(){}
 	
-	public CommandConfirmed(Command inceptionCommand){
+	public CommandConfirmed(BotCommand inceptionCommand){
 		super(inceptionCommand);
 		
 		this.inceptionCommand = inceptionCommand;

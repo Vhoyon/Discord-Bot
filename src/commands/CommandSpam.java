@@ -1,8 +1,8 @@
 package commands;
 
-import utilities.Command;
+import utilities.BotCommand;
 
-public class CommandSpam extends Command {
+public class CommandSpam extends BotCommand {
 	
 	@Override
 	public void action(){

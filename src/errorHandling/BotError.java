@@ -1,47 +1,47 @@
 package errorHandling;
 
-import utilities.Command;
+import utilities.BotCommand;
 import utilities.abstracts.AbstractBotError;
 
 public class BotError extends AbstractBotError {
 	
-	public BotError(Command commandInError, String errorMessage,
-			boolean isErrorOneLiner, Object[] replacements){
+	public BotError(BotCommand commandInError, String errorMessage,
+					boolean isErrorOneLiner, Object[] replacements){
 		super(commandInError, errorMessage, isErrorOneLiner, replacements);
 	}
 	
-	public BotError(Command commandInError, String errorMessage,
-			boolean isErrorOneLiner){
+	public BotError(BotCommand commandInError, String errorMessage,
+					boolean isErrorOneLiner){
 		super(commandInError, errorMessage, isErrorOneLiner);
 	}
 	
-	public BotError(Command commandInError, String errorMessage,
-			Object[] replacements){
+	public BotError(BotCommand commandInError, String errorMessage,
+					Object[] replacements){
 		super(commandInError, errorMessage, replacements);
 	}
 	
-	public BotError(Command commandInError, String errorMessage,
-			String errorEmoji, boolean isErrorOneLiner, Object[] replacements){
+	public BotError(BotCommand commandInError, String errorMessage,
+					String errorEmoji, boolean isErrorOneLiner, Object[] replacements){
 		super(commandInError, errorMessage, errorEmoji, isErrorOneLiner,
 				replacements);
 	}
 	
-	public BotError(Command commandInError, String errorMessage,
-			String errorEmoji, boolean isErrorOneLiner){
+	public BotError(BotCommand commandInError, String errorMessage,
+					String errorEmoji, boolean isErrorOneLiner){
 		super(commandInError, errorMessage, errorEmoji, isErrorOneLiner);
 	}
 	
-	public BotError(Command commandInError, String errorMessage,
-			String errorEmoji, Object[] replacements){
+	public BotError(BotCommand commandInError, String errorMessage,
+					String errorEmoji, Object[] replacements){
 		super(commandInError, errorMessage, errorEmoji, replacements);
 	}
 	
-	public BotError(Command commandInError, String errorMessage,
-			String errorEmoji){
+	public BotError(BotCommand commandInError, String errorMessage,
+					String errorEmoji){
 		super(commandInError, errorMessage, errorEmoji);
 	}
 	
-	public BotError(Command commandInError, String errorMessage){
+	public BotError(BotCommand commandInError, String errorMessage){
 		super(commandInError, errorMessage);
 	}
 	

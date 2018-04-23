@@ -1,11 +1,11 @@
 package commands;
 
-import utilities.Command;
+import utilities.BotCommand;
 import vendor.objects.Dictionary;
 import vendor.objects.Language;
 import errorHandling.BotError;
 
-public class CommandLanguage extends Command {
+public class CommandLanguage extends BotCommand {
 	
 	@Override
 	public void action(){
