@@ -31,7 +31,7 @@ public class CommandClear extends Command {
 				
 				try{
 					
-					fullClean();
+					fullCleanReworked();
 					
 				}
 				catch(PermissionException e){
@@ -44,6 +44,54 @@ public class CommandClear extends Command {
 		
 	}
 	
+	private void fullCleanReworked() throws PermissionException{
+		
+		MessageHistory history = getTextContext().getHistory();
+		
+		boolean isEmpty;
+		
+		boolean deletingIndividually = false;
+		
+		do{
+			
+			List<Message> messages = history.retrievePast(100).complete();
+			
+			if(!(isEmpty = messages.isEmpty())){
+				
+				if(!deletingIndividually){
+					
+					try{
+						getTextContext().deleteMessages(messages).complete();
+					}
+					catch(IllegalArgumentException e){
+						deletingIndividually = true;
+					}
+					
+				}
+				
+				if(deletingIndividually){
+					
+					for(Message message : messages){
+						
+						message.delete().queue();
+						
+					}
+					
+				}
+				
+			}
+			
+		}while(!isEmpty && isAlive());
+		
+		if(isAlive())
+			sendMessage("Cleared everything!");
+		
+	}
+	
+	/**
+	 * @deprecated
+	 * @throws PermissionException
+	 */
 	private void fullClean() throws PermissionException{
 		
 		boolean hadErrors = false;
@@ -76,16 +124,23 @@ public class CommandClear extends Command {
 	}
 	
 	@Override
+	public boolean stopAction(){
+		kill();
+		
+		return true;
+	}
+	
+	@Override
 	public String[] getCalls(){
 		return new String[]
 		{
 			CLEAR
 		};
 	}
-
+	
 	@Override
 	public String getCommandDescription(){
 		return "Clear all the messages that in the text channel you execute the command!";
 	}
-
+	
 }
