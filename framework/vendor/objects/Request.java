@@ -283,6 +283,9 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public boolean hasParameter(String parameterName){
+		if (getParameters() == null)
+			return false;
+		
 		return getParameters().containsKey(parameterName);
 	}
 	
