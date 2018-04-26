@@ -1,7 +1,9 @@
 package vendor.objects;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 import vendor.exceptions.CommandNotFoundException;
 import vendor.interfaces.LinkableCommand;
 import vendor.modules.Logger;
@@ -33,6 +35,31 @@ public abstract class CommandLinksContainer {
 		}
 		
 		initializeContainer(links);
+	}
+	
+	public CommandLinksContainer(String linksPackage){
+		
+		ScanResult results = new FastClasspathScanner(linksPackage)
+				.strictWhitelist().verbose().scan();
+		
+		List<String> classNames = results.getNamesOfAllClasses();
+		
+		List<Class<?>> linkableClasses = results
+				.classNamesToClassRefs(classNames);
+		
+		ArrayList<Link> links = new ArrayList<>();
+		
+		linkableClasses.forEach(linkableClass -> {
+			
+			if(LinkableCommand.class.isAssignableFrom(linkableClass)){
+				
+				links.add(new Link((Class<LinkableCommand>)linkableClass));
+				
+			}
+			
+		});
+		
+		initializeContainer(links.toArray(new Link[links.size()]));
 	}
 	
 	private void initializeContainer(Link[] links){
