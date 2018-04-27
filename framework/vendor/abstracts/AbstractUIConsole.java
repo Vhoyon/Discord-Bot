@@ -17,6 +17,9 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	public AbstractUIConsole(){
 		super();
 
+
+		setIconImage(new ImageIcon("res/img/Voyon.jpg").getImage());
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		addWindowListener(new WindowAdapter(){
