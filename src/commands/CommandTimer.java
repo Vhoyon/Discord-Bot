@@ -6,16 +6,16 @@ import errorHandling.BotError;
 import vendor.objects.ParametersHelp;
 
 public class CommandTimer extends BotCommand {
-	
-	private int[] timeRef = new int[3];
+
+    int seconds = 0;
+    int hours = 0;
+    int minutes = 0;
 	private boolean isAlive = true;
 	
 	@Override
 	public void action(){
 		
-		int seconds = 0;
-		int hours = 0;
-		int minutes = 0;
+		
 		
 		try{
 			
@@ -39,31 +39,30 @@ public class CommandTimer extends BotCommand {
 			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
 			String timerMessageId = null;
-			// long totalTime = (seconds * 1000);
-			// long temps = System.currentTimeMillis();
-			timerMessageId = sendMessage(formatDate(timeRef[0], timeRef[1],
-					timeRef[2]));
-			
+            timeConstruct(totalTime);
+			timerMessageId = sendMessage(formatDate(hours, minutes,
+					seconds));
+
 			try{
-				
+
 				for(int i = totalTime; i >= 0 && isAlive; i--){
-					
+
 					if(i < totalTime){
 						Thread.sleep(1000);
-						
+
 						timeConstruct(i);
 						editMessageQueue(timerMessageId,
-								formatDate(timeRef[0], timeRef[1], timeRef[2]));
+								formatDate(hours, minutes, seconds));
 					}
-					
+
 				}
-				
+
 				if(isAlive)
 					sendMessage("TimerEnded");
-				
+
 			}
 			catch(InterruptedException e){}
-			
+
 		}
 		catch(NullPointerException e){
 			sendMessage("You must give an amount of time to the "
@@ -72,25 +71,25 @@ public class CommandTimer extends BotCommand {
 		catch(NumberFormatException | NoContentException e){
 			new BotError(this, "One of the value provided isn't a number!");
 		}
-		
+
 	}
-	
+
 	private void timeConstruct(int remainingTime){
-		
-		if(remainingTime / 3600 >= 0){
-			timeRef[0] = remainingTime / 3600;
-			remainingTime -= timeRef[0] * 3600;
+
+        if(remainingTime / 3600 >= 0){
+            hours = remainingTime / 3600;
+            remainingTime -= hours * 3600;
+        }
+        else
+            hours = 0;
+        if(remainingTime / 60 >= 0){
+            minutes = remainingTime / 60;
+			remainingTime -= minutes * 60;
 		}
 		else
-			timeRef[0] = 0;
-		if(remainingTime / 60 >= 0){
-			timeRef[1] = remainingTime / 60;
-			remainingTime -= timeRef[1] * 60;
-		}
-		else
-			timeRef[1] = 0;
+			minutes = 0;
 		if(remainingTime >= 0){
-			timeRef[2] = remainingTime;
+			seconds = remainingTime;
 		}
 		
 	}
