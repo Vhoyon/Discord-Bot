@@ -38,9 +38,8 @@ public abstract class CommandLinksContainer {
 	}
 	
 	public CommandLinksContainer(String linksPackage){
-		
 		ScanResult results = new FastClasspathScanner(linksPackage)
-				.strictWhitelist().verbose().scan();
+				.strictWhitelist().scan();
 		
 		List<String> classNames = results.getNamesOfAllClasses();
 		
