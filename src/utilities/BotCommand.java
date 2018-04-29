@@ -23,7 +23,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public abstract class BotCommand extends Translatable implements Commands,
 		Resources, Emojis, Utils, LinkableCommand {
-	
+
 	private CommandRouter router;
 	private Buffer buffer;
 	private MessageReceivedEvent event;

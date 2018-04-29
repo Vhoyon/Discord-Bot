@@ -23,7 +23,7 @@ public class CommandMusicVolume extends MusicCommands {
 			}
 			else{
 				
-				MusicManager.get().getPlayer(getGuild()).getAudioPlayer()
+				MusicManager.get().getPlayer(this).getAudioPlayer()
 						.setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
 				
 				sendMessage(lang("ChangedSuccess", volume));

@@ -4,7 +4,7 @@ import errorHandling.BotError;
 import utilities.BotCommand;
 
 public abstract class MusicCommands extends BotCommand {
-	
+
 	public Boolean canSkipAll(boolean skipAll){
 		
 		if(!isPlaying()){
@@ -19,6 +19,7 @@ public abstract class MusicCommands extends BotCommand {
 		return skipAll;
 
 	}
+
 	
 	protected boolean isPlaying(){
 		return getGuild().getAudioManager().isConnected()

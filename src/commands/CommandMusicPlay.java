@@ -39,7 +39,7 @@ public class CommandMusicPlay extends MusicCommands {
 			}
 			else{
 
-				MusicPlayer player = MusicManager.get().getPlayer(getGuild());
+				MusicPlayer player = MusicManager.get().getPlayer(this);
 
 				if(player.isPaused()){
 					player.setPause(false);

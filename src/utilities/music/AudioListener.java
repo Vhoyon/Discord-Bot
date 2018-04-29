@@ -43,8 +43,11 @@ public class AudioListener extends AudioEventAdapter {
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track,
 			AudioTrackEndReason endReason){
-		
-		if(endReason.mayStartNext)
+
+		if(this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean) this.player.getCommand().getMemory("MUSIC_LOOP")){
+			player.playTrack(track.makeClone());
+
+		}else if(endReason.mayStartNext)
 			nextTrack();
 		
 	}

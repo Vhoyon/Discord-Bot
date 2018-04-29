@@ -24,7 +24,7 @@ public class CommandMusicSkip extends MusicCommands {
 			}
 			else{
 				
-				MusicPlayer player = MusicManager.get().getPlayer(getGuild());
+				MusicPlayer player = MusicManager.get().getPlayer(this);
 				
 				if(getContent() == null){
 					

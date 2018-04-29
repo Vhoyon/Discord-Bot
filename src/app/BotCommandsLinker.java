@@ -32,7 +32,8 @@ public class BotCommandsLinker extends CommandsLinker implements Commands {
 			CommandGameRoll.class,
 			CommandGameList.class,
 			CommandTimer.class,
-			CommandLanguage.class
+			CommandLanguage.class,
+			CommandMusicLoop.class
 		){
 			
 			@Override
