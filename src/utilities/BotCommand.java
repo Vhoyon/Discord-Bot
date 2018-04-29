@@ -90,15 +90,15 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	public boolean remember(Object object, String associatedName){
-		return getBuffer().push(object, associatedName, getId());
+		return getBuffer().push(object, associatedName, getKey());
 	}
 	
 	public Object getMemory(String associatedName) throws NullPointerException{
-		return getBuffer().get(associatedName, getId());
+		return getBuffer().get(associatedName, getKey());
 	}
 	
 	public boolean forget(String associatedName){
-		return getBuffer().remove(associatedName, getId());
+		return getBuffer().remove(associatedName, getKey());
 	}
 	
 	public boolean hasMemory(String associatedName){
@@ -148,7 +148,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 		return getGuild().getId();
 	}
 	
-	public String getId(){
+	public String getKey(){
 		return Utils.buildKey(getGuildId(), getTextChannelId());
 	}
 	

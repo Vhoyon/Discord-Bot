@@ -13,7 +13,7 @@ public class CommandStop extends BotCommand {
 		if(getContent() == null){
 			
 			BotCommand commandToStop = CommandsThreadManager
-					.getLatestRunningCommandExcept(this, getId());
+					.getLatestRunningCommandExcept(this, getKey());
 			
 			if(commandToStop == null){
 				sendMessage(lang("BotCantStop"));
@@ -40,7 +40,7 @@ public class CommandStop extends BotCommand {
 		else{
 			
 			BotCommand commandToStop = CommandsThreadManager.getCommandRunning(
-					getContent(), getId(), getRouter());
+					getContent(), getKey(), getRouter());
 			
 			if(commandToStop == null){
 				new BotError(this, lang("NoCommandToStopMessage", getContent()));
