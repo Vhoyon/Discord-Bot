@@ -17,7 +17,7 @@ public class CommandMusicLoop extends MusicCommands {
             if (!isPlaying()) {
                 new BotError(this, lang("CommandMusicLoopNotPlaying"));
             } else {
-
+                remember(true, "LOOP_ONE");
                 if (this.hasMemory("MUSIC_LOOP") && (boolean) this.getMemory("MUSIC_LOOP")) {
 
                     forget("MUSIC_LOOP");

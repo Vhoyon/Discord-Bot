@@ -44,6 +44,8 @@ public class AudioListener extends AudioEventAdapter {
 	public void onTrackEnd(AudioPlayer player, AudioTrack track,
 			AudioTrackEndReason endReason){
 
+//		System.out.println(tracks.remainingCapacity());
+
 		if(this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean) this.player.getCommand().getMemory("MUSIC_LOOP")){
 			player.playTrack(track.makeClone());
 
