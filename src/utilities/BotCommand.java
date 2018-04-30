@@ -25,7 +25,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 		Resources, Emojis, Utils, LinkableCommand {
 	
 	public enum BufferLevel{
-		CHANNEL, SERVER
+		CHANNEL, SERVER, USER
 	}
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
@@ -150,6 +150,10 @@ public abstract class BotCommand extends Translatable implements Commands,
 		return getEvent().getAuthor();
 	}
 	
+	public String getUserId(){
+		return getUser().getId();
+	}
+	
 	public String getUsername(){
 		return getUser().getName();
 	}
@@ -182,6 +186,8 @@ public abstract class BotCommand extends Translatable implements Commands,
 		switch(level){
 		case SERVER:
 			return Utils.buildKey(getGuildId());
+		case USER:
+			return Utils.buildKey(getUsername(), getUserId());
 		case CHANNEL:
 		default:
 			return Utils.buildKey(getGuildId(), getTextChannelId());
