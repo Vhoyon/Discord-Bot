@@ -2,29 +2,25 @@ package vendor.terminalcommands;
 
 import vendor.abstracts.AbstractTerminalCommand;
 import vendor.modules.Logger;
+import vendor.modules.Metrics;
 
-public class CommandRestart extends AbstractTerminalCommand {
+public class TerminalCommandUptime extends AbstractTerminalCommand {
 	
 	@Override
 	public String[] getCalls(){
 		return new String[]
 		{
-			"restart"
+			"uptime"
 		};
 	}
 	
 	@Override
 	public void action(){
-		
-		try{
-			console.onStop();
 
-			console.onStart();
-		}
-		catch(Exception e){
-			Logger.log(e);
-		}
+		long milliseconds = Metrics.getUptime();
+
+		Logger.log("The bot has been up for " + milliseconds + " milliseconds!");
 		
 	}
-	
+
 }
