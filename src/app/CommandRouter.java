@@ -61,11 +61,19 @@ public class CommandRouter extends Thread implements Resources, Commands,
 	}
 	
 	public BotCommand getCommand(){
-		return command;
+		return this.command;
 	}
 	
 	public CommandsRepository getCommandsRepo(){
 		return this.commandsRepo;
+	}
+	
+	public Buffer getBuffer(){
+		return this.buffer;
+	}
+	
+	public Request getRequest(){
+		return this.request;
 	}
 	
 	public String getString(String key){
@@ -155,8 +163,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					command.setRouter(this);
 					command.setEventDigger(eventDigger);
-					command.setBuffer(buffer);
-					command.setRequest(request);
 					command.setDictionary(dict);
 					
 					command.action();

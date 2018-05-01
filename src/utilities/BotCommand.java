@@ -34,8 +34,6 @@ public abstract class BotCommand extends Translatable implements Commands,
 	private MessageEventDigger eventDigger;
 	
 	private CommandRouter router;
-	private Buffer buffer;
-	private Request request;
 	
 	private boolean isAlive;
 	
@@ -48,19 +46,17 @@ public abstract class BotCommand extends Translatable implements Commands,
 		
 		setEventDigger(commandToCopy.getEventDigger());
 		setRouter(commandToCopy.getRouter());
-		setBuffer(commandToCopy.getBuffer());
-		setRequest(commandToCopy.getRequest());
 		setDictionary(commandToCopy.getDictionary());
 		
 		this.isAlive = commandToCopy.isAlive();
 	}
 	
 	public String getCommandName(){
-		return request.getCommand();
+		return getRequest().getCommand();
 	}
 	
 	protected String getContent(){
-		return request.getContent();
+		return getRequest().getContent();
 	}
 	
 	protected String[] getSplitContent(){
@@ -90,11 +86,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	public Buffer getBuffer(){
-		return buffer;
-	}
-	
-	public void setBuffer(Buffer buffer){
-		this.buffer = buffer;
+		return getRouter().getBuffer();
 	}
 	
 	public boolean remember(Object object, String associatedName){
@@ -193,11 +185,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	public Request getRequest(){
-		return request;
-	}
-	
-	public void setRequest(Request request){
-		this.request = request;
+		return getRouter().getRequest();
 	}
 	
 	public boolean isAlive(){
