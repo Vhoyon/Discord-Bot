@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import app.CommandRouter;
 import utilities.interfaces.*;
+import utilities.specifics.MessageEventDigger;
 import vendor.abstracts.Translatable;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
@@ -30,10 +31,10 @@ public abstract class BotCommand extends Translatable implements Commands,
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
 	
+	private MessageEventDigger eventDigger;
+	
 	private CommandRouter router;
 	private Buffer buffer;
-	private MessageReceivedEvent event;
-	private Guild guild;
 	private Request request;
 	
 	private boolean isAlive;
@@ -45,10 +46,9 @@ public abstract class BotCommand extends Translatable implements Commands,
 	public BotCommand(BotCommand commandToCopy){
 		this();
 		
+		setEventDigger(commandToCopy.getEventDigger());
 		setRouter(commandToCopy.getRouter());
-		setContext(commandToCopy.getEvent());
 		setBuffer(commandToCopy.getBuffer());
-		setGuild(commandToCopy.getGuild());
 		setRequest(commandToCopy.getRequest());
 		setDictionary(commandToCopy.getDictionary());
 		
@@ -137,60 +137,58 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	protected MessageReceivedEvent getEvent(){
-		return event;
-	}
-	
-	public void setContext(MessageReceivedEvent event){
-		this.event = event;
-		
-		this.guild = event.getGuild();
+		return getEventDigger().getEvent();
 	}
 	
 	public User getUser(){
-		return getEvent().getAuthor();
+		return getEventDigger().getUser();
 	}
 	
 	public String getUserId(){
-		return getUser().getId();
+		return getEventDigger().getUserId();
 	}
 	
-	public String getUsername(){
-		return getUser().getName();
+	public String getUserName(){
+		return getEventDigger().getUserName();
 	}
 	
 	protected TextChannel getTextContext(){
-		return event.getTextChannel();
+		return getEventDigger().getChannel();
 	}
 	
 	public String getTextChannelId(){
-		return getTextContext().getId();
+		return getEventDigger().getChannelId();
 	}
 	
 	public Guild getGuild(){
-		return this.guild;
-	}
-	
-	public void setGuild(Guild guild){
-		this.guild = guild;
+		return getEventDigger().getGuild();
 	}
 	
 	public String getGuildId(){
-		return getGuild().getId();
+		return getEventDigger().getGuildId();
 	}
 	
 	public String getKey(){
 		return getKey(BufferLevel.CHANNEL);
 	}
 	
+	public MessageEventDigger getEventDigger(){
+		return eventDigger;
+	}
+	
+	public void setEventDigger(MessageEventDigger eventDigger){
+		this.eventDigger = eventDigger;
+	}
+	
 	public String getKey(BufferLevel level){
 		switch(level){
 		case SERVER:
-			return Utils.buildKey(getGuildId());
+			return getEventDigger().getGuildKey();
 		case USER:
-			return Utils.buildKey(getUsername(), getUserId());
+			return getEventDigger().getUserKey();
 		case CHANNEL:
 		default:
-			return Utils.buildKey(getGuildId(), getTextChannelId());
+			return getEventDigger().getChannelKey();
 		}
 	}
 	
@@ -273,7 +271,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	
 	public String sendPrivateMessage(String messageToSend){
 		
-		PrivateChannel channel = this.getUser().openPrivateChannel().complete();
+		PrivateChannel channel = getUser().openPrivateChannel().complete();
 		
 		if(getUser().hasPrivateChannel()){
 			

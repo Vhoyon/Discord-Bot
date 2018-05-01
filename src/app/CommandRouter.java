@@ -83,22 +83,20 @@ public class CommandRouter extends Thread implements Resources, Commands,
 			
 			try{
 				
+				MessageEventDigger eventDigger = new MessageEventDigger(event);
+				
 				if((command = validateMessage()) == null){
 					
-					String commandGuildID = event.getGuild().getId();
-					String commandChannelID = event.getTextChannel().getId();
-					
-					String textChannelKey = Utils.buildKey(commandGuildID,
-							commandChannelID);
-					
-					String routerKey = Utils.buildKey(textChannelKey,
-							request.getCommand());
+					String routerKey = eventDigger.getCommandKey(request
+							.getCommand());
 					
 					this.setName(routerKey);
 					
 					boolean confirmationConfirmed = false;
 					
 					try{
+						
+						String textChannelKey = eventDigger.getChannelKey();
 						
 						Object needsConfirmation = buffer.get(
 								BUFFER_CONFIRMATION, textChannelKey);
@@ -126,7 +124,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					if(request.hasError()){
 						command = new BotError(request.getError(), false);
 						
-						command.setContext(event);
+						command.setEventDigger(eventDigger);
 						command.action();
 						command = null;
 					}
@@ -136,7 +134,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						String commandName = request.getCommand();
 						
 						if(CommandsThreadManager.isCommandRunning(commandName,
-								textChannelKey, this)){
+								eventDigger, this)){
 							
 							command = new BotError(getString(
 									"CommandIsRunningError", commandName));
@@ -156,7 +154,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 				try{
 					
 					command.setRouter(this);
-					command.setContext(event);
+					command.setEventDigger(eventDigger);
 					command.setBuffer(buffer);
 					command.setRequest(request);
 					command.setDictionary(dict);

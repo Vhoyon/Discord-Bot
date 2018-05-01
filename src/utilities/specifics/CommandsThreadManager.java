@@ -18,7 +18,7 @@ public class CommandsThreadManager {
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
-	 * @param commandID
+	 * @param eventDigger
 	 *            The server's <code>commandID</code> required to search for
 	 *            commands running in said server's text channel.
 	 * @return The command found with all of it's attribute in a
@@ -26,14 +26,14 @@ public class CommandsThreadManager {
 	 *         wasn't found.
 	 */
 	public static BotCommand getCommandRunning(String commandName,
-											   String commandID, CommandRouter inRouter){
+			MessageEventDigger eventDigger, CommandRouter inRouter){
 		
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
 		for(CommandRouter router : routers)
 			if(!router.equals(inRouter)
 					&& router.getName().equals(
-							Utils.buildKey(commandID, commandName)))
+							eventDigger.getCommandKey(commandName)))
 				return router.getCommand();
 		
 		return null;
@@ -74,7 +74,8 @@ public class CommandsThreadManager {
 		
 	}
 	
-	public static BotCommand getLatestRunningCommandExcept(BotCommand commandToIgnore){
+	public static BotCommand getLatestRunningCommandExcept(
+			BotCommand commandToIgnore){
 		
 		Stack<CommandRouter> guildRouters = getRunningCommandRouters();
 		
@@ -136,15 +137,15 @@ public class CommandsThreadManager {
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
-	 * @param commandID
+	 * @param eventDigger
 	 *            The server's <code>commandID</code> required to search for
 	 *            commands running in said server.
 	 * @return <code>true</code> if the command is running in the specified
 	 *         command id, <code>false</code> otherwise.
 	 */
 	public static boolean isCommandRunning(String commandName,
-			String commandID, CommandRouter router){
-		return getCommandRunning(commandName, commandID, router) != null;
+			MessageEventDigger eventDigger, CommandRouter router){
+		return getCommandRunning(commandName, eventDigger, router) != null;
 	}
 	
 	public static int stopAllCommands(){
