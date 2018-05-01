@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import app.CommandRouter;
 import utilities.interfaces.*;
+import utilities.specifics.MessageEventDigger;
 import vendor.abstracts.Translatable;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
@@ -24,10 +25,16 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public abstract class BotCommand extends Translatable implements Commands,
 		Resources, Emojis, Utils, LinkableCommand {
 	
+	public enum BufferLevel{
+		CHANNEL, SERVER, USER
+	}
+	
+	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
+	
+	private MessageEventDigger eventDigger;
+	
 	private CommandRouter router;
 	private Buffer buffer;
-	private MessageReceivedEvent event;
-	private Guild guild;
 	private Request request;
 	
 	private boolean isAlive;
@@ -39,12 +46,13 @@ public abstract class BotCommand extends Translatable implements Commands,
 	public BotCommand(BotCommand commandToCopy){
 		this();
 		
+		setEventDigger(commandToCopy.getEventDigger());
 		setRouter(commandToCopy.getRouter());
-		setContext(commandToCopy.getEvent());
 		setBuffer(commandToCopy.getBuffer());
-		setGuild(commandToCopy.getGuild());
 		setRequest(commandToCopy.getRequest());
 		setDictionary(commandToCopy.getDictionary());
+		
+		this.isAlive = commandToCopy.isAlive();
 	}
 	
 	public String getCommandName(){
@@ -90,20 +98,38 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	public boolean remember(Object object, String associatedName){
-		return getBuffer().push(object, associatedName, getKey());
+		return remember(object, associatedName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	public boolean remember(Object object, String associatedName,
+			BufferLevel level){
+		return getBuffer().push(object, associatedName, getKey(level));
 	}
 	
 	public Object getMemory(String associatedName) throws NullPointerException{
-		return getBuffer().get(associatedName, getKey());
+		return getMemory(associatedName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	public Object getMemory(String associatedName, BufferLevel level)
+			throws NullPointerException{
+		return getBuffer().get(associatedName, getKey(level));
 	}
 	
 	public boolean forget(String associatedName){
-		return getBuffer().remove(associatedName, getKey());
+		return forget(associatedName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	public boolean forget(String associatedName, BufferLevel level){
+		return getBuffer().remove(associatedName, getKey(level));
 	}
 	
 	public boolean hasMemory(String associatedName){
+		return hasMemory(associatedName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	public boolean hasMemory(String associatedName, BufferLevel level){
 		try{
-			return getMemory(associatedName) != null;
+			return getMemory(associatedName, level) != null;
 		}
 		catch(NullPointerException e){
 			return false;
@@ -111,45 +137,59 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	protected MessageReceivedEvent getEvent(){
-		return event;
-	}
-	
-	public void setContext(MessageReceivedEvent event){
-		this.event = event;
-		
-		this.guild = event.getGuild();
+		return getEventDigger().getEvent();
 	}
 	
 	public User getUser(){
-		return getEvent().getAuthor();
+		return getEventDigger().getUser();
 	}
 	
-	public String getUsername(){
-		return getUser().getName();
+	public String getUserId(){
+		return getEventDigger().getUserId();
+	}
+	
+	public String getUserName(){
+		return getEventDigger().getUserName();
 	}
 	
 	protected TextChannel getTextContext(){
-		return event.getTextChannel();
+		return getEventDigger().getChannel();
 	}
 	
 	public String getTextChannelId(){
-		return getTextContext().getId();
+		return getEventDigger().getChannelId();
 	}
 	
 	public Guild getGuild(){
-		return this.guild;
-	}
-	
-	public void setGuild(Guild guild){
-		this.guild = guild;
+		return getEventDigger().getGuild();
 	}
 	
 	public String getGuildId(){
-		return getGuild().getId();
+		return getEventDigger().getGuildId();
 	}
 	
 	public String getKey(){
-		return Utils.buildKey(getGuildId(), getTextChannelId());
+		return getKey(BufferLevel.CHANNEL);
+	}
+	
+	public MessageEventDigger getEventDigger(){
+		return eventDigger;
+	}
+	
+	public void setEventDigger(MessageEventDigger eventDigger){
+		this.eventDigger = eventDigger;
+	}
+	
+	public String getKey(BufferLevel level){
+		switch(level){
+		case SERVER:
+			return getEventDigger().getGuildKey();
+		case USER:
+			return getEventDigger().getUserKey();
+		case CHANNEL:
+		default:
+			return getEventDigger().getChannelKey();
+		}
 	}
 	
 	public Request getRequest(){
@@ -231,7 +271,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	
 	public String sendPrivateMessage(String messageToSend){
 		
-		PrivateChannel channel = this.getUser().openPrivateChannel().complete();
+		PrivateChannel channel = getUser().openPrivateChannel().complete();
 		
 		if(getUser().hasPrivateChannel()){
 			
@@ -322,7 +362,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	public String formatParameter(String parameterToFormat){
 		return buildVParameter(parameterToFormat);
 	}
-
+	
 	public String getUsage(){
 		return buildVCommand(getCommandName());
 	}

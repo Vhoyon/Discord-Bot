@@ -6,7 +6,7 @@ public class CommandHello extends SimpleTextCommand {
 	
 	@Override
 	public String getTextToSend(){
-		return lang("HelloResponse", getUsername());
+		return lang("HelloResponse", getUserName());
 	}
 	
 	@Override

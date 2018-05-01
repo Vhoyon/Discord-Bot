@@ -40,7 +40,7 @@ public class CommandStop extends BotCommand {
 		else{
 			
 			BotCommand commandToStop = CommandsThreadManager.getCommandRunning(
-					getContent(), getKey(), getRouter());
+					getContent(), getEventDigger(), getRouter());
 			
 			if(commandToStop == null){
 				new BotError(this, lang("NoCommandToStopMessage", getContent()));
@@ -72,9 +72,9 @@ public class CommandStop extends BotCommand {
 			STOP
 		};
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "This command stops the specified command";
 	}
 }
