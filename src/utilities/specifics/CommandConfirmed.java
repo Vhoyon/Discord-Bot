@@ -62,7 +62,7 @@ public abstract class CommandConfirmed extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
+	public Object getCalls(){
 		if(inceptionCommand == null)
 			return null;
 		

@@ -1,36 +1,49 @@
 package vendor.objects;
 
 import vendor.interfaces.LinkableCommand;
+import vendor.modules.Logger;
 
 public class Link {
 	
 	private Class<? extends LinkableCommand> classToLink;
-	private String[] calls;
+	private LinkableCommand commandInstance;
 	
 	public Link(Class<? extends LinkableCommand> command){
 		this.classToLink = command;
 		
 		try{
-			LinkableCommand commandInstance = getInstance();
-			
-			this.calls = commandInstance.getCalls();
+			getInstance();
 		}
 		catch(Exception e){}
 	}
 	
 	public LinkableCommand getInstance() throws Exception{
-		return getClassToLink().newInstance();
+		if(this.commandInstance == null)
+			this.commandInstance = getClassToLink().newInstance();
+		
+		return this.commandInstance;
 	}
 	
 	public boolean hasCall(String call){
 		
 		if(call != null && call.length() != 0){
 			
-			String[] definedCalls = getCalls();
-			
-			for(String definedCall : definedCalls)
-				if(definedCall.equals(call))
-					return true;
+			if(getCalls() instanceof String[]){
+				
+				String[] calls = (String[])getCalls();
+				
+				for(String definedCall : calls)
+					if(definedCall.equals(call))
+						return true;
+				
+			}
+			else{
+				
+				String linkCall = getCalls().toString();
+				
+				return call.equals(linkCall);
+				
+			}
 			
 		}
 		
@@ -38,16 +51,26 @@ public class Link {
 		
 	}
 	
-	public String[] getCalls(){
-		return this.calls;
+	public Object getCalls(){
+		try{
+			return getInstance().getCalls();
+		}
+		catch(Exception e){
+			return null;
+		}
 	}
-
+	
 	public String getDefaultCall(){
-		return getCalls()[0];
+		try{
+			return getInstance().getDefaultCall();
+		}
+		catch(Exception e){
+			return null;
+		}
 	}
 	
 	public Class<? extends LinkableCommand> getClassToLink(){
-		return classToLink;
+		return this.classToLink;
 	}
 	
 }

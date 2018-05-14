@@ -59,7 +59,7 @@ public abstract class CommandsLinker extends Translatable {
 			String wholeHelpString = null;
 			
 			try{
-
+				
 				// Try to get the help string of a link
 				String helpString = link.getInstance().getCommandDescription();
 				
@@ -78,15 +78,21 @@ public abstract class CommandsLinker extends Translatable {
 			
 			builder.append("\n");
 			
-			String[] calls = link.getCalls();
-
-			// Add all of the non default calls of a link as a variant
-			for(int i = 1; i < calls.length; i++){
+			Object calls = link.getCalls();
+			
+			if(calls instanceof String[]){
 				
-				builder.append(formatVariant(formatWholeCommand(prependCharsVariants,
-						calls[i])));
+				String[] callsArray = (String[])calls;
 				
-				builder.append("\n");
+				// Add all of the non default calls of a link as a variant
+				for(int i = 1; i < callsArray.length; i++){
+					
+					builder.append(formatVariant(formatWholeCommand(
+							prependCharsVariants, callsArray[i])));
+					
+					builder.append("\n");
+					
+				}
 				
 			}
 			

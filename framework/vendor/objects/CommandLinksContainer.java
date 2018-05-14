@@ -67,14 +67,24 @@ public abstract class CommandLinksContainer {
 		
 		for(Link link : links){
 			
-			String[] calls = link.getCalls();
+			Object calls = link.getCalls();
 			
 			if(calls != null){
-				for(String call : calls){
+				
+				if(calls instanceof String[]){
 					
-					linkMap.put(call, link);
+					String[] callsArray = (String[])calls;
+					
+					for(String call : callsArray)
+						linkMap.put(call, link);
 					
 				}
+				else{
+					
+					linkMap.put(calls.toString(), link);
+					
+				}
+				
 			}
 			
 		}

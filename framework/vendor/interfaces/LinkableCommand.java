@@ -4,15 +4,22 @@ import vendor.objects.ParametersHelp;
 
 public interface LinkableCommand extends Command {
 	
-	String[] getCalls();
+	Object getCalls();
 	
 	default String getDefaultCall(){
-		String[] calls = getCalls();
+		Object calls = getCalls();
 		
 		if(calls == null)
 			return null;
 		
-		return calls[0];
+		String call;
+		
+		if(calls instanceof String[])
+			call = ((String[])calls)[0];
+		else
+			call = calls.toString();
+		
+		return call;
 	}
 	
 	default String getCommandDescription(){
