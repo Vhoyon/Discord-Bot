@@ -105,11 +105,8 @@ public class CommandTimer extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			TIMER
-		};
+	public Object getCalls(){
+		return TIMER;
 	}
 	
 	@Override

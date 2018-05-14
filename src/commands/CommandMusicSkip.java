@@ -110,11 +110,8 @@ public class CommandMusicSkip extends MusicCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			MUSIC_SKIP
-		};
+	public Object getCalls(){
+		return MUSIC_SKIP;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package vendor.objects;
 
 import vendor.interfaces.LinkableCommand;
-import vendor.modules.Logger;
 
 public class Link {
 	

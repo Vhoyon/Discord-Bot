@@ -15,11 +15,8 @@ public class CommandHello extends SimpleTextCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			HELLO
-		};
+	public Object getCalls(){
+		return HELLO;
 	}
 
 	@Override

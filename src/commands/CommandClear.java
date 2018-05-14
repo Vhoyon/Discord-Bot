@@ -131,11 +131,8 @@ public class CommandClear extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			CLEAR
-		};
+	public Object getCalls(){
+		return CLEAR;
 	}
 	
 	@Override

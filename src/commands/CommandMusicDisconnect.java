@@ -22,11 +22,8 @@ public class CommandMusicDisconnect extends MusicCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			MUSIC_DISCONNECT
-		};
+	public Object getCalls(){
+		return MUSIC_DISCONNECT;
 	}
 
 	@Override

@@ -56,11 +56,8 @@ public class CommandGameRemove extends GameInteractionCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			GAME_REMOVE
-		};
+	public Object getCalls(){
+		return GAME_REMOVE;
 	}
 
 	@Override

@@ -59,11 +59,8 @@ public class CommandHelp extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			HELP
-		};
+	public Object getCalls(){
+		return HELP;
 	}
 	
 	@Override

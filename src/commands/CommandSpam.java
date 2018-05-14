@@ -83,11 +83,8 @@ public class CommandSpam extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			SPAM
-		};
+	public Object getCalls(){
+		return SPAM;
 	}
 
 	@Override

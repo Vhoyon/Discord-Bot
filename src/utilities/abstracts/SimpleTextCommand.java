@@ -20,7 +20,7 @@ public abstract class SimpleTextCommand extends AbstractTextCommand {
 	}
 
 	@Override
-	public String[] getCalls() {
+	public Object getCalls() {
 		return null;
 	}
 }

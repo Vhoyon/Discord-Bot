@@ -37,11 +37,8 @@ public class CommandGameAdd extends GameInteractionCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			GAME_ADD
-		};
+	public Object getCalls(){
+		return GAME_ADD;
 	}
 	
 	@Override

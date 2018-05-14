@@ -66,11 +66,8 @@ public class CommandStop extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			STOP
-		};
+	public Object getCalls(){
+		return STOP;
 	}
 	
 	@Override

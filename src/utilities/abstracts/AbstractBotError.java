@@ -117,7 +117,7 @@ public abstract class AbstractBotError extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
+	public Object getCalls(){
 		return null;
 	}
 }

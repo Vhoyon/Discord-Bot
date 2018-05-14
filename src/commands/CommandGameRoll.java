@@ -66,7 +66,7 @@ public class CommandGameRoll extends GameInteractionCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
+	public Object getCalls(){
 		return new String[]
 		{
 			GAME_ROLL, GAME_ROLL_ALT
