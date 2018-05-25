@@ -35,6 +35,8 @@ public class CommandHelp extends BotCommand {
 				BotCommand commandToExplain = (BotCommand)getRouter()
 						.getCommandsRepo().getContainer().findCommand(content);
 				
+				commandToExplain.putStateFromCommand(this);
+				
 				StringBuilder builder = new StringBuilder();
 				
 				String helpString = commandToExplain.getHelp(
