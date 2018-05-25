@@ -19,11 +19,11 @@ public class MessageEventDigger {
     }
 
     public String getGuildKey(){
-        return Utils.buildKey(event.getGuild().getId());
+        return Utils.buildKey(getGuildId());
     }
     
     public String getChannelKey(){
-        return Utils.buildKey(getGuildId(), getChannelId());
+        return Utils.buildKey(getGuildKey(), getChannelId());
     }
     
     public String getUserKey(){
