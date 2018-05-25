@@ -43,12 +43,17 @@ public abstract class BotCommand extends Translatable implements Commands,
 	
 	public BotCommand(BotCommand commandToCopy){
 		this();
+		putStateFromCommand(commandToCopy);
+	}
+	
+	public void putStateFromCommand(BotCommand commandToCopy){
 		
 		setEventDigger(commandToCopy.getEventDigger());
 		setRouter(commandToCopy.getRouter());
 		setDictionary(commandToCopy.getDictionary());
 		
 		this.isAlive = commandToCopy.isAlive();
+		
 	}
 	
 	public String getCommandName(){
