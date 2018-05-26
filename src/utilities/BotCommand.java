@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import app.CommandRouter;
 import utilities.interfaces.*;
-import utilities.specifics.MessageEventDigger;
+import vendor.objects.MessageEventDigger;
 import vendor.abstracts.Translatable;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
@@ -31,8 +31,6 @@ public abstract class BotCommand extends Translatable implements Commands,
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
 	
-	private MessageEventDigger eventDigger;
-	
 	private CommandRouter router;
 	
 	private boolean isAlive;
@@ -48,7 +46,6 @@ public abstract class BotCommand extends Translatable implements Commands,
 	
 	public void putStateFromCommand(BotCommand commandToCopy){
 		
-		setEventDigger(commandToCopy.getEventDigger());
 		setRouter(commandToCopy.getRouter());
 		setDictionary(commandToCopy.getDictionary());
 		
@@ -170,11 +167,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	}
 	
 	public MessageEventDigger getEventDigger(){
-		return eventDigger;
-	}
-	
-	public void setEventDigger(MessageEventDigger eventDigger){
-		this.eventDigger = eventDigger;
+		return getRouter().getEventDigger();
 	}
 	
 	public String getKey(BufferLevel level){

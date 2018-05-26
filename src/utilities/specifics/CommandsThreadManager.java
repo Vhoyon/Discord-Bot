@@ -5,7 +5,7 @@ import java.util.Stack;
 
 import utilities.BotCommand;
 import app.CommandRouter;
-import vendor.interfaces.Utils;
+import vendor.objects.MessageEventDigger;
 
 public class CommandsThreadManager {
 	
@@ -34,7 +34,7 @@ public class CommandsThreadManager {
 			if(!router.equals(inRouter)
 					&& router.getName().equals(
 							eventDigger.getCommandKey(commandName)))
-				return router.getCommand();
+				return (BotCommand)router.getCommand();
 		
 		return null;
 		
@@ -51,7 +51,7 @@ public class CommandsThreadManager {
 			
 			CommandRouter latestRouter = routers.pop();
 			
-			return latestRouter.getCommand();
+			return (BotCommand)latestRouter.getCommand();
 			
 		}
 		
@@ -68,7 +68,7 @@ public class CommandsThreadManager {
 			
 			CommandRouter latestRouter = guildRouters.pop();
 			
-			return latestRouter.getCommand();
+			return (BotCommand)latestRouter.getCommand();
 			
 		}
 		
@@ -95,7 +95,7 @@ public class CommandsThreadManager {
 				}
 			}
 			
-			return latestRouter.getCommand();
+			return (BotCommand)latestRouter.getCommand();
 			
 		}
 		
@@ -122,7 +122,7 @@ public class CommandsThreadManager {
 				}
 			}
 			
-			return latestRouter.getCommand();
+			return (BotCommand)latestRouter.getCommand();
 			
 		}
 		
@@ -155,7 +155,7 @@ public class CommandsThreadManager {
 		Stack<CommandRouter> routers = getRunningCommandRouters();
 		
 		for(CommandRouter router : routers)
-			if(router.getCommand().stopAction())
+			if(((BotCommand)router.getCommand()).stopAction())
 				numberOfCommandsStopped++;
 		
 		return numberOfCommandsStopped;
