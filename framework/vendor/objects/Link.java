@@ -8,11 +8,6 @@ public class Link {
 	
 	public Link(Class<? extends LinkableCommand> command){
 		this.classToLink = command;
-		
-		try{
-			getInstance();
-		}
-		catch(Exception e){}
 	}
 	
 	public LinkableCommand getInstance() throws Exception{
