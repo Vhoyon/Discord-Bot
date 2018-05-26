@@ -38,7 +38,7 @@ public abstract class BotCommand extends Translatable implements Commands,
 	private boolean isAlive;
 	
 	public BotCommand(){
-		isAlive = true;
+		this.isAlive = true;
 	}
 	
 	public BotCommand(BotCommand commandToCopy){
