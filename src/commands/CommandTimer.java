@@ -59,7 +59,7 @@ public class CommandTimer extends BotCommand {
 				sendMessage("TimerEnded");
 			
 		}
-		catch(InterruptedException e){}
+		catch(InterruptedException | IllegalStateException e){}
 		catch(NullPointerException e){
 			sendMessage("You must give an amount of time to the "
 					+ buildVCommand("timer") + " command for it to count");
