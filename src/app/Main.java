@@ -115,7 +115,7 @@ public class Main {
 						.buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
-
+				
 				Metrics.startClock();
 				Metrics.setJDA(jda);
 				
@@ -160,7 +160,7 @@ public class Main {
 					canStopBot = false;
 				}
 				else{
-
+					
 					int numberOfStoppedCommands = CommandsThreadManager
 							.stopAllCommands();
 					
@@ -174,7 +174,7 @@ public class Main {
 			
 			if(!canStopBot){
 				
-				throw new Exception("Bot not stopped.");
+				Logger.log("Bot not stopped.", LogType.INFO);
 				
 			}
 			else{
@@ -182,11 +182,11 @@ public class Main {
 				jda.shutdownNow();
 				
 				jda = null;
-
+				
 				Buffer.get().emptyMemory();
-
+				
 				Logger.log("Bot has been shutdown!", LogType.INFO);
-
+				
 				Metrics.stopClock();
 				Metrics.setJDA(null);
 				
@@ -203,13 +203,13 @@ public class Main {
 	private static void logLink(){
 		
 		String clientId = Environment.getVar("CLIENT_ID", null);
-
+		
 		if(clientId != null){
 			Logger.log("Link to join the bot to a server :\n\n"
 					+ "https://discordapp.com/oauth2/authorize?client_id="
 					+ clientId + "&scope=bot&permissions=0", false);
 		}
-
+		
 	}
 	
 	private static String convertArgsToString(String[] args){
