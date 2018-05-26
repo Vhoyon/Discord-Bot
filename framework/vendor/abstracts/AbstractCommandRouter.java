@@ -7,9 +7,10 @@ import vendor.interfaces.Command;
 import vendor.interfaces.Translatable;
 import vendor.interfaces.Utils;
 import vendor.objects.*;
+import vendor.res.FrameworkResources;
 
 public abstract class AbstractCommandRouter extends Thread implements Utils,
-		Translatable {
+		Translatable, FrameworkResources {
 	
 	private Dictionary dict;
 	private Request request;
@@ -28,7 +29,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		try{
 			
-			Object bufferedDict = buffer.get(Dictionary.BUFFER_LOCATION,
+			Object bufferedDict = buffer.get(BUFFER_DICTIONARY,
 					eventDigger.getGuildId());
 			setDictionary((Dictionary)bufferedDict);
 			
@@ -38,7 +39,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			setDictionary(new Dictionary());
 			
 			try{
-				buffer.push(getDictionary(), Dictionary.BUFFER_LOCATION,
+				buffer.push(getDictionary(), BUFFER_DICTIONARY,
 						eventDigger.getGuildId());
 			}
 			catch(NullPointerException e1){}

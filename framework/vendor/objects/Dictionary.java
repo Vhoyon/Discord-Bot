@@ -10,8 +10,6 @@ import vendor.modules.Logger.LogType;
 
 public class Dictionary implements Utils {
 	
-	public static final String BUFFER_LOCATION = "VHOYON_LANG_BUFFER";
-	
 	private static final String DEFAULT_LANG = "en";
 	private static final String DEFAULT_COUNTRY = "US";
 	
