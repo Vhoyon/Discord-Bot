@@ -1,6 +1,6 @@
 package vendor.interfaces;
 
-interface Command {
+public interface Command {
 
     void action();
 
