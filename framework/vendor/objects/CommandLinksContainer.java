@@ -96,19 +96,16 @@ public abstract class CommandLinksContainer {
 			
 			Link link = findLink(commandName);
 			
-			if(link == null){
-				return whenCommandNotFound(commandName);
-			}
-			else{
+			if(link != null){
 				return link.getInstance();
 			}
 			
 		}
 		catch(Exception e){
 			Logger.log(e);
-			
-			return whenCommandNotFound(commandName);
 		}
+		
+		return whenCommandNotFound(commandName);
 	}
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);
