@@ -4,17 +4,19 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
+import vendor.interfaces.Translatable;
 import vendor.interfaces.Utils;
 import vendor.objects.*;
 
-public abstract class AbstractCommandRouter extends Thread implements Utils {
+public abstract class AbstractCommandRouter extends Thread implements Utils,
+		Translatable {
 	
+	private Dictionary dict;
 	private Request request;
 	private Buffer buffer;
-	private Command command;
-	private Dictionary dict;
 	private CommandsRepository commandsRepo;
 	private MessageEventDigger eventDigger;
+	protected Command command;
 	
 	public AbstractCommandRouter(MessageReceivedEvent event,
 			String receivedMessage, Buffer buffer,
@@ -28,26 +30,26 @@ public abstract class AbstractCommandRouter extends Thread implements Utils {
 			
 			Object bufferedDict = buffer.get(Dictionary.BUFFER_LOCATION,
 					eventDigger.getGuildId());
-			dict = (Dictionary)bufferedDict;
+			setDictionary((Dictionary)bufferedDict);
 			
 		}
 		catch(NullPointerException e){
 			
-			dict = new Dictionary();
+			setDictionary(new Dictionary());
 			
 			try{
-				buffer.push(dict, Dictionary.BUFFER_LOCATION,
+				buffer.push(getDictionary(), Dictionary.BUFFER_LOCATION,
 						eventDigger.getGuildId());
 			}
 			catch(NullPointerException e1){}
 			
 		}
 		
-		commandsRepo.setDictionary(dict);
+		commandsRepo.setDictionary(getDictionary());
 		
 		this.commandsRepo = commandsRepo;
 		
-		this.request = createRequest(receivedMessage, dict);
+		this.request = createRequest(receivedMessage, getDictionary());
 		
 	}
 	
@@ -82,12 +84,14 @@ public abstract class AbstractCommandRouter extends Thread implements Utils {
 		return this.request;
 	}
 	
-	public String getString(String key){
-		return dict.getDirectString(key);
+	@Override
+	public Dictionary getDictionary(){
+		return this.dict;
 	}
 	
-	public String getString(String key, Object... replacements){
-		return dict.getDirectString(key, replacements);
+	@Override
+	public void setDictionary(Dictionary dict){
+		this.dict = dict;
 	}
 	
 	/**
@@ -110,7 +114,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils {
 	 * @throws NoCommandException
 	 *             Generic exception thrown if the message isn't a command.
 	 */
-	private Command validateMessage() throws NoCommandException{
+	protected Command validateMessage() throws NoCommandException{
 		
 		MessageReceivedEvent event = getEvent();
 		
