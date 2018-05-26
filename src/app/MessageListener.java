@@ -28,12 +28,12 @@ public class MessageListener extends ListenerAdapter implements Resources {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event){
 		
-		String messageRecu = event.getMessage().getContentRaw();
+		String receivedMessage = event.getMessage().getContentRaw();
 		
 		// Bots doesn't need attention...
 		if(!event.getAuthor().isBot()){
 			
-			new CommandRouter(event, messageRecu, buffer, commandsRepo).start();
+			new CommandRouter(event, receivedMessage, buffer, commandsRepo).start();
 			
 		}
 		
