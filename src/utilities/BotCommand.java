@@ -6,6 +6,14 @@ import vendor.abstracts.AbstractBotCommand;
 
 public abstract class BotCommand extends AbstractBotCommand implements
 		Commands, Resources {
+	
+	public BotCommand(){
+		super();
+	}
+	
+	public BotCommand(BotCommand botCommandToCopy){
+		super(botCommandToCopy);
+	}
 
 	@Override
 	public CommandRouter getRouter() {
