@@ -1,5 +1,7 @@
 package utilities.abstracts;
 
+import vendor.abstracts.AbstractTextCommand;
+
 public abstract class SimpleTextCommand extends AbstractTextCommand {
 	
 	@Override
@@ -18,9 +20,9 @@ public abstract class SimpleTextCommand extends AbstractTextCommand {
 		}
 		
 	}
-
+	
 	@Override
-	public Object getCalls() {
+	public Object getCalls(){
 		return null;
 	}
 }

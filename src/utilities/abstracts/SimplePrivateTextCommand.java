@@ -1,5 +1,7 @@
 package utilities.abstracts;
 
+import vendor.abstracts.AbstractTextCommand;
+
 public abstract class SimplePrivateTextCommand extends AbstractTextCommand {
 	
 	@Override

@@ -1,8 +1,6 @@
-package utilities.abstracts;
+package vendor.abstracts;
 
-import utilities.BotCommand;
-
-public abstract class AbstractTextCommand extends BotCommand {
+public abstract class AbstractTextCommand extends AbstractBotCommand {
 	
 	protected enum TextType{
 		SIMPLE, INFO_LINE, INFO_BLOCK
