@@ -1,4 +1,4 @@
-package utilities.specifics;
+package vendor.utilities;
 
 import java.util.Set;
 import java.util.Stack;

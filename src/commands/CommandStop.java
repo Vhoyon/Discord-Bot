@@ -2,7 +2,7 @@ package commands;
 
 import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
-import utilities.specifics.CommandsThreadManager;
+import vendor.utilities.CommandsThreadManager;
 import errorHandling.BotError;
 
 public class CommandStop extends BotCommand {
