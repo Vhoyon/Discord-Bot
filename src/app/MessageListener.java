@@ -1,12 +1,12 @@
 package app;
 
 import utilities.interfaces.Resources;
+import vendor.abstracts.AbstractCommandRouter;
+import vendor.abstracts.AbstractMessageListener;
+import vendor.abstracts.CommandsLinker;
 import vendor.objects.Buffer;
 import vendor.objects.CommandsRepository;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  * Cette classe extend <b>ListenerAdapter</b> recoit les commandes de
@@ -14,69 +14,19 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  * 
  * @author Stephano
  */
-public class MessageListener extends ListenerAdapter implements Resources {
+public class MessageListener extends AbstractMessageListener implements
+		Resources {
 	
-	private Buffer buffer;
-	private CommandsRepository commandsRepo;
-	
-	public MessageListener(){
-		buffer = Buffer.get();
-		
-		commandsRepo = new CommandsRepository(new BotCommandsLinker());
+	@Override
+	protected CommandsLinker createCommandLinker(){
+		return new BotCommandsLinker();
 	}
 	
 	@Override
-	public void onMessageReceived(MessageReceivedEvent event){
-		
-		String receivedMessage = event.getMessage().getContentRaw();
-		
-		// Bots doesn't need attention...
-		if(!event.getAuthor().isBot()){
-			
-			new CommandRouter(event, receivedMessage, buffer, commandsRepo).start();
-			
-		}
-		
-	}
-	
-	@Override
-	public void onGuildVoiceLeave(GuildVoiceLeaveEvent event){
-		super.onGuildVoiceLeave(event);
-		
-//		// No events from bots
-//		if(!event.getMember().getUser().isBot()){
-//			
-//			try{
-//				
-//				VoiceChannel playerVoiceChannel = (VoiceChannel)buffer.get(
-//						BUFFER_VOICE_CHANNEL, event.getGuild().getId());
-//				
-//				System.out.println(playerVoiceChannel);
-//				
-//				if(playerVoiceChannel.equals(event.getChannelLeft())){
-//					System.out.println("test leaves from same lel");
-//				}
-//				else{
-//					System.out.println("fuk");
-//				}
-//				
-//			}
-//			catch(NullPointerException e){
-//				System.out.println("hehe");
-//			}
-//			
-//		}
-		
-		
-	}
-	
-	@Override
-	public void onGuildVoiceMove(GuildVoiceMoveEvent event){
-		super.onGuildVoiceMove(event);
-		
-//		event.getChannelLeft();
-//		
-//		System.out.println("test moves between channels");
+	protected AbstractCommandRouter createRouter(MessageReceivedEvent event,
+			String receivedMessage, Buffer buffer,
+			CommandsRepository commandsRepo){
+		return new CommandRouter(event, receivedMessage, buffer, commandsRepo);
 	}
 	
 }

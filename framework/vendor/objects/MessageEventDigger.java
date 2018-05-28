@@ -1,4 +1,4 @@
-package utilities.specifics;
+package vendor.objects;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
