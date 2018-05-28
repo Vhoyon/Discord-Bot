@@ -36,5 +36,10 @@ public abstract class AbstractTextCommand extends AbstractBotCommand {
 	public Boolean isTextInfoOneLiner(){
 		return null;
 	}
+
+	@Override
+	public Object getCalls(){
+		return null;
+	}
 	
 }

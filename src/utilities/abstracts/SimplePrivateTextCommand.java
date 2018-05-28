@@ -1,8 +1,10 @@
 package utilities.abstracts;
 
+import utilities.interfaces.Commands;
 import vendor.abstracts.AbstractTextCommand;
 
-public abstract class SimplePrivateTextCommand extends AbstractTextCommand {
+public abstract class SimplePrivateTextCommand extends AbstractTextCommand
+		implements Commands {
 	
 	@Override
 	protected void sendMessageMethod(String textToSend, TextType textType){
