@@ -208,27 +208,27 @@ public abstract class AbstractBotCommand extends Translatable implements
 	public boolean stopAction(){
 		return false;
 	}
-
+	
 	public void connect(VoiceChannel voiceChannel){
 		getGuild().getAudioManager().openAudioConnection(voiceChannel);
-
+		
 		remember(voiceChannel, BUFFER_VOICE_CHANNEL);
 	}
 	
 	public VoiceChannel getConnectedVoiceChannel(){
 		return getGuild().getAudioManager().getConnectedChannel();
 	}
-
+	
 	public void disconnect(){
-
+		
 		if(getConnectedVoiceChannel() != null){
-
+			
 			getGuild().getAudioManager().closeAudioConnection();
-
+			
 		}
-
+		
 		forget(BUFFER_VOICE_CHANNEL);
-
+		
 	}
 	
 	public String sendMessage(String messageToSend){
