@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 public class Setting {
 	
-	private HashMap<String, AbstractNode> nodes;
+	private HashMap<String, AbstractField> nodes;
 	
-	public Setting(AbstractNode... nodes){
+	public Setting(AbstractField... nodes){
 		
 		this.nodes = new HashMap<>();
 		
-		for (AbstractNode node : nodes){
+		for (AbstractField node : nodes){
 			this.nodes.put(node.getName(), node);
 		}
 		

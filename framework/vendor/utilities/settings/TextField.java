@@ -2,9 +2,9 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class TextNode extends AbstractNode<String> {
+public class TextField extends AbstractField<String> {
 	
-	public TextNode(String name, String env, String defaultValue,
+	public TextField(String name, String env, String defaultValue,
 			Dictionary dict){
 		super(name, env, defaultValue, dict);
 	}

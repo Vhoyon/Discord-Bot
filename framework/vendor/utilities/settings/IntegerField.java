@@ -2,18 +2,18 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class IntegerNode extends AbstractNode<Integer> {
+public class IntegerField extends AbstractField<Integer> {
 	
 	private int min;
 	private int max;
 	
-	public IntegerNode(String name, String env, int defaultValue,
+	public IntegerField(String name, String env, int defaultValue,
 			Dictionary dict){
 		this(name, env, defaultValue, dict, Integer.MIN_VALUE,
 				Integer.MAX_VALUE);
 	}
 	
-	public IntegerNode(String name, String env, int defaultValue,
+	public IntegerField(String name, String env, int defaultValue,
 			Dictionary dict, int minValue, int maxValue){
 		super(name, env, defaultValue, dict);
 		
