@@ -1,19 +1,19 @@
 package vendor.utilities.settings;
 
 import vendor.abstracts.Translatable;
+import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
 import vendor.objects.Dictionary;
 
-public abstract class AbstractNode extends Translatable {
+public abstract class AbstractNode<E> extends Translatable {
 	
-	protected Object value;
-	private Object defaultValue;
+	protected E value;
+	private E defaultValue;
 	
 	private String name;
 	private String env;
 	
-	public AbstractNode(String name, String env, Object defaultValue,
-			Dictionary dict){
+	public AbstractNode(String name, String env, E defaultValue, Dictionary dict){
 		
 		this.name = name;
 		this.defaultValue = defaultValue;
@@ -23,41 +23,43 @@ public abstract class AbstractNode extends Translatable {
 		
 	}
 	
-	public AbstractNode(String name, String env, Object defaultValue){
-		this(name, env, defaultValue, null);
+	public AbstractNode(String name, String env, E defaultValue){
+		this(name, env, defaultValue, new Dictionary());
 	}
 	
-	protected abstract Class<?> getType();
-	
-	public Object getValue() throws RuntimeException{
+	public E getValue() throws BadFormatException{
 		if(value != null){
 			return value;
 		}
 		
-		Object envFound = null;
+		E envFound = null;
 		
-		envFound = Environment.getVar(env, defaultValue);
-		
-		if (!envFound.getClass().equals(getType())){
-			throw new RuntimeException("Type does not match!");
+		try{
+			
+			envFound = (E)Environment.getVar(env, defaultValue);
+			
+		}
+		catch(ClassCastException e){
+			throw new BadFormatException(
+					"Environment variable is not formatted correctly for its data type!");
 		}
 		
 		return envFound;
 	}
 	
-	protected abstract Object sanitizeValue(Object value)
-			throws IllegalArgumentException;
-	
-	public void setValue(Object value) throws IllegalArgumentException{
+	public void setValue(E value, Object context)
+			throws IllegalArgumentException{
 		this.value = this.sanitizeValue(value);
-	}
-	
-	public <E> E getCastedValue(){
-		return (E)getType().cast(getValue());
+		
+		onChange(this.value, context);
 	}
 	
 	public String getName(){
 		return this.name;
 	}
+	
+	protected abstract E sanitizeValue(E value) throws IllegalArgumentException;
+	
+	public void onChange(Object value, Object context){}
 	
 }

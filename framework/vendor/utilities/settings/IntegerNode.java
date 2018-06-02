@@ -2,31 +2,47 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class IntegerNode extends AbstractNode {
+public class IntegerNode extends AbstractNode<Integer> {
 	
 	private int min;
 	private int max;
 	
 	public IntegerNode(String name, String env, int defaultValue,
-					   Dictionary dict){
+			Dictionary dict){
+		this(name, env, defaultValue, dict, Integer.MIN_VALUE,
+				Integer.MAX_VALUE);
+	}
+	
+	public IntegerNode(String name, String env, int defaultValue,
+			Dictionary dict, int minValue, int maxValue){
 		super(name, env, defaultValue, dict);
+		
+		this.min = minValue;
+		this.max = maxValue;
 	}
 	
 	@Override
-	protected Class<?> getType(){
-		return Integer.class;
-	}
-	
-	@Override
-	protected Object sanitizeValue(Object value) throws IllegalArgumentException{
+	protected Integer sanitizeValue(Integer value)
+			throws IllegalArgumentException{
 		
 		int castedValue;
 		
 		try{
-			castedValue = (int)value;
+			castedValue = (Integer)value;
 		}
-		catch (ClassCastException e){
-			throw new IllegalArgumentException("Value is not a number");
+		catch(ClassCastException e){
+			throw new IllegalArgumentException("Value is not a number!");
+		}
+		
+		if(value < this.min){
+			throw new IllegalArgumentException("Value (" + value
+					+ ") is lower than the minimum required (" + this.min
+					+ ")!");
+		}
+		else if(value > this.max){
+			throw new IllegalArgumentException("Value (" + value
+					+ ") is higher than the maximum required (" + this.min
+					+ ")!");
 		}
 		
 		return castedValue;

@@ -2,7 +2,7 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class TextNode extends AbstractNode {
+public class TextNode extends AbstractNode<String> {
 	
 	public TextNode(String name, String env, String defaultValue,
 			Dictionary dict){
@@ -10,13 +10,9 @@ public class TextNode extends AbstractNode {
 	}
 	
 	@Override
-	protected Class<?> getType(){
-		return String.class;
-	}
-	
-	@Override
-	protected Object sanitizeValue(Object value) throws IllegalArgumentException{
-		return value.toString();
+	protected String sanitizeValue(String value)
+			throws IllegalArgumentException{
+		return value;
 	}
 	
 }
