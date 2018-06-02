@@ -4,14 +4,14 @@ import java.util.HashMap;
 
 public class Setting {
 	
-	private HashMap<String, AbstractField> nodes;
+	private HashMap<String, AbstractField> fields;
 	
-	public Setting(AbstractField... nodes){
+	public Setting(AbstractField... fields){
 		
-		this.nodes = new HashMap<>();
+		this.fields = new HashMap<>();
 		
-		for (AbstractField node : nodes){
-			this.nodes.put(node.getName(), node);
+		for(AbstractField field : fields){
+			this.fields.put(field.getName(), field);
 		}
 		
 	}
