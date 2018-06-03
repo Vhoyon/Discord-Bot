@@ -16,4 +16,27 @@ public class Setting {
 		
 	}
 	
+	public boolean save(String settingName, Object value, Object context)
+			throws IllegalArgumentException{
+		
+		if(!hasField(settingName)){
+			return false;
+		}
+		
+		AbstractField field = getField(settingName);
+		
+		field.setValue(value, context);
+		
+		return true;
+		
+	}
+	
+	public boolean hasField(String name){
+		return fields.containsKey(name);
+	}
+	
+	public AbstractField getField(String name){
+		return fields.get(name);
+	}
+	
 }
