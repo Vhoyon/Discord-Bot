@@ -2,7 +2,7 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class TextNotNullField extends AbstractField<String> {
+public class TextNotNullField extends TextField {
 	
 	public TextNotNullField(String name, String env, String defaultValue,
 			Dictionary dict){
@@ -16,7 +16,7 @@ public class TextNotNullField extends AbstractField<String> {
 			throw new IllegalArgumentException("Value cannot be empty!");
 		}
 		
-		return value;
+		return super.sanitizeValue(value);
 	}
 	
 }
