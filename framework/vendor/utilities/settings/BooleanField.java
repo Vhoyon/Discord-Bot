@@ -1,12 +1,9 @@
 package vendor.utilities.settings;
 
-import vendor.objects.Dictionary;
-
 public class BooleanField extends SettingField<Boolean> {
 	
-	public BooleanField(String name, String env, Boolean defaultValue,
-			Dictionary dict){
-		super(name, env, defaultValue, dict);
+	public BooleanField(String name, String env, Boolean defaultValue){
+		super(name, env, defaultValue);
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package vendor.utilities.settings;
 import vendor.abstracts.Translatable;
 import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
-import vendor.objects.Dictionary;
 
 public abstract class SettingField<E> extends Translatable {
 	
@@ -13,18 +12,12 @@ public abstract class SettingField<E> extends Translatable {
 	private String name;
 	private String env;
 	
-	public SettingField(String name, String env, E defaultValue, Dictionary dict){
+	public SettingField(String name, String env, E defaultValue){
 		
 		this.name = name;
 		this.defaultValue = defaultValue;
 		this.env = env;
 		
-		this.setDictionary(dict);
-		
-	}
-	
-	public SettingField(String name, String env, E defaultValue){
-		this(name, env, defaultValue, new Dictionary());
 	}
 	
 	public E getValue() throws BadFormatException{

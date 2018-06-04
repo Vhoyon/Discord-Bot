@@ -1,5 +1,7 @@
 package vendor.utilities.settings;
 
+import vendor.objects.Dictionary;
+
 import java.util.HashMap;
 
 public class Setting {
@@ -7,10 +9,16 @@ public class Setting {
 	private HashMap<String, SettingField> fields;
 	
 	public Setting(SettingField... fields){
+		this(new Dictionary(), fields);
+	}
+	
+	public Setting(Dictionary dict, SettingField... fields){
 		
 		this.fields = new HashMap<>();
 		
 		for(SettingField field : fields){
+			field.setDictionary(dict);
+			
 			this.fields.put(field.getName(), field);
 		}
 		
