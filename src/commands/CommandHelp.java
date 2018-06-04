@@ -28,6 +28,12 @@ public class CommandHelp extends BotCommand {
 			sendInfoMessage(lang("HelpSentMessage"));
 			
 		}
+		else if(content.matches("-h")){
+			String fullHelpString = getRouter().getCommandsRepo()
+				.getFullHelpString("Available commands :");
+			
+			sendMessage(fullHelpString);
+		}
 		else{
 			
 			try{
