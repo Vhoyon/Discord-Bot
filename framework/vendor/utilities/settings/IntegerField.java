@@ -2,7 +2,7 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class IntegerField extends AbstractField<Integer> {
+public class IntegerField extends SettingField<Integer> {
 	
 	private int min;
 	private int max;

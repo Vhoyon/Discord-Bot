@@ -5,7 +5,7 @@ import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
 import vendor.objects.Dictionary;
 
-public abstract class AbstractField<E> extends Translatable {
+public abstract class SettingField<E> extends Translatable {
 	
 	protected E value;
 	private E defaultValue;
@@ -13,8 +13,7 @@ public abstract class AbstractField<E> extends Translatable {
 	private String name;
 	private String env;
 	
-	public AbstractField(String name, String env, E defaultValue,
-			Dictionary dict){
+	public SettingField(String name, String env, E defaultValue, Dictionary dict){
 		
 		this.name = name;
 		this.defaultValue = defaultValue;
@@ -24,7 +23,7 @@ public abstract class AbstractField<E> extends Translatable {
 		
 	}
 	
-	public AbstractField(String name, String env, E defaultValue){
+	public SettingField(String name, String env, E defaultValue){
 		this(name, env, defaultValue, new Dictionary());
 	}
 	

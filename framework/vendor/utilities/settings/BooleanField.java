@@ -2,7 +2,7 @@ package vendor.utilities.settings;
 
 import vendor.objects.Dictionary;
 
-public class BooleanField extends AbstractField<Boolean> {
+public class BooleanField extends SettingField<Boolean> {
 	
 	public BooleanField(String name, String env, Boolean defaultValue,
 			Dictionary dict){

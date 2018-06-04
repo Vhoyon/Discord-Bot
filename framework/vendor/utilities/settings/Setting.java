@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 public class Setting {
 	
-	private HashMap<String, AbstractField> fields;
+	private HashMap<String, SettingField> fields;
 	
-	public Setting(AbstractField... fields){
+	public Setting(SettingField... fields){
 		
 		this.fields = new HashMap<>();
 		
-		for(AbstractField field : fields){
+		for(SettingField field : fields){
 			this.fields.put(field.getName(), field);
 		}
 		
@@ -23,7 +23,7 @@ public class Setting {
 			return false;
 		}
 		
-		AbstractField field = getField(settingName);
+		SettingField field = getField(settingName);
 		
 		field.setValue(value, context);
 		
@@ -35,7 +35,7 @@ public class Setting {
 		return fields.containsKey(name);
 	}
 	
-	public AbstractField getField(String name){
+	public SettingField getField(String name){
 		return fields.get(name);
 	}
 	
