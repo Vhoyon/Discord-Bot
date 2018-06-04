@@ -25,7 +25,7 @@ public class CommandHelp extends BotCommand {
 			String fullHelpString = getRouter().getCommandsRepo()
 					.getFullHelpString("Available commands :");
 			
-			if (!hasParameter("h")) {
+			if (!hasParameter("h", "here")) {
 				sendPrivateMessage(fullHelpString);
 				sendInfoMessage(lang("HelpSentMessage"));
 			}else{
