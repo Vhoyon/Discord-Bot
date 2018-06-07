@@ -1,6 +1,9 @@
 package utilities.interfaces;
 
+import utilities.BotCommand;
 import vendor.objects.Language;
+import vendor.utilities.settings.SettingField;
+import vendor.utilities.settings.TextNotNullField;
 
 /**
  * Contient les constantes du bot
@@ -15,12 +18,26 @@ public interface Resources {
 	String BUFFER_GAMEPOOL = "GAMEPOOL";
 	String BUFFER_SPAM = "SPAM_CONDITION";
 	String BUFFER_LANG = "LANGUAGE";
+	String BUFFER_SETTINGS = "SETTINGS";
 	
 	Language[] languages =
 	{
 		new Language("en", "US", "anglais", "eng", "english", "en"),
 		new Language("fr", "CA", "francais", "fran�ais", "fra", "french", "fr"),
 	//		new Language("fr", "Te", "test")
+	};
+	
+	SettingField[] SETTINGS =
+	{
+		new TextNotNullField("prefix", "PREFIX", PREFIX){
+			@Override
+			public void onChange(Object value, Object context){
+				BotCommand command = (BotCommand)context;
+				
+				command.sendMessage("You switched the prefix to `" + value
+						+ "`!");
+			}
+		}
 	};
 	
 }

@@ -25,9 +25,15 @@ public class Buffer {
 		
 		String objectKey = Utils.buildKey(key, associatedName);
 		
-		boolean isNewObject = memory.containsKey(objectKey);
+		return this.push(object, objectKey);
 		
-		memory.put(objectKey, object);
+	}
+	
+	public boolean push(Object object, String fullKey){
+		
+		boolean isNewObject = !memory.containsKey(fullKey);
+		
+		memory.put(fullKey, object);
 		
 		return isNewObject;
 		
@@ -38,17 +44,21 @@ public class Buffer {
 		
 		String objectKey = Utils.buildKey(key, associatedName);
 		
-		boolean hasObject = memory.containsKey(objectKey);
+		return this.get(objectKey);
+		
+	}
+	
+	public Object get(String fullKey) throws NullPointerException{
+		
+		boolean hasObject = memory.containsKey(fullKey);
 		
 		if(!hasObject){
-			throw new NullPointerException(
-					"No object with the associated name \"" + associatedName
-							+ "\" found in the buffer for the Command ID \""
-							+ key + "\".");
+			throw new NullPointerException("No object with the key \""
+					+ fullKey + "\" was found in the Buffer.");
 		}
 		else{
 			
-			Object memoryObject = memory.get(objectKey);
+			Object memoryObject = memory.get(fullKey);
 			
 			return memoryObject;
 			
@@ -61,7 +71,7 @@ public class Buffer {
 		String objectKey = Utils.buildKey(key, associatedName);
 		
 		boolean hasRemovedObject = memory.containsKey(objectKey);
-
+		
 		memory.remove(objectKey);
 		
 		return hasRemovedObject;
@@ -70,6 +80,10 @@ public class Buffer {
 	
 	public void emptyMemory(){
 		memory = new HashMap<>();
+	}
+	
+	public boolean has(String key){
+		return this.memory.containsKey(key);
 	}
 	
 }

@@ -6,14 +6,18 @@ import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
 import vendor.abstracts.AbstractCommandRouter;
+import vendor.exceptions.BadFormatException;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
 import vendor.interfaces.Emojis;
+import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.*;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
 import vendor.utilities.CommandsThreadManager;
+import vendor.utilities.settings.Setting;
+import vendor.utilities.settings.TextNotNullField;
 
 public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Commands, Emojis {
@@ -25,7 +29,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	
 	@Override
 	protected Request createRequest(String receivedMessage, Dictionary dict){
-		return new Request(receivedMessage, dict, Resources.PREFIX,
+		return new Request(receivedMessage, dict, getCommandPrefix(),
 				Resources.PARAMETER_PREFIX);
 	}
 	
@@ -35,7 +39,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Request request = getRequest();
 		MessageEventDigger eventDigger = getEventDigger();
 		
-		if(request.getCommandNoFormat().startsWith(PREFIX)){
+		if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
 			
 			try{
 				
@@ -144,7 +148,35 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	
 	@Override
 	public String getCommandPrefix(){
-		return PREFIX;
+		
+		String textChannelKey = getEventDigger().getChannelKey();
+		
+		String settingsKey = Utils.buildKey(BUFFER_SETTINGS, textChannelKey);
+		
+		boolean hasSettings = getBuffer().has(settingsKey);
+		
+		Setting settings;
+		
+		if(!hasSettings){
+			
+			settings = new Setting(SETTINGS);
+			
+			getBuffer().push(settings, settingsKey);
+			
+		}
+		else{
+			settings = (Setting)getBuffer().get(settingsKey);
+		}
+		
+		String prefix = null;
+		
+		try{
+			prefix = ((TextNotNullField)settings.getField("prefix")).getValue();
+		}
+		catch(BadFormatException e){}
+		
+		return prefix;
+		
 	}
 	
 }
