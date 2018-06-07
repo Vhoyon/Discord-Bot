@@ -29,15 +29,7 @@ public interface Resources {
 	
 	SettingField[] SETTINGS =
 	{
-		new TextNotNullField("prefix", "PREFIX", PREFIX){
-			@Override
-			public void onChange(Object value, Object context){
-				BotCommand command = (BotCommand)context;
-				
-				command.sendMessage("You switched the prefix to `" + value
-						+ "`!");
-			}
-		}
+		new TextNotNullField("prefix", "PREFIX", PREFIX)
 	};
 	
 }

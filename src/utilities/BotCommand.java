@@ -4,6 +4,7 @@ import app.CommandRouter;
 import utilities.interfaces.*;
 import vendor.abstracts.AbstractBotCommand;
 import vendor.exceptions.BadFormatException;
+import vendor.interfaces.Callback;
 import vendor.utilities.settings.Setting;
 
 public abstract class BotCommand extends AbstractBotCommand implements
@@ -43,10 +44,14 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	public void setSetting(String settingName, Object value){
+		this.setSetting(settingName, value, null);
+	}
+	
+	public void setSetting(String settingName, Object value, Callback onChange){
 		
 		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
 		
-		settings.save(settingName, value, this);
+		settings.save(settingName, value, onChange);
 		
 	}
 	

@@ -151,7 +151,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		
 		String textChannelKey = getEventDigger().getChannelKey();
 		
-		String settingsKey = Utils.buildKey(BUFFER_SETTINGS, textChannelKey);
+		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
 		
 		boolean hasSettings = getBuffer().has(settingsKey);
 		

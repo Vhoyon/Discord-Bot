@@ -1,5 +1,6 @@
 package vendor.utilities.settings;
 
+import vendor.interfaces.Callback;
 import vendor.objects.Dictionary;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class Setting {
 		
 	}
 	
-	public boolean save(String settingName, Object value, Object context)
+	public boolean save(String settingName, Object value, Callback onChange)
 			throws IllegalArgumentException{
 		
 		if(!hasField(settingName)){
@@ -33,7 +34,7 @@ public class Setting {
 		
 		SettingField field = getField(settingName);
 		
-		field.setValue(value, context);
+		field.setValue(value, onChange);
 		
 		return true;
 		

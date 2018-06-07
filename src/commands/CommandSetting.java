@@ -12,10 +12,16 @@ public class CommandSetting extends BotCommand {
 			
 			String prefixContent = getParameter("prefix").getParameterContent();
 			
-			setSetting("prefix", prefixContent);
+			setSetting("prefix", prefixContent, (value) -> {
+				
+				sendMessage("You switched the prefix to `" + value + "`!");
+				
+			});
 			
 		}
 		catch(NoContentException e){
+			
+			sendMessage("You dun goofed");
 			
 		}
 		
