@@ -32,7 +32,9 @@ public class CommandMusicSkip extends MusicCommands {
 						new BotError(this, lang("NotPlaying"));
 					}
 					else{
-						
+						if (this.hasMemory("MUSIC_LOOP") && (boolean) this.getMemory("MUSIC_LOOP")) {
+							forget("MUSIC_LOOP");
+						}
 						if(player.skipTrack()){
 							sendInfoMessage(lang("SkippedNowPlaying", player
 									.getAudioPlayer().getPlayingTrack()

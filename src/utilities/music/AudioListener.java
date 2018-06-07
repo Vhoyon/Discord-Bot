@@ -46,12 +46,15 @@ public class AudioListener extends AudioEventAdapter {
 
 //		System.out.println(tracks.remainingCapacity());
 
-		if(this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean) this.player.getCommand().getMemory("MUSIC_LOOP")){
+		if(this.player.getCommand().hasMemory("LOOP_ONCE") && (boolean) this.player.getCommand().getMemory("LOOP_ONCE") ){
 			player.playTrack(track.makeClone());
+		}else if(endReason.mayStartNext){
+			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean) this.player.getCommand().getMemory("MUSIC_LOOP"))) {
+				tracks.add(track.makeClone());
+				nextTrack();
+			}
+		}
 
-		}else if(endReason.mayStartNext)
-			nextTrack();
-		
 	}
 	
 	public void queue(AudioTrack track){
