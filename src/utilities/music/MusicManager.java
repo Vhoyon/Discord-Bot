@@ -40,13 +40,13 @@ public class MusicManager {
 		return players.containsKey(guild.getId());
 	}
 	
-	public synchronized MusicPlayer getPlayer(Guild guild){
+	public synchronized MusicPlayer getPlayer(BotCommand command){
 		
-		if(!hasPlayer(guild))
-			players.put(guild.getId(), new MusicPlayer(manager.createPlayer(),
-					guild));
+		if(!hasPlayer(command.getGuild()))
+			players.put(command.getGuild().getId(), new MusicPlayer(manager.createPlayer(),
+					command));
 		
-		return players.get(guild.getId());
+		return players.get(command.getGuild().getId());
 		
 	}
 	
@@ -54,7 +54,7 @@ public class MusicManager {
 		
 		if(this.hasPlayer(command.getGuild())){
 			
-			MusicPlayer player = this.getPlayer(command.getGuild());
+			MusicPlayer player = this.getPlayer(command);
 			
 			player.getAudioPlayer().destroy();
 			
@@ -72,8 +72,8 @@ public class MusicManager {
 	
 	public void loadTrack(final BotCommand command, final String source){
 		
-		MusicPlayer player = getPlayer(command.getGuild());
-		
+		MusicPlayer player = getPlayer(command);
+
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
 		

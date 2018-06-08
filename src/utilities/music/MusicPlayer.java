@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import utilities.BotCommand;
 
 public class MusicPlayer {
 	
@@ -12,11 +13,11 @@ public class MusicPlayer {
 	
 	private final AudioPlayer audioPlayer;
 	private final AudioListener listener;
-	private final Guild guild;
+	private final BotCommand command;
 	
-	public MusicPlayer(AudioPlayer audioPlayer, Guild guild){
+	public MusicPlayer(AudioPlayer audioPlayer, BotCommand command){
 		this.audioPlayer = audioPlayer;
-		this.guild = guild;
+		this.command = command;
 		
 		// Defaults volume to 75% of our maxed value (20) by default
 		this.audioPlayer.setVolume(15);
@@ -34,9 +35,13 @@ public class MusicPlayer {
 	}
 	
 	public Guild getGuild(){
-		return this.guild;
+		return this.command.getGuild();
 	}
-	
+
+	public BotCommand getCommand(){
+		return this.command;
+	}
+
 	public AudioHandler getAudioHandler(){
 		return new AudioHandler(this.audioPlayer);
 	}
