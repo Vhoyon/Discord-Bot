@@ -17,7 +17,6 @@ import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
 import vendor.utilities.CommandsThreadManager;
 import vendor.utilities.settings.Setting;
-import vendor.utilities.settings.TextNotNullField;
 
 public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Commands, Emojis {
@@ -171,7 +170,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		String prefix = null;
 		
 		try{
-			prefix = ((TextNotNullField)settings.getField("prefix")).getValue();
+			prefix = (String)settings.getField("prefix").getValue();
 		}
 		catch(BadFormatException e){}
 		
