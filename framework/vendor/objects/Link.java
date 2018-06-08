@@ -5,17 +5,9 @@ import vendor.interfaces.LinkableCommand;
 public class Link {
 	
 	private Class<? extends LinkableCommand> classToLink;
-	private String[] calls;
 	
 	public Link(Class<? extends LinkableCommand> command){
 		this.classToLink = command;
-		
-		try{
-			LinkableCommand commandInstance = getInstance();
-			
-			this.calls = commandInstance.getCalls();
-		}
-		catch(Exception e){}
 	}
 	
 	public LinkableCommand getInstance() throws Exception{
@@ -26,11 +18,22 @@ public class Link {
 		
 		if(call != null && call.length() != 0){
 			
-			String[] definedCalls = getCalls();
-			
-			for(String definedCall : definedCalls)
-				if(definedCall.equals(call))
-					return true;
+			if(getCalls() instanceof String[]){
+				
+				String[] calls = (String[])getCalls();
+				
+				for(String definedCall : calls)
+					if(definedCall.equals(call))
+						return true;
+				
+			}
+			else{
+				
+				String linkCall = getCalls().toString();
+				
+				return call.equals(linkCall);
+				
+			}
 			
 		}
 		
@@ -38,16 +41,26 @@ public class Link {
 		
 	}
 	
-	public String[] getCalls(){
-		return this.calls;
+	public Object getCalls(){
+		try{
+			return getInstance().getCalls();
+		}
+		catch(Exception e){
+			return null;
+		}
 	}
-
+	
 	public String getDefaultCall(){
-		return getCalls()[0];
+		try{
+			return getInstance().getDefaultCall();
+		}
+		catch(Exception e){
+			return null;
+		}
 	}
 	
 	public Class<? extends LinkableCommand> getClassToLink(){
-		return classToLink;
+		return this.classToLink;
 	}
 	
 }

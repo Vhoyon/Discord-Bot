@@ -5,7 +5,7 @@ import vendor.exceptions.JDANotSetException;
 import vendor.modules.Logger;
 import vendor.modules.Metrics;
 
-public class CommandNumberOfServers extends AbstractTerminalCommand {
+public class TerminalCommandNumberOfServers extends AbstractTerminalCommand {
 	
 	@Override
 	public String[] getCalls(){

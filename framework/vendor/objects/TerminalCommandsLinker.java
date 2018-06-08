@@ -11,15 +11,7 @@ public class TerminalCommandsLinker extends CommandsLinker {
 	@Override
 	public CommandLinksContainer createLinksContainer(){
 		
-		return new CommandLinksContainer(
-				CommandHelp.class,
-		        CommandStart.class,
-                CommandStop.class,
-                CommandRestart.class,
-                CommandExit.class,
-				CommandUptime.class,
-				CommandNumberOfServers.class
-        ){
+		return new CommandLinksContainer("vendor.terminalcommands"){
 			
 			@Override
 			public LinkableCommand whenCommandNotFound(String commandName){

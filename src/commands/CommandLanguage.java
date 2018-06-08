@@ -58,7 +58,7 @@ public class CommandLanguage extends BotCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
+	public Object getCalls(){
 		return new String[]
 		{
 			LANG, LANGUAGE

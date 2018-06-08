@@ -1,6 +1,10 @@
 package utilities.abstracts;
 
-public abstract class SimpleTextCommand extends AbstractTextCommand {
+import utilities.interfaces.Commands;
+import vendor.abstracts.AbstractTextCommand;
+
+public abstract class SimpleTextCommand extends AbstractTextCommand implements
+		Commands {
 	
 	@Override
 	protected void sendMessageMethod(String textToSend, TextType textType){
@@ -18,9 +22,5 @@ public abstract class SimpleTextCommand extends AbstractTextCommand {
 		}
 		
 	}
-
-	@Override
-	public String[] getCalls() {
-		return null;
-	}
+	
 }

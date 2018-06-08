@@ -1,11 +1,11 @@
-package utilities.specifics;
+package vendor.utilities;
 
 import java.util.Set;
 import java.util.Stack;
 
-import utilities.BotCommand;
-import app.CommandRouter;
-import vendor.interfaces.Utils;
+import vendor.abstracts.AbstractBotCommand;
+import vendor.abstracts.AbstractCommandRouter;
+import vendor.objects.MessageEventDigger;
 
 public class CommandsThreadManager {
 	
@@ -18,72 +18,73 @@ public class CommandsThreadManager {
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
-	 * @param commandID
+	 * @param eventDigger
 	 *            The server's <code>commandID</code> required to search for
 	 *            commands running in said server's text channel.
 	 * @return The command found with all of it's attribute in a
 	 *         <code>Command</code> object, <code>null</code> if the command
 	 *         wasn't found.
 	 */
-	public static BotCommand getCommandRunning(String commandName,
-											   String commandID, CommandRouter inRouter){
+	public static AbstractBotCommand getCommandRunning(String commandName,
+			MessageEventDigger eventDigger, AbstractCommandRouter inRouter){
 		
-		Stack<CommandRouter> routers = getRunningCommandRouters();
+		Stack<AbstractCommandRouter> routers = getRunningCommandRouters();
 		
-		for(CommandRouter router : routers)
+		for(AbstractCommandRouter router : routers)
 			if(!router.equals(inRouter)
 					&& router.getName().equals(
-							Utils.buildKey(commandID, commandName)))
-				return router.getCommand();
+							eventDigger.getCommandKey(commandName)))
+				return (AbstractBotCommand)router.getCommand();
 		
 		return null;
 		
 	}
 	
-	public static BotCommand getLatestRunningCommand(){
+	public static AbstractBotCommand getLatestRunningCommand(){
 		
-		Stack<CommandRouter> routers = getRunningCommandRouters();
+		Stack<AbstractCommandRouter> routers = getRunningCommandRouters();
 		
 		if(routers.empty()){
 			return null;
 		}
 		else{
 			
-			CommandRouter latestRouter = routers.pop();
+			AbstractCommandRouter latestRouter = routers.pop();
 			
-			return latestRouter.getCommand();
+			return (AbstractBotCommand)latestRouter.getCommand();
 			
 		}
 		
 	}
 	
-	public static BotCommand getLatestRunningCommand(String guildID){
+	public static AbstractBotCommand getLatestRunningCommand(String guildID){
 		
-		Stack<CommandRouter> guildRouters = getRunningCommandRouters(guildID);
+		Stack<AbstractCommandRouter> guildRouters = getRunningCommandRouters(guildID);
 		
 		if(guildRouters.empty()){
 			return null;
 		}
 		else{
 			
-			CommandRouter latestRouter = guildRouters.pop();
+			AbstractCommandRouter latestRouter = guildRouters.pop();
 			
-			return latestRouter.getCommand();
+			return (AbstractBotCommand)latestRouter.getCommand();
 			
 		}
 		
 	}
 	
-	public static BotCommand getLatestRunningCommandExcept(BotCommand commandToIgnore){
+	public static AbstractBotCommand getLatestRunningCommandExcept(
+			AbstractBotCommand commandToIgnore){
 		
-		Stack<CommandRouter> guildRouters = getRunningCommandRouters();
+		Stack<AbstractCommandRouter> guildRouters = getRunningCommandRouters();
 		
 		if(guildRouters.empty()){
 			return null;
 		}
 		else{
 			
-			CommandRouter latestRouter = guildRouters.pop();
+			AbstractCommandRouter latestRouter = guildRouters.pop();
 			
 			if(latestRouter.getCommand().equals(commandToIgnore)){
 				if(guildRouters.empty()){
@@ -94,23 +95,23 @@ public class CommandsThreadManager {
 				}
 			}
 			
-			return latestRouter.getCommand();
+			return (AbstractBotCommand)latestRouter.getCommand();
 			
 		}
 		
 	}
 	
-	public static BotCommand getLatestRunningCommandExcept(
-			BotCommand commandToIgnore, String commandID){
+	public static AbstractBotCommand getLatestRunningCommandExcept(
+			AbstractBotCommand commandToIgnore, String commandID){
 		
-		Stack<CommandRouter> guildRouters = getRunningCommandRouters(commandID);
+		Stack<AbstractCommandRouter> guildRouters = getRunningCommandRouters(commandID);
 		
 		if(guildRouters.empty()){
 			return null;
 		}
 		else{
 			
-			CommandRouter latestRouter = guildRouters.pop();
+			AbstractCommandRouter latestRouter = guildRouters.pop();
 			
 			if(latestRouter.getCommand().equals(commandToIgnore)){
 				if(guildRouters.empty()){
@@ -121,7 +122,7 @@ public class CommandsThreadManager {
 				}
 			}
 			
-			return latestRouter.getCommand();
+			return (AbstractBotCommand)latestRouter.getCommand();
 			
 		}
 		
@@ -136,25 +137,25 @@ public class CommandsThreadManager {
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
-	 * @param commandID
+	 * @param eventDigger
 	 *            The server's <code>commandID</code> required to search for
 	 *            commands running in said server.
 	 * @return <code>true</code> if the command is running in the specified
 	 *         command id, <code>false</code> otherwise.
 	 */
 	public static boolean isCommandRunning(String commandName,
-			String commandID, CommandRouter router){
-		return getCommandRunning(commandName, commandID, router) != null;
+			MessageEventDigger eventDigger, AbstractCommandRouter router){
+		return getCommandRunning(commandName, eventDigger, router) != null;
 	}
 	
 	public static int stopAllCommands(){
 		
 		int numberOfCommandsStopped = 0;
 		
-		Stack<CommandRouter> routers = getRunningCommandRouters();
+		Stack<AbstractCommandRouter> routers = getRunningCommandRouters();
 		
-		for(CommandRouter router : routers)
-			if(router.getCommand().stopAction())
+		for(AbstractCommandRouter router : routers)
+			if(((AbstractBotCommand)router.getCommand()).stopAction())
 				numberOfCommandsStopped++;
 		
 		return numberOfCommandsStopped;
@@ -165,25 +166,25 @@ public class CommandsThreadManager {
 		return !getRunningCommandRouters().empty();
 	}
 	
-	private static Stack<CommandRouter> getRunningCommandRouters(){
+	private static Stack<AbstractCommandRouter> getRunningCommandRouters(){
 		Thread[] threads = getThreadsArray();
 		
-		Stack<CommandRouter> routers = new Stack<>();
+		Stack<AbstractCommandRouter> routers = new Stack<>();
 		
 		for(Thread thread : threads)
-			if(thread instanceof CommandRouter)
-				routers.add((CommandRouter)thread);
+			if(thread instanceof AbstractCommandRouter)
+				routers.add((AbstractCommandRouter)thread);
 		
 		return routers;
 	}
 	
-	private static Stack<CommandRouter> getRunningCommandRouters(
+	private static Stack<AbstractCommandRouter> getRunningCommandRouters(
 			String commandID){
-		Stack<CommandRouter> routers = getRunningCommandRouters();
+		Stack<AbstractCommandRouter> routers = getRunningCommandRouters();
 		
-		Stack<CommandRouter> guildRouters = new Stack<>();
+		Stack<AbstractCommandRouter> guildRouters = new Stack<>();
 		
-		for(CommandRouter router : routers)
+		for(AbstractCommandRouter router : routers)
 			if(router.getName().contains(commandID))
 				guildRouters.push(router);
 		

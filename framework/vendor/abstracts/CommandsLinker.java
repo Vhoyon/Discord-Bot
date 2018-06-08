@@ -21,6 +21,10 @@ public abstract class CommandsLinker extends Translatable {
 	}
 	
 	public String getFullHelpString(String textHeader){
+		return getFullHelpString(textHeader, true);
+	}
+	
+	public String getFullHelpString(String textHeader, boolean shouldSummarize){
 		
 		if(fullHelpString != null){
 			return fullHelpString;
@@ -59,7 +63,7 @@ public abstract class CommandsLinker extends Translatable {
 			String wholeHelpString = null;
 			
 			try{
-
+				
 				// Try to get the help string of a link
 				String helpString = link.getInstance().getCommandDescription();
 				
@@ -73,20 +77,26 @@ public abstract class CommandsLinker extends Translatable {
 			}
 			else{
 				builder.append(formatWholeHelpLine(wholeCommandString,
-						wholeHelpString));
+						wholeHelpString, shouldSummarize));
 			}
 			
 			builder.append("\n");
 			
-			String[] calls = link.getCalls();
-
-			// Add all of the non default calls of a link as a variant
-			for(int i = 1; i < calls.length; i++){
+			Object calls = link.getCalls();
+			
+			if(calls instanceof String[]){
 				
-				builder.append(formatVariant(formatWholeCommand(prependCharsVariants,
-						calls[i])));
+				String[] callsArray = (String[])calls;
 				
-				builder.append("\n");
+				// Add all of the non default calls of a link as a variant
+				for(int i = 1; i < callsArray.length; i++){
+					
+					builder.append(formatVariant(formatWholeCommand(
+							prependCharsVariants, callsArray[i])));
+					
+					builder.append("\n");
+					
+				}
 				
 			}
 			
@@ -99,15 +109,27 @@ public abstract class CommandsLinker extends Translatable {
 	}
 	
 	private String formatWholeCommand(String prependChars, String command){
-		if(prependChars == null)
+		if(prependChars == null || prependChars.length() == 0)
 			return formatCommand(command);
 		
 		return prependChars + formatCommand(command);
 	}
 	
 	public String formatWholeHelpLine(String wholeCommandString,
-			String wholeHelpString){
-		return wholeCommandString + " : " + wholeHelpString;
+			String wholeHelpString, boolean shouldSummarize){
+		
+		String helpString;
+		int returnIndex;
+		
+		if(shouldSummarize
+				&& (returnIndex = wholeHelpString.indexOf("\n")) != -1){
+			helpString = wholeHelpString.substring(0, returnIndex);
+		}
+		else{
+			helpString = wholeHelpString;
+		}
+		
+		return wholeCommandString + " : " + helpString;
 	}
 	
 	public String formatCommand(String command){

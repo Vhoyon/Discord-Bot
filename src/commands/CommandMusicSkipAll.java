@@ -21,7 +21,7 @@ public class CommandMusicSkipAll extends MusicCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
+	public Object getCalls(){
 		return new String[]
 		{
 			MUSIC_SKIP_ALL1, MUSIC_SKIP_ALL2, MUSIC_SKIP_ALL3

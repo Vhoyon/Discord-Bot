@@ -36,11 +36,8 @@ public class CommandGameList extends GameInteractionCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			GAME_LIST
-		};
+	public Object getCalls(){
+		return GAME_LIST;
 	}
 
 	@Override

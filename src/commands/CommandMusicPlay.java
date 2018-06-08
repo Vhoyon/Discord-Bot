@@ -57,11 +57,8 @@ public class CommandMusicPlay extends MusicCommands {
 	}
 
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			MUSIC_PLAY
-		};
+	public Object getCalls(){
+		return MUSIC_PLAY;
 	}
 
 	@Override

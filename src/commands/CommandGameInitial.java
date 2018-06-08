@@ -44,11 +44,8 @@ public class CommandGameInitial extends GameInteractionCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			GAME
-		};
+	public Object getCalls(){
+		return GAME;
 	}
 
 	@Override

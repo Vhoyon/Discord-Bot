@@ -3,13 +3,13 @@ package vendor.terminalcommands;
 import vendor.abstracts.AbstractTerminalCommand;
 import vendor.modules.Logger;
 
-public class CommandExit extends AbstractTerminalCommand {
+public class TerminalCommandRestart extends AbstractTerminalCommand {
 	
 	@Override
 	public String[] getCalls(){
 		return new String[]
 		{
-			"exit"
+			"restart"
 		};
 	}
 	
@@ -19,17 +19,12 @@ public class CommandExit extends AbstractTerminalCommand {
 		try{
 			console.onStop();
 
-			console.onExit();
+			console.onStart();
 		}
 		catch(Exception e){
 			Logger.log(e);
 		}
 		
 	}
-
-	@Override
-	public boolean doesStopTerminal() {
-		return true;
-	}
-
+	
 }

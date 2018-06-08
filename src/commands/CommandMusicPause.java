@@ -35,11 +35,8 @@ public class CommandMusicPause extends MusicCommands {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			MUSIC_PAUSE
-		};
+	public Object getCalls(){
+		return MUSIC_PAUSE;
 	}
 
 	@Override

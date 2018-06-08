@@ -6,16 +6,17 @@ import errorHandling.BotError;
 import vendor.objects.ParametersHelp;
 
 public class CommandTimer extends BotCommand {
-
-    int seconds = 0;
-    int hours = 0;
-    int minutes = 0;
-	private boolean isAlive = true;
+	
+	private int seconds;
+	private int hours;
+	private int minutes;
 	
 	@Override
 	public void action(){
 		
-		
+		seconds = 0;
+		hours = 0;
+		minutes = 0;
 		
 		try{
 			
@@ -39,31 +40,26 @@ public class CommandTimer extends BotCommand {
 			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
 			String timerMessageId = null;
-            timeConstruct(totalTime);
-			timerMessageId = sendMessage(formatDate(hours, minutes,
-					seconds));
-
-			try{
-
-				for(int i = totalTime; i >= 0 && isAlive; i--){
-
-					if(i < totalTime){
-						Thread.sleep(1000);
-
-						timeConstruct(i);
-						editMessageQueue(timerMessageId,
-								formatDate(hours, minutes, seconds));
-					}
-
+			timeConstruct(totalTime);
+			timerMessageId = sendMessage(formatDate(hours, minutes, seconds));
+			
+			for(int i = totalTime; i >= 0 && isAlive(); i--){
+				
+				if(i < totalTime){
+					Thread.sleep(1000);
+					
+					timeConstruct(i);
+					editMessageQueue(timerMessageId,
+							formatDate(hours, minutes, seconds));
 				}
-
-				if(isAlive)
-					sendMessage("TimerEnded");
-
+				
 			}
-			catch(InterruptedException e){}
-
+			
+			if(isAlive())
+				sendMessage("TimerEnded");
+			
 		}
+		catch(InterruptedException | IllegalStateException e){}
 		catch(NullPointerException e){
 			sendMessage("You must give an amount of time to the "
 					+ buildVCommand("timer") + " command for it to count");
@@ -71,19 +67,19 @@ public class CommandTimer extends BotCommand {
 		catch(NumberFormatException | NoContentException e){
 			new BotError(this, "One of the value provided isn't a number!");
 		}
-
+		
 	}
-
+	
 	private void timeConstruct(int remainingTime){
-
-        if(remainingTime / 3600 >= 0){
-            hours = remainingTime / 3600;
-            remainingTime -= hours * 3600;
-        }
-        else
-            hours = 0;
-        if(remainingTime / 60 >= 0){
-            minutes = remainingTime / 60;
+		
+		if(remainingTime / 3600 >= 0){
+			hours = remainingTime / 3600;
+			remainingTime -= hours * 3600;
+		}
+		else
+			hours = 0;
+		if(remainingTime / 60 >= 0){
+			minutes = remainingTime / 60;
 			remainingTime -= minutes * 60;
 		}
 		else
@@ -100,16 +96,13 @@ public class CommandTimer extends BotCommand {
 	
 	@Override
 	public boolean stopAction(){
-		isAlive = false;
+		kill();
 		return true;
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			TIMER
-		};
+	public Object getCalls(){
+		return TIMER;
 	}
 	
 	@Override

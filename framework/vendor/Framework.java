@@ -15,22 +15,22 @@ public class Framework {
 	
 	private Framework(){}
 	
+	public static boolean isRunningFromTerminal(){
+		return IS_RUNNING_FROM_TERMINAL;
+	}
+	
+	public static String runnableSystemPath(){
+		return RUNNABLE_SYSTEM_PATH;
+	}
+	
+	public static Date buildStartedAt(){
+		return BUILD_STARTED_AT;
+	}
+	
 	private static String[] modules =
 	{
 		"Environment", "Logger", "Metrics"
 	};
-	
-	public static boolean isRunningFromTerminal(){
-		return IS_RUNNING_FROM_TERMINAL;
-	}
-
-	public static String runnableSystemPath(){
-		return RUNNABLE_SYSTEM_PATH;
-	}
-
-	public static Date buildStartedAt(){
-		return BUILD_STARTED_AT;
-	}
 	
 	public static void build() throws Exception{
 		
@@ -106,7 +106,7 @@ public class Framework {
 		return decoratedSystemPath;
 		
 	}
-
+	
 	private static Date getBuildStartedAt(){
 		return new Date();
 	}

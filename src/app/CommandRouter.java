@@ -1,98 +1,51 @@
 package app;
 
-import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.*;
 import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
+import vendor.abstracts.AbstractCommandRouter;
+import vendor.exceptions.BadFormatException;
 import vendor.exceptions.NoCommandException;
+import vendor.interfaces.Command;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
-import vendor.objects.Buffer;
-import vendor.objects.CommandsRepository;
-import vendor.objects.Dictionary;
-import vendor.objects.Request;
+import vendor.objects.*;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
+import vendor.utilities.CommandsThreadManager;
+import vendor.utilities.settings.Setting;
 
-public class CommandRouter extends Thread implements Resources, Commands,
-		Emojis, Utils {
+public class CommandRouter extends AbstractCommandRouter implements Resources,
+		Commands, Emojis {
 	
-	private MessageReceivedEvent event;
-	private Request request;
-	private Buffer buffer;
-	private BotCommand command;
-	private Dictionary dict;
-	private CommandsRepository commandsRepo;
-	
-	public CommandRouter(MessageReceivedEvent event, String messageRecu,
+	public CommandRouter(MessageReceivedEvent event, String receivedMessage,
 			Buffer buffer, CommandsRepository commandsRepo){
-		
-		this.event = event;
-		this.buffer = buffer;
-		
-		try{
-			
-			Object bufferedDict = buffer.get(BUFFER_LANG, event.getGuild()
-					.getId());
-			dict = (Dictionary)bufferedDict;
-			
-		}
-		catch(NullPointerException e){
-			
-			dict = new Dictionary();
-			
-			try{
-				buffer.push(dict, BUFFER_LANG, event.getGuild().getId());
-			}
-			catch(NullPointerException e1){}
-			
-		}
-		
-		commandsRepo.setDictionary(dict);
-		
-		this.commandsRepo = commandsRepo;
-		
-		this.request = new Request(messageRecu, dict, Resources.PREFIX,
+		super(event, receivedMessage, buffer, commandsRepo);
+	}
+	
+	@Override
+	protected Request createRequest(String receivedMessage, Dictionary dict){
+		return new Request(receivedMessage, dict, getCommandPrefix(),
 				Resources.PARAMETER_PREFIX);
-		
-	}
-	
-	public BotCommand getCommand(){
-		return command;
-	}
-	
-	public CommandsRepository getCommandsRepo(){
-		return this.commandsRepo;
-	}
-	
-	public String getString(String key){
-		return dict.getDirectString(key);
-	}
-	
-	public String getString(String key, Object... replacements){
-		return dict.getDirectString(key, replacements);
 	}
 	
 	@Override
 	public void run(){
 		
-		if(request.getCommandNoFormat().startsWith(PREFIX)){
+		Request request = getRequest();
+		MessageEventDigger eventDigger = getEventDigger();
+		
+		if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
 			
 			try{
 				
 				if((command = validateMessage()) == null){
 					
-					String commandGuildID = event.getGuild().getId();
-					String commandChannelID = event.getTextChannel().getId();
-					
-					String textChannelKey = Utils.buildKey(commandGuildID,
-							commandChannelID);
-					
-					String routerKey = Utils.buildKey(textChannelKey,
-							request.getCommand());
+					String routerKey = eventDigger.getCommandKey(request
+							.getCommand());
 					
 					this.setName(routerKey);
 					
@@ -100,7 +53,9 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					
 					try{
 						
-						Object needsConfirmation = buffer.get(
+						String textChannelKey = eventDigger.getChannelKey();
+						
+						Object needsConfirmation = getBuffer().get(
 								BUFFER_CONFIRMATION, textChannelKey);
 						
 						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
@@ -118,7 +73,7 @@ public class CommandRouter extends Thread implements Resources, Commands,
 							
 						}
 						
-						buffer.remove(BUFFER_CONFIRMATION, textChannelKey);
+						getBuffer().remove(BUFFER_CONFIRMATION, textChannelKey);
 						
 					}
 					catch(NullPointerException e){}
@@ -126,7 +81,6 @@ public class CommandRouter extends Thread implements Resources, Commands,
 					if(request.hasError()){
 						command = new BotError(request.getError(), false);
 						
-						command.setContext(event);
 						command.action();
 						command = null;
 					}
@@ -136,15 +90,15 @@ public class CommandRouter extends Thread implements Resources, Commands,
 						String commandName = request.getCommand();
 						
 						if(CommandsThreadManager.isCommandRunning(commandName,
-								textChannelKey, this)){
+								eventDigger, this)){
 							
-							command = new BotError(getString(
+							command = new BotError(lang(
 									"CommandIsRunningError", commandName));
 							
 						}
 						else{
 							
-							command = (BotCommand)commandsRepo.getContainer()
+							command = getCommandsRepo().getContainer()
 									.initiateLink(commandName);
 							
 						}
@@ -155,11 +109,10 @@ public class CommandRouter extends Thread implements Resources, Commands,
 				
 				try{
 					
-					command.setRouter(this);
-					command.setContext(event);
-					command.setBuffer(buffer);
-					command.setRequest(request);
-					command.setDictionary(dict);
+					BotCommand botCommand = (BotCommand)command;
+					
+					botCommand.setRouter(this);
+					botCommand.setDictionary(getDictionary());
 					
 					command.action();
 					
@@ -176,62 +129,52 @@ public class CommandRouter extends Thread implements Resources, Commands,
 		
 	}
 	
-	/**
-	 * Method that validates the message received and return the command to
-	 * execute if it is not validated. In the case where the message received
-	 * isn't a command (a message that starts with
-	 * <i>Ressources.<b>PREFIX</b></i>), a <i>NoCommandException</i> is thrown.
-	 * <p>
-	 * If the message received is from a private channel, a
-	 * {@link errorHandling.BotErrorPrivate BotErrorPrivate} command is created,
-	 * having the message that <i>you need to be in a server to intercat with
-	 * the bot</i>.
-	 * <p>
-	 * In another case where the received message in a server is only "
-	 * <code>!!</code>" (the <code><i>PREFIX</i></code> value), a
-	 * {@link utilities.abstracts.SimpleTextCommand SimpleTextCommand} command
-	 * is created that will send the message
-	 * "<i>... you wanted to call upon me or...?</i>".
-	 * 
-	 * @return <code>null</code> if valid; a command to execute otherwise.
-	 * @throws NoCommandException
-	 *             Generic exception thrown if the message isn't a command.
-	 */
-	private BotCommand validateMessage() throws NoCommandException{
+	@Override
+	public Command commandWhenFromPrivate(){
+		return new BotErrorPrivate("*"
+				+ lang("MessageReceivedFromPrivateResponse") + "*", true);
+	}
+	
+	@Override
+	public Command commandWhenFromServerIsOnlyPrefix(){
+		return new SimpleTextCommand(){
+			@Override
+			public String getTextToSend(){
+				return lang("MessageIsOnlyPrefixResponse");
+			}
+		};
+	}
+	
+	@Override
+	public String getCommandPrefix(){
 		
-		BotCommand command = null;
+		String textChannelKey = getEventDigger().getChannelKey();
 		
-		// Only interactions are through a server, no single conversations permitted!
-		if(event.isFromType(ChannelType.PRIVATE)){
+		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
+		
+		boolean hasSettings = getBuffer().has(settingsKey);
+		
+		Setting settings;
+		
+		if(!hasSettings){
 			
-			command = new BotErrorPrivate("*"
-					+ getString("MessageReceivedFromPrivateResponse") + "*",
-					true);
+			settings = new Setting(SETTINGS);
+			
+			getBuffer().push(settings, settingsKey);
 			
 		}
-		else if(event.isFromType(ChannelType.TEXT)){
-			
-			if(!request.getCommandNoFormat().matches(PREFIX + ".+")){
-				throw new NoCommandException();
-			}
-			else{
-				
-				if(request.getCommand().equals(PREFIX)){
-					
-					command = new SimpleTextCommand(){
-						@Override
-						public String getTextToSend(){
-							return getString("MessageIsOnlyPrefixResponse");
-						}
-					};
-					
-				}
-				
-			}
-			
+		else{
+			settings = (Setting)getBuffer().get(settingsKey);
 		}
 		
-		return command;
+		String prefix = null;
+		
+		try{
+			prefix = (String)settings.getField("prefix").getValue();
+		}
+		catch(BadFormatException e){}
+		
+		return prefix;
 		
 	}
 	

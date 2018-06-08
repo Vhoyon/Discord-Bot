@@ -1,7 +1,9 @@
 package vendor.objects;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 import vendor.exceptions.CommandNotFoundException;
 import vendor.interfaces.LinkableCommand;
 import vendor.modules.Logger;
@@ -35,20 +37,54 @@ public abstract class CommandLinksContainer {
 		initializeContainer(links);
 	}
 	
+	public CommandLinksContainer(String linksPackage){
+		ScanResult results = new FastClasspathScanner(linksPackage)
+				.strictWhitelist().scan();
+		
+		List<String> classNames = results.getNamesOfAllClasses();
+		
+		List<Class<?>> linkableClasses = results
+				.classNamesToClassRefs(classNames);
+		
+		ArrayList<Link> links = new ArrayList<>();
+		
+		linkableClasses.forEach(linkableClass -> {
+			
+			if(LinkableCommand.class.isAssignableFrom(linkableClass)){
+				
+				links.add(new Link((Class<LinkableCommand>)linkableClass));
+				
+			}
+			
+		});
+		
+		initializeContainer(links.toArray(new Link[links.size()]));
+	}
+	
 	private void initializeContainer(Link[] links){
 		
 		linkMap = new LinkedHashMap<>();
 		
 		for(Link link : links){
 			
-			String[] calls = link.getCalls();
+			Object calls = link.getCalls();
 			
 			if(calls != null){
-				for(String call : calls){
+				
+				if(calls instanceof String[]){
 					
-					linkMap.put(call, link);
+					String[] callsArray = (String[])calls;
+					
+					for(String call : callsArray)
+						linkMap.put(call, link);
 					
 				}
+				else{
+					
+					linkMap.put(calls.toString(), link);
+					
+				}
+				
 			}
 			
 		}
@@ -60,19 +96,16 @@ public abstract class CommandLinksContainer {
 			
 			Link link = findLink(commandName);
 			
-			if(link == null){
-				return whenCommandNotFound(commandName);
-			}
-			else{
+			if(link != null){
 				return link.getInstance();
 			}
 			
 		}
 		catch(Exception e){
 			Logger.log(e);
-			
-			return whenCommandNotFound(commandName);
 		}
+		
+		return whenCommandNotFound(commandName);
 	}
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);

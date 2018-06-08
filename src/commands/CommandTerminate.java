@@ -10,11 +10,8 @@ public class CommandTerminate extends SimpleTextCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			TERMINATE
-		};
+	public Object getCalls(){
+		return TERMINATE;
 	}
 
 	@Override
