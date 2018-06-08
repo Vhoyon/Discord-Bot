@@ -3,6 +3,9 @@ package utilities;
 import app.CommandRouter;
 import utilities.interfaces.*;
 import vendor.abstracts.AbstractBotCommand;
+import vendor.exceptions.BadFormatException;
+import vendor.interfaces.Callback;
+import vendor.utilities.settings.Setting;
 
 public abstract class BotCommand extends AbstractBotCommand implements
 		Commands, Resources {
@@ -14,12 +17,12 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	public BotCommand(BotCommand botCommandToCopy){
 		super(botCommandToCopy);
 	}
-
+	
 	@Override
-	public CommandRouter getRouter() {
+	public CommandRouter getRouter(){
 		return (CommandRouter)super.getRouter();
 	}
-
+	
 	@Override
 	public String formatParameter(String parameterToFormat){
 		return buildVParameter(parameterToFormat);
@@ -27,6 +30,29 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	
 	public String getUsage(){
 		return buildVCommand(getCommandName());
+	}
+	
+	public <SettingValue> SettingValue setting(String settingName)
+			throws BadFormatException{
+		
+		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
+		
+		Object value = settings.getField(settingName).getValue();
+		
+		return (SettingValue)value;
+		
+	}
+	
+	public void setSetting(String settingName, Object value){
+		this.setSetting(settingName, value, null);
+	}
+	
+	public void setSetting(String settingName, Object value, Callback onChange){
+		
+		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
+		
+		settings.save(settingName, value, onChange);
+		
 	}
 	
 }
