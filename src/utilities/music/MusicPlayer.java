@@ -37,11 +37,11 @@ public class MusicPlayer {
 	public Guild getGuild(){
 		return this.command.getGuild();
 	}
-
+	
 	public BotCommand getCommand(){
 		return this.command;
 	}
-
+	
 	public AudioHandler getAudioHandler(){
 		return new AudioHandler(this.audioPlayer);
 	}

@@ -4,7 +4,6 @@ import vendor.abstracts.AbstractTerminalCommand;
 import vendor.abstracts.CommandsLinker;
 import vendor.interfaces.LinkableCommand;
 import vendor.modules.Logger;
-import vendor.terminalcommands.*;
 
 public class TerminalCommandsLinker extends CommandsLinker {
 	

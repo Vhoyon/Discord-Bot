@@ -303,6 +303,8 @@ public class Environment extends Module {
 		OutputStream outStream = new FileOutputStream(targetFile);
 		outStream.write(buffer);
 		
+		outStream.close();
+		
 		return systemEnvFilePath;
 		
 	}

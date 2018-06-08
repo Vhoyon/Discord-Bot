@@ -2,8 +2,6 @@ package commands;
 
 import errorHandling.BotError;
 import utilities.abstracts.MusicCommands;
-import utilities.music.MusicManager;
-import utilities.music.MusicPlayer;
 import vendor.objects.ParametersHelp;
 
 public class CommandMusicLoop extends MusicCommands {

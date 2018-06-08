@@ -35,16 +35,19 @@ public class CommandSetting extends BotCommand {
 			"setting", "settings"
 		};
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "This command changes settings for the bot. Use the parameters below to change what you want to change!";
 	}
-
+	
 	@Override
-	public ParametersHelp[] getParametersDescriptions() {
-		return new ParametersHelp[]{
-			new ParametersHelp("Changes the prefix used for each command. Default is `!!`.", "prefix")
+	public ParametersHelp[] getParametersDescriptions(){
+		return new ParametersHelp[]
+		{
+			new ParametersHelp(
+					"Changes the prefix used for each command. Default is `!!`.",
+					"prefix")
 		};
 	}
 	

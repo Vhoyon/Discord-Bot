@@ -1,6 +1,5 @@
 package utilities.interfaces;
 
-import utilities.BotCommand;
 import vendor.objects.Language;
 import vendor.utilities.settings.SettingField;
 import vendor.utilities.settings.TextNotNullField;

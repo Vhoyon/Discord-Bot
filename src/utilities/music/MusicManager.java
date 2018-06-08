@@ -43,8 +43,8 @@ public class MusicManager {
 	public synchronized MusicPlayer getPlayer(BotCommand command){
 		
 		if(!hasPlayer(command.getGuild()))
-			players.put(command.getGuild().getId(), new MusicPlayer(manager.createPlayer(),
-					command));
+			players.put(command.getGuild().getId(),
+					new MusicPlayer(manager.createPlayer(), command));
 		
 		return players.get(command.getGuild().getId());
 		
@@ -73,7 +73,7 @@ public class MusicManager {
 	public void loadTrack(final BotCommand command, final String source){
 		
 		MusicPlayer player = getPlayer(command);
-
+		
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
 		

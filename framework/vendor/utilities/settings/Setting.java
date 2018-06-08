@@ -7,17 +7,17 @@ import java.util.HashMap;
 
 public class Setting {
 	
-	private HashMap<String, SettingField> fields;
+	private HashMap<String, SettingField<Object>> fields;
 	
-	public Setting(SettingField... fields){
+	public Setting(SettingField<Object>... fields){
 		this(new Dictionary(), fields);
 	}
 	
-	public Setting(Dictionary dict, SettingField... fields){
+	public Setting(Dictionary dict, SettingField<Object>... fields){
 		
 		this.fields = new HashMap<>();
 		
-		for(SettingField field : fields){
+		for(SettingField<Object> field : fields){
 			field.setDictionary(dict);
 			
 			this.fields.put(field.getName(), field);
@@ -32,7 +32,7 @@ public class Setting {
 			return false;
 		}
 		
-		SettingField field = getField(settingName);
+		SettingField<Object> field = getField(settingName);
 		
 		field.setValue(value, onChange);
 		
@@ -44,7 +44,7 @@ public class Setting {
 		return fields.containsKey(name);
 	}
 	
-	public SettingField getField(String name){
+	public SettingField<Object> getField(String name){
 		return fields.get(name);
 	}
 	
