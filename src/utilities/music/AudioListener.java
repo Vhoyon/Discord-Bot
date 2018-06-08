@@ -52,6 +52,10 @@ public class AudioListener extends AudioEventAdapter {
 			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean) this.player.getCommand().getMemory("MUSIC_LOOP"))) {
 				tracks.add(track.makeClone());
 				nextTrack();
+			}else{
+				if (!tracks.isEmpty()) {
+					nextTrack();
+				}
 			}
 		}
 

@@ -18,13 +18,22 @@ public class CommandMusicLoop extends MusicCommands {
                 new BotError(this, lang("CommandMusicLoopNotPlaying"));
             } else {
 
-//                remember(true, "LOOP_ONE");
-//                remember(true, "LOOP_ONCE");
                 if (this.hasMemory("MUSIC_LOOP") && (boolean) this.getMemory("MUSIC_LOOP")) {
                     forget("MUSIC_LOOP");
-                } else {
+                    sendMessage("The loop has been stopped");
+                } else  if (this.hasMemory("LOOP_ONCE") && (boolean) this.getMemory("LOOP_ONCE")) {
+                    forget("LOOP_ONCE");
+                    sendMessage("The loop has been stopped");
+                }else{
+                    if (hasParameter("o","one")){
+                        remember(true, "LOOP_ONCE");
+                        sendMessage("A Loop on the current song has been started.");
+                    }else{
 
-                    remember(true, "MUSIC_LOOP");
+                        remember(true, "MUSIC_LOOP");
+                        sendMessage("A loop on all the songs of the playlist has been started.");
+                    }
+
                 }
             }
 
