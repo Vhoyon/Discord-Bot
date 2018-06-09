@@ -5,6 +5,7 @@ import utilities.*;
 import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
+import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.exceptions.BadFormatException;
 import vendor.exceptions.NoCommandException;
@@ -109,7 +110,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 				try{
 					
-					BotCommand botCommand = (BotCommand)command;
+					AbstractBotCommand botCommand = (AbstractBotCommand)command;
 					
 					botCommand.setRouter(this);
 					botCommand.setDictionary(getDictionary());
