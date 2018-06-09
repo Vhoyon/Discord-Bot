@@ -6,6 +6,8 @@ import vendor.abstracts.AbstractBotCommand;
 import vendor.exceptions.BadFormatException;
 import vendor.utilities.settings.Setting;
 
+import java.util.function.Consumer;
+
 public abstract class BotCommand extends AbstractBotCommand implements
 		Commands, Resources {
 	
@@ -46,7 +48,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		this.setSetting(settingName, value, null);
 	}
 	
-	public void setSetting(String settingName, Object value, Callback onChange){
+	public void setSetting(String settingName, Object value, Consumer<Object> onChange){
 		
 		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
 		
