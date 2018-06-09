@@ -1,9 +1,9 @@
 package vendor.utilities.settings;
 
-import vendor.interfaces.Callback;
 import vendor.objects.Dictionary;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class Setting {
 	
@@ -25,7 +25,7 @@ public class Setting {
 		
 	}
 	
-	public boolean save(String settingName, Object value, Callback onChange)
+	public boolean save(String settingName, Object value, Consumer<Object> onChange)
 			throws IllegalArgumentException{
 		
 		if(!hasField(settingName)){

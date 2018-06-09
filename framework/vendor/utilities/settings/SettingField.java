@@ -2,8 +2,9 @@ package vendor.utilities.settings;
 
 import vendor.abstracts.Translatable;
 import vendor.exceptions.BadFormatException;
-import vendor.interfaces.Callback;
 import vendor.modules.Environment;
+
+import java.util.function.Consumer;
 
 public abstract class SettingField<E> extends Translatable {
 	
@@ -39,13 +40,13 @@ public abstract class SettingField<E> extends Translatable {
 		this.setValue(value, null);
 	}
 	
-	public void setValue(E value, Callback onChange)
+	public void setValue(E value, Consumer<E> onChange)
 			throws IllegalArgumentException{
 		
 		this.value = this.sanitizeValue(value);
 		
 		if(onChange != null)
-			onChange.action(this.value);
+			onChange.accept(this.value);
 		
 	}
 	
