@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>en.stephanomehawej</groupId>
     <artifactId>DiscordBot</artifactId>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <name>Discord Bot</name>
     <description>A Discord bot to learn and have fun.</description>
     <build>
