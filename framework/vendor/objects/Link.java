@@ -5,22 +5,13 @@ import vendor.interfaces.LinkableCommand;
 public class Link {
 	
 	private Class<? extends LinkableCommand> classToLink;
-	private LinkableCommand commandInstance;
 	
 	public Link(Class<? extends LinkableCommand> command){
 		this.classToLink = command;
-		
-		try{
-			getInstance();
-		}
-		catch(Exception e){}
 	}
 	
 	public LinkableCommand getInstance() throws Exception{
-		if(this.commandInstance == null)
-			this.commandInstance = getClassToLink().newInstance();
-		
-		return this.commandInstance;
+		return getClassToLink().newInstance();
 	}
 	
 	public boolean hasCall(String call){

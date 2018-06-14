@@ -2,7 +2,7 @@ package commands;
 
 import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
-import utilities.specifics.CommandsThreadManager;
+import vendor.utilities.CommandsThreadManager;
 import errorHandling.BotError;
 
 public class CommandStop extends BotCommand {
@@ -12,7 +12,7 @@ public class CommandStop extends BotCommand {
 		
 		if(getContent() == null){
 			
-			BotCommand commandToStop = CommandsThreadManager
+			BotCommand commandToStop = (BotCommand)CommandsThreadManager
 					.getLatestRunningCommandExcept(this, getKey());
 			
 			if(commandToStop == null){
@@ -39,8 +39,9 @@ public class CommandStop extends BotCommand {
 		}
 		else{
 			
-			BotCommand commandToStop = CommandsThreadManager.getCommandRunning(
-					getContent(), getEventDigger(), getRouter());
+			BotCommand commandToStop = (BotCommand)CommandsThreadManager
+					.getCommandRunning(getContent(), getEventDigger(),
+							getRouter());
 			
 			if(commandToStop == null){
 				new BotError(this, lang("NoCommandToStopMessage", getContent()));

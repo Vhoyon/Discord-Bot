@@ -1,9 +1,7 @@
 package vendor.terminalcommands;
 
 import vendor.abstracts.AbstractTerminalCommand;
-import vendor.exceptions.JDANotSetException;
 import vendor.modules.Logger;
-import vendor.modules.Metrics;
 
 public class TerminalCommandHelp extends AbstractTerminalCommand {
 	

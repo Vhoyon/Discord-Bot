@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import vendor.abstracts.AbstractTerminalConsole;
 import vendor.modules.Logger;
-import vendor.modules.Logger.LogType;
 
 public abstract class TerminalConsole extends AbstractTerminalConsole {
 	

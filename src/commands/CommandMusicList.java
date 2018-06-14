@@ -20,19 +20,19 @@ public class CommandMusicList extends MusicCommands {
 			
 			StringBuilder sb = new StringBuilder();
 			
-			AudioTrack currentTrack = MusicManager.get().getPlayer(getGuild())
+			AudioTrack currentTrack = MusicManager.get().getPlayer(this)
 					.getAudioPlayer().getPlayingTrack();
 			
 			sb.append(lang("CurrentTrack", currentTrack.getInfo().title));
 			
-			if(MusicManager.get().getPlayer(getGuild()).getListener()
+			if(MusicManager.get().getPlayer(this).getListener()
 					.getTrackSize() != 0){
 				
 				sb.append("\n\n").append(lang("Header")).append("\n\n");
 				
 				int i = 1;
 				
-				for(AudioTrack track : MusicManager.get().getPlayer(getGuild())
+				for(AudioTrack track : MusicManager.get().getPlayer(this)
 						.getListener().getTracks()){
 					
 					sb.append(lang("TrackInfo", i++, track.getInfo().title))

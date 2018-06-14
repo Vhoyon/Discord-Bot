@@ -10,7 +10,6 @@ public class BotCommandsLinker extends CommandsLinker implements Commands {
 	
 	@Override
 	public CommandLinksContainer createLinksContainer(){
-		
 		return new CommandLinksContainer("commands"){
 			
 			@Override

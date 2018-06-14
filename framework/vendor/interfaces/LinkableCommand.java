@@ -43,8 +43,11 @@ public interface LinkableCommand extends Command {
 		
 		if(commandDescription != null){
 			
-			if(textHeader != null)
+			if(textHeader != null) {
 				builder.append("\t");
+				
+				commandDescription = commandDescription.replaceAll("\n", "\n\t");
+			}
 			
 			builder.append(commandDescription);
 			

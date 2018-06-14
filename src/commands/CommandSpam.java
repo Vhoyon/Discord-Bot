@@ -86,9 +86,9 @@ public class CommandSpam extends BotCommand {
 	public Object getCalls(){
 		return SPAM;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "This command sends the specified amount of the specified message in a text channel";
 	}
 }

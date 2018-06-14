@@ -1,4 +1,4 @@
-package utilities.abstracts;
+package vendor.abstracts;
 
 import utilities.BotCommand;
 
@@ -36,6 +36,11 @@ public abstract class AbstractTextCommand extends BotCommand {
 	public abstract String getTextToSend();
 	
 	public Boolean isTextInfoOneLiner(){
+		return null;
+	}
+
+	@Override
+	public Object getCalls(){
 		return null;
 	}
 	
