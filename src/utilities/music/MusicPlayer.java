@@ -12,7 +12,6 @@ import vendor.modules.Logger;
 public class MusicPlayer {
 	
 	public final static int MAX_VOLUME = 20;
-	public final static int DEFAULT_VOLUME= 75;
 
 	private final AudioPlayer audioPlayer;
 	private final AudioListener listener;
