@@ -89,9 +89,7 @@ public class MusicPlayer {
 
 	public void setVolume(int volume) throws BadParameterException{
 
-
         if(volume < 0 || volume > 100){
-        	setVolume(DEFAULT_VOLUME);
             throw new BadParameterException("Volume must be between 0 and 100.");
         }
         else{
@@ -99,6 +97,7 @@ public class MusicPlayer {
             this.getAudioPlayer().setVolume(volume / (100 / MAX_VOLUME));
 
         }
+        
     }
 	
 }
