@@ -6,6 +6,9 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import utilities.BotCommand;
+import vendor.exceptions.BadParameterException;
+import vendor.modules.Environment;
+import vendor.modules.Logger;
 
 public class MusicPlayer {
 	
@@ -19,8 +22,15 @@ public class MusicPlayer {
 		this.audioPlayer = audioPlayer;
 		this.command = command;
 		
-		// Defaults volume to 75% of our maxed value (20) by default
-		this.audioPlayer.setVolume(15);
+		// Defaults volume to 75% of our maxed value (20) if no env var is set
+		int defaultVolume = Environment.getVar("DEFAULT_VOLUME", 75);
+		
+		try{
+			this.setVolume(defaultVolume);
+		}
+		catch(BadParameterException e){
+			Logger.log(e + " Your environment variable is not correctly set...");
+		}
 		
 		listener = new AudioListener(this);
 		audioPlayer.addListener(listener);
@@ -80,6 +90,19 @@ public class MusicPlayer {
 	
 	public void closeConnection(){
 		this.getGuild().getAudioManager().closeAudioConnection();
+	}
+	
+	public void setVolume(int volume) throws BadParameterException{
+		
+		if(volume < 0 || volume > 100){
+			throw new BadParameterException("Volume must be between 0 and 100.");
+		}
+		else{
+			
+			this.getAudioPlayer().setVolume(volume / (100 / MAX_VOLUME));
+			
+		}
+		
 	}
 	
 }
