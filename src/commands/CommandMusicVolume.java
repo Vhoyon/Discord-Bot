@@ -17,9 +17,9 @@ public class CommandMusicVolume extends MusicCommands {
 		try{
 
 			int volume = Integer.valueOf(content);
-
-			MusicManager.get().getPlayer(getGuild()).setVolume(volume);
-
+			
+			MusicManager.get().getPlayer(this).setVolume(volume);
+			
 			sendMessage(lang("ChangedSuccess", volume));
 			
 		}
