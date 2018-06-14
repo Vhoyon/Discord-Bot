@@ -29,7 +29,7 @@ public class MusicPlayer {
 			this.setVolume(defaultVolume);
 		}
 		catch(BadParameterException e){
-			Logger.log(e);
+			Logger.log(e + " Your environment variable is not correctly set...");
 		}
 		
 		listener = new AudioListener(this);
