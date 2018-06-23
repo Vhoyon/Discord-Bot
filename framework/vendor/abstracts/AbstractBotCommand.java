@@ -28,11 +28,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	protected AbstractCommandRouter router;
 	
-	private boolean isAlive;
-	
-	public AbstractBotCommand(){
-		this.isAlive = true;
-	}
+	public AbstractBotCommand(){}
 	
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
 		this();
@@ -43,8 +39,6 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		setRouter(commandToCopy.getRouter());
 		setDictionary(commandToCopy.getDictionary());
-		
-		this.isAlive = commandToCopy.isAlive();
 		
 	}
 	
@@ -182,11 +176,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return this.isAlive;
+		return this.getRouter().isAlive();
 	}
 	
 	public void kill(){
-		this.isAlive = false;
+		this.getRouter().interrupt();
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
