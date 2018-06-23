@@ -4,6 +4,7 @@ import errorHandling.BotError;
 import utilities.BotCommand;
 import vendor.exceptions.CommandNotFoundException;
 import vendor.modules.Logger;
+import vendor.objects.ParametersHelp;
 
 /**
  * Classe qui envois un message a l'utilisateur qui demande de l'aide avec une
@@ -21,16 +22,17 @@ public class CommandHelp extends BotCommand {
 		
 		if(content == null){
 			
-			
 			String fullHelpString = getRouter().getCommandsRepo()
 					.getFullHelpString("Available commands :");
 			
-			if (!hasParameter("h", "here")) {
+			if(hasParameter("p", "private")){
 				sendPrivateMessage(fullHelpString);
 				sendInfoMessage(lang("HelpSentMessage"));
-			}else{
+			}
+			else{
 				sendMessage(fullHelpString);
 			}
+			
 		}
 		else{
 			
@@ -49,7 +51,13 @@ public class CommandHelp extends BotCommand {
 				
 				builder.append(helpString);
 				
-				sendMessage(builder.toString());
+				if(hasParameter("p", "private")){
+					sendPrivateMessage(builder.toString());
+					sendInfoMessage(lang("HelpSentMessage"));
+				}
+				else{
+					sendMessage(builder.toString());
+				}
 				
 			}
 			catch(CommandNotFoundException e){
@@ -73,4 +81,15 @@ public class CommandHelp extends BotCommand {
 	public String getCommandDescription(){
 		return "Well you just used this command.So ;)";
 	}
+	
+	@Override
+	public ParametersHelp[] getParametersDescriptions(){
+		return new ParametersHelp[]
+		{
+			new ParametersHelp(
+					"Send the requested help string to your private channel.",
+					"p", "private")
+		};
+	}
+	
 }
