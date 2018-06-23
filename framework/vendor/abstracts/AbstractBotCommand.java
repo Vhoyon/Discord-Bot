@@ -55,6 +55,12 @@ public abstract class AbstractBotCommand extends Translatable implements
 				return requestName;
 			
 		}
+		else{
+			
+			if(calls.equals(requestName))
+				return requestName;
+			
+		}
 		
 		return getDefaultCall();
 		
