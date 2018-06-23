@@ -2,48 +2,7 @@ package utilities.interfaces;
 
 public interface Commands {
 	
-	/**
-	 * @return A String that starts with the <i>PREFIX</i> found in Ressources
-	 *         followed by the <i>commandName</i> parameter.
-	 */
-	default String buildCommand(String command){
-		return Resources.PREFIX + command;
-	}
-	
-	/**
-	 * @return A String that starts with the <i>PREFIX</i> found in Ressources
-	 *         followed by the <i>commandName</i> parameter, surrounded by two
-	 *         "<b>`</b>" tick, meaning the visual will be like code in Discord.
-	 */
-	default String buildVCommand(String command){
-		return buildVText(buildCommand(command));
-	}
-	
-	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources followed by the <i>parameter</i> parameter.
-	 */
-	default String buildParameter(String parameter){
-		return Resources.PARAMETER_PREFIX + parameter;
-	}
-	
-	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources followed by the <i>parameter</i> parameter.
-	 */
-	default String buildVParameter(String parameter){
-		return buildVText(buildParameter(parameter));
-	}
-	
-	/**
-	 * @return A String that contains the <i>text</i> parameter enclosed with
-	 *         <b>`</b>".
-	 */
-	default String buildVText(String text){
-		return "`" + text + "`";
-	}
-	
-	String TEST = "test";
+	//	String TEST = "test";
 	
 	String HELLO = "hello";
 	String HELP = "help";

@@ -1,7 +1,7 @@
 package vendor.utilities.formatting;
 
 public interface DiscordFormatter {
-
+	
 	/**
 	 * Format the text as a code line.
 	 *
@@ -66,7 +66,8 @@ public interface DiscordFormatter {
 	 * Format the text as a block of code for a specified language.
 	 *
 	 * @return A String that contains the <i>text</i> parameter enclosed with
-	 *         <b>```</b> with the language specified in the parameter <i>lang</i>.
+	 *         <b>```</b> with the language specified in the parameter
+	 *         <i>lang</i>.
 	 */
 	default String bloc(String text, String lang){
 		return "```" + lang + "\n" + text + "\n```";
