@@ -1,6 +1,7 @@
 package vendor.abstracts;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import net.dv8tion.jda.core.entities.*;
@@ -43,7 +44,20 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String getCommandName(){
-		return getRequest().getCommand();
+		
+		String requestName = getRequest().getCommand();
+		
+		Object calls = getCalls();
+		
+		if(calls instanceof String[]){
+			
+			if(Arrays.asList((String[])calls).contains(requestName))
+				return requestName;
+			
+		}
+		
+		return getDefaultCall();
+		
 	}
 	
 	protected String getContent(){
