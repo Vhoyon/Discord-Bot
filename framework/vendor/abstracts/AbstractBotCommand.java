@@ -15,9 +15,10 @@ import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
+import vendor.utilities.formatting.DiscordFormatter;
 
 public abstract class AbstractBotCommand extends Translatable implements
-		Emojis, Utils, LinkableCommand, FrameworkResources {
+		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
 	
 	public enum BufferLevel{
 		CHANNEL, SERVER, USER
@@ -336,6 +337,40 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public void log(String message){
 		Logger.log(message);
+	}
+	
+	/**
+	 * @return A String that starts with the router's command prefix
+	 *         followed by the <i>commandName</i> parameter.
+	 */
+	public String buildCommand(String command){
+		return getRouter().getCommandPrefix() + command;
+	}
+	
+	/**
+	 * @return A String that starts with the <i>PREFIX</i> found in Ressources
+	 *         followed by the <i>commandName</i> parameter, surrounded by two
+	 *         "<b>`</b>" tick, meaning the visual will be like code in Discord.
+	 */
+	public String buildVCommand(String command){
+		return code(buildCommand(command));
+	}
+	
+	/**
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
+	 *         Ressources followed by the <i>parameter</i> parameter.
+	 */
+	public String buildParameter(String parameter){
+		// TODO : Get the Parameter Prefix from the router
+		return "--" + parameter;
+	}
+	
+	/**
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
+	 *         Ressources followed by the <i>parameter</i> parameter.
+	 */
+	public String buildVParameter(String parameter){
+		return code(buildParameter(parameter));
 	}
 	
 }

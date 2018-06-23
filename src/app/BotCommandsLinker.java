@@ -5,8 +5,10 @@ import utilities.interfaces.Commands;
 import vendor.abstracts.CommandsLinker;
 import vendor.interfaces.LinkableCommand;
 import vendor.objects.CommandLinksContainer;
+import vendor.utilities.formatting.DiscordFormatter;
 
-public class BotCommandsLinker extends CommandsLinker implements Commands {
+public class BotCommandsLinker extends CommandsLinker implements Commands,
+		DiscordFormatter {
 	
 	@Override
 	public CommandLinksContainer createLinksContainer(){
@@ -16,7 +18,7 @@ public class BotCommandsLinker extends CommandsLinker implements Commands {
 			public LinkableCommand whenCommandNotFound(String commandName){
 				
 				return new BotError(lang("NoActionForCommand",
-						buildVCommand(commandName)), false);
+						code(commandName)), false);
 				
 			}
 			
@@ -26,7 +28,7 @@ public class BotCommandsLinker extends CommandsLinker implements Commands {
 	
 	@Override
 	public String formatCommand(String command){
-		return buildVText(command);
+		return code(command);
 	}
 	
 }
