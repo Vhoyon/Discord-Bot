@@ -22,8 +22,10 @@ public class CommandHelp extends BotCommand {
 		
 		if(content == null){
 			
+			boolean isSimple = hasParameter("s", "simple");
+			
 			String fullHelpString = getRouter().getCommandsRepo()
-					.getFullHelpString("Available commands :");
+					.getFullHelpString("Available commands :", isSimple);
 			
 			if(hasParameter("p", "private")){
 				sendPrivateMessage(fullHelpString);

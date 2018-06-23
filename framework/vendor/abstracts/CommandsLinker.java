@@ -9,7 +9,6 @@ import java.util.TreeMap;
 public abstract class CommandsLinker extends Translatable {
 	
 	private CommandLinksContainer container;
-	private String fullHelpString;
 	
 	public abstract CommandLinksContainer createLinksContainer();
 	
@@ -24,11 +23,12 @@ public abstract class CommandsLinker extends Translatable {
 		return getFullHelpString(textHeader, true);
 	}
 	
-	public String getFullHelpString(String textHeader, boolean shouldSummarize){
-		
-		if(fullHelpString != null){
-			return fullHelpString;
-		}
+	public String getFullHelpString(String textHeader, boolean showDescriptions){
+		return getFullHelpString(textHeader, showDescriptions, true);
+	}
+	
+	public String getFullHelpString(String textHeader,
+			boolean showDescriptions, boolean shouldSummarize){
 		
 		CommandLinksContainer container = getContainer();
 		
@@ -60,24 +60,32 @@ public abstract class CommandsLinker extends Translatable {
 			
 			String wholeCommandString = formatWholeCommand(prependChars, key);
 			
-			String wholeHelpString = null;
-			
-			try{
-				
-				// Try to get the help string of a link
-				String helpString = link.getInstance().getCommandDescription();
-				
-				wholeHelpString = formatHelpString(helpString);
-				
-			}
-			catch(Exception e){}
-			
-			if(wholeHelpString == null){
+			if(showDescriptions){
 				builder.append(wholeCommandString);
 			}
 			else{
-				builder.append(formatWholeHelpLine(wholeCommandString,
-						wholeHelpString, shouldSummarize));
+				
+				String wholeHelpString = null;
+				
+				// Try to get the help string of a link
+				try{
+					
+					String helpString = link.getInstance()
+							.getCommandDescription();
+					
+					wholeHelpString = formatHelpString(helpString);
+					
+				}
+				catch(Exception e){}
+				
+				if(wholeHelpString == null){
+					builder.append(wholeCommandString);
+				}
+				else{
+					builder.append(formatWholeHelpLine(wholeCommandString,
+							wholeHelpString, shouldSummarize));
+				}
+				
 			}
 			
 			builder.append("\n");
@@ -102,9 +110,7 @@ public abstract class CommandsLinker extends Translatable {
 			
 		});
 		
-		fullHelpString = builder.toString().trim();
-		
-		return fullHelpString;
+		return builder.toString().trim();
 		
 	}
 	
@@ -130,6 +136,7 @@ public abstract class CommandsLinker extends Translatable {
 		}
 		
 		return wholeCommandString + " : " + helpString;
+		
 	}
 	
 	public String formatCommand(String command){

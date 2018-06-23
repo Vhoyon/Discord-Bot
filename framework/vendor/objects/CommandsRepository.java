@@ -16,13 +16,23 @@ public class CommandsRepository {
 		this.dict = dict;
 		commandsLinker.setDictionary(dict);
 	}
-
+	
 	public CommandLinksContainer getContainer(){
 		return commandsLinker.getContainer();
 	}
-
+	
 	public String getFullHelpString(String textHeader){
 		return commandsLinker.getFullHelpString(textHeader);
 	}
-
+	
+	public String getFullHelpString(String textHeader, boolean showDescriptions){
+		return commandsLinker.getFullHelpString(textHeader, showDescriptions);
+	}
+	
+	public String getFullHelpString(String textHeader,
+			boolean showDescriptions, boolean shouldSummarize){
+		return commandsLinker.getFullHelpString(textHeader, showDescriptions,
+				shouldSummarize);
+	}
+	
 }
