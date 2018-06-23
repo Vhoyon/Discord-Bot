@@ -29,7 +29,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	protected AbstractCommandRouter router;
 	
-	public AbstractBotCommand(){}
+	private boolean isCopy;
+	
+	public AbstractBotCommand(){
+		this.isCopy = false;
+	}
 	
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
 		this();
@@ -40,6 +44,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		setRouter(commandToCopy.getRouter());
 		setDictionary(commandToCopy.getDictionary());
+		
+		this.isCopy = true;
 		
 	}
 	
@@ -193,6 +199,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public Request getRequest(){
 		return getRouter().getRequest();
+	}
+	
+	public boolean isCopy(){
+		return this.isCopy;
 	}
 	
 	public boolean isAlive(){
