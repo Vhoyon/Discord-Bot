@@ -41,7 +41,7 @@ Your `.env` file should look like this :
 DEBUG=true
 
 CLIENT_ID=
-BOT_TOKEN=     // <-- This is where your Bot Token should be pasted to!
+BOT_TOKEN=     # <-- This is where your Bot Token should be pasted to!
 ```
 
 Now, you can run the bot again, which will detect the `.env` file and wait for your input to bring the bot to life.
