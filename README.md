@@ -34,7 +34,7 @@ Once you have your bot token, you can run the program for the first time. It wil
 
 Your `.env` file should look like this :
 
-```env
+```properties
 # This is the place where you store the environment variables for the bot.
 # This includes the bot's TOKEN, its name if you want, etc.
 
