@@ -1,7 +1,7 @@
 package vendor.interfaces;
 
 public interface Emojis {
-	
+
 	String EMOJI_OK_HAND = ":ok_hand:";
 	String EMOJI_RED_CROSS = ":x:";
 	String EMOJI_HAMMER_PICK = ":hammer_pick:";
@@ -13,5 +13,39 @@ public interface Emojis {
 	String EMOJI_CHECKMARK_BOX = ":white_check_mark:";
 	String EMOJI_STOPWATCH = ":stopwatch:";
 	String EMOJI_ALARM_CLOCK = ":alarm_clock:";
-	
+	String EMOJI_TIRED_FACE = ":tired_face:";
+	String EMOJI_ONE_HUNDRED = ":100:";
+	String EMOJI_WIP_FACE = ":weary:";
+	String EMOJI_SMILEY_FACE = ":smiley:";
+	String EMOJI_SMILE_FACE = ":smile:";
+	String EMOJI_LAUGHING = ":laughing:";
+	String EMOJI_SWEAT_SMILE = ":sweat_smile:";
+	String EMOJI_JOY = ":joy:";
+	String EMOJI_INNOCENT_FACE = ":innocent:";
+	String EMOJI_WINK = ":wink:";
+	String EMOJI_BLUSH_FACE = ":blush:";
+	String EMOJI_SLIGHT_SMILE = ":slight_smile:";
+	String EMOJI_UPSIDE_DOWN_FACE = ":upside_down:";
+	String EMOJI_RELAXED_FACE = ":relaxed:";
+	String EMOJI_YUM_FACE = ":yum:";
+	String EMOJI_RELIEVED_FACE = ":relieved:";
+	String EMOJI_HEART_EYES_FACE = ":heart_eyes:";
+	String EMOJI_KISSING_HEART_FACE = ":kissing_heart:";
+	String EMOJI_KISSING_FACE = ":kissing:";
+	String EMOJI_KISSING_SMILING_EYES = ":kissing_smiling_eyes:";
+	String EMOJI_KISSING_CLOSED_EYES = ":kissing_closed_eyes:";
+	String EMOJI_STUCK_OUT_TONGUE_WINKING = ":stuck_out_tongue_winking_eye:";
+	String EMOJI_STUCK_OUT_TONGUE_CLOSED_EYES = ":stuck_out_tongue_closed_eyes:";
+	String EMOJI_MONEY_MOUTH = ":money_mouth:";
+	String EMOJI_STUCK_OUT_TONGUE = ":stuck_out_tongue:";
+	String EMOJI_NERD = ":nerd:";
+	String EMOJI_SUNGLASSES = ":sunglasses:";
+	String EMOJI_HUGGING = ":hugging:";
+	String EMOJI_SMIRK_FACE = ":smirk:";
+	String EMOJI_NO_FACE = ":smirk:";
+	String EMOJI_NEUTRAL_FACE = ":neutral_face:";
+	String EMOJI_EXPRESSIONLESS = ":expressionless:";
+	String EMOJI_UNAMUSED_FACE = ":unamused:";
+	String EMOJI_ROLLING_EYES_FACE = ":rolling_eyes:";
+	String EMOJI_THINKING_FACE = ":thinking:";
 }
