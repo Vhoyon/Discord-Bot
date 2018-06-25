@@ -54,6 +54,6 @@ public abstract class SettingField<E> extends Translatable {
 		return this.name;
 	}
 	
-	protected abstract E sanitizeValue(E value) throws IllegalArgumentException;
+	protected abstract E sanitizeValue(Object value) throws IllegalArgumentException;
 	
 }

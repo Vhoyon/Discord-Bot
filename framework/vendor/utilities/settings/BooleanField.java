@@ -7,7 +7,7 @@ public class BooleanField extends SettingField<Boolean> {
 	}
 	
 	@Override
-	protected Boolean sanitizeValue(Boolean value)
+	protected Boolean sanitizeValue(Object value)
 			throws IllegalArgumentException{
 		boolean castedValue;
 		

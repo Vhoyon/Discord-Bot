@@ -18,7 +18,7 @@ public class IntegerField extends SettingField<Integer> {
 	}
 	
 	@Override
-	protected Integer sanitizeValue(Integer value)
+	protected Integer sanitizeValue(Object value)
 			throws IllegalArgumentException{
 		
 		int castedValue;
@@ -30,13 +30,13 @@ public class IntegerField extends SettingField<Integer> {
 			throw new IllegalArgumentException("Value is not a number!");
 		}
 		
-		if(value < this.min){
-			throw new IllegalArgumentException("Value (" + value
+		if(castedValue < this.min){
+			throw new IllegalArgumentException("Value (" + castedValue
 					+ ") is lower than the minimum required (" + this.min
 					+ ")!");
 		}
-		else if(value > this.max){
-			throw new IllegalArgumentException("Value (" + value
+		else if(castedValue > this.max){
+			throw new IllegalArgumentException("Value (" + castedValue
 					+ ") is higher than the maximum required (" + this.min
 					+ ")!");
 		}

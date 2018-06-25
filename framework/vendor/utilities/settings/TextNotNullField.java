@@ -7,9 +7,11 @@ public class TextNotNullField extends TextField {
 	}
 	
 	@Override
-	protected String sanitizeValue(String value)
+	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		if(value == null || value.length() == 0){
+		String stringValue = value.toString();
+		
+		if(stringValue == null || stringValue.length() == 0){
 			throw new IllegalArgumentException("Value cannot be empty!");
 		}
 		
