@@ -4,7 +4,7 @@
 
 In this repository we host the source code of our Discord Bot, based of [DV8FromTheWorld's JDA library](https://github.com/DV8FromTheWorld/JDA). This bot is made to be self-hosted and has no particular goal - we do it to learn more about Discord and have fun while coding it!
 
-Currently, this repo also holds the code for the framwork we are building to facilitate the creation of bots, which we will move in another repository shortly.
+Currently, this repo also holds the code for the framework we are building to facilitate the creation of bots, which we will move in another repository shortly.
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ Maven could be installed through most Java IDE : your mileage may vary.
 
 You can clone this repo and import the project in any Java IDE that you may want to use. We created this project in Eclipse but we are now using IntelliJ IDEA - as long as you can run a Maven project, you are good to go.
 
-Make sure that you have imported the plugins required via Maven (look up how to do that for your own environment) and that your IDE recognize the root folder `framework`, `res` and `src` as Source folders.
+Make sure that you have imported the plugins required via Maven (look up how to do that for your own environment) and that your IDE recognize the root folders `framework`, `res` and `src` as Source folders.
 
 If you have trouble getting the bot up and running, feel free to [create an issue](https://github.com/Vhoyon/Discord-Bot/issues).
 
@@ -46,7 +46,7 @@ BOT_TOKEN=     # <-- This is where your Bot Token should be pasted to!
 
 Now, you can run the bot again, which will detect the `.env` file and wait for your input to bring the bot to life.
 
-Once started, if you followed [these instructions](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token) correctly (the link provided to make your bot join a server will also be outputted to the Bot's console if you added the `CLIENT_ID` value to the `.env` file!), you should see the Bot's status to come online. If you didn't change anything in the code yet, you should be able to send the command `!!help` in a Text Channel and see a list of the available commands!
+Once started, if you followed [these instructions](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token) correctly (_tip : the link provided to make your bot join a server will also be outputted to the Bot's console if you added the `CLIENT_ID` value to the `.env` file!_), you should see the Bot's status to come online. If you didn't change anything in the code yet, you should be able to send the command `!!help` in a Text Channel and see a list of the available commands!
 
 ## Built With
 
