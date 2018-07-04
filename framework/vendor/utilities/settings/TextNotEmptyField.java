@@ -9,7 +9,7 @@ public class TextNotEmptyField extends TextField {
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		String safeValue = super.sanitizeValue(value)
+		String safeValue = super.sanitizeValue(value);
 				
 		if(safeValue.length() == 0){
 			throw new IllegalArgumentException("Value cannot be empty!");
