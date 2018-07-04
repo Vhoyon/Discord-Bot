@@ -9,11 +9,13 @@ public class TextNotNullField extends TextField {
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		if(value == null || value.toString().length() == 0){
+		String safeValue = super.sanitizeValue(value)
+				
+		if(safeValue.length() == 0){
 			throw new IllegalArgumentException("Value cannot be empty!");
 		}
 		
-		return super.sanitizeValue(value);
+		return safeValue;
 	}
 	
 }
