@@ -1,8 +1,8 @@
 package vendor.utilities.settings;
 
-public class TextNotNullField extends TextField {
+public class TextNotEmptyField extends TextField {
 	
-	public TextNotNullField(String name, String env, String defaultValue){
+	public TextNotEmptyField(String name, String env, String defaultValue){
 		super(name, env, defaultValue);
 	}
 	
