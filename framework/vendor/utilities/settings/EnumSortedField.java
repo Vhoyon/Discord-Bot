@@ -1,5 +1,6 @@
 package vendor.utilities.settings;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class EnumSortedField extends EnumField {
@@ -9,6 +10,7 @@ public class EnumSortedField extends EnumField {
 		super(name, env, defaultValue, otherValues);
 	}
 	
+	@Override
 	public ArrayList<String> getPossibleValues(){
 		return Collections.sort(super.getPossibleValues());
 	}
