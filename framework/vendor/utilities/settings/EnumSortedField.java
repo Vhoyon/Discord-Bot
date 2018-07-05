@@ -12,7 +12,9 @@ public class EnumSortedField extends EnumField {
 	
 	@Override
 	public ArrayList<String> getPossibleValues(){
-		return Collections.sort(super.getPossibleValues());
+		ArrayList<String> sortedArray = super.getPossibleValues();
+		Collections.sort(sortedArray);
+		return sortedArray; 
 	}
 	
 }
