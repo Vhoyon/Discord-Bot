@@ -23,18 +23,18 @@ public abstract class SettingField<E> extends Translatable {
 	}
 	
 	public E getValue() throws BadFormatException{
-		if(value != null){
-			return value;
+		if(this.value != null){
+			return this.value;
 		}
 		
 		try{
-			E envValue = (E)Environment.getVar(envKey);
+			E envValue = (E)Environment.getVar(this.env);
 			
 			if(envValue == null){
-				value = defaultValue;
+				this.value = this.defaultValue;
 			}
 			else{
-				value = this.formatEnvironment(envValue);
+				this.value = this.formatEnvironment(envValue);
 			}
 		}
 		catch(ClassCastException e){
@@ -42,7 +42,7 @@ public abstract class SettingField<E> extends Translatable {
 					"Environment variable is not formatted correctly for its data type!");
 		}
 			
-		return value;
+		return this.value;
 	}
 	
 	public final void setValue(E value) throws IllegalArgumentException{

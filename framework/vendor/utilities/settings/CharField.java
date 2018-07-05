@@ -2,7 +2,7 @@ package vendor.utilities.settings;
 
 public class CharField extends SettingField<Character> {
 	
-	public CharField(String name, String env, String defaultValue){
+	public CharField(String name, String env, char defaultValue){
 		super(name, env, defaultValue);
 	}
 	

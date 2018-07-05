@@ -14,7 +14,7 @@ public class EnumField extends TextField {
 		
 		this.isSorted = isSorted;
 		
-		this.values = this.getValuesArrayList(defaultValue, possibleValues);
+		this.values = this.getValuesArrayList(defaultValue, otherValues);
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public class EnumField extends TextField {
 		for(Object otherValue : otherValues){
 			if(!defaultValue.equals(otherValue)){
 				try{
-					newValues.add(othervalue.toString().toLowerCase());
+					newValues.add(otherValue.toString().toLowerCase());
 				}
 				catch(NullPointerException e){}
 			}
