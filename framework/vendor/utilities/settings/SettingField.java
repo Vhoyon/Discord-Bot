@@ -31,15 +31,18 @@ public abstract class SettingField<E> extends Translatable {
 			E envValue = (E)Environment.getVar(envKey);
 			
 			if(envValue == null){
-				return defaultValue;
+				value = defaultValue;
 			}
-			
-			return this.formatEnvironment(envValue);
+			else{
+				value = this.formatEnvironment(envValue);
+			}
 		}
 		catch(ClassCastException e){
 			throw new BadFormatException(
 					"Environment variable is not formatted correctly for its data type!");
 		}
+			
+		return value;
 	}
 	
 	public final void setValue(E value) throws IllegalArgumentException{

@@ -35,7 +35,7 @@ public class EnumField extends TextField {
 	protected String formatEnvironment(String envValue){
 		String[] possibleValues = envValue.split("\\|");
 		
-		String envDefaultValue = possibleValues[0]
+		String envDefaultValue = possibleValues[0];
 		
 		this.values = this.getValuesArrayList(envDefaultValue, possibleValues);
 		
