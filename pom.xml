@@ -51,6 +51,7 @@
                 </executions>
             </plugin>
         </plugins>
+        <testSourceDirectory>tests</testSourceDirectory>
     </build>
 
     <repositories>
