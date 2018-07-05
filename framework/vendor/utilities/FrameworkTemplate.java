@@ -1,4 +1,4 @@
-package vendor;
+package vendor.utilities;
 
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
