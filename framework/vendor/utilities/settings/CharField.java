@@ -1,15 +1,15 @@
 package vendor.utilities.settings;
 
-public class CharField extends TextNotEmptyField {
+public class CharField extends SettingField<Character> {
 	
 	public CharField(String name, String env, String defaultValue){
 		super(name, env, defaultValue);
 	}
 	
 	@Override
-	protected char sanitizeValue(Object value)
+	protected Character sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		String stringValue = super.sanitizeValue(value);
+		String stringValue = value.toString();
 		
 		if(stringValue.length() != 1){
 			throw new IllegalArgumentException("Only one character is expected!");
