@@ -24,9 +24,16 @@ public class IntegerField extends SettingField<Integer> {
 		int castedValue;
 		
 		try{
-			castedValue = (Integer)value;
+			
+			if (value instanceof String) {
+				castedValue = Integer.valueOf((String)value);
+			}
+			else {
+				castedValue = (Integer)value;
+			}
+			
 		}
-		catch(ClassCastException e){
+		catch(Exception e){
 			throw new IllegalArgumentException("Value is not a number!");
 		}
 		
@@ -37,7 +44,7 @@ public class IntegerField extends SettingField<Integer> {
 		}
 		else if(castedValue > this.max){
 			throw new IllegalArgumentException("Value (" + castedValue
-					+ ") is higher than the maximum required (" + this.min
+					+ ") is higher than the maximum required (" + this.max
 					+ ")!");
 		}
 		
