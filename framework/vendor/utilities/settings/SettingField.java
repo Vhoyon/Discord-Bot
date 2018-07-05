@@ -28,7 +28,13 @@ public abstract class SettingField<E> extends Translatable {
 		}
 		
 		try{
-			return (E)Environment.getVar(env, defaultValue);
+			E envValue = (E)Environment.getVar(envKey);
+			
+			if(envValue == null){
+				return defaultValue;
+			}
+			
+			return this.formatEnvironment(envValue);
 		}
 		catch(ClassCastException e){
 			throw new BadFormatException(
@@ -59,5 +65,9 @@ public abstract class SettingField<E> extends Translatable {
 	}
 	
 	protected abstract E sanitizeValue(Object value) throws IllegalArgumentException;
+	
+	protected E formatEnvironment(E envValue){
+		return envValue;
+	}
 	
 }
