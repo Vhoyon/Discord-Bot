@@ -36,12 +36,16 @@ public abstract class SettingField<E> extends Translatable {
 		}
 	}
 	
-	public void setValue(E value) throws IllegalArgumentException{
+	public final void setValue(E value) throws IllegalArgumentException{
 		this.setValue(value, null);
 	}
 	
-	public void setValue(E value, Consumer<E> onChange)
+	public final void setValue(E value, Consumer<E> onChange)
 			throws IllegalArgumentException{
+		
+		if(value == null){
+			throw new IllegalArgumentException("Value cannot be null!");
+		}
 		
 		this.value = this.sanitizeValue(value);
 		

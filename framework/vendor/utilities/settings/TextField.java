@@ -9,10 +9,6 @@ public class TextField extends SettingField<String> {
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		if(value == null){
-			throw new IllegalArgumentException("Value cannot be null!");
-		}
-		
 		return value.toString();
 	}
 	
