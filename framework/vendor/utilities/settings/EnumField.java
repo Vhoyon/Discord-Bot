@@ -5,14 +5,11 @@ import java.util.Arrays;
 
 public class EnumField extends TextField {
 	
-	private boolean isSorted;
-	private ArrayList<String> values;
+	protected ArrayList<String> values;
 	
-	public EnumField(String name, String env, boolean isSorted,
+	public EnumField(String name, String env,
 		Object defaultValue, Object... otherValues){
 		super(name, env, defaultValue.toString().toLowerCase());
-		
-		this.isSorted = isSorted;
 		
 		this.values = this.getValuesArrayList(defaultValue, otherValues);
 	}
@@ -29,6 +26,10 @@ public class EnumField extends TextField {
 		
 		return stringValue;
 		
+	}
+	
+	public ArrayList<String> getPossibleValues(){
+		return this.values;
 	}
 	
 	@Override
