@@ -7,6 +7,7 @@ import java.util.HashMap;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
+import net.dv8tion.jda.core.managers.GuildManager;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
@@ -151,6 +152,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
+	public Member getSelfMember(){
+		return getGuild().getSelfMember();
+	}
+	
 	public SelfUser getSelfUser(){
 		return FrameworkTemplate.jda.getSelfUser();
 	}
@@ -181,6 +186,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String getTextChannelId(){
 		return getEventDigger().getChannelId();
+	}
+	
+	public GuildManager getGuildManager(){
+		return new Guildmanager(getGuild());
 	}
 	
 	public Guild getGuild(){
