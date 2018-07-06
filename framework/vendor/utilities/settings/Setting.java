@@ -52,4 +52,8 @@ public class Setting {
 		return this.fields;
 	}
 	
+	public <SettingValue> SettingValue getFieldValue(String name){
+		return (SettingValue)this.getField(name).getValue();
+	}
+	
 }
