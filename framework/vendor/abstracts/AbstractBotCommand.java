@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.managers.AccountManager;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
@@ -17,6 +18,7 @@ import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
 import vendor.utilities.formatting.DiscordFormatter;
+import vendor.utilities.FrameworkTemplate;
 
 public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
@@ -147,6 +149,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	protected MessageReceivedEvent getEvent(){
 		return getEventDigger().getEvent();
+	}
+	
+	public SelfUser getSelfUser(){
+		return FrameworkTemplate.jda.getSelfUser();
+	}
+	
+	public AccountManager getSelfUserManager(){
+		return getSelfUser().getManager();
 	}
 	
 	public Member getMember(){

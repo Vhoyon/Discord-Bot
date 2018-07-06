@@ -18,6 +18,8 @@ public class CommandSetting extends BotCommand {
 		});
 		
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
+			getSelfUserManager().setName(value.toString());
+			
 			sendMessage("The nickname of the bot is now set to `" + value + "`!");
 		}, (parameterName) -> {
 			sendMessage("The nickname of the bot cannot be empty!");
@@ -64,7 +66,10 @@ public class CommandSetting extends BotCommand {
 		{
 			new ParametersHelp(
 					"Changes the prefix used for each command. Default is `" + getSettings().getField("prefix").getDefaultValue() + "`.",
-					"prefix")
+					"prefix"),
+			new ParametersHelp(
+					"Changes the bot's nickname. His default name is `" + getSettings().getField("nickname").getDefaultValue() + "`.",
+					"nickname"),
 		};
 	}
 	
