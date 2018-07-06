@@ -7,7 +7,7 @@ import java.util.HashMap;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
-import net.dv8tion.jda.core.managers.GuildManager;
+import net.dv8tion.jda.core.managers.GuildController;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
@@ -188,8 +188,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getChannelId();
 	}
 	
-	public GuildManager getGuildManager(){
-		return new GuildManager(getGuild());
+	public GuildController getGuildController(){
+		return new GuildController(getGuild());
 	}
 	
 	public Guild getGuild(){
@@ -277,6 +277,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		forget(BUFFER_VOICE_CHANNEL);
 		
+	}
+	
+	public void setSelfNickname(String nickname){
+		this.setNicknameOf(this.getSelfMember(), nickname);
+	}
+	
+	public void setNicknameOf(Member member, String nickname){
+		this.getGuildController().setNickname(member, nickname).complete();
 	}
 	
 	public String sendMessage(String messageToSend){
