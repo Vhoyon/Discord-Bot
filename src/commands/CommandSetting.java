@@ -14,7 +14,13 @@ public class CommandSetting extends BotCommand {
 		tryAndChangeSetting("prefix", "prefix", (value) -> {
 			sendMessage("You switched the prefix to `" + value + "`!");
 		}, (parameterName) -> {
-			sendMessage("You dun goofed");
+			sendMessage("The prefix setting requires at least one character!");
+		});
+		
+		tryAndChangeSetting("nickname", "nickname", (value) -> {
+			sendMessage("The nickname of the bot is now set to `" + value + "`!");
+		}, (parameterName) -> {
+			sendMessage("The nickname of the bot cannot be empty!");
 		});
 		
 	}
@@ -22,15 +28,19 @@ public class CommandSetting extends BotCommand {
 	public void tryAndChangeSetting(String settingName, String parameterName,
 			Consumer<Object> onSuccess, Consumer<String> onNoContent){
 		
-		try{
+		if(hasParameter(parameterName)){
 			
-			String parameterContent = getParameter(parameterName).getParameterContent();
+			try{
+				
+				String parameterContent = getParameter(parameterName).getParameterContent();
+				
+				setSetting(settingName, parameterContent, onSuccess);
+				
+			}
+			catch(NoContentException e){
+				onNoContent.accept(parameterName);
+			}
 			
-			setSetting(settingName, parameterContent, onSuccess);
-			
-		}
-		catch(NoContentException e){
-			onNoContent.accept(parameterName);
 		}
 		
 	}
