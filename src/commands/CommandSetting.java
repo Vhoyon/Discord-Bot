@@ -2,6 +2,7 @@ package commands;
 
 import utilities.BotCommand;
 import errorHandling.BotError;
+import vendor.exceptions.NoContentException;
 import vendor.objects.ParametersHelp;
 
 import java.util.function.Consumer;
@@ -28,7 +29,12 @@ public class CommandSetting extends BotCommand {
 		
 		if(hasParameter(parameterName)){
 			
-			String parameterContent = getParameter(parameterName).getParameterContent();
+			String parameterContent = null;
+			
+			try{
+				parameterContent = getParameter(parameterName).getParameterContent();
+			}
+			catch(NoContentException e){}
 			
 			if(parameterContent == null){
 				
