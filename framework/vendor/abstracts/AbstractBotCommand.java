@@ -149,6 +149,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
+	public Member getMember(){
+		return getEventDigger().getMember();
+	}
+	
 	public User getUser(){
 		return getEventDigger().getUser();
 	}
