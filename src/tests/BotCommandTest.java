@@ -2,6 +2,8 @@ package tests;
 
 import org.junit.jupiter.api.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class BotCommandTest {
 	
 	@BeforeEach
@@ -16,7 +18,7 @@ class BotCommandTest {
 	
 	@Test
 	void getRouter(){
-		assert false;
+		assertTrue(false);
 	}
 	
 	@Test
