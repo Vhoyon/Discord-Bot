@@ -18,7 +18,7 @@ public class CommandSetting extends BotCommand {
 		});
 		
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
-			getGuildManager().setNickName(getSelfMember(), value.toString());
+			getGuildManager().setNickname(getSelfMember(), value.toString());
 			
 			sendMessage("The nickname of the bot is now set to `" + value + "`!");
 		}, (parameterName) -> {

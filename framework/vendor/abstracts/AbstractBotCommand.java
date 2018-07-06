@@ -189,7 +189,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public GuildManager getGuildManager(){
-		return new Guildmanager(getGuild());
+		return new GuildManager(getGuild());
 	}
 	
 	public Guild getGuild(){
