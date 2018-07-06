@@ -168,12 +168,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			settings = (Setting)getBuffer().get(settingsKey);
 		}
 		
-		String prefix = null;
-		
-		try{
-			prefix = (String)settings.getField("prefix").getValue();
-		}
-		catch(BadFormatException e){}
+		String prefix = settings.getFieldValue("prefix");
 		
 		return prefix;
 		

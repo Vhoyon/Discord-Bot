@@ -1,8 +1,9 @@
 package vendor.utilities.settings;
 
 import vendor.abstracts.Translatable;
-import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
+import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
 
 import java.util.function.Consumer;
 
@@ -22,7 +23,7 @@ public abstract class SettingField<E> extends Translatable {
 		
 	}
 	
-	public E getValue() throws BadFormatException{
+	public E getValue(){
 		if(this.value != null){
 			return this.value;
 		}
@@ -38,8 +39,12 @@ public abstract class SettingField<E> extends Translatable {
 			}
 		}
 		catch(ClassCastException e){
-			throw new BadFormatException(
-					"Environment variable is not formatted correctly for its data type!");
+			
+			Logger.log("Environment variable is not formatted correctly for its data type! Using default value.",
+				LogType.WARNING);
+			
+			this.value = this.getDefaultValue();
+			
 		}
 			
 		return this.value;
