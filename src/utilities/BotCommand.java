@@ -33,10 +33,14 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		return buildVCommand(getCommandName());
 	}
 	
+	public Setting getSettings(){
+		return (Setting)getMemory(BUFFER_SETTINGS);
+	}
+	
 	public <SettingValue> SettingValue setting(String settingName)
 			throws BadFormatException{
 		
-		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
+		Setting settings = this.getSettings();
 		
 		Object value = settings.getField(settingName).getValue();
 		
@@ -50,7 +54,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	
 	public void setSetting(String settingName, Object value, Consumer<Object> onChange){
 		
-		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
+		Setting settings = this.getSettings();
 		
 		settings.save(settingName, value, onChange);
 		

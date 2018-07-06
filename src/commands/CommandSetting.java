@@ -9,21 +9,26 @@ public class CommandSetting extends BotCommand {
 	@Override
 	public void action(){
 		
+		tryAndChangeSetting("prefix", "prefix", (value) -> {
+			sendMessage("You switched the prefix to `" + value + "`!");
+		}, (parameterName) -> {
+			sendMessage("You dun goofed");
+		});
+		
+	}
+	
+	public void tryAndChangeSetting(String settingName, String parameterName,
+			Consumer<Object> onSuccess, Consumer<String> onNoContent){
+		
 		try{
 			
-			String prefixContent = getParameter("prefix").getParameterContent();
+			String parameterContent = getParameter(parameterName).getParameterContent();
 			
-			setSetting("prefix", prefixContent, (value) -> {
-				
-				sendMessage("You switched the prefix to `" + value + "`!");
-				
-			});
+			setSetting(settingName, parameterContent, onSuccess);
 			
 		}
 		catch(NoContentException e){
-			
-			sendMessage("You dun goofed");
-			
+			onNoContent.accept(parameterName);
 		}
 		
 	}
@@ -46,7 +51,7 @@ public class CommandSetting extends BotCommand {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Changes the prefix used for each command. Default is `!!`.",
+					"Changes the prefix used for each command. Default is `" + getSettings().getField("prefix").getDefaultValue() + "`.",
 					"prefix")
 		};
 	}

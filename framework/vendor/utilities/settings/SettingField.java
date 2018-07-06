@@ -31,7 +31,7 @@ public abstract class SettingField<E> extends Translatable {
 			E envValue = (E)Environment.getVar(this.env);
 			
 			if(envValue == null){
-				this.value = this.defaultValue;
+				this.value = this.getDefaultValue();
 			}
 			else{
 				this.value = this.formatEnvironment(envValue);
@@ -43,6 +43,10 @@ public abstract class SettingField<E> extends Translatable {
 		}
 			
 		return this.value;
+	}
+	
+	public E getDefaultValue(){
+		return this.defaultValue;
 	}
 	
 	public final void setValue(E value) throws IllegalArgumentException{
