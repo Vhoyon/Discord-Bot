@@ -20,20 +20,27 @@ public class CommandStop extends BotCommand {
 			}
 			else{
 				
-				new CommandConfirmed(this){
-					@Override
-					public String getConfMessage(){
-						return "Please confirm that you want to stop the "
+				boolean isConfirming = setting("confirm_stop");
+				
+				if(!isConfirming){
+					stopCommandLogic(commandToStop);
+				}
+				else{
+					new CommandConfirmed(this){
+						@Override
+						public String getConfMessage(){
+							return "Please confirm that you want to stop the "
 								+ buildVCommand(commandToStop.getCommandName())
 								+ " command.";
-					}
+						}
+						
+						@Override
+						public void confirmed(){
+							stopCommandLogic(commandToStop);
+						}
+					};
+				}
 					
-					@Override
-					public void confirmed(){
-						stopCommandLogic(commandToStop);
-					}
-				};
-				
 			}
 			
 		}

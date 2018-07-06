@@ -22,6 +22,17 @@ public class CommandSetting extends BotCommand {
 			sendMessage("The nickname of the bot is now set to `" + value + "`!");
 		});
 		
+		tryAndChangeSetting("confirm_stop", "confirm_stop", (value) -> {
+			boolean isConfirming = (boolean)value;
+			
+			if(isConfirming){
+				sendMessage("Stopping the most recent running command will now ask for a confirmation.");
+			}
+			else{
+				sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
+			}
+		});
+		
 	}
 	
 	public void tryAndChangeSetting(String settingName, String parameterName,
