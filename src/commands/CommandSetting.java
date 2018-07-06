@@ -35,7 +35,7 @@ public class CommandSetting extends BotCommand {
 				Object defaultSettingValue = getSettings().getField(settingName).getDefaultValue();
 				
 				sendMessage("The default value for the setting " + code(settingName)
-					+ " is : " + code(defaultSettingValue) + ".");
+					+ " is : " + code(defaultSettingValue.toString()) + ".");
 				
 			}
 			else{
