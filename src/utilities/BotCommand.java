@@ -3,7 +3,6 @@ package utilities;
 import app.CommandRouter;
 import utilities.interfaces.*;
 import vendor.abstracts.AbstractBotCommand;
-import vendor.exceptions.BadFormatException;
 import vendor.utilities.settings.Setting;
 
 import java.util.function.Consumer;
@@ -37,8 +36,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		return (Setting)getMemory(BUFFER_SETTINGS);
 	}
 	
-	public <SettingValue> SettingValue setting(String settingName)
-			throws BadFormatException{
+	public <SettingValue> SettingValue setting(String settingName){
 		
 		Setting settings = this.getSettings();
 		
