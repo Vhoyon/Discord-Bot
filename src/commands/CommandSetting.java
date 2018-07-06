@@ -1,7 +1,7 @@
 package commands;
 
 import utilities.BotCommand;
-import vendor.exceptions.NoContentException;
+import errorHandling.BotError;
 import vendor.objects.ParametersHelp;
 
 import java.util.function.Consumer;
@@ -13,34 +13,40 @@ public class CommandSetting extends BotCommand {
 		
 		tryAndChangeSetting("prefix", "prefix", (value) -> {
 			sendMessage("You switched the prefix to `" + value + "`!");
-		}, (parameterName) -> {
-			sendMessage("The prefix setting requires at least one character!");
 		});
 		
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
 			setSelfNickname(value.toString());
 			
 			sendMessage("The nickname of the bot is now set to `" + value + "`!");
-		}, (parameterName) -> {
-			sendMessage("The nickname of the bot cannot be empty!");
 		});
 		
 	}
 	
 	public void tryAndChangeSetting(String settingName, String parameterName,
-			Consumer<Object> onSuccess, Consumer<String> onNoContent){
+			Consumer<Object> onSuccess){
 		
 		if(hasParameter(parameterName)){
 			
-			try{
+			String parameterContent = getParameter(parameterName).getParameterContent();
+			
+			if(parameterContent == null){
 				
-				String parameterContent = getParameter(parameterName).getParameterContent();
+				Object defaultSettingValue = getSettings().getField(settingName).getDefaultValue();
 				
-				setSetting(settingName, parameterContent, onSuccess);
+				sendMessage("The default value for the setting " + code(settingName)
+					+ " is : " + code(defaultSettingValue) + ".");
 				
 			}
-			catch(NoContentException e){
-				onNoContent.accept(parameterName);
+			else{
+				
+				try{
+					setSetting(settingName, parameterContent, onSuccess);
+				}
+				catch(IllegalArgumentException e){
+					new BotError(this, e.getMessage());
+				}
+				
 			}
 			
 		}
