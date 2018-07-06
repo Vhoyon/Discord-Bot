@@ -18,7 +18,7 @@ class BotCommandTest {
 	
 	@Test
 	void getRouter(){
-		assertTrue(false);
+		fail("Testing failures in Travis...");
 	}
 	
 	@Test
