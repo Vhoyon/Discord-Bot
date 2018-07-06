@@ -3,6 +3,7 @@ package vendor.objects;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import vendor.interfaces.Utils;
 
@@ -48,6 +49,10 @@ public class MessageEventDigger {
     
     public String getChannelId(){
         return getChannel().getId();
+	}
+	
+	public Member getMember(){
+        return event.getMember();
     }
     
     public User getUser(){

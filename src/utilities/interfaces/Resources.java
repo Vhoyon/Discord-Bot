@@ -28,7 +28,8 @@ public interface Resources {
 	
 	SettingField[] SETTINGS =
 	{
-		new TextNotEmptyField("prefix", "PREFIX", PREFIX)
+		new TextNotEmptyField("prefix", "PREFIX", PREFIX),
+		new TextNotEmptyField("nickname", "NICKNAME", "Vhoyon")
 	};
 	
 }

@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.managers.AccountManager;
+import net.dv8tion.jda.core.managers.GuildController;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
@@ -17,6 +19,7 @@ import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
 import vendor.utilities.formatting.DiscordFormatter;
+import vendor.utilities.FrameworkTemplate;
 
 public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
@@ -149,6 +152,22 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
+	public Member getSelfMember(){
+		return getGuild().getSelfMember();
+	}
+	
+	public SelfUser getSelfUser(){
+		return FrameworkTemplate.jda.getSelfUser();
+	}
+	
+	public AccountManager getSelfUserManager(){
+		return getSelfUser().getManager();
+	}
+	
+	public Member getMember(){
+		return getEventDigger().getMember();
+	}
+	
 	public User getUser(){
 		return getEventDigger().getUser();
 	}
@@ -167,6 +186,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String getTextChannelId(){
 		return getEventDigger().getChannelId();
+	}
+	
+	public GuildController getGuildController(){
+		return new GuildController(getGuild());
 	}
 	
 	public Guild getGuild(){
@@ -254,6 +277,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		forget(BUFFER_VOICE_CHANNEL);
 		
+	}
+	
+	public void setSelfNickname(String nickname){
+		this.setNicknameOf(this.getSelfMember(), nickname);
+	}
+	
+	public void setNicknameOf(Member member, String nickname){
+		this.getGuildController().setNickname(member, nickname).complete();
 	}
 	
 	public String sendMessage(String messageToSend){
