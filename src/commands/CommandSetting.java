@@ -4,6 +4,8 @@ import utilities.BotCommand;
 import vendor.exceptions.NoContentException;
 import vendor.objects.ParametersHelp;
 
+import java.util.function.Consumer;
+
 public class CommandSetting extends BotCommand {
 	
 	@Override
