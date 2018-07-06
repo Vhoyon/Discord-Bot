@@ -90,11 +90,17 @@ public class CommandSetting extends BotCommand {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Changes the prefix used for each command. Default is `" + getSettings().getField("prefix").getDefaultValue() + "`.",
+					"Changes the prefix used for each command. Default is " + code(getSettings().getField("prefix").getDefaultValue().toString()) + ".",
 					"prefix"),
 			new ParametersHelp(
-					"Changes the bot's nickname. His default name is `" + getSettings().getField("nickname").getDefaultValue() + "`.",
+					"Changes the bot's nickname. His default name is " + code(getSettings().getField("nickname").getDefaultValue().toString()) + ".",
 					"nickname"),
+			new ParametersHelp(
+					"Determine the behavior of stopping the most recent running command. "
+					+ code("true") + " to ask for a confirmation, " + code("false")
+					+ " to stop the most recent command without confirming. Default is set to "
+					+ code(getSettings().getField("nickname").getDefaultValue().toString()) + ".",
+					"confirm_stop"),
 		};
 	}
 	
