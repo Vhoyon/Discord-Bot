@@ -40,13 +40,14 @@ public abstract class SettingField<E> extends Translatable {
 		}
 		catch(ClassCastException e){
 			
-			Logger.log("Environment variable is not formatted correctly for its data type! Using default value.",
-				LogType.WARNING);
+			Logger.log(
+					"Environment variable is not formatted correctly for its data type! Using default value.",
+					LogType.WARNING);
 			
 			this.value = this.getDefaultValue();
 			
 		}
-			
+		
 		return this.value;
 	}
 	
@@ -76,7 +77,8 @@ public abstract class SettingField<E> extends Translatable {
 		return this.name;
 	}
 	
-	protected abstract E sanitizeValue(Object value) throws IllegalArgumentException;
+	protected abstract E sanitizeValue(Object value)
+			throws IllegalArgumentException;
 	
 	protected E formatEnvironment(E envValue){
 		return envValue;

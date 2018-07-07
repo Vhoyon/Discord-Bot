@@ -5,7 +5,8 @@ public class TextLengthField extends TextNotEmptyField {
 	private int minLength;
 	private int maxLength;
 	
-	public TextLengthField(String name, String env, String defaultValue, int minLength, int maxLength){
+	public TextLengthField(String name, String env, String defaultValue,
+			int minLength, int maxLength){
 		super(name, env, defaultValue);
 		
 		this.minLength = minLength;
@@ -18,12 +19,16 @@ public class TextLengthField extends TextNotEmptyField {
 		String stringValue = super.sanitizeValue(value);
 		
 		int stringLength = stringValue.length();
-				
+		
 		if(stringLength < this.minLength){
-			throw new IllegalArgumentException("This setting's value needs to have at least " + this.minLength + " characters!");
+			throw new IllegalArgumentException(
+					"This setting's value needs to have at least "
+							+ this.minLength + " characters!");
 		}
 		else if(stringLength > this.maxLength){
-			throw new IllegalArgumentException("This setting's value cannot have more than " + this.maxLength + " characters!");
+			throw new IllegalArgumentException(
+					"This setting's value cannot have more than "
+							+ this.maxLength + " characters!");
 		}
 		
 		return stringValue;

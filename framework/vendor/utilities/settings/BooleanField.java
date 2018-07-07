@@ -13,18 +13,18 @@ public class BooleanField extends SettingField<Boolean> {
 		
 		try{
 			
-			if (value instanceof String) {
+			if(value instanceof String){
 				
 				String stringValue = (String)value;
 				
-				if (!stringValue.matches("^(?i)true|false$")) {
+				if(!stringValue.matches("^(?i)true|false$")){
 					throw new Exception();
 				}
 				
 				castedValue = Boolean.valueOf(stringValue);
 				
 			}
-			else {
+			else{
 				
 				castedValue = (boolean)value;
 				

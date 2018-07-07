@@ -50,7 +50,8 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		this.setSetting(settingName, value, null);
 	}
 	
-	public void setSetting(String settingName, Object value, Consumer<Object> onChange){
+	public void setSetting(String settingName, Object value,
+			Consumer<Object> onChange){
 		
 		Setting settings = this.getSettings();
 		

@@ -19,19 +19,23 @@ public class CommandSetting extends BotCommand {
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
 			setSelfNickname(value.toString());
 			
-			sendMessage("The nickname of the bot is now set to `" + value + "`!");
+			sendMessage("The nickname of the bot is now set to `" + value
+					+ "`!");
 		});
 		
-		tryAndChangeSetting("confirm_stop", "confirm_stop", (value) -> {
-			boolean isConfirming = (boolean)value;
-			
-			if(isConfirming){
-				sendMessage("Stopping the most recent running command will now ask for a confirmation.");
-			}
-			else{
-				sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
-			}
-		});
+		tryAndChangeSetting(
+				"confirm_stop",
+				"confirm_stop",
+				(value) -> {
+					boolean isConfirming = (boolean)value;
+					
+					if(isConfirming){
+						sendMessage("Stopping the most recent running command will now ask for a confirmation.");
+					}
+					else{
+						sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
+					}
+				});
 		
 	}
 	
@@ -43,18 +47,23 @@ public class CommandSetting extends BotCommand {
 			String parameterContent = null;
 			
 			try{
-				parameterContent = getParameter(parameterName).getParameterContent();
+				parameterContent = getParameter(parameterName)
+						.getParameterContent();
 			}
 			catch(NoContentException e){}
 			
 			if(parameterContent == null){
 				
-				Object defaultSettingValue = getSettings().getField(settingName).getDefaultValue();
-				Object currentSettingValue = getSettings().getField(settingName).getDefaultValue();
+				Object defaultSettingValue = getSettings()
+						.getField(settingName).getDefaultValue();
+				Object currentSettingValue = getSettings()
+						.getField(settingName).getDefaultValue();
 				
-				sendMessage("The default value for the setting " + code(settingName)
-					+ " is : " + ital(code(defaultSettingValue))
-					+ ". Current value : " + code(currentSettingValue) + ".");
+				sendMessage("The default value for the setting "
+						+ code(settingName) + " is : "
+						+ ital(code(defaultSettingValue))
+						+ ". Current value : " + code(currentSettingValue)
+						+ ".");
 				
 			}
 			else{
@@ -90,17 +99,21 @@ public class CommandSetting extends BotCommand {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Changes the prefix used for each command. Default is " + code(getSettings().getField("prefix").getDefaultValue()) + ".",
-					"prefix"),
+					"Changes the prefix used for each command. Default is "
+							+ code(getSettings().getField("prefix")
+									.getDefaultValue()) + ".", "prefix"),
 			new ParametersHelp(
-					"Changes the bot's nickname. His default name is " + code(getSettings().getField("nickname").getDefaultValue()) + ".",
-					"nickname"),
+					"Changes the bot's nickname. His default name is "
+							+ code(getSettings().getField("nickname")
+									.getDefaultValue()) + ".", "nickname"),
 			new ParametersHelp(
 					"Determine the behavior of stopping the most recent running command. "
-					+ code("true") + " to ask for a confirmation, " + code("false")
-					+ " to stop the most recent command without confirming. Default is set to "
-					+ code(getSettings().getField("nickname").getDefaultValue()) + ".",
-					"confirm_stop"),
+							+ code("true")
+							+ " to ask for a confirmation, "
+							+ code("false")
+							+ " to stop the most recent command without confirming. Default is set to "
+							+ code(getSettings().getField("nickname")
+									.getDefaultValue()) + ".", "confirm_stop"),
 		};
 	}
 	

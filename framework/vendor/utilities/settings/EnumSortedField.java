@@ -5,8 +5,8 @@ import java.util.Collections;
 
 public class EnumSortedField extends EnumField {
 	
-	public EnumSortedField(String name, String env,
-		Object defaultValue, Object... otherValues){
+	public EnumSortedField(String name, String env, Object defaultValue,
+			Object... otherValues){
 		super(name, env, defaultValue, otherValues);
 	}
 	
@@ -14,7 +14,7 @@ public class EnumSortedField extends EnumField {
 	public ArrayList<String> getPossibleValues(){
 		ArrayList<String> sortedArray = super.getPossibleValues();
 		Collections.sort(sortedArray);
-		return sortedArray; 
+		return sortedArray;
 	}
 	
 }

@@ -1,14 +1,13 @@
 package vendor.utilities.settings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EnumField extends TextField {
 	
 	protected ArrayList<String> values;
 	
-	public EnumField(String name, String env,
-		Object defaultValue, Object... otherValues){
+	public EnumField(String name, String env, Object defaultValue,
+			Object... otherValues){
 		super(name, env, defaultValue.toString().toLowerCase());
 		
 		this.values = this.getValuesArrayList(defaultValue, otherValues);
@@ -21,7 +20,8 @@ public class EnumField extends TextField {
 		String stringValue = super.sanitizeValue(value).toLowerCase();
 		
 		if(!this.values.contains(stringValue)){
-			throw new IllegalArgumentException("The value " + stringValue + " is not a choice for this setting!");
+			throw new IllegalArgumentException("The value " + stringValue
+					+ " is not a choice for this setting!");
 		}
 		
 		return stringValue;
@@ -43,7 +43,8 @@ public class EnumField extends TextField {
 		return envDefaultValue;
 	}
 	
-	private ArrayList<String> getValuesArrayList(Object defaultValue, Object... otherValues){
+	private ArrayList<String> getValuesArrayList(Object defaultValue,
+			Object... otherValues){
 		
 		ArrayList<String> newValues = new ArrayList<>();
 		

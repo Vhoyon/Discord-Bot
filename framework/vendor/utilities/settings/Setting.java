@@ -25,8 +25,8 @@ public class Setting {
 		
 	}
 	
-	public boolean save(String settingName, Object value, Consumer<Object> onChange)
-			throws IllegalArgumentException{
+	public boolean save(String settingName, Object value,
+			Consumer<Object> onChange) throws IllegalArgumentException{
 		
 		if(!hasField(settingName)){
 			return false;

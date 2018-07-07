@@ -12,7 +12,8 @@ public class CharField extends SettingField<Character> {
 		String stringValue = value.toString();
 		
 		if(stringValue.length() != 1){
-			throw new IllegalArgumentException("Only one character is expected!");
+			throw new IllegalArgumentException(
+					"Only one character is expected!");
 		}
 		
 		return stringValue.charAt(0);
