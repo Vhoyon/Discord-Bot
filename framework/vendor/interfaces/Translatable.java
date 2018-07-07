@@ -35,7 +35,7 @@ public interface Translatable {
 	 * @return The language String found in the resources with the variables
 	 *         replaced, or <code>null</code> if there is absolutely no string
 	 *         found in the resources.
-	 * @see {@link #langDirect(String key)}
+	 * @see #langDirect(String key)
 	 */
 	default String langDirect(String key, Object... replacements){
 		return getDictionary().getDirectString(key, replacements);
@@ -53,7 +53,7 @@ public interface Translatable {
 	 *            The key to search the resource lang files for.
 	 * @return The language String found in the resources, or <code>null</code>
 	 *         if there is absolutely no string found in the resources.
-	 * @see {@link #langDirect(String key, Object... replacements)}
+	 * @see #langDirect(String key, Object... replacements)
 	 */
 	default String langDirect(String key){
 		return getDictionary().getDirectString(key);
