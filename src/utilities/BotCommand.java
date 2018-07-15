@@ -3,7 +3,6 @@ package utilities;
 import app.CommandRouter;
 import utilities.interfaces.*;
 import vendor.abstracts.AbstractBotCommand;
-import vendor.exceptions.BadFormatException;
 import vendor.utilities.settings.Setting;
 
 import java.util.function.Consumer;
@@ -33,10 +32,13 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		return buildVCommand(getCommandName());
 	}
 	
-	public <SettingValue> SettingValue setting(String settingName)
-			throws BadFormatException{
+	public Setting getSettings(){
+		return (Setting)getMemory(BUFFER_SETTINGS);
+	}
+	
+	public <SettingValue> SettingValue setting(String settingName){
 		
-		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
+		Setting settings = this.getSettings();
 		
 		Object value = settings.getField(settingName).getValue();
 		
@@ -48,9 +50,10 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		this.setSetting(settingName, value, null);
 	}
 	
-	public void setSetting(String settingName, Object value, Consumer<Object> onChange){
+	public void setSetting(String settingName, Object value,
+			Consumer<Object> onChange){
 		
-		Setting settings = (Setting)getMemory(BUFFER_SETTINGS);
+		Setting settings = this.getSettings();
 		
 		settings.save(settingName, value, onChange);
 		

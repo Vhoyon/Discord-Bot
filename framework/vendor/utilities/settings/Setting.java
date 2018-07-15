@@ -20,13 +20,13 @@ public class Setting {
 		for(SettingField<Object> field : fields){
 			field.setDictionary(dict);
 			
-			this.fields.put(field.getName(), field);
+			this.getFieldsMap().put(field.getName(), field);
 		}
 		
 	}
 	
-	public boolean save(String settingName, Object value, Consumer<Object> onChange)
-			throws IllegalArgumentException{
+	public boolean save(String settingName, Object value,
+			Consumer<Object> onChange) throws IllegalArgumentException{
 		
 		if(!hasField(settingName)){
 			return false;
@@ -41,11 +41,19 @@ public class Setting {
 	}
 	
 	public boolean hasField(String name){
-		return fields.containsKey(name);
+		return this.getFieldsMap().containsKey(name);
 	}
 	
 	public SettingField<Object> getField(String name){
-		return fields.get(name);
+		return this.getFieldsMap().get(name);
+	}
+	
+	public HashMap<String, SettingField<Object>> getFieldsMap(){
+		return this.fields;
+	}
+	
+	public <SettingValue> SettingValue getFieldValue(String name){
+		return (SettingValue)this.getField(name).getValue();
 	}
 	
 }

@@ -7,9 +7,9 @@ public class TextField extends SettingField<String> {
 	}
 	
 	@Override
-	protected String sanitizeValue(String value)
+	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		return value;
+		return value.toString();
 	}
 	
 }

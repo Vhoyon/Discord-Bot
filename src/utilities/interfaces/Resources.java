@@ -1,8 +1,7 @@
 package utilities.interfaces;
 
 import vendor.objects.Language;
-import vendor.utilities.settings.SettingField;
-import vendor.utilities.settings.TextNotNullField;
+import vendor.utilities.settings.*;
 
 /**
  * Contient les constantes du bot
@@ -28,7 +27,9 @@ public interface Resources {
 	
 	SettingField[] SETTINGS =
 	{
-		new TextNotNullField("prefix", "PREFIX", PREFIX)
+		new TextNotEmptyField("prefix", "PREFIX", PREFIX),
+		new TextNotEmptyField("nickname", "NICKNAME", "Vhoyon"),
+		new BooleanField("confirm_stop", "SHOULD_CONFIRM_STOP", true)
 	};
 	
 }

@@ -2,7 +2,6 @@ package commands;
 
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
-import utilities.music.MusicPlayer;
 import vendor.exceptions.BadParameterException;
 
 import errorHandling.BotError;
@@ -18,17 +17,9 @@ public class CommandMusicVolume extends MusicCommands {
 			
 			int volume = Integer.valueOf(content);
 			
-			if(volume < 0 || volume > 100){
-				throw new BadParameterException();
-			}
-			else{
-				
-				MusicManager.get().getPlayer(this).getAudioPlayer()
-						.setVolume(volume / (100 / MusicPlayer.MAX_VOLUME));
-				
-				sendMessage(lang("ChangedSuccess", volume));
-				
-			}
+			MusicManager.get().getPlayer(this).setVolume(volume);
+			
+			sendMessage(lang("ChangedSuccess", volume));
 			
 		}
 		catch(NumberFormatException e){
@@ -44,9 +35,10 @@ public class CommandMusicVolume extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_VOLUME;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Change the volume of the music that the bot plays";
 	}
+	
 }

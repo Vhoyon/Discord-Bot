@@ -1,10 +1,13 @@
 package vendor.abstracts;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.managers.AccountManager;
+import net.dv8tion.jda.core.managers.GuildController;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
@@ -15,9 +18,11 @@ import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
+import vendor.utilities.formatting.DiscordFormatter;
+import vendor.utilities.FrameworkTemplate;
 
 public abstract class AbstractBotCommand extends Translatable implements
-		Emojis, Utils, LinkableCommand, FrameworkResources {
+		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
 	
 	public enum BufferLevel{
 		CHANNEL, SERVER, USER
@@ -27,10 +32,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	protected AbstractCommandRouter router;
 	
-	private boolean isAlive;
+	private boolean isCopy;
 	
 	public AbstractBotCommand(){
-		this.isAlive = true;
+		this.isCopy = false;
 	}
 	
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
@@ -43,12 +48,31 @@ public abstract class AbstractBotCommand extends Translatable implements
 		setRouter(commandToCopy.getRouter());
 		setDictionary(commandToCopy.getDictionary());
 		
-		this.isAlive = commandToCopy.isAlive();
+		this.isCopy = true;
 		
 	}
 	
 	public String getCommandName(){
-		return getRequest().getCommand();
+		
+		String requestName = getRequest().getCommand();
+		
+		Object calls = getCalls();
+		
+		if(calls instanceof String[]){
+			
+			if(Arrays.asList((String[])calls).contains(requestName))
+				return requestName;
+			
+		}
+		else{
+			
+			if(calls.equals(requestName))
+				return requestName;
+			
+		}
+		
+		return getDefaultCall();
+		
 	}
 	
 	protected String getContent(){
@@ -128,6 +152,22 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
+	public Member getSelfMember(){
+		return getGuild().getSelfMember();
+	}
+	
+	public SelfUser getSelfUser(){
+		return FrameworkTemplate.jda.getSelfUser();
+	}
+	
+	public AccountManager getSelfUserManager(){
+		return getSelfUser().getManager();
+	}
+	
+	public Member getMember(){
+		return getEventDigger().getMember();
+	}
+	
 	public User getUser(){
 		return getEventDigger().getUser();
 	}
@@ -146,6 +186,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String getTextChannelId(){
 		return getEventDigger().getChannelId();
+	}
+	
+	public GuildController getGuildController(){
+		return new GuildController(getGuild());
 	}
 	
 	public Guild getGuild(){
@@ -180,12 +224,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getRouter().getRequest();
 	}
 	
+	public boolean isCopy(){
+		return this.isCopy;
+	}
+	
 	public boolean isAlive(){
-		return this.isAlive;
+		return this.getRouter().isAlive();
 	}
 	
 	public void kill(){
-		this.isAlive = false;
+		this.getRouter().interrupt();
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
@@ -229,6 +277,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		forget(BUFFER_VOICE_CHANNEL);
 		
+	}
+	
+	public void setSelfNickname(String nickname){
+		this.setNicknameOf(this.getSelfMember(), nickname);
+	}
+	
+	public void setNicknameOf(Member member, String nickname){
+		this.getGuildController().setNickname(member, nickname).complete();
 	}
 	
 	public String sendMessage(String messageToSend){
@@ -336,6 +392,40 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public void log(String message){
 		Logger.log(message);
+	}
+	
+	/**
+	 * @return A String that starts with the router's command prefix
+	 *         followed by the <i>commandName</i> parameter.
+	 */
+	public String buildCommand(String command){
+		return getRouter().getCommandPrefix() + command;
+	}
+	
+	/**
+	 * @return A String that starts with the <i>PREFIX</i> found in Ressources
+	 *         followed by the <i>commandName</i> parameter, surrounded by two
+	 *         "<b>`</b>" tick, meaning the visual will be like code in Discord.
+	 */
+	public String buildVCommand(String command){
+		return code(buildCommand(command));
+	}
+	
+	/**
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
+	 *         Ressources followed by the <i>parameter</i> parameter.
+	 */
+	public String buildParameter(String parameter){
+		// TODO : Get the Parameter Prefix from the router
+		return "--" + parameter;
+	}
+	
+	/**
+	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
+	 *         Ressources followed by the <i>parameter</i> parameter.
+	 */
+	public String buildVParameter(String parameter){
+		return code(buildParameter(parameter));
 	}
 	
 }

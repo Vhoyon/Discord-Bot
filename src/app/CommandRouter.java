@@ -1,13 +1,11 @@
 package app;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import utilities.*;
 import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
 import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
-import vendor.exceptions.BadFormatException;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
 import vendor.interfaces.Emojis;
@@ -168,12 +166,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			settings = (Setting)getBuffer().get(settingsKey);
 		}
 		
-		String prefix = null;
-		
-		try{
-			prefix = (String)settings.getField("prefix").getValue();
-		}
-		catch(BadFormatException e){}
+		String prefix = settings.getFieldValue("prefix");
 		
 		return prefix;
 		
