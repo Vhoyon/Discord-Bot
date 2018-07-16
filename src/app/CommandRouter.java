@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
 import utilities.specifics.*;
-import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
@@ -15,10 +14,11 @@ import vendor.objects.*;
 import errorHandling.BotError;
 import errorHandling.BotErrorPrivate;
 import vendor.utilities.CommandsThreadManager;
+import vendor.utilities.formatting.DiscordFormatter;
 import vendor.utilities.settings.Setting;
 
 public class CommandRouter extends AbstractCommandRouter implements Resources,
-		Commands, Emojis {
+		Commands, Emojis, DiscordFormatter {
 	
 	public CommandRouter(MessageReceivedEvent event, String receivedMessage,
 			Buffer buffer, CommandsRepository commandsRepo){
@@ -127,8 +127,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	
 	@Override
 	public Command commandWhenFromPrivate(){
-		return new BotErrorPrivate("*"
-				+ lang("MessageReceivedFromPrivateResponse") + "*", true);
+		return new BotErrorPrivate(ital(lang("MessageReceivedFromPrivateResponse")), true);
 	}
 	
 	@Override
