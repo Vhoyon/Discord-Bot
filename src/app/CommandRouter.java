@@ -108,12 +108,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 				try{
 					
-					AbstractBotCommand botCommand = (AbstractBotCommand)command;
-					
-					botCommand.setRouter(this);
-					botCommand.setDictionary(getDictionary());
-					
-					command.action();
+					getAbstractBotCommand().action();
 					
 				}
 				catch(NullPointerException e){}

@@ -8,6 +8,7 @@ import vendor.interfaces.Translatable;
 import vendor.interfaces.Utils;
 import vendor.objects.*;
 import vendor.res.FrameworkResources;
+import vendor.abstracts.AbstractBotCommand;
 
 public abstract class AbstractCommandRouter extends Thread implements Utils,
 		Translatable, FrameworkResources {
@@ -93,6 +94,17 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	@Override
 	public void setDictionary(Dictionary dict){
 		this.dict = dict;
+	}
+	
+	protected AbstractBotCommand getAbstractBotCommand(){
+		
+		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
+		
+		botCommand.setRouter(this);
+		botCommand.setDictionary(getDictionary());
+		
+		return botCommand;
+		
 	}
 	
 	/**
