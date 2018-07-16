@@ -28,7 +28,7 @@ public class TextRegexField extends TextField {
 			throws IllegalArgumentException{
 		String stringValue = super.sanitizeValue(value);
 		
-		if(!(stringValue.matches(this.regexToMatch) ^ this.isInverted)){
+		if(stringValue.matches(this.regexToMatch) == this.isInverted){
 			throw new IllegalArgumentException(
 					"Value does not match the required pattern!");
 		}
