@@ -41,7 +41,9 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			
 			try{
 				
-				if((command = validateMessage()) == null){
+				setCommand(validateMessage());
+				
+				if(getCommand() == null){
 					
 					String routerKey = eventDigger.getCommandKey(request
 							.getCommand());
@@ -78,10 +80,10 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					catch(NullPointerException e){}
 					
 					if(request.hasError()){
-						command = new BotError(request.getError(), false);
+						setCommand(new BotError(request.getError(), false));
 						
-						command.action();
-						command = null;
+						getCommand().action();
+						setCommand(null);
 					}
 					
 					if(!confirmationConfirmed){
@@ -91,14 +93,14 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						if(CommandsThreadManager.isCommandRunning(commandName,
 								eventDigger, this)){
 							
-							command = new BotError(lang(
-									"CommandIsRunningError", commandName));
+							setCommand(new BotError(lang(
+									"CommandIsRunningError", commandName)));
 							
 						}
 						else{
 							
-							command = getCommandsRepo().getContainer()
-									.initiateLink(commandName);
+							setCommand(getCommandsRepo().getContainer()
+									.initiateLink(commandName));
 							
 						}
 						
