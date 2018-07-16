@@ -157,7 +157,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		
 		if(!hasSettings){
 			
-			settings = new Setting(SETTINGS);
+			settings = new Setting(getDictionary(), SETTINGS);
 			
 			getBuffer().push(settings, settingsKey);
 			
