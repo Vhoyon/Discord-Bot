@@ -89,7 +89,7 @@ public class Request extends Translatable implements Utils {
 	private String commandPrefix;
 	
 	private HashMap<String, Parameter> parameters;
-	private String parametersPrefix;
+	private char parametersPrefix;
 	
 	private String error;
 	
