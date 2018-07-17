@@ -171,6 +171,10 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	@Override
 	public char getCommandParameterPrefix(){
 		
+		String textChannelKey = getEventDigger().getChannelKey();
+ 		
+ 		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
+		
 		Setting settings = (Setting)getBuffer().get(settingsKey);
 		
 		char paramPrefix = settings.getFieldValue("param_prefix");
