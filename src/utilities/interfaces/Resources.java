@@ -11,7 +11,7 @@ import vendor.utilities.settings.*;
 public interface Resources {
 	
 	String PREFIX = "!!";
-	String PARAMETER_PREFIX = "--";
+	char PARAMETER_PREFIX = '-';
 	
 	String BUFFER_GAMEPOOL = "GAMEPOOL";
 	String BUFFER_SPAM = "SPAM_CONDITION";
@@ -28,6 +28,7 @@ public interface Resources {
 	SettingField[] SETTINGS =
 	{
 		new TextNotEmptyField("prefix", "PREFIX", PREFIX),
+		new CharField("param_prefix", "PARAMETER_PREFIX", PARAMETER_PREFIX),
 		new TextNotEmptyField("nickname", "NICKNAME", "Vhoyon"),
 		new BooleanField("confirm_stop", "SHOULD_CONFIRM_STOP", true),
 		new IntegerField("volume", "DEFAULT_VOLUME", 60, 0, 100)

@@ -28,7 +28,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	@Override
 	protected Request createRequest(String receivedMessage, Dictionary dict){
 		return new Request(receivedMessage, dict, getCommandPrefix(),
-				Resources.PARAMETER_PREFIX);
+				getCommandParameterPrefix());
 	}
 	
 	@Override
@@ -165,6 +165,21 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		String prefix = settings.getFieldValue("prefix");
 		
 		return prefix;
+		
+	}
+	
+	@Override
+	public char getCommandParameterPrefix(){
+		
+		String textChannelKey = getEventDigger().getChannelKey();
+ 		
+ 		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
+		
+		Setting settings = (Setting)getBuffer().get(settingsKey);
+		
+		char paramPrefix = settings.getFieldValue("param_prefix");
+		
+		return paramPrefix;
 		
 	}
 	
