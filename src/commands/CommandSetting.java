@@ -1,6 +1,7 @@
 package commands;
 
 import utilities.BotCommand;
+import utilities.music.MusicManager;
 import errorHandling.BotError;
 import vendor.exceptions.NoContentException;
 import vendor.objects.ParametersHelp;
@@ -13,14 +14,14 @@ public class CommandSetting extends BotCommand {
 	public void action(){
 		
 		tryAndChangeSetting("prefix", "prefix", (value) -> {
-			sendMessage("You switched the prefix to `" + value + "`!");
+			sendMessage("You switched the prefix to " + code(value) + "!");
 		});
 		
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
 			setSelfNickname(value.toString());
 			
-			sendMessage("The nickname of the bot is now set to `" + value
-					+ "`!");
+			sendMessage("The nickname of the bot is now set to " + code(value)
+					+ "!");
 		});
 		
 		tryAndChangeSetting(
@@ -36,6 +37,17 @@ public class CommandSetting extends BotCommand {
 						sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
 					}
 				});
+		
+		tryAndChangeSetting("volume", "volume", (value) -> {
+			
+			if(MusicManager.get().hasPlayer(this.getGuild())){
+				MusicManager.get().getPlayer(this).setVolume((int)value);
+			}
+			
+			sendMessage("The default volume will now be " + code(value)
+					+ "!");
+			
+		});
 		
 	}
 	
@@ -114,6 +126,10 @@ public class CommandSetting extends BotCommand {
 							+ " to stop the most recent command without confirming. Default is set to "
 							+ code(getSettings().getField("nickname")
 									.getDefaultValue()) + ".", "confirm_stop"),
+			new ParametersHelp(
+					"Changes the bot's default volume when playing some music. The default value is "
+							+ code(getSettings().getField("volume")
+									.getDefaultValue()) + ".", "volume"),
 		};
 	}
 	

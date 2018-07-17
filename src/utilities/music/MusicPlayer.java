@@ -22,8 +22,7 @@ public class MusicPlayer {
 		this.audioPlayer = audioPlayer;
 		this.command = command;
 		
-		// Defaults volume to 75% of our maxed value (20) if no env var is set
-		int defaultVolume = Environment.getVar("DEFAULT_VOLUME", 75);
+		int defaultVolume = command.setting("volume");
 		
 		try{
 			this.setVolume(defaultVolume);
