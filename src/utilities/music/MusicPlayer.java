@@ -7,7 +7,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import utilities.BotCommand;
 import vendor.exceptions.BadParameterException;
-import vendor.modules.Environment;
 import vendor.modules.Logger;
 
 public class MusicPlayer {
@@ -24,15 +23,10 @@ public class MusicPlayer {
 		
 		int defaultVolume = command.setting("volume");
 		
-		try{
-			this.setVolume(defaultVolume);
-		}
-		catch(BadParameterException e){
-			Logger.log(e + " Your environment variable is not correctly set...");
-		}
+		this.setVolume(defaultVolume);
 		
-		listener = new AudioListener(this);
-		audioPlayer.addListener(listener);
+		this.listener = new AudioListener(this);
+		this.audioPlayer.addListener(this.listener);
 	}
 	
 	public AudioPlayer getAudioPlayer(){
@@ -60,7 +54,7 @@ public class MusicPlayer {
 	}
 	
 	public synchronized void togglePause(){
-		this.setPause(!this.getAudioPlayer().isPaused());
+		this.setPause(!this.isPaused());
 	}
 	
 	public synchronized void setPause(boolean isPaused){
@@ -91,17 +85,8 @@ public class MusicPlayer {
 		this.getGuild().getAudioManager().closeAudioConnection();
 	}
 	
-	public void setVolume(int volume) throws BadParameterException{
-		
-		if(volume < 0 || volume > 100){
-			throw new BadParameterException("Volume must be between 0 and 100.");
-		}
-		else{
-			
-			this.getAudioPlayer().setVolume(volume / (100 / MAX_VOLUME));
-			
-		}
-		
+	public void setVolume(int volume){
+		this.getAudioPlayer().setVolume(volume / (100 / MAX_VOLUME));
 	}
 	
 }
