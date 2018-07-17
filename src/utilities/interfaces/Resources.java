@@ -29,7 +29,8 @@ public interface Resources {
 	{
 		new TextNotEmptyField("prefix", "PREFIX", PREFIX),
 		new TextNotEmptyField("nickname", "NICKNAME", "Vhoyon"),
-		new BooleanField("confirm_stop", "SHOULD_CONFIRM_STOP", true)
+		new BooleanField("confirm_stop", "SHOULD_CONFIRM_STOP", true),
+		new IntegerField("volume", "DEFAULT_VOLUME", 60, 0, 100)
 	};
 	
 }
