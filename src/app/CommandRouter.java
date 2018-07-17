@@ -127,7 +127,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	
 	@Override
 	public Command commandWhenFromPrivate(){
-		return new BotErrorPrivate(ital(lang("MessageReceivedFromPrivateResponse")), true);
+		return new BotErrorPrivate(
+				ital(lang("MessageReceivedFromPrivateResponse")), true);
 	}
 	
 	@Override
@@ -172,8 +173,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	public char getCommandParameterPrefix(){
 		
 		String textChannelKey = getEventDigger().getChannelKey();
- 		
- 		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
+		
+		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
 		
 		Setting settings = (Setting)getBuffer().get(settingsKey);
 		

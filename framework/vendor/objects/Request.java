@@ -1,13 +1,13 @@
 package vendor.objects;
 
+import vendor.abstracts.Translatable;
+import vendor.exceptions.NoContentException;
+import vendor.interfaces.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import vendor.abstracts.Translatable;
-import vendor.exceptions.NoContentException;
-import vendor.interfaces.Utils;
 
 public class Request extends Translatable implements Utils {
 	
@@ -19,9 +19,10 @@ public class Request extends Translatable implements Utils {
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			if(parameter.matches(getParametersPrefix() + "{1,2}.+")){
+			if(parameter.matches(getParametersPrefixProtected() + "{1,2}.+")){
 				
-				int paramDeclaratorLength = parameter.matches(getParametersPrefix() + "{1}.+") ? 1 : 2;
+				int paramDeclaratorLength = parameter
+						.matches(getParametersPrefixProtected() + "{2}.+") ? 2 : 1;
 				
 				this.parameter = parameter.substring(paramDeclaratorLength);
 				
@@ -151,7 +152,8 @@ public class Request extends Translatable implements Utils {
 				String possibleParam = possibleParams.get(i);
 				
 				// If string is structured as a parameter, create it.
-				if(possibleParam.matches(getParametersPrefix() + "{1,2}[^\\s]+")){
+				if(possibleParam.matches(getParametersPrefixProtected()
+						+ "{1,2}[^\\s]+")){
 					
 					Parameter newParam = new Parameter(possibleParam);
 					
@@ -177,7 +179,8 @@ public class Request extends Translatable implements Utils {
 							// If the following String isn't another param, set
 							// said String as the content for the current param.
 							if(!possibleParamContent
-									.matches(getParametersPrefix() + "{1,2}[^\\s]+")){
+									.matches(getParametersPrefixProtected()
+											+ "{1,2}[^\\s]+")){
 								
 								newParam.setParameterContent(possibleParamContent);
 								
@@ -280,6 +283,10 @@ public class Request extends Translatable implements Utils {
 		return parametersPrefix;
 	}
 	
+	private String getParametersPrefixProtected(){
+		return Pattern.quote(String.valueOf(getParametersPrefix()));
+	}
+	
 	public String getError(){
 		return this.error;
 	}
@@ -289,7 +296,7 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public boolean hasParameter(String parameterName){
-		if (getParameters() == null)
+		if(getParameters() == null)
 			return false;
 		
 		return getParameters().containsKey(parameterName);

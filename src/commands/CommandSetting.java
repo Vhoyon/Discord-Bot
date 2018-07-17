@@ -17,11 +17,17 @@ public class CommandSetting extends BotCommand {
 			sendMessage("You switched the prefix to " + code(value) + "!");
 		});
 		
-		tryAndChangeSetting("param_prefix", "param_prefix", (value) -> {
-			sendMessage("You switched the parameters prefix to " + code(value)
-					+ " (" + ital("and of course " + code(value.toString()
-					+ value.toString())) + ")!");
-		});
+		tryAndChangeSetting(
+				"param_prefix",
+				"param_prefix",
+				(value) -> {
+					sendMessage("You switched the parameters prefix to "
+							+ code(value)
+							+ " ("
+							+ ital("and of course "
+									+ code(value.toString() + value.toString()))
+							+ ")!");
+				});
 		
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
 			setSelfNickname(value.toString());
@@ -50,8 +56,7 @@ public class CommandSetting extends BotCommand {
 				MusicManager.get().getPlayer(this).setVolume((int)value);
 			}
 			
-			sendMessage("The default volume will now be " + code(value)
-					+ "!");
+			sendMessage("The default volume will now be " + code(value) + "!");
 			
 		});
 		
