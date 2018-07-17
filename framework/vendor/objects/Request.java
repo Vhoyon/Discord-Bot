@@ -19,10 +19,16 @@ public class Request extends Translatable implements Utils {
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			if(parameter.matches(getParametersPrefix() + ".+"))
-				this.parameter = parameter.substring(getParametersPrefix().length());
-			else
+			if(parameter.matches(getParametersPrefix() + "{1,2}.+")){
+				
+				int paramDeclaratorLength = parameter.matches(getParametersPrefix() + "{1}.+") ? 1 : 2;
+				
+				this.parameter = parameter.substring(paramDeclaratorLength);
+				
+			}
+			else{
 				this.parameter = parameter;
+			}
 		}
 		
 		public Parameter(String paramName, String paramContent){
@@ -71,7 +77,7 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
-	public final static String DEFAULT_PARAMETER_PREFIX = "-";
+	public final static char DEFAULT_PARAMETER_PREFIX = '-';
 	
 	private final static String DEFAULT_LANG_DIRECTORY = "/vendor.lang.strings";
 	
@@ -92,19 +98,19 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String parametersPrefix){
+			char parametersPrefix){
 		this(receivedMessage, dictionary, DEFAULT_COMMAND_PREFIX,
 				parametersPrefix);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, String parametersPrefix){
+			String commandPrefix, char parametersPrefix){
 		this(receivedMessage, dictionary, commandPrefix, parametersPrefix,
 				DEFAULT_LANG_DIRECTORY);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, String parametersPrefix, String langDirectory){
+			String commandPrefix, char parametersPrefix, String langDirectory){
 		
 		this.setDictionary(dictionary);
 		this.langDirectory = langDirectory;
@@ -145,7 +151,7 @@ public class Request extends Translatable implements Utils {
 				String possibleParam = possibleParams.get(i);
 				
 				// If string is structured as a parameter, create it.
-				if(possibleParam.matches(getParametersPrefix() + "[^\\s]+")){
+				if(possibleParam.matches(getParametersPrefix() + "{1,2}[^\\s]+")){
 					
 					Parameter newParam = new Parameter(possibleParam);
 					
@@ -171,7 +177,7 @@ public class Request extends Translatable implements Utils {
 							// If the following String isn't another param, set
 							// said String as the content for the current param.
 							if(!possibleParamContent
-									.matches(getParametersPrefix() + "[^\\s]+")){
+									.matches(getParametersPrefix() + "{1,2}[^\\s]+")){
 								
 								newParam.setParameterContent(possibleParamContent);
 								
@@ -270,7 +276,7 @@ public class Request extends Translatable implements Utils {
 		
 	}
 	
-	public String getParametersPrefix(){
+	public char getParametersPrefix(){
 		return parametersPrefix;
 	}
 	

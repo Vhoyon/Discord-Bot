@@ -174,4 +174,6 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	public abstract String getCommandPrefix();
 	
+	public abstract char getCommandParameterPrefix();
+	
 }

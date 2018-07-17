@@ -17,6 +17,12 @@ public class CommandSetting extends BotCommand {
 			sendMessage("You switched the prefix to " + code(value) + "!");
 		});
 		
+		tryAndChangeSetting("param_prefix", "param_prefix", (value) -> {
+			sendMessage("You switched the parameters prefix to " + code(value)
+					+ " (" ital("and of course " + code(value.toString()
+					+ value.toString())) + ")!");
+		});
+		
 		tryAndChangeSetting("nickname", "nickname", (value) -> {
 			setSelfNickname(value.toString());
 			
@@ -114,6 +120,10 @@ public class CommandSetting extends BotCommand {
 					"Changes the prefix used for each command. Default is "
 							+ code(getSettings().getField("prefix")
 									.getDefaultValue()) + ".", "prefix"),
+			new ParametersHelp(
+					"Changes the parameters prefix used for each command. Default is "
+							+ code(getSettings().getField("param_prefix")
+									.getDefaultValue()) + ".", "param_prefix"),
 			new ParametersHelp(
 					"Changes the bot's nickname. His default name is "
 							+ code(getSettings().getField("nickname")
