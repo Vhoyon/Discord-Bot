@@ -19,7 +19,7 @@ public class CommandSetting extends BotCommand {
 		
 		tryAndChangeSetting("param_prefix", "param_prefix", (value) -> {
 			sendMessage("You switched the parameters prefix to " + code(value)
-					+ " (" ital("and of course " + code(value.toString()
+					+ " (" + ital("and of course " + code(value.toString()
 					+ value.toString())) + ")!");
 		});
 		
