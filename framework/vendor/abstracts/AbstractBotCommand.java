@@ -3,6 +3,7 @@ package vendor.abstracts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Collections;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -399,7 +400,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 *         followed by the <i>commandName</i> parameter.
 	 */
 	public String buildCommand(String command){
-		return getRouter().getCommandPrefix() + command;
+		return getRequest().getCommandPrefix() + command;
 	}
 	
 	/**
@@ -416,8 +417,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 *         Ressources followed by the <i>parameter</i> parameter.
 	 */
 	public String buildParameter(String parameter){
-		// TODO : Get the Parameter Prefix from the router
-		return "--" + parameter;
+		return String.join("", Collections.nCopies(parameter.length() > 1 ? 2 : 1,
+				String.valueOf(getRequest().getParametersPrefix()))) + parameter;
 	}
 	
 	/**
@@ -426,6 +427,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 */
 	public String buildVParameter(String parameter){
 		return code(buildParameter(parameter));
+	}
+	
+	@Override
+	public String formatParameter(String parameterToFormat){
+		return buildParameter(parameterToFormat);
 	}
 	
 }

@@ -1,5 +1,6 @@
 package vendor.interfaces;
 
+import vendor.objects.Request;
 import vendor.objects.ParametersHelp;
 
 public interface LinkableCommand extends Command {
@@ -88,7 +89,7 @@ public interface LinkableCommand extends Command {
 	}
 	
 	default String formatParameter(String parameterToFormat){
-		return "-" + parameterToFormat;
+		return Request.DEFAULT_PARAMETER_PREFIX + parameterToFormat;
 	}
 	
 }
