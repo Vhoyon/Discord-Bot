@@ -340,10 +340,11 @@ public class Request extends Translatable implements Utils {
 				}
 				else{
 					
-					for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks().entrySet()){
+					for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
+							.entrySet()){
 						
 						if(entry.getValue().contains(parameterName))
-               				return entry.getKey();
+							return entry.getKey();
 						
 					}
 					
@@ -379,7 +380,7 @@ public class Request extends Translatable implements Utils {
 	// public boolean hasParameter(String parameterName){
 	// 	if(getParameters() == null)
 	// 		return false;
-		
+	
 	// 	return this.getParameters().containsKey(parameterName);
 	// }
 	
@@ -473,24 +474,25 @@ public class Request extends Translatable implements Utils {
 	
 	public void setParamLinkMap(ArrayList<ArrayList<String>> map){
 		
-		getParameters().forEach((key, param) -> {
-			
-			for(ArrayList<String> paramsGroup : map){
+		if(getParameters() != null)
+			getParameters().forEach((key, param) -> {
 				
-				if(paramsGroup.contains(key)){
+				for(ArrayList<String> paramsGroup : map){
 					
-					if(this.parametersLinks == null){
-						this.parametersLinks = new HashMap<>();
+					if(paramsGroup.contains(key)){
+						
+						if(this.parametersLinks == null){
+							this.parametersLinks = new HashMap<>();
+						}
+						
+						this.parametersLinks.put(param, paramsGroup);
+						break;
+						
 					}
-					
-					this.parametersLinks.put(param, paramsGroup);
-					break;
 					
 				}
 				
-			}
-			
-		});
+			});
 		
 	}
 	

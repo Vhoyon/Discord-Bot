@@ -1,11 +1,12 @@
 package app;
 
-import java.util.ArrayList;
-
+import errorHandling.BotError;
+import errorHandling.BotErrorPrivate;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.abstracts.SimpleTextCommand;
-import utilities.interfaces.*;
-import utilities.specifics.*;
+import utilities.interfaces.Commands;
+import utilities.interfaces.Resources;
+import utilities.specifics.CommandConfirmed;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
@@ -13,11 +14,11 @@ import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.*;
-import errorHandling.BotError;
-import errorHandling.BotErrorPrivate;
 import vendor.utilities.CommandsThreadManager;
 import vendor.utilities.formatting.DiscordFormatter;
 import vendor.utilities.settings.Setting;
+
+import java.util.ArrayList;
 
 public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Commands, Emojis, DiscordFormatter {
@@ -84,7 +85,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					if(request.hasError()){
 						setCommand(new BotError(request.getError(), false));
 						
-						getCommand().action();
+						getAbstractBotCommand().action();
 						setCommand(null);
 					}
 					
@@ -112,7 +113,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 				try{
 					
-					ParametersHelp[] commandParamsHelp = getAbstractBotCommand().getParametersDescriptions();
+					ParametersHelp[] commandParamsHelp = getAbstractBotCommand()
+							.getParametersDescriptions();
 					
 					if(commandParamsHelp != null){
 						ArrayList<ArrayList<String>> paramsHelpMap = new ArrayList<>();
