@@ -1,5 +1,7 @@
 package vendor.objects;
 
+import java.util.ArrayList;
+
 public class ParametersHelp {
 	
 	private String parameterDescription;
@@ -8,11 +10,11 @@ public class ParametersHelp {
 	
 	public ParametersHelp(String parameterDescription, String param,
 			String... paramVariants){
-
+		
 		this.parameterDescription = parameterDescription;
 		this.param = param;
 		this.paramVariants = paramVariants;
-
+		
 	}
 	
 	public String getParameterDescription(){
@@ -26,4 +28,20 @@ public class ParametersHelp {
 	public String[] getParamVariants(){
 		return this.paramVariants;
 	}
+	
+	public boolean hasParam(String param){
+		return getAllParams().contains(param);
+	}
+	
+	public ArrayList<String> getAllParams(){
+		ArrayList<String> allParams = new ArrayList<>();
+		
+		allParams.add(getParam());
+		
+		for(String paramVariant : getParamVariants())
+			allParams.add(paramVariant);
+		
+		return allParams;
+	}
+	
 }
