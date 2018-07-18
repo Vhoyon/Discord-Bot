@@ -1,5 +1,7 @@
 package app;
 
+import java.util.ArrayList;
+
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.*;
@@ -109,6 +111,18 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				}
 				
 				try{
+					
+					ParametersHelp[] commandParamsHelp = getAbstractBotCommand().getParametersDescriptions();
+					
+					if(commandParamsHelp != null){
+						ArrayList<ArrayList<String>> paramsHelpMap = new ArrayList<>();
+						
+						for(ParametersHelp commandParamHelp : commandParamsHelp){
+							paramsHelpMap.add(commandParamHelp.getAllParams());
+						}
+						
+						getRequest().setParamLinkMap(paramsHelpMap);
+					}
 					
 					getAbstractBotCommand().action();
 					
