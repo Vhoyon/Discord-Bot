@@ -1,10 +1,5 @@
 package vendor.abstracts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Collections;
-
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
@@ -19,8 +14,13 @@ import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
-import vendor.utilities.formatting.DiscordFormatter;
 import vendor.utilities.FrameworkTemplate;
+import vendor.utilities.formatting.DiscordFormatter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 
 public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
@@ -417,8 +417,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 *         Ressources followed by the <i>parameter</i> parameter.
 	 */
 	public String buildParameter(String parameter){
-		return String.join("", Collections.nCopies(parameter.length() > 1 ? 2 : 1,
-				String.valueOf(getRequest().getParametersPrefix()))) + parameter;
+		return String.join(
+				"",
+				Collections.nCopies(parameter.length() > 1 ? 2 : 1,
+						String.valueOf(getRequest().getParametersPrefix())))
+				+ parameter;
 	}
 	
 	/**

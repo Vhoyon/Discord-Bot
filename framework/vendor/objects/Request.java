@@ -6,6 +6,7 @@ import vendor.interfaces.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,6 +92,7 @@ public class Request extends Translatable implements Utils {
 	private String commandPrefix;
 	
 	private HashMap<String, Parameter> parameters;
+	private HashMap<Parameter, ArrayList<String>> parametersLinks;
 	private char parametersPrefix;
 	
 	private String error;
@@ -283,11 +285,11 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public String getCommand(){
-		return command.substring(getCommandPrefix().length());
+		return this.getCommandNoFormat().substring(getCommandPrefix().length());
 	}
 	
 	public String getCommandNoFormat(){
-		return command;
+		return this.command;
 	}
 	
 	public void setCommand(String command){
@@ -295,7 +297,7 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public String getContent(){
-		return content;
+		return this.content;
 	}
 	
 	public void setContent(String content){
@@ -312,7 +314,11 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
-		return parameters;
+		return this.parameters;
+	}
+	
+	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
+		return this.parametersLinks;
 	}
 	
 	public Parameter getParameter(String... parameterNames)
@@ -326,10 +332,23 @@ public class Request extends Translatable implements Utils {
 			
 			for(String parameterName : parameterNames){
 				
-				Parameter paramFound = getParameters().get(parameterName);
-				
-				if(paramFound != null)
-					return paramFound;
+				if(getParametersLinks() == null){
+					Parameter paramFound = getParameters().get(parameterName);
+					
+					if(paramFound != null)
+						return paramFound;
+				}
+				else{
+					
+					for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
+							.entrySet()){
+						
+						if(entry.getValue().contains(parameterName))
+							return entry.getKey();
+						
+					}
+					
+				}
 				
 			}
 			
@@ -343,7 +362,7 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public char getParametersPrefix(){
-		return parametersPrefix;
+		return this.parametersPrefix;
 	}
 	
 	private String getParametersPrefixProtected(){
@@ -355,34 +374,35 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public boolean hasError(){
-		return error != null;
+		return this.getError() != null;
 	}
 	
-	public boolean hasParameter(String parameterName){
-		if(getParameters() == null)
-			return false;
-		
-		return getParameters().containsKey(parameterName);
-	}
+	// public boolean hasParameter(String parameterName){
+	// 	if(getParameters() == null)
+	// 		return false;
+	
+	// 	return this.getParameters().containsKey(parameterName);
+	// }
 	
 	public boolean hasParameter(String... parameterNames){
 		
-		for(String parameterName : parameterNames)
-			if(this.hasParameter(parameterName))
-				return true;
-		
-		return false;
+		try{
+			return getParameter(parameterNames) != null;
+		}
+		catch(NoContentException e){
+			return false;
+		}
 		
 	}
 	
-	public boolean addParameter(String paramName){
-		return this.getParameters().put(paramName, new Parameter(paramName)) == null;
-	}
+	// public boolean addParameter(String paramName){
+	// 	return this.getParameters().put(paramName, new Parameter(paramName)) == null;
+	// }
 	
-	public boolean addParameter(String paramName, String paramContent){
-		return this.getParameters().put(paramName,
-				new Parameter(paramName, paramContent)) == null;
-	}
+	// public boolean addParameter(String paramName, String paramContent){
+	// 	return this.getParameters().put(paramName,
+	// 			new Parameter(paramName, paramContent)) == null;
+	// }
 	
 	private String[] splitCommandAndContent(String command){
 		
@@ -449,6 +469,30 @@ public class Request extends Translatable implements Utils {
 			this.error = message.toString();
 			
 		}
+		
+	}
+	
+	public void setParamLinkMap(ArrayList<ArrayList<String>> map){
+		
+		if(getParameters() != null)
+			getParameters().forEach((key, param) -> {
+				
+				for(ArrayList<String> paramsGroup : map){
+					
+					if(paramsGroup.contains(key)){
+						
+						if(this.parametersLinks == null){
+							this.parametersLinks = new HashMap<>();
+						}
+						
+						this.parametersLinks.put(param, paramsGroup);
+						break;
+						
+					}
+					
+				}
+				
+			});
 		
 	}
 	

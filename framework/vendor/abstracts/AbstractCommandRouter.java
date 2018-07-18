@@ -8,7 +8,6 @@ import vendor.interfaces.Translatable;
 import vendor.interfaces.Utils;
 import vendor.objects.*;
 import vendor.res.FrameworkResources;
-import vendor.abstracts.AbstractBotCommand;
 
 public abstract class AbstractCommandRouter extends Thread implements Utils,
 		Translatable, FrameworkResources {
