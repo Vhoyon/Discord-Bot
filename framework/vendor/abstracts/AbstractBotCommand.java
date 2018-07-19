@@ -241,6 +241,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return this.getRequest().getParameters();
 	}
 	
+	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
+		return this.getRequest().getParametersLinks();
+	}
+	
 	public Parameter getParameter(String... parameterNames)
 			throws NoContentException{
 		return this.getRequest().getParameter(parameterNames);
