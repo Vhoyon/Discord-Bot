@@ -348,6 +348,11 @@ public class Request extends Translatable implements Utils {
 						
 					}
 					
+					Parameter paramFound = getParameters().get(parameterName);
+					
+					if(paramFound != null)
+						return paramFound;
+					
 				}
 				
 			}
