@@ -20,13 +20,13 @@ public class CommandTimer extends BotCommand {
 		
 		try{
 			
-			if(!hasParameter("h", "m", "s", "hours")){
+			if(!hasParameter("h", "m", "s")){
 				throw new NullPointerException();
 			}
 			
 			// seconds = Integer.parseInt(constraints[0]);
-			if(hasParameter("h", "hours")){
-				hours = Integer.parseInt(getParameter("h", "hours")
+			if(hasParameter("h")){
+				hours = Integer.parseInt(getParameter("h")
 						.getParameterContent());
 			}
 			if(hasParameter("m")){
@@ -114,9 +114,12 @@ public class CommandTimer extends BotCommand {
 	public ParametersHelp[] getParametersDescriptions(){
 		return new ParametersHelp[]
 		{
-			new ParametersHelp("Sets the hours of the timer.", "h"),
-			new ParametersHelp("Sets the minutes of the timer.", "m"),
-			new ParametersHelp("Sets the seconds of the timer.", "s"),
+			new ParametersHelp("Sets the hours of the timer.", "h", "hour",
+					"hours"),
+			new ParametersHelp("Sets the minutes of the timer.", "m", "minute",
+					"minutes"),
+			new ParametersHelp("Sets the seconds of the timer.", "s", "second",
+					"seconds"),
 		};
 	}
 	

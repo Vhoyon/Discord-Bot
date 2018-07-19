@@ -7,6 +7,7 @@ import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.Commands;
 import utilities.interfaces.Resources;
 import utilities.specifics.CommandConfirmed;
+import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
@@ -40,7 +41,17 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Request request = getRequest();
 		MessageEventDigger eventDigger = getEventDigger();
 		
-		if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
+		if(!request.getCommandNoFormat().startsWith(getCommandPrefix())){
+			try{
+				AbstractBotCommand command = (AbstractBotCommand)validateMessage();
+				
+				command.setRouter(this);
+				
+				command.action();
+			}
+			catch(NoCommandException e){}
+		}
+		else{
 			
 			try{
 				
@@ -160,43 +171,59 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	@Override
 	public String getCommandPrefix(){
 		
-		String textChannelKey = getEventDigger().getChannelKey();
-		
-		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
-		
-		boolean hasSettings = getBuffer().has(settingsKey);
-		
-		Setting settings;
-		
-		if(!hasSettings){
+		try{
 			
-			settings = new Setting(getDictionary(), SETTINGS);
+			String textChannelKey = getEventDigger().getChannelKey();
 			
-			getBuffer().push(settings, settingsKey);
+			String settingsKey = Utils
+					.buildKey(textChannelKey, BUFFER_SETTINGS);
+			
+			boolean hasSettings = getBuffer().has(settingsKey);
+			
+			Setting settings;
+			
+			if(!hasSettings){
+				
+				settings = new Setting(getDictionary(), SETTINGS);
+				
+				getBuffer().push(settings, settingsKey);
+				
+			}
+			else{
+				settings = (Setting)getBuffer().get(settingsKey);
+			}
+			
+			String prefix = settings.getFieldValue("prefix");
+			
+			return prefix;
 			
 		}
-		else{
-			settings = (Setting)getBuffer().get(settingsKey);
+		catch(Exception e){
+			return Request.DEFAULT_COMMAND_PREFIX;
 		}
-		
-		String prefix = settings.getFieldValue("prefix");
-		
-		return prefix;
 		
 	}
 	
 	@Override
 	public char getCommandParameterPrefix(){
 		
-		String textChannelKey = getEventDigger().getChannelKey();
-		
-		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
-		
-		Setting settings = (Setting)getBuffer().get(settingsKey);
-		
-		char paramPrefix = settings.getFieldValue("param_prefix");
-		
-		return paramPrefix;
+		try{
+			
+			String textChannelKey = getEventDigger().getChannelKey();
+			
+			String settingsKey = Utils
+					.buildKey(textChannelKey, BUFFER_SETTINGS);
+			
+			Setting settings = (Setting)getBuffer().get(settingsKey);
+			
+			char paramPrefix = settings.getFieldValue("param_prefix");
+			
+			return paramPrefix;
+			
+		}
+		catch(Exception e){
+			return Request.DEFAULT_PARAMETER_PREFIX;
+		}
 		
 	}
 	

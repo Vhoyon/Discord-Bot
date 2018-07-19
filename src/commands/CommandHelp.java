@@ -22,12 +22,12 @@ public class CommandHelp extends BotCommand {
 		
 		if(content == null){
 			
-			boolean isFull = hasParameter("f", "full");
+			boolean isFull = hasParameter("f");
 			
 			String fullHelpString = getRouter().getCommandsRepo()
 					.getFullHelpString("Available commands :", isFull);
 			
-			if(hasParameter("p", "private")){
+			if(hasParameter("p")){
 				sendPrivateMessage(fullHelpString);
 				sendInfoMessage(lang("HelpSentMessage"));
 			}
@@ -53,7 +53,7 @@ public class CommandHelp extends BotCommand {
 				
 				builder.append(helpString);
 				
-				if(hasParameter("p", "private")){
+				if(hasParameter("p")){
 					sendPrivateMessage(builder.toString());
 					sendInfoMessage(lang("HelpSentMessage"));
 				}
@@ -90,7 +90,10 @@ public class CommandHelp extends BotCommand {
 		{
 			new ParametersHelp(
 					"Send the requested help string to your private channel.",
-					"p", "private")
+					"p", "private"),
+			new ParametersHelp(
+					"Shows the full descriptions of each commands inline.",
+					"f", "full")
 		};
 	}
 	

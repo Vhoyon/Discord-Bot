@@ -140,7 +140,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			Request request = getRequest();
 			String commandPrefix = getCommandPrefix();
 			
-			if(!request.getCommandNoFormat().matches(commandPrefix + ".*")){
+			if(!request.getCommandNoFormat().startsWith(commandPrefix)){
 				throw new NoCommandException();
 			}
 			else{
