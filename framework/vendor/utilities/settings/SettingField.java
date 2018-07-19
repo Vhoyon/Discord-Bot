@@ -59,6 +59,14 @@ public abstract class SettingField<E> extends Translatable {
 		this.setValue(value, null);
 	}
 	
+	public final void setToDefaultValue(){
+		this.setToDefaultValue(null);
+	}
+	
+	public final void setToDefaultValue(Consumer<E> onChange){
+		this.setValue(getDefaultValue(), onChange);
+	}
+	
 	public final void setValue(E value, Consumer<E> onChange)
 			throws IllegalArgumentException{
 		

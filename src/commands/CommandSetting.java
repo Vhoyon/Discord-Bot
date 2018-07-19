@@ -10,8 +10,12 @@ import java.util.function.Consumer;
 
 public class CommandSetting extends BotCommand {
 	
+	private boolean shouldSwitchToDefault;
+	
 	@Override
 	public void action(){
+		
+		this.shouldSwitchToDefault = hasParameter("d");
 		
 		tryAndChangeSetting("prefix", "prefix", (value) -> {
 			sendMessage("You switched the prefix to " + code(value) + "!");
@@ -77,16 +81,31 @@ public class CommandSetting extends BotCommand {
 			
 			if(parameterContent == null){
 				
-				Object defaultSettingValue = getSettings()
-						.getField(settingName).getDefaultValue();
-				Object currentSettingValue = getSettings()
-						.getField(settingName).getValue();
-				
-				sendMessage("The default value for the setting "
-						+ code(settingName) + " is : "
-						+ ital(code(defaultSettingValue))
-						+ ". Current value : " + code(currentSettingValue)
-						+ ".");
+				if(this.shouldSwitchToDefault){
+					
+					getSettings().getField(settingName).setToDefaultValue();
+					
+					sendMessage("The setting "
+							+ code(settingName)
+							+ " has been set back to its default ("
+							+ ital(code(getSettings().getField(settingName)
+									.getDefaultValue())) + ")!");
+					
+				}
+				else{
+					
+					Object defaultSettingValue = getSettings().getField(
+							settingName).getDefaultValue();
+					Object currentSettingValue = getSettings().getField(
+							settingName).getValue();
+					
+					sendMessage("The default value for the setting "
+							+ code(settingName) + " is : "
+							+ ital(code(defaultSettingValue))
+							+ ". Current value : " + code(currentSettingValue)
+							+ ".");
+					
+				}
 				
 			}
 			else{
@@ -145,6 +164,9 @@ public class CommandSetting extends BotCommand {
 					"Changes the bot's default volume when playing some music. The default value is "
 							+ code(getSettings().getField("volume")
 									.getDefaultValue()) + ".", "volume"),
+			new ParametersHelp(
+					"Switch to allow for putting back the default value for each settings as parameters quickly.",
+					"d")
 		};
 	}
 	
