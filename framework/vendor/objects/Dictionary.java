@@ -150,7 +150,7 @@ public class Dictionary implements Utils {
 	}
 	
 	protected String convertToSpecialNotation(String langString){
-		return Pattern.compile("[()\\[\\].+*?^$\\\\|]").matcher(langString)
+		return Pattern.compile("[()\\[\\].+?^$\\\\|]").matcher(langString)
 				.replaceAll("\\\\$0").replaceAll("\\{0+", "\\{")
 				.replaceAll("\\{([1-9][0-9]*)\\}", "\\%$1\\$s")
 				.replaceAll("\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
