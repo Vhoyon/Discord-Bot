@@ -98,7 +98,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 								eventDigger, this)){
 							
 							setCommand(new BotError(lang(
-									"CommandIsRunningError", commandName)));
+									"CommandIsRunningError", code(commandName))));
 							
 						}
 						else{

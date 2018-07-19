@@ -35,8 +35,8 @@ public class CommandLanguage extends BotCommand {
 				
 				remember(changedDictionary, BUFFER_LANG);
 				
-				sendInfoMessage(String.format(langChangeMessage,
-						changedDictionary.getDirectString("LanguageName")));
+				sendInfoMessage(format(langChangeMessage,
+						code(changedDictionary.getDirectString("LanguageName"))));
 				
 			}
 			
