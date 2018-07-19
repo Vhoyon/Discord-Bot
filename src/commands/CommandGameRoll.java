@@ -1,10 +1,10 @@
 package commands;
 
-import java.util.Random;
-
+import errorHandling.BotError;
 import utilities.abstracts.GameInteractionCommands;
 import utilities.specifics.GamePool;
-import errorHandling.BotError;
+
+import java.util.Random;
 
 public class CommandGameRoll extends GameInteractionCommands {
 	
@@ -32,7 +32,7 @@ public class CommandGameRoll extends GameInteractionCommands {
 				
 				num = ran.nextInt(gamepool.size());
 				
-				sendMessage(lang("RolledGameMessage", gamepool.get(num)));
+				sendMessage(lang("RolledGameMessage", code(gamepool.get(num))));
 				
 			}
 			else{
@@ -42,7 +42,7 @@ public class CommandGameRoll extends GameInteractionCommands {
 					num = ran.nextInt(gamepool.size());
 					
 					sendMessage(lang("RolledMultipleGamesMessage", i,
-							gamepool.get(num)));
+							code(gamepool.get(num))));
 					
 				}
 				
@@ -72,9 +72,9 @@ public class CommandGameRoll extends GameInteractionCommands {
 			GAME_ROLL, GAME_ROLL_ALT
 		};
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Use this command tu select a random game from your list when you don't know what to play.";
 	}
 }

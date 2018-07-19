@@ -29,7 +29,7 @@ public class CommandHelp extends BotCommand {
 			
 			if(hasParameter("p")){
 				sendPrivateMessage(fullHelpString);
-				sendInfoMessage(lang("HelpSentMessage"));
+				sendInfoMessage(ital(lang("HelpSentMessage")));
 			}
 			else{
 				sendMessage(fullHelpString);

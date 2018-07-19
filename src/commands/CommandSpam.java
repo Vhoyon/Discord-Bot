@@ -57,12 +57,14 @@ public class CommandSpam extends BotCommand {
 			String commandStart = lang("UsageStart");
 			String command = buildCommand(SPAM);
 			
-			String command1 = String.format(commandStart, command) + " : "
-					+ String.format(lang("UsageFirstLine"), numberOfSpam);
-			String command2 = String.format(commandStart, command
+			String command1 = format(commandStart, command) + " : "
+					+ format(lang("UsageFirstLine"), numberOfSpam);
+			
+			String command2 = format(commandStart, command
 					+ " [number of times to spam]")
 					+ " : " + lang("UsageSecondLine");
-			String command3 = String.format(commandStart, command
+			
+			String command3 = format(commandStart, command
 					+ " [number of times to spam] [custom message]")
 					+ " : " + lang("UsageThirdLine");
 			
