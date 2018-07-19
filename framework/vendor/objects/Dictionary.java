@@ -1,12 +1,12 @@
 package vendor.objects;
 
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
+
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 public class Dictionary implements Utils {
 	
@@ -84,10 +84,6 @@ public class Dictionary implements Utils {
 	}
 	
 	public String getString(String key, String possiblePrefix){
-		return this.getString(true, key, possiblePrefix);
-	}
-	
-	public String getString(boolean usesSpecialNotation, String key, String possiblePrefix){
 		
 		if(key == null){
 			throw new IllegalArgumentException(
@@ -148,17 +144,12 @@ public class Dictionary implements Utils {
 			
 		}
 		
-		if(usesSpecialNotation){
-			return this.convertToSpecialNotation(string);
-		}
-		else{
-			return string;
-		}
+		return this.convertToSpecialNotation(string);
 		
 	}
 	
-	protected String convertToSpecialNotation(String string){
-		return string.replaceAll("\\{0+", "\\{")
+	protected String convertToSpecialNotation(String langString){
+		return langString.replaceAll("\\{0+", "\\{")
 				.replaceAll("\\{([1-9][0-9]*)\\}", "\\%$1\\$s")
 				.replaceAll("\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
 	}
