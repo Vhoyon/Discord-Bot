@@ -21,7 +21,7 @@ public class CommandGameAdd extends GameInteractionCommands {
 				
 				gamepool.add(getContent());
 				
-				sendMessage(lang("AddedGameSuccessMessage", getContent()));
+				sendMessage(lang("AddedGameSuccessMessage", code(getContent())));
 				
 			}
 			catch(NullPointerException e){

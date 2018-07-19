@@ -32,13 +32,14 @@ public class CommandMusicSkip extends MusicCommands {
 						new BotError(this, lang("NotPlaying"));
 					}
 					else{
-						if (this.hasMemory("MUSIC_LOOP") && (boolean) this.getMemory("MUSIC_LOOP")) {
+						if(this.hasMemory("MUSIC_LOOP")
+								&& (boolean)this.getMemory("MUSIC_LOOP")){
 							forget("MUSIC_LOOP");
 						}
 						if(player.skipTrack()){
-							sendInfoMessage(lang("SkippedNowPlaying", player
-									.getAudioPlayer().getPlayingTrack()
-									.getInfo().title));
+							sendInfoMessage(lang("SkippedNowPlaying",
+									code(player.getAudioPlayer()
+											.getPlayingTrack().getInfo().title)));
 						}
 						else{
 							sendInfoMessage(lang("NoMoreMusic"));
@@ -77,9 +78,10 @@ public class CommandMusicSkip extends MusicCommands {
 								new CommandConfirmed(this){
 									@Override
 									public String getConfMessage(){
-										return lang("OverflowConfirm",
-												skipAmount,
-												player.getNumberOfTracks());
+										return lang(
+												"OverflowConfirm",
+												code(skipAmount),
+												code(player.getNumberOfTracks()));
 									}
 									
 									@Override
@@ -115,9 +117,9 @@ public class CommandMusicSkip extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_SKIP;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Skip the song that is currently playing";
 	}
 }
