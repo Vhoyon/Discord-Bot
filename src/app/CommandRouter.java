@@ -41,21 +41,11 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Request request = getRequest();
 		MessageEventDigger eventDigger = getEventDigger();
 		
-		if(!request.getCommandNoFormat().startsWith(getCommandPrefix())){
-			try{
-				AbstractBotCommand command = (AbstractBotCommand)validateMessage();
-				
-				command.setRouter(this);
-				
-				command.action();
-			}
-			catch(NoCommandException e){}
-		}
-		else{
+		try{
 			
-			try{
-				
-				setCommand(validateMessage());
+			setCommand(validateMessage());
+			
+			if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
 				
 				if(getCommand() == null){
 					
@@ -137,17 +127,20 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						getRequest().setParamLinkMap(paramsHelpMap);
 					}
 					
-					getAbstractBotCommand().action();
-					
 				}
 				catch(NullPointerException e){}
 				
 			}
-			catch(NoCommandException e){
-				if(isDebugging())
-					Logger.log(e);
-			}
 			
+			try{
+				getAbstractBotCommand().action();
+			}
+			catch(NullPointerException e){}
+			
+		}
+		catch(NoCommandException e){
+			if(isDebugging())
+				Logger.log(e);
 		}
 		
 	}

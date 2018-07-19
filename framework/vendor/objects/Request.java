@@ -332,13 +332,7 @@ public class Request extends Translatable implements Utils {
 			
 			for(String parameterName : parameterNames){
 				
-				if(getParametersLinks() == null){
-					Parameter paramFound = getParameters().get(parameterName);
-					
-					if(paramFound != null)
-						return paramFound;
-				}
-				else{
+				if(getParametersLinks() != null){
 					
 					for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
 							.entrySet()){
@@ -348,12 +342,12 @@ public class Request extends Translatable implements Utils {
 						
 					}
 					
-					Parameter paramFound = getParameters().get(parameterName);
-					
-					if(paramFound != null)
-						return paramFound;
-					
 				}
+				
+				Parameter paramFound = getParameters().get(parameterName);
+				
+				if(paramFound != null)
+					return paramFound;
 				
 			}
 			
