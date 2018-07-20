@@ -4,12 +4,14 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
+import vendor.exceptions.BadContentException;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.Buffer;
+import vendor.objects.Mention;
 import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
@@ -260,6 +262,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public boolean stopAction(){
 		return false;
+	}
+	
+	public Mention getContentAsMention() throws BadContentException{
+		if(!getContent().matches("^<@[0-9]{18}>$"))
+			throw new BadContentException("Content is not a mention.");
+		
+		return new Mention(getContent().replaceAll("<@([0-9]{18})>", "$1"),
+				getEventDigger());
 	}
 	
 	public void connect(VoiceChannel voiceChannel){
