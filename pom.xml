@@ -88,13 +88,6 @@
             <version>2.19.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-youtube</artifactId>
-            <version>v3-rev204-1.23.0</version>
-        </dependency>
-        
-
     </dependencies>
 
 </project>

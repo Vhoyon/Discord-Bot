@@ -1,12 +1,8 @@
 package utilities.music;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
 import utilities.BotCommand;
 import net.dv8tion.jda.core.entities.Guild;
 
@@ -77,60 +73,56 @@ public class MusicManager {
 	public void loadTrack(final BotCommand command, final String source){
 		
 		MusicPlayer player = getPlayer(command);
-
-
+		
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
 		
-		
 		manager.loadItemOrdered(player, source, new AudioLoadResultHandler(){
-
+			
 			@Override
 			public void trackLoaded(AudioTrack track){
 				command.sendMessage(command.lang("MusicManagerTrackLoaded",
-					track.getInfo().title));
-
+						track.getInfo().title));
+				
 				player.playTrack(track);
 			}
-
+			
 			@Override
 			public void playlistLoaded(AudioPlaylist playlist){
-
+				
 				StringBuilder builder = new StringBuilder();
-
+				
 				builder.append(
-					command.lang("MusicManagerPlaylistLoaded",
-						playlist.getName())).append("\n");
-
+						command.lang("MusicManagerPlaylistLoaded",
+								playlist.getName())).append("\n");
+				
 				for(int i = 0; i < playlist.getTracks().size(); i++){
 					AudioTrack track = playlist.getTracks().get(i);
-
+					
 					builder.append("\n").append(
-						command.lang("MusicManagerPlaylistAddedTrackInfo",
-							(i + 1), track.getInfo().title));
-
+							command.lang("MusicManagerPlaylistAddedTrackInfo",
+									(i + 1), track.getInfo().title));
+					
 					player.playTrack(track);
 				}
-
+				
 				command.sendMessage(builder.toString());
-
+				
 			}
-
+			
 			@Override
 			public void noMatches(){
 				command.sendMessage(command.lang("MusicManagerNoMatch", source));
 			}
-
+			
 			@Override
 			public void loadFailed(FriendlyException exeption){
 				command.sendMessage(command.lang("MusicManagerLoadFailed",
-					exeption.getMessage()));
+						exeption.getMessage()));
 			}
-
+			
 		});
 		
-
 	}
-	
 	
 }
