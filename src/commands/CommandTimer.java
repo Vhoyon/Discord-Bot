@@ -25,16 +25,13 @@ public class CommandTimer extends BotCommand {
 			
 			// seconds = Integer.parseInt(constraints[0]);
 			if(hasParameter("h")){
-				hours = Integer.parseInt(getParameter("h")
-						.getParameterContent());
+				hours = Integer.parseInt(getParameter("h").getContent());
 			}
 			if(hasParameter("m")){
-				minutes = Integer.parseInt(getParameter("m")
-						.getParameterContent());
+				minutes = Integer.parseInt(getParameter("m").getContent());
 			}
 			if(hasParameter("s")){
-				seconds = Integer.parseInt(getParameter("s")
-						.getParameterContent());
+				seconds = Integer.parseInt(getParameter("s").getContent());
 			}
 			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;

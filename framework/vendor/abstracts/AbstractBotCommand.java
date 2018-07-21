@@ -279,11 +279,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		Parameter paramFound = getParameter(parametersNames);
 		
-		if(!isStringMention(paramFound.getParameterContent()))
+		if(!isStringMention(paramFound.getContent()))
 			throw new BadContentException("Parameter content is not a mention.");
 		
-		return new Mention(
-				getIdFromStringMention(paramFound.getParameterContent()),
+		return new Mention(getIdFromStringMention(paramFound.getContent()),
 				getEventDigger());
 		
 	}

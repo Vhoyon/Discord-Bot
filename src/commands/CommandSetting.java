@@ -72,8 +72,7 @@ public class CommandSetting extends BotCommand {
 			
 			String parameterContent = null;
 			
-			parameterContent = getParameter(parameterName)
-					.getParameterContent();
+			parameterContent = getParameter(parameterName).getContent();
 			
 			if(parameterContent == null){
 				

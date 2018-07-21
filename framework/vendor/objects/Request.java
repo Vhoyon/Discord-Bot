@@ -14,7 +14,7 @@ public class Request extends Translatable implements Utils {
 	
 	public class Parameter {
 		
-		private String parameter;
+		private String parameterName;
 		private String parameterContent;
 		
 		protected Parameter(){}
@@ -26,11 +26,11 @@ public class Request extends Translatable implements Utils {
 						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
 						: 1;
 				
-				this.parameter = parameter.substring(paramDeclaratorLength);
+				this.parameterName = parameter.substring(paramDeclaratorLength);
 				
 			}
 			else{
-				this.parameter = parameter;
+				this.parameterName = parameter;
 			}
 		}
 		
@@ -40,11 +40,11 @@ public class Request extends Translatable implements Utils {
 			this.setParameterContent(paramContent);
 		}
 		
-		public String getParameter(){
-			return parameter;
+		public String getName(){
+			return parameterName;
 		}
 		
-		public String getParameterContent(){
+		public String getContent(){
 			if(parameterContent == null)
 				return null;
 			else
@@ -64,8 +64,7 @@ public class Request extends Translatable implements Utils {
 				
 				Parameter parameterToCompare = (Parameter)obj;
 				
-				isEqual = getParameter().equals(
-						parameterToCompare.getParameter());
+				isEqual = getName().equals(parameterToCompare.getName());
 				
 			}
 			
@@ -74,7 +73,7 @@ public class Request extends Translatable implements Utils {
 		
 		@Override
 		public String toString(){
-			return this.getParameterContent();
+			return this.getContent();
 		}
 		
 	}
@@ -204,7 +203,7 @@ public class Request extends Translatable implements Utils {
 								canRoll = false;
 							}
 							
-							parameters.put(newParam.getParameter(), newParam);
+							parameters.put(newParam.getName(), newParam);
 							
 						}
 						
@@ -257,8 +256,7 @@ public class Request extends Translatable implements Utils {
 									
 								}
 								
-								parameters.put(newParam.getParameter(),
-										newParam);
+								parameters.put(newParam.getName(), newParam);
 								
 							}
 							
@@ -446,8 +444,7 @@ public class Request extends Translatable implements Utils {
 				if(duplicateParams.size() != 1)
 					message.append("\n").append(i + 1).append(". ");
 				
-				message.append("`")
-						.append(duplicateParams.get(i).getParameter())
+				message.append("`").append(duplicateParams.get(i).getName())
 						.append("`");
 				
 			}

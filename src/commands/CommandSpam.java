@@ -15,18 +15,16 @@ public class CommandSpam extends BotCommand {
 		// Defaults to 10 messages.
 		AtomicInteger numberOfSpam = new AtomicInteger(10);
 		
-		onParameterPresent("c",
-				param -> {
-					try{
-						
-						numberOfSpam.set(Integer.parseInt(param
-								.getParameterContent()));
-						
-					}
-					catch(NumberFormatException e){
-						
-					}
-				});
+		onParameterPresent("c", param -> {
+			try{
+				
+				numberOfSpam.set(Integer.parseInt(param.getContent()));
+				
+			}
+			catch(NumberFormatException e){
+				
+			}
+		});
 		
 		boolean shouldSendToMember = hasParameter("u");
 		
