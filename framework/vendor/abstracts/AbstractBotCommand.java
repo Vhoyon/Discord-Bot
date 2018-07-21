@@ -341,10 +341,15 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String sendPrivateMessage(String messageToSend){
+		return this.sendMessageToMember(this.getMember(), messageToSend);
+	}
+	
+	public String sendMessageToMember(Member member, String messageToSend){
 		
-		PrivateChannel channel = getUser().openPrivateChannel().complete();
+		PrivateChannel channel = member.getUser().openPrivateChannel()
+				.complete();
 		
-		if(getUser().hasPrivateChannel()){
+		if(member.getUser().hasPrivateChannel()){
 			
 			if(messageToSend == null){
 				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
