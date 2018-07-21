@@ -1,7 +1,6 @@
 package vendor.objects;
 
 import vendor.abstracts.Translatable;
-import vendor.exceptions.NoContentException;
 import vendor.interfaces.Utils;
 
 import java.util.ArrayList;
@@ -322,42 +321,34 @@ public class Request extends Translatable implements Utils {
 		return this.parametersLinks;
 	}
 	
-	public Parameter getParameter(String... parameterNames)
-			throws NoContentException{
+	public Parameter getParameter(String... parameterNames){
 		
 		if(parameterNames == null || parameterNames.length == 0)
 			throw new IllegalArgumentException(
 					"The parametersName parameter cannot be null / empty!");
 		
-		try{
+		for(String parameterName : parameterNames){
 			
-			for(String parameterName : parameterNames){
+			if(getParametersLinks() != null){
 				
-				if(getParametersLinks() != null){
+				for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
+						.entrySet()){
 					
-					for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
-							.entrySet()){
-						
-						if(entry.getValue().contains(parameterName))
-							return entry.getKey();
-						
-					}
+					if(entry.getValue().contains(parameterName))
+						return entry.getKey();
 					
 				}
 				
-				Parameter paramFound = getParameters().get(parameterName);
-				
-				if(paramFound != null)
-					return paramFound;
-				
 			}
 			
-		}
-		catch(NullPointerException e){
-			throw new NoContentException(getCommand());
+			Parameter paramFound = getParameters().get(parameterName);
+			
+			if(paramFound != null)
+				return paramFound;
+			
 		}
 		
-		throw new NoContentException(getCommand());
+		return null;
 		
 	}
 	
@@ -385,30 +376,19 @@ public class Request extends Translatable implements Utils {
 	// }
 	
 	public boolean hasParameter(String... parameterNames){
-		
-		try{
-			return getParameter(parameterNames) != null;
-		}
-		catch(NoContentException e){
-			return false;
-		}
-		
+		return getParameter(parameterNames) != null;
 	}
 	
 	public void onParameterPresent(String parameterName,
 			Consumer<Parameter> onParamPresent){
 		
 		Parameter param = null;
-		try{
-			
-			param = getParameter(parameterName);
-			
-			if(param != null){
-				onParamPresent.accept(param);
-			}
-			
+		
+		param = getParameter(parameterName);
+		
+		if(param != null){
+			onParamPresent.accept(param);
 		}
-		catch(NoContentException e){}
 		
 	}
 	

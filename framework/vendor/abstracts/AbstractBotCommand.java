@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import vendor.exceptions.BadContentException;
-import vendor.exceptions.NoContentException;
 import vendor.interfaces.DiscordUtils;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
@@ -271,13 +270,12 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return this.getRequest().getParametersLinks();
 	}
 	
-	public Parameter getParameter(String... parameterNames)
-			throws NoContentException{
+	public Parameter getParameter(String... parameterNames){
 		return this.getRequest().getParameter(parameterNames);
 	}
 	
 	public Mention getParameterAsMention(String... parametersNames)
-			throws NoContentException, BadContentException{
+			throws BadContentException{
 		
 		Parameter paramFound = getParameter(parametersNames);
 		

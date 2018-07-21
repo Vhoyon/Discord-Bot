@@ -1,9 +1,8 @@
 package commands;
 
+import errorHandling.BotError;
 import utilities.BotCommand;
 import utilities.music.MusicManager;
-import errorHandling.BotError;
-import vendor.exceptions.NoContentException;
 import vendor.objects.ParametersHelp;
 
 import java.util.function.Consumer;
@@ -73,11 +72,8 @@ public class CommandSetting extends BotCommand {
 			
 			String parameterContent = null;
 			
-			try{
-				parameterContent = getParameter(parameterName)
-						.getParameterContent();
-			}
-			catch(NoContentException e){}
+			parameterContent = getParameter(parameterName)
+					.getParameterContent();
 			
 			if(parameterContent == null){
 				

@@ -3,7 +3,6 @@ package commands;
 import net.dv8tion.jda.core.entities.Member;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
-import vendor.exceptions.NoContentException;
 import vendor.objects.ParametersHelp;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,7 +36,6 @@ public class CommandSpam extends BotCommand {
 			try{
 				memberToSpam = getParameterAsMention("u");
 			}
-			catch(NoContentException e){}
 			catch(BadContentException e){
 				sendMessage("The member specified is not valid. Tag him with "
 						+ code("@[username]") + "!");
