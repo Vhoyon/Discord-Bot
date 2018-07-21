@@ -50,14 +50,20 @@ public class CommandSpam extends BotCommand {
 			
 			if(hasContent()){
 				
-				message = getContent();
+				if(shouldSendToMember){
+					message = ital(getMember().getAsMention()
+							+ " is spamming you this :")
+							+ " " + getContent();
+				}
+				else{
+					message = getContent();
+				}
 				
 			}
 			else{
 				
 				if(shouldSendToMember){
-					message = ital(bold(getMember().getEffectiveName()))
-							+ " is spamming you!";
+					message = getMember().getAsMention() + " is spamming you!";
 				}
 				else{
 					message = ital(bold(getMember().getEffectiveName()))
