@@ -379,6 +379,11 @@ public class Request extends Translatable implements Utils {
 	
 	public void onParameterPresent(String parameterName,
 			Consumer<Parameter> onParamPresent){
+		onParameterPresent(parameterName, onParamPresent, null);
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent, Runnable onParamNotPresent){
 		
 		Parameter param = null;
 		
@@ -386,6 +391,9 @@ public class Request extends Translatable implements Utils {
 		
 		if(param != null){
 			onParamPresent.accept(param);
+		}
+		else if(onParamNotPresent != null){
+			onParamNotPresent.run();
 		}
 		
 	}
