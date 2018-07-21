@@ -64,7 +64,7 @@ public class CommandStop extends BotCommand {
 	
 	private void stopCommandLogic(BotCommand commandToStop){
 
-		if(!commandToStop.kill())
+		if(commandToStop.kill())
 			sendInfoMessage(lang("CommandFullyStoppedMessage",
 					code(commandToStop.getCommandName()), EMOJI_OK_HAND));
 		else{

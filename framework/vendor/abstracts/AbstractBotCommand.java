@@ -259,7 +259,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 			this.isAlive = false;
 		}
 		
-		return this.isAlive();
+		return !this.isAlive();
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
