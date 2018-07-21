@@ -4,6 +4,7 @@ import errorHandling.BotError;
 import utilities.BotCommand;
 import utilities.music.MusicManager;
 import vendor.objects.ParametersHelp;
+import vendor.utilities.settings.SettingField;
 
 import java.util.function.Consumer;
 
@@ -68,53 +69,56 @@ public class CommandSetting extends BotCommand {
 	public void tryAndChangeSetting(String settingName, String parameterName,
 			Consumer<Object> onSuccess){
 		
-		if(hasParameter(parameterName)){
-			
-			String parameterContent = null;
-			
-			parameterContent = getParameter(parameterName).getContent();
-			
-			if(parameterContent == null){
-				
-				if(this.shouldSwitchToDefault){
+		onParameterPresent(
+				parameterName,
+				param -> {
 					
-					getSettings().getField(settingName).setToDefaultValue();
+					String parameterContent = param.getContent();
 					
-					sendMessage("The setting "
-							+ code(settingName)
-							+ " has been set back to its default ("
-							+ ital(code(getSettings().getField(settingName)
-									.getDefaultValue())) + ")!");
+					if(parameterContent == null){
+						
+						SettingField<Object> settingField = getSettings()
+								.getField(settingName);
+						
+						if(this.shouldSwitchToDefault){
+							
+							settingField.setToDefaultValue();
+							
+							sendMessage("The setting "
+									+ code(settingName)
+									+ " has been set back to its default ("
+									+ ital(code(settingField.getDefaultValue()))
+									+ ")!");
+							
+						}
+						else{
+							
+							Object defaultSettingValue = settingField
+									.getDefaultValue();
+							Object currentSettingValue = settingField
+									.getValue();
+							
+							sendMessage("The default value for the setting "
+									+ code(settingName) + " is : "
+									+ ital(code(defaultSettingValue))
+									+ ". Current value : "
+									+ code(currentSettingValue) + ".");
+							
+						}
+						
+					}
+					else{
+						
+						try{
+							setSetting(settingName, parameterContent, onSuccess);
+						}
+						catch(IllegalArgumentException e){
+							new BotError(this, e.getMessage());
+						}
+						
+					}
 					
-				}
-				else{
-					
-					Object defaultSettingValue = getSettings().getField(
-							settingName).getDefaultValue();
-					Object currentSettingValue = getSettings().getField(
-							settingName).getValue();
-					
-					sendMessage("The default value for the setting "
-							+ code(settingName) + " is : "
-							+ ital(code(defaultSettingValue))
-							+ ". Current value : " + code(currentSettingValue)
-							+ ".");
-					
-				}
-				
-			}
-			else{
-				
-				try{
-					setSetting(settingName, parameterContent, onSuccess);
-				}
-				catch(IllegalArgumentException e){
-					new BotError(this, e.getMessage());
-				}
-				
-			}
-			
-		}
+				});
 		
 	}
 	
