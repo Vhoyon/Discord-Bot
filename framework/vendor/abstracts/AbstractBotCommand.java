@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import vendor.exceptions.BadContentException;
 import vendor.exceptions.NoContentException;
 import vendor.interfaces.DiscordUtils;
@@ -344,8 +345,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		}
 		
 		try{
-			return this.getTextContext().sendMessage(messageToSend).complete()
-					.getId();
+			return sendMessageForChannel(this.getTextContext(), messageToSend);
 		}
 		catch(IllegalArgumentException e){
 			log(e.getMessage());
@@ -372,7 +372,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 			}
 			
 			try{
-				return channel.sendMessage(messageToSend).complete().getId();
+				return sendMessageForChannel(channel, messageToSend);
 			}
 			catch(IllegalArgumentException e){
 				log(e.getMessage());
@@ -436,12 +436,24 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String editMessage(String messageId, String newMessage){
-		return getTextContext().editMessageById(messageId, newMessage)
-				.complete().getId();
+		return editMessageForChannel(getTextContext(), messageId, newMessage);
 	}
 	
 	public void editMessageQueue(String messageId, String newMessage){
 		getTextContext().editMessageById(messageId, newMessage).queue();
+	}
+	
+	protected String sendMessageForChannel(MessageChannel channel,
+			String message){}
+	
+	protected String editMessageForChannel(MessageChannel channel,
+			String messageId, String newMessage){
+		return messageActionComplete(channel.editMessageById(messageId,
+				newMessage));
+	}
+	
+	private String messageActionComplete(MessageAction action){
+		return action.complete().getId();
 	}
 	
 	public void log(String message){
