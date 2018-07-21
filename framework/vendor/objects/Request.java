@@ -7,6 +7,7 @@ import vendor.interfaces.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -391,6 +392,23 @@ public class Request extends Translatable implements Utils {
 		catch(NoContentException e){
 			return false;
 		}
+		
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent){
+		
+		Parameter param = null;
+		try{
+			
+			param = getParameter(parameterName);
+			
+			if(param != null){
+				onParamPresent.accept(param);
+			}
+			
+		}
+		catch(NoContentException e){}
 		
 	}
 	

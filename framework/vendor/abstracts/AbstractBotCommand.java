@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
@@ -286,6 +287,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public boolean hasParameter(String... parameterNames){
 		return this.getRequest().hasParameter(parameterNames);
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent){
+		this.getRequest().onParameterPresent(parameterName, onParamPresent);
 	}
 	
 	public boolean stopAction(){
