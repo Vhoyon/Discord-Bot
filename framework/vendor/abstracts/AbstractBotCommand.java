@@ -4,12 +4,15 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
+import vendor.exceptions.BadContentException;
 import vendor.exceptions.NoContentException;
+import vendor.interfaces.DiscordUtils;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.Buffer;
+import vendor.objects.Mention;
 import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
@@ -23,7 +26,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public abstract class AbstractBotCommand extends Translatable implements
-		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
+		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
+		DiscordUtils {
 	
 	public enum BufferLevel{
 		CHANNEL, SERVER, USER
@@ -96,6 +100,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 		else
 			return null;
 		
+	}
+	
+	public Mention getContentAsMention() throws BadContentException{
+		if(!isStringMention(getContent()))
+			throw new BadContentException("Content is not a mention.");
+		
+		return new Mention(getIdFromStringMention(getContent()),
+				getEventDigger());
 	}
 	
 	public AbstractCommandRouter getRouter(){
@@ -248,6 +260,20 @@ public abstract class AbstractBotCommand extends Translatable implements
 	public Parameter getParameter(String... parameterNames)
 			throws NoContentException{
 		return this.getRequest().getParameter(parameterNames);
+	}
+	
+	public Mention getParameterAsMention(String... parametersNames)
+			throws NoContentException, BadContentException{
+		
+		Parameter paramFound = getParameter(parametersNames);
+		
+		if(!isStringMention(paramFound.getParameterContent()))
+			throw new BadContentException("Parameter content is not a mention.");
+		
+		return new Mention(
+				getIdFromStringMention(paramFound.getParameterContent()),
+				getEventDigger());
+		
 	}
 	
 	public boolean hasParameter(String parameterName){
