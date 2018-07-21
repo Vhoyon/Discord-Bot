@@ -70,25 +70,26 @@ public class CommandSpam extends BotCommand {
 			
 			for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
 				
-				if(i != 0)
-					try{
+				try{
+					
+					if(i != 0)
 						Thread.sleep(1250);
+					
+					String messageToSend = shouldAppendNumber ? message + " #"
+							+ (i + 1) : message;
+					
+					if(!shouldSendToMember){
+						
+						sendMessage(messageToSend);
+						
 					}
-					catch(InterruptedException e){}
-				
-				String messageToSend = shouldAppendNumber ? message + " #"
-						+ (i + 1) : message;
-				
-				if(!shouldSendToMember){
-					
-					sendMessage(messageToSend);
-					
+					else{
+						
+						sendMessageToMember(memberToSpam, messageToSend);
+						
+					}
 				}
-				else{
-					
-					sendMessageToMember(memberToSpam, messageToSend);
-					
-				}
+				catch(InterruptedException e){}
 				
 			}
 			
@@ -98,11 +99,7 @@ public class CommandSpam extends BotCommand {
 	
 	@Override
 	public boolean stopAction(){
-		
-		kill();
-		
 		return true;
-		
 	}
 	
 	@Override

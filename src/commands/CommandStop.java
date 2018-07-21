@@ -1,9 +1,9 @@
 package commands;
 
+import errorHandling.BotError;
 import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import vendor.utilities.CommandsThreadManager;
-import errorHandling.BotError;
 
 public class CommandStop extends BotCommand {
 	
@@ -63,8 +63,8 @@ public class CommandStop extends BotCommand {
 	}
 	
 	private void stopCommandLogic(BotCommand commandToStop){
-		
-		if(commandToStop.stopAction())
+
+		if(!commandToStop.kill())
 			sendInfoMessage(lang("CommandFullyStoppedMessage",
 					code(commandToStop.getCommandName()), EMOJI_OK_HAND));
 		else{

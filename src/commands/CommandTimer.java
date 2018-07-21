@@ -96,7 +96,6 @@ public class CommandTimer extends BotCommand {
 	
 	@Override
 	public boolean stopAction(){
-		kill();
 		return true;
 	}
 	
