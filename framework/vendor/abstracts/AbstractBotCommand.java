@@ -80,11 +80,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	protected String getContent(){
+	public String getContent(){
 		return getRequest().getContent();
 	}
 	
-	protected String[] getSplitContent(){
+	public String[] getSplitContent(){
 		
 		if(getContent() != null)
 			return getContent().split(" ");
@@ -93,7 +93,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	protected String[] getSplitContentMaxed(int maxSize){
+	public String[] getSplitContentMaxed(int maxSize){
 		
 		if(getContent() != null)
 			return getContent().split(" ", maxSize);
@@ -108,6 +108,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		return new Mention(getIdFromStringMention(getContent()),
 				getEventDigger());
+	}
+	
+	public boolean hasContent(){
+		return getContent() != null;
 	}
 	
 	public AbstractCommandRouter getRouter(){
