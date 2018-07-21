@@ -444,7 +444,9 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	protected String sendMessageForChannel(MessageChannel channel,
-			String message){}
+			String message){
+		return messageActionComplete(channel.sendMessage(message));
+	}
 	
 	protected String editMessageForChannel(MessageChannel channel,
 			String messageId, String newMessage){
