@@ -1,26 +1,28 @@
 package app;
 
+import errorHandling.BotError;
+import errorHandling.BotErrorPrivate;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import utilities.*;
 import utilities.abstracts.SimpleTextCommand;
-import utilities.interfaces.*;
-import utilities.specifics.*;
+import utilities.interfaces.Commands;
+import utilities.interfaces.Resources;
+import utilities.specifics.CommandConfirmed;
 import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
-import vendor.exceptions.BadFormatException;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.*;
-import errorHandling.BotError;
-import errorHandling.BotErrorPrivate;
 import vendor.utilities.CommandsThreadManager;
+import vendor.utilities.formatting.DiscordFormatter;
 import vendor.utilities.settings.Setting;
 
+import java.util.ArrayList;
+
 public class CommandRouter extends AbstractCommandRouter implements Resources,
-		Commands, Emojis {
+		Commands, Emojis, DiscordFormatter {
 	
 	public CommandRouter(MessageReceivedEvent event, String receivedMessage,
 			Buffer buffer, CommandsRepository commandsRepo){
@@ -30,7 +32,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	@Override
 	protected Request createRequest(String receivedMessage, Dictionary dict){
 		return new Request(receivedMessage, dict, getCommandPrefix(),
-				Resources.PARAMETER_PREFIX);
+				getCommandParameterPrefix());
 	}
 	
 	@Override
@@ -39,11 +41,13 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Request request = getRequest();
 		MessageEventDigger eventDigger = getEventDigger();
 		
-		if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
+		try{
 			
-			try{
+			setCommand(validateMessage());
+			
+			if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
 				
-				if((command = validateMessage()) == null){
+				if(getCommand() == null){
 					
 					String routerKey = eventDigger.getCommandKey(request
 							.getCommand());
@@ -80,10 +84,10 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					catch(NullPointerException e){}
 					
 					if(request.hasError()){
-						command = new BotError(request.getError(), false);
+						setCommand(new BotError(request.getError(), false));
 						
-						command.action();
-						command = null;
+						getAbstractBotCommand().action();
+						setCommand(null);
 					}
 					
 					if(!confirmationConfirmed){
@@ -93,14 +97,14 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						if(CommandsThreadManager.isCommandRunning(commandName,
 								eventDigger, this)){
 							
-							command = new BotError(lang(
-									"CommandIsRunningError", commandName));
+							setCommand(new BotError(lang(
+									"CommandIsRunningError", code(commandName))));
 							
 						}
 						else{
 							
-							command = getCommandsRepo().getContainer()
-									.initiateLink(commandName);
+							setCommand(getCommandsRepo().getContainer()
+									.initiateLink(commandName));
 							
 						}
 						
@@ -110,30 +114,41 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 				try{
 					
-					AbstractBotCommand botCommand = (AbstractBotCommand)command;
+					ParametersHelp[] commandParamsHelp = getAbstractBotCommand()
+							.getParametersDescriptions();
 					
-					botCommand.setRouter(this);
-					botCommand.setDictionary(getDictionary());
-					
-					command.action();
+					if(commandParamsHelp != null){
+						ArrayList<ArrayList<String>> paramsHelpMap = new ArrayList<>();
+						
+						for(ParametersHelp commandParamHelp : commandParamsHelp){
+							paramsHelpMap.add(commandParamHelp.getAllParams());
+						}
+						
+						getRequest().setParamLinkMap(paramsHelpMap);
+					}
 					
 				}
 				catch(NullPointerException e){}
 				
 			}
-			catch(NoCommandException e){
-				if(isDebugging())
-					Logger.log(e);
-			}
 			
+			try{
+				getAbstractBotCommand().action();
+			}
+			catch(NullPointerException e){}
+			
+		}
+		catch(NoCommandException e){
+			if(isDebugging())
+				Logger.log(e);
 		}
 		
 	}
 	
 	@Override
 	public Command commandWhenFromPrivate(){
-		return new BotErrorPrivate("*"
-				+ lang("MessageReceivedFromPrivateResponse") + "*", true);
+		return new BotErrorPrivate(
+				ital(lang("MessageReceivedFromPrivateResponse")), true);
 	}
 	
 	@Override
@@ -149,28 +164,59 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	@Override
 	public String getCommandPrefix(){
 		
-		String textChannelKey = getEventDigger().getChannelKey();
-		
-		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
-		
-		boolean hasSettings = getBuffer().has(settingsKey);
-		
-		Setting settings;
-		
-		if(!hasSettings){
+		try{
 			
-			settings = new Setting(SETTINGS);
+			String textChannelKey = getEventDigger().getChannelKey();
 			
-			getBuffer().push(settings, settingsKey);
+			String settingsKey = Utils
+					.buildKey(textChannelKey, BUFFER_SETTINGS);
+			
+			boolean hasSettings = getBuffer().has(settingsKey);
+			
+			Setting settings;
+			
+			if(!hasSettings){
+				
+				settings = new Setting(getDictionary(), SETTINGS);
+				
+				getBuffer().push(settings, settingsKey);
+				
+			}
+			else{
+				settings = (Setting)getBuffer().get(settingsKey);
+			}
+			
+			String prefix = settings.getFieldValue("prefix");
+			
+			return prefix;
 			
 		}
-		else{
-			settings = (Setting)getBuffer().get(settingsKey);
+		catch(Exception e){
+			return Request.DEFAULT_COMMAND_PREFIX;
 		}
 		
-		String prefix = settings.getFieldValue("prefix");
+	}
+	
+	@Override
+	public char getCommandParameterPrefix(){
 		
-		return prefix;
+		try{
+			
+			String textChannelKey = getEventDigger().getChannelKey();
+			
+			String settingsKey = Utils
+					.buildKey(textChannelKey, BUFFER_SETTINGS);
+			
+			Setting settings = (Setting)getBuffer().get(settingsKey);
+			
+			char paramPrefix = settings.getFieldValue("param_prefix");
+			
+			return paramPrefix;
+			
+		}
+		catch(Exception e){
+			return Request.DEFAULT_PARAMETER_PREFIX;
+		}
 		
 	}
 	

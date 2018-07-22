@@ -20,7 +20,7 @@ public abstract class CommandsLinker extends Translatable {
 	}
 	
 	public String getFullHelpString(String textHeader){
-		return getFullHelpString(textHeader, true);
+		return getFullHelpString(textHeader, false);
 	}
 	
 	public String getFullHelpString(String textHeader, boolean showDescriptions){
@@ -60,7 +60,7 @@ public abstract class CommandsLinker extends Translatable {
 			
 			String wholeCommandString = formatWholeCommand(prependChars, key);
 			
-			if(showDescriptions){
+			if(!showDescriptions){
 				builder.append(wholeCommandString);
 			}
 			else{

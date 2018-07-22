@@ -95,6 +95,17 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		this.dict = dict;
 	}
 	
+	protected AbstractBotCommand getAbstractBotCommand(){
+		
+		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
+		
+		botCommand.setRouter(this);
+		botCommand.setDictionary(getDictionary());
+		
+		return botCommand;
+		
+	}
+	
 	/**
 	 * Method that validates the message received and return the command to
 	 * execute if it is not validated. In the case where the message received
@@ -129,7 +140,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			Request request = getRequest();
 			String commandPrefix = getCommandPrefix();
 			
-			if(!request.getCommandNoFormat().matches(commandPrefix + ".*")){
+			if(!request.getCommandNoFormat().startsWith(commandPrefix)){
 				throw new NoCommandException();
 			}
 			else{
@@ -161,5 +172,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	public abstract Command commandWhenFromServerIsOnlyPrefix();
 	
 	public abstract String getCommandPrefix();
+	
+	public abstract char getCommandParameterPrefix();
 	
 }

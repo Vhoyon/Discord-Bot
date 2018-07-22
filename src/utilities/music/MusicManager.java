@@ -1,11 +1,5 @@
 package utilities.music;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import utilities.BotCommand;
-import net.dv8tion.jda.core.entities.Guild;
-
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -13,6 +7,11 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.core.entities.Guild;
+import utilities.BotCommand;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MusicManager {
 	
@@ -82,7 +81,7 @@ public class MusicManager {
 			@Override
 			public void trackLoaded(AudioTrack track){
 				command.sendMessage(command.lang("MusicManagerTrackLoaded",
-						track.getInfo().title));
+						command.code(track.getInfo().title)));
 				
 				player.playTrack(track);
 			}
@@ -94,14 +93,15 @@ public class MusicManager {
 				
 				builder.append(
 						command.lang("MusicManagerPlaylistLoaded",
-								playlist.getName())).append("\n");
+								command.code(playlist.getName()))).append("\n");
 				
 				for(int i = 0; i < playlist.getTracks().size(); i++){
 					AudioTrack track = playlist.getTracks().get(i);
 					
 					builder.append("\n").append(
 							command.lang("MusicManagerPlaylistAddedTrackInfo",
-									(i + 1), track.getInfo().title));
+									(i + 1),
+									command.code(track.getInfo().title)));
 					
 					player.playTrack(track);
 				}
@@ -112,13 +112,14 @@ public class MusicManager {
 			
 			@Override
 			public void noMatches(){
-				command.sendMessage(command.lang("MusicManagerNoMatch", source));
+				command.sendMessage(command.lang("MusicManagerNoMatch",
+						command.code(source)));
 			}
 			
 			@Override
 			public void loadFailed(FriendlyException exeption){
 				command.sendMessage(command.lang("MusicManagerLoadFailed",
-						exeption.getMessage()));
+						command.code(exeption.getMessage())));
 			}
 			
 		});

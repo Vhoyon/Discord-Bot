@@ -1,28 +1,37 @@
 package vendor.objects;
 
+import vendor.abstracts.Translatable;
+import vendor.interfaces.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import vendor.abstracts.Translatable;
-import vendor.exceptions.NoContentException;
-import vendor.interfaces.Utils;
 
 public class Request extends Translatable implements Utils {
 	
 	public class Parameter {
 		
-		private String parameter;
+		private String parameterName;
 		private String parameterContent;
 		
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			if(parameter.matches(getParametersPrefix() + ".+"))
-				this.parameter = parameter.substring(getParametersPrefix().length());
-			else
-				this.parameter = parameter;
+			if(parameter.matches(getParametersPrefixProtected() + "{1,2}.+")){
+				
+				int paramDeclaratorLength = parameter
+						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
+						: 1;
+				
+				this.parameterName = parameter.substring(paramDeclaratorLength);
+				
+			}
+			else{
+				this.parameterName = parameter;
+			}
 		}
 		
 		public Parameter(String paramName, String paramContent){
@@ -31,11 +40,11 @@ public class Request extends Translatable implements Utils {
 			this.setParameterContent(paramContent);
 		}
 		
-		public String getParameter(){
-			return parameter;
+		public String getName(){
+			return parameterName;
 		}
 		
-		public String getParameterContent(){
+		public String getContent(){
 			if(parameterContent == null)
 				return null;
 			else
@@ -55,8 +64,7 @@ public class Request extends Translatable implements Utils {
 				
 				Parameter parameterToCompare = (Parameter)obj;
 				
-				isEqual = getParameter().equals(
-						parameterToCompare.getParameter());
+				isEqual = getName().equals(parameterToCompare.getName());
 				
 			}
 			
@@ -65,13 +73,13 @@ public class Request extends Translatable implements Utils {
 		
 		@Override
 		public String toString(){
-			return this.getParameterContent();
+			return this.getContent();
 		}
 		
 	}
 	
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
-	public final static String DEFAULT_PARAMETER_PREFIX = "-";
+	public final static char DEFAULT_PARAMETER_PREFIX = '-';
 	
 	private final static String DEFAULT_LANG_DIRECTORY = "/vendor.lang.strings";
 	
@@ -83,7 +91,8 @@ public class Request extends Translatable implements Utils {
 	private String commandPrefix;
 	
 	private HashMap<String, Parameter> parameters;
-	private String parametersPrefix;
+	private HashMap<Parameter, ArrayList<String>> parametersLinks;
+	private char parametersPrefix;
 	
 	private String error;
 	
@@ -92,19 +101,19 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String parametersPrefix){
+			char parametersPrefix){
 		this(receivedMessage, dictionary, DEFAULT_COMMAND_PREFIX,
 				parametersPrefix);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, String parametersPrefix){
+			String commandPrefix, char parametersPrefix){
 		this(receivedMessage, dictionary, commandPrefix, parametersPrefix,
 				DEFAULT_LANG_DIRECTORY);
 	}
 	
 	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, String parametersPrefix, String langDirectory){
+			String commandPrefix, char parametersPrefix, String langDirectory){
 		
 		this.setDictionary(dictionary);
 		this.langDirectory = langDirectory;
@@ -145,9 +154,8 @@ public class Request extends Translatable implements Utils {
 				String possibleParam = possibleParams.get(i);
 				
 				// If string is structured as a parameter, create it.
-				if(possibleParam.matches(getParametersPrefix() + "[^\\s]+")){
-					
-					Parameter newParam = new Parameter(possibleParam);
+				if(possibleParam.matches(getParametersPrefixProtected()
+						+ "{1,2}[^\\s]+")){
 					
 					int paramStartPos;
 					int paramEndPos;
@@ -155,40 +163,104 @@ public class Request extends Translatable implements Utils {
 					paramStartPos = getContent().indexOf(possibleParam);
 					paramEndPos = paramStartPos + possibleParam.length();
 					
-					if(parameters.containsValue(newParam)){
+					if(possibleParam.matches(getParametersPrefixProtected()
+							+ "{2}[^\\s]+")){
+						// Doubled param prefix means that all letters count as one param
 						
-						if(!duplicateParams.contains(newParam))
-							duplicateParams.add(newParam);
+						Parameter newParam = new Parameter(possibleParam);
+						
+						if(parameters.containsValue(newParam)){
+							
+							if(!duplicateParams.contains(newParam))
+								duplicateParams.add(newParam);
+							
+						}
+						else{
+							
+							try{
+								
+								String possibleParamContent = possibleParams
+										.get(i + 1);
+								
+								// If the following String isn't another param, set
+								// said String as the content for the current param.
+								if(!possibleParamContent
+										.matches(getParametersPrefixProtected()
+												+ "{1,2}[^\\s]+")){
+									
+									newParam.setParameterContent(possibleParamContent);
+									
+									i++;
+									
+									paramEndPos = getContent().indexOf(
+											possibleParamContent)
+											+ possibleParamContent.length();
+									
+								}
+								
+							}
+							catch(IndexOutOfBoundsException e){
+								canRoll = false;
+							}
+							
+							parameters.put(newParam.getName(), newParam);
+							
+						}
 						
 					}
 					else{
+						// Single param prefix means that all letters counts as a different param
 						
-						try{
+						String[] singleParams = possibleParam.substring(1,
+								possibleParam.length()).split("");
+						
+						for(int j = 0; j < singleParams.length && canRoll; j++){
 							
-							String possibleParamContent = possibleParams
-									.get(i + 1);
+							Parameter newParam = new Parameter(singleParams[j]);
 							
-							// If the following String isn't another param, set
-							// said String as the content for the current param.
-							if(!possibleParamContent
-									.matches(getParametersPrefix() + "[^\\s]+")){
+							if(parameters.containsValue(newParam)){
 								
-								newParam.setParameterContent(possibleParamContent);
+								if(!duplicateParams.contains(newParam))
+									duplicateParams.add(newParam);
 								
-								i++;
+							}
+							else{
 								
-								paramEndPos = getContent().indexOf(
-										possibleParamContent)
-										+ possibleParamContent.length();
+								if(j == singleParams.length - 1){
+									
+									try{
+										String possibleParamContent = possibleParams
+												.get(i + 1);
+										
+										// If the following String isn't another param, set
+										// said String as the content for the current param.
+										if(!possibleParamContent
+												.matches(getParametersPrefixProtected()
+														+ "{1,2}[^\\s]+")){
+											
+											newParam.setParameterContent(possibleParamContent);
+											
+											i++;
+											
+											paramEndPos = getContent().indexOf(
+													possibleParamContent)
+													+ possibleParamContent
+															.length();
+											
+										}
+										
+									}
+									catch(IndexOutOfBoundsException e){
+										canRoll = false;
+									}
+									
+								}
+								
+								parameters.put(newParam.getName(), newParam);
 								
 							}
 							
 						}
-						catch(IndexOutOfBoundsException e){
-							canRoll = false;
-						}
-						
-						parameters.put(newParam.getParameter(), newParam);
 						
 					}
 					
@@ -211,11 +283,11 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public String getCommand(){
-		return command.substring(getCommandPrefix().length());
+		return this.getCommandNoFormat().substring(getCommandPrefix().length());
 	}
 	
 	public String getCommandNoFormat(){
-		return command;
+		return this.command;
 	}
 	
 	public void setCommand(String command){
@@ -223,7 +295,7 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public String getContent(){
-		return content;
+		return this.content;
 	}
 	
 	public void setContent(String content){
@@ -240,38 +312,54 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
-		return parameters;
+		return this.parameters;
 	}
 	
-	public Parameter getParameter(String... parameterNames)
-			throws NoContentException{
+	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
+		return this.parametersLinks;
+	}
+	
+	public Parameter getParameter(String... parameterNames){
+		
+		if(!hasParameters()){
+			return null;
+		}
 		
 		if(parameterNames == null || parameterNames.length == 0)
 			throw new IllegalArgumentException(
 					"The parametersName parameter cannot be null / empty!");
 		
-		try{
+		for(String parameterName : parameterNames){
 			
-			for(String parameterName : parameterNames){
+			if(getParametersLinks() != null){
 				
-				Parameter paramFound = getParameters().get(parameterName);
-				
-				if(paramFound != null)
-					return paramFound;
+				for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
+						.entrySet()){
+					
+					if(entry.getValue().contains(parameterName))
+						return entry.getKey();
+					
+				}
 				
 			}
 			
-		}
-		catch(NullPointerException e){
-			throw new NoContentException(getCommand());
+			Parameter paramFound = getParameters().get(parameterName);
+			
+			if(paramFound != null)
+				return paramFound;
+			
 		}
 		
-		throw new NoContentException(getCommand());
+		return null;
 		
 	}
 	
-	public String getParametersPrefix(){
-		return parametersPrefix;
+	public char getParametersPrefix(){
+		return this.parametersPrefix;
+	}
+	
+	private String getParametersPrefixProtected(){
+		return Pattern.quote(String.valueOf(getParametersPrefix()));
 	}
 	
 	public String getError(){
@@ -279,34 +367,53 @@ public class Request extends Translatable implements Utils {
 	}
 	
 	public boolean hasError(){
-		return error != null;
+		return this.getError() != null;
 	}
 	
-	public boolean hasParameter(String parameterName){
-		if (getParameters() == null)
-			return false;
-		
-		return getParameters().containsKey(parameterName);
-	}
+	// public boolean hasParameter(String parameterName){
+	// 	if(getParameters() == null)
+	// 		return false;
+	
+	// 	return this.getParameters().containsKey(parameterName);
+	// }
 	
 	public boolean hasParameter(String... parameterNames){
+		return getParameter(parameterNames) != null;
+	}
+	
+	public boolean hasParameters(){
+		return getParameters() != null;
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent){
+		onParameterPresent(parameterName, onParamPresent, null);
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent, Runnable onParamNotPresent){
 		
-		for(String parameterName : parameterNames)
-			if(this.hasParameter(parameterName))
-				return true;
+		Parameter param = null;
 		
-		return false;
+		param = getParameter(parameterName);
+		
+		if(param != null){
+			onParamPresent.accept(param);
+		}
+		else if(onParamNotPresent != null){
+			onParamNotPresent.run();
+		}
 		
 	}
 	
-	public boolean addParameter(String paramName){
-		return this.getParameters().put(paramName, new Parameter(paramName)) == null;
-	}
+	// public boolean addParameter(String paramName){
+	// 	return this.getParameters().put(paramName, new Parameter(paramName)) == null;
+	// }
 	
-	public boolean addParameter(String paramName, String paramContent){
-		return this.getParameters().put(paramName,
-				new Parameter(paramName, paramContent)) == null;
-	}
+	// public boolean addParameter(String paramName, String paramContent){
+	// 	return this.getParameters().put(paramName,
+	// 			new Parameter(paramName, paramContent)) == null;
+	// }
 	
 	private String[] splitCommandAndContent(String command){
 		
@@ -353,8 +460,7 @@ public class Request extends Translatable implements Utils {
 				if(duplicateParams.size() != 1)
 					message.append("\n").append(i + 1).append(". ");
 				
-				message.append("`")
-						.append(duplicateParams.get(i).getParameter())
+				message.append("`").append(duplicateParams.get(i).getName())
 						.append("`");
 				
 			}
@@ -373,6 +479,30 @@ public class Request extends Translatable implements Utils {
 			this.error = message.toString();
 			
 		}
+		
+	}
+	
+	public void setParamLinkMap(ArrayList<ArrayList<String>> map){
+		
+		if(getParameters() != null)
+			getParameters().forEach((key, param) -> {
+				
+				for(ArrayList<String> paramsGroup : map){
+					
+					if(paramsGroup.contains(key)){
+						
+						if(this.parametersLinks == null){
+							this.parametersLinks = new HashMap<>();
+						}
+						
+						this.parametersLinks.put(param, paramsGroup);
+						break;
+						
+					}
+					
+				}
+				
+			});
 		
 	}
 	
