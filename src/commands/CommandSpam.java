@@ -3,6 +3,7 @@ package commands;
 import net.dv8tion.jda.core.entities.Member;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
+import vendor.objects.Mention;
 import vendor.objects.ParametersHelp;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class CommandSpam extends BotCommand {
 		
 		boolean shouldSendToMember = hasParameter("u");
 		
-		Member memberToSpam = null;
+		Mention memberToSpam = null;
 		List<Member> membersToSpam = null;
 		
 		if(shouldSendToMember){
@@ -105,12 +106,17 @@ public class CommandSpam extends BotCommand {
 					else{
 						
 						if(memberToSpam != null){
+							if(i == 0 && memberToSpam.isMentionningSelf()){
+								sendMessage("I like how you are spamming yourself. Good job.");
+							}
+							
 							sendMessageToMember(memberToSpam, messageToSend);
 						}
 						else if(membersToSpam != null){
 							
 							for(Member member : membersToSpam){
-								sendMessageToMember(member, messageToSend);
+								new Thread(() -> sendMessageToMember(member,
+										messageToSend)).start();
 							}
 							
 						}
