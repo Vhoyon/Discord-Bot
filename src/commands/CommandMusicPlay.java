@@ -75,7 +75,7 @@ public class CommandMusicPlay extends MusicCommands {
 				
 				} catch (IOException e) {
 				
-					sendMessage("SongByStringFail");
+					sendMessage(lang("SongByStringFail"));
 				
 				}
 
