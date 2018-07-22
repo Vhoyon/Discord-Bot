@@ -1,13 +1,10 @@
 package utilities.music;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import utilities.BotCommand;
-import vendor.exceptions.BadParameterException;
-import vendor.modules.Logger;
 
 public class MusicPlayer {
 	
@@ -86,7 +83,9 @@ public class MusicPlayer {
 	}
 	
 	public void setVolume(int volume){
-		this.getAudioPlayer().setVolume(volume / (100 / MAX_VOLUME));
+		this.getAudioPlayer().setVolume(
+				(int)Math.ceil((double)volume
+						/ ((double)100 / (double)MAX_VOLUME)));
 	}
 	
 }
