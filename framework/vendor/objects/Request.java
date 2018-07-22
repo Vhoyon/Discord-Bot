@@ -321,6 +321,10 @@ public class Request extends Translatable implements Utils {
 	
 	public Parameter getParameter(String... parameterNames){
 		
+		if(!hasParameters()){
+			return null;
+		}
+		
 		if(parameterNames == null || parameterNames.length == 0)
 			throw new IllegalArgumentException(
 					"The parametersName parameter cannot be null / empty!");
@@ -375,6 +379,10 @@ public class Request extends Translatable implements Utils {
 	
 	public boolean hasParameter(String... parameterNames){
 		return getParameter(parameterNames) != null;
+	}
+	
+	public boolean hasParameters(){
+		return getParameters() != null;
 	}
 	
 	public void onParameterPresent(String parameterName,
