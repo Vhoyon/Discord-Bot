@@ -10,4 +10,12 @@ public interface DiscordUtils {
 		return stringMention.replaceAll("<@([0-9]{18})>", "$1");
 	}
 	
+	default boolean isStringMentionRole(String string){
+		return string.matches("^<@&[0-9]{18}>$");
+	}
+	
+	default String getIdFromStringMentionRole(String stringMention){
+		return stringMention.replaceAll("<@&([0-9]{18})>", "$1");
+	}
+	
 }

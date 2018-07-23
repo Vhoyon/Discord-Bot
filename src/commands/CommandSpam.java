@@ -3,8 +3,10 @@ package commands;
 import net.dv8tion.jda.core.entities.Member;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
+import vendor.objects.Mention;
 import vendor.objects.ParametersHelp;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandSpam extends BotCommand {
@@ -28,11 +30,25 @@ public class CommandSpam extends BotCommand {
 		
 		boolean shouldSendToMember = hasParameter("u");
 		
-		Member memberToSpam = null;
+		Mention memberToSpam = null;
+		List<Member> membersToSpam = null;
 		
 		if(shouldSendToMember){
 			try{
-				memberToSpam = getParameterAsMention("u");
+				
+				String possibleMention = getParameter("u").getContent();
+				
+				if(isStringMention(possibleMention)){
+					memberToSpam = getParameterAsMention("u");
+				}
+				else if(isStringMentionRole(possibleMention)){
+					membersToSpam = getGuild()
+							.getMembersWithRoles(
+									getGuild()
+											.getRoleById(
+													getIdFromStringMentionRole(possibleMention)));
+				}
+				
 			}
 			catch(BadContentException e){
 				sendMessage("The member specified is not valid. Tag him with "
@@ -40,7 +56,8 @@ public class CommandSpam extends BotCommand {
 			}
 		}
 		
-		if(!shouldSendToMember || (shouldSendToMember && memberToSpam != null)){
+		if(!shouldSendToMember
+				|| (shouldSendToMember && (memberToSpam != null || membersToSpam != null))){
 			
 			String message;
 			
@@ -59,10 +76,11 @@ public class CommandSpam extends BotCommand {
 			else{
 				
 				if(shouldSendToMember){
-					message = getMember().getAsMention() + " is spamming you!";
+					message = ital(getMember().getAsMention()
+							+ " is spamming you!");
 				}
 				else{
-					message = ital(bold(getMember().getEffectiveName()))
+					message = ital(bold(getMember().getAsMention()))
 							+ " is spamming y'all!";
 				}
 				
@@ -87,7 +105,21 @@ public class CommandSpam extends BotCommand {
 					}
 					else{
 						
-						sendMessageToMember(memberToSpam, messageToSend);
+						if(memberToSpam != null){
+							if(i == 0 && memberToSpam.isMentionningSelf()){
+								sendMessage("I like how you are spamming yourself. Good job.");
+							}
+							
+							sendMessageToMember(memberToSpam, messageToSend);
+						}
+						else if(membersToSpam != null){
+							
+							for(Member member : membersToSpam){
+								new Thread(() -> sendMessageToMember(member,
+										messageToSend)).start();
+							}
+							
+						}
 						
 					}
 				}

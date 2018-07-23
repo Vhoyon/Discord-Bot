@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
+import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Translatable;
 import vendor.interfaces.Utils;
 import vendor.objects.*;
@@ -174,5 +175,9 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	public abstract String getCommandPrefix();
 	
 	public abstract char getCommandParameterPrefix();
+	
+	public LinkableCommand getLinkableCommand(String commandName){
+		return this.getCommandsRepo().getContainer().initiateLink(commandName);
+	}
 	
 }

@@ -103,8 +103,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						}
 						else{
 							
-							setCommand(getCommandsRepo().getContainer()
-									.initiateLink(commandName));
+							setCommand(getLinkableCommand(commandName));
 							
 						}
 						
@@ -132,10 +131,18 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 			}
 			
-			try{
-				getAbstractBotCommand().action();
+			AbstractBotCommand command = getAbstractBotCommand();
+			
+			if(command != null){
+				
+				try{
+					command.action();
+				}
+				catch(Exception e){
+					Logger.log(e);
+				}
+				
 			}
-			catch(NullPointerException e){}
 			
 		}
 		catch(NoCommandException e){

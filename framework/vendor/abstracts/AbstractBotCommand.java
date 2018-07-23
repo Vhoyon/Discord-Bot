@@ -455,6 +455,19 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return action.complete().getId();
 	}
 	
+	protected void callCommand(String commandName){
+		AbstractBotCommand command = (AbstractBotCommand)getRouter()
+				.getLinkableCommand(commandName);
+		
+		this.callCommand(command);
+	}
+	
+	protected void callCommand(AbstractBotCommand command){
+		command.putStateFromCommand(this);
+		
+		command.action();
+	}
+	
 	public void log(String message){
 		Logger.log(message);
 	}
