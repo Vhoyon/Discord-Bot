@@ -1,13 +1,9 @@
 package commands;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
-import utilities.music.MusicPlayer;
 
-import javax.sound.midi.Track;
-
-public class CommandReplay extends MusicCommands {
+public class CommandMusicReplay extends MusicCommands {
 	@Override
 	public void action(){
 		
