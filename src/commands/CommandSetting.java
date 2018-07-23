@@ -82,7 +82,7 @@ public class CommandSetting extends BotCommand {
 						
 						if(this.shouldSwitchToDefault){
 							
-							settingField.setToDefaultValue();
+							settingField.setToDefaultValue(onSuccess);
 							
 							sendMessage("The setting "
 									+ code(settingName)
