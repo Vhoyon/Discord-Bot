@@ -13,6 +13,7 @@ import utilities.music.MusicPlayer;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
 import vendor.modules.Environment;
+import vendor.objects.ParametersHelp;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -116,7 +117,16 @@ public class CommandMusicPlay extends MusicCommands {
 		return "Start a song by giving a youtube link or restart a paused song by not giving a link";
 		
 	}
-	
+
+	@Override
+	public ParametersHelp[] getParametersDescriptions() {
+		return new ParametersHelp[]{
+		
+			new ParametersHelp(lang("ReplayDescription"),"l" ,"latest")
+			
+		};
+	}
+
 	public boolean isUrl(String string){
 		try{
 			URL url = new URL(string);
