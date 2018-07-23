@@ -9,21 +9,20 @@ import javax.sound.midi.Track;
 
 public class CommandReplay extends MusicCommands {
 	@Override
-	public void action() {
+	public void action(){
 		
-		if (getGuild() == null)
+		if(getGuild() == null)
 			return;
 		
 		connectIfNotPlaying();
-
-		AudioTrack track = (AudioTrack) getMemory("LATEST_SONG");
 		
+		String trackSource = (String)getMemory("LATEST_SONG");
 		
-		MusicManager.get().loadTrack(this, track.getInfo().uri);
+		MusicManager.get().loadTrack(this, trackSource);
 	}
-
+	
 	@Override
-	public Object getCalls() {
+	public Object getCalls(){
 		return MUSIC_REPLAY;
 	}
 }
