@@ -21,8 +21,7 @@ public interface Resources {
 	Language[] languages =
 	{
 		new Language("en", "US", "anglais", "eng", "english", "en"),
-		new Language("fr", "CA", "francais", "fran�ais", "fra", "french", "fr"),
-	//		new Language("fr", "Te", "test")
+		new Language("fr", "CA", "francais", "français", "fra", "french", "fr"),
 	};
 	
 	SettingField[] SETTINGS =
