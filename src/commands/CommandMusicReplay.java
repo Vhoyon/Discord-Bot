@@ -10,17 +10,22 @@ public class CommandMusicReplay extends MusicCommands {
 		if(getGuild() == null)
 			return;
 		
-		connectIfNotPlaying();
-		
-		String trackSource = null;
-		
-		if(hasMemory("LATEST_SONG")){
-			trackSource = (String)getMemory("LATEST_SONG");
-		}else{
+		if(!hasMemory("LATEST_SONG")){
+			
 			sendMessage(lang("NoPreviousSong"));
+			
+		}
+		else{
+			
+			connectIfNotPlaying();
+			
+			String trackSource = null;
+			
+			trackSource = (String)getMemory("LATEST_SONG");
+			
+			MusicManager.get().loadTrack(this, trackSource);
 		}
 		
-		MusicManager.get().loadTrack(this, trackSource);
 	}
 	
 	@Override
