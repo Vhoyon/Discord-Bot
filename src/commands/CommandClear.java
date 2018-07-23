@@ -1,13 +1,13 @@
 package commands;
 
-import java.util.List;
-
-import utilities.BotCommand;
-import utilities.specifics.CommandConfirmed;
-import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+import utilities.BotCommand;
+import utilities.specifics.CommandConfirmed;
+import vendor.objects.ParametersHelp;
+
+import java.util.List;
 
 /**
  * Classe qui permet d'effacer tout les messages dans le chat ou on l'invoque.
@@ -31,7 +31,61 @@ public class CommandClear extends BotCommand {
 				
 				try{
 					
-					fullCleanReworked();
+					MessageHistory history = getTextContext().getHistory();
+					
+					boolean isEmpty;
+					
+					boolean deletingIndividually = false;
+					
+					boolean waitForDeletionToContinue = hasParameter("s");
+					
+					do{
+						
+						List<Message> messages = history.retrievePast(100)
+								.complete();
+						
+						if(!(isEmpty = messages.isEmpty())){
+							
+							if(!deletingIndividually){
+								
+								try{
+									
+									if(!waitForDeletionToContinue){
+										getTextContext().deleteMessages(
+												messages).queue();
+									}
+									else{
+										getTextContext().deleteMessages(
+												messages).complete();
+									}
+									
+								}
+								catch(IllegalArgumentException e){
+									deletingIndividually = true;
+								}
+								
+							}
+							else{
+								
+								for(Message message : messages){
+									
+									if(!waitForDeletionToContinue){
+										message.delete().queue();
+									}
+									else{
+										message.delete().complete();
+									}
+									
+								}
+								
+							}
+							
+						}
+						
+					}while(!isEmpty && isAlive());
+					
+					if(isAlive())
+						sendMessage("Cleared everything!");
 					
 				}
 				catch(PermissionException e){
@@ -44,89 +98,8 @@ public class CommandClear extends BotCommand {
 		
 	}
 	
-	private void fullCleanReworked() throws PermissionException{
-		
-		MessageHistory history = getTextContext().getHistory();
-		
-		boolean isEmpty;
-		
-		boolean deletingIndividually = false;
-		
-		do{
-			
-			List<Message> messages = history.retrievePast(100).complete();
-			
-			if(!(isEmpty = messages.isEmpty())){
-				
-				if(!deletingIndividually){
-					
-					try{
-						getTextContext().deleteMessages(messages).complete();
-					}
-					catch(IllegalArgumentException e){
-						deletingIndividually = true;
-					}
-					
-				}
-				
-				if(deletingIndividually){
-					
-					for(Message message : messages){
-						
-						message.delete().queue();
-						
-					}
-					
-				}
-				
-			}
-			
-		}while(!isEmpty && isAlive());
-		
-		if(isAlive())
-			sendMessage("Cleared everything!");
-		
-	}
-	
-	/**
-	 * @deprecated
-	 * @throws PermissionException
-	 */
-	private void fullClean() throws PermissionException{
-		
-		boolean hadErrors = false;
-		
-		boolean vide = false;
-		MessageHistory history = getTextContext().getHistory();
-		do{
-			
-			List<Message> messages = history.retrievePast(100).complete();
-			
-			if(!messages.isEmpty()){
-				
-				try{
-					getTextContext().deleteMessages(messages).complete();
-				}
-				catch(IllegalArgumentException e){
-					hadErrors = true;
-				}
-				
-			}
-			else{
-				vide = true;
-			}
-			
-		}while(!vide);
-		
-		if(hadErrors)
-			new BotError(this, lang("CannotBulkDeleteOld"));
-		
-	}
-	
 	@Override
 	public boolean stopAction(){
-		kill();
-		
 		return true;
 	}
 	
@@ -138,6 +111,16 @@ public class CommandClear extends BotCommand {
 	@Override
 	public String getCommandDescription(){
 		return "Clear all the messages that in the text channel you execute the command!";
+	}
+	
+	@Override
+	public ParametersHelp[] getParametersDescriptions(){
+		return new ParametersHelp[]
+		{
+			new ParametersHelp(
+					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
+					"s", "slow")
+		};
 	}
 	
 }
