@@ -7,7 +7,6 @@ import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.Commands;
 import utilities.interfaces.Resources;
 import utilities.specifics.CommandConfirmed;
-import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
@@ -103,8 +102,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						}
 						else{
 							
-							setCommand(getCommandsRepo().getContainer()
-									.initiateLink(commandName));
+							setCommand(getLinkableCommand(commandName));
 							
 						}
 						
