@@ -7,6 +7,7 @@ import utilities.abstracts.SimpleTextCommand;
 import utilities.interfaces.Commands;
 import utilities.interfaces.Resources;
 import utilities.specifics.CommandConfirmed;
+import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
@@ -130,10 +131,18 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 			}
 			
-			try{
-				getAbstractBotCommand().action();
+			AbstractBotCommand command = getAbstractBotCommand();
+			
+			if(command != null){
+				
+				try{
+					command.action();
+				}
+				catch(Exception e){
+					Logger.log(e);
+				}
+				
 			}
-			catch(NullPointerException e){}
 			
 		}
 		catch(NoCommandException e){
