@@ -12,7 +12,13 @@ public class CommandMusicReplay extends MusicCommands {
 		
 		connectIfNotPlaying();
 		
-		String trackSource = (String)getMemory("LATEST_SONG");
+		String trackSource = null;
+		
+		if(hasMemory("LATEST_SONG")){
+			trackSource = (String)getMemory("LATEST_SONG");
+		}else{
+			sendMessage(lang("NoPreviousSong"));
+		}
 		
 		MusicManager.get().loadTrack(this, trackSource);
 	}
