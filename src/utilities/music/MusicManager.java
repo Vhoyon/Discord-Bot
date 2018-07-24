@@ -12,6 +12,7 @@ import utilities.BotCommand;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MusicManager {
 	
@@ -76,7 +77,7 @@ public class MusicManager {
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
 				
-		boolean isLoaded = false;
+		AtomicBoolean isLoaded = new AtomicBoolean(false);
 		
 		manager.loadItemOrdered(player, source, new AudioLoadResultHandler(){
 			
@@ -87,7 +88,7 @@ public class MusicManager {
 				
 				player.playTrack(track);
 				
-				isLoaded = true;
+				isLoaded.set(true);
 			}
 			
 			@Override
@@ -112,7 +113,7 @@ public class MusicManager {
 				
 				command.sendMessage(builder.toString());
 				
-				isLoaded = true;
+				isLoaded.set(true);
 				
 			}
 			
@@ -130,7 +131,7 @@ public class MusicManager {
 			
 		});
 		
-		return isLoaded;
+		return isLoaded.get();
 		
 	}
 	
