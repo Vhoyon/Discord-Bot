@@ -1,5 +1,6 @@
 package commands;
 
+import errorHandling.BotError;
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
 
@@ -8,9 +9,10 @@ public class CommandMusicSkipAll extends MusicCommands {
 	@Override
 	public void action(){
 		
-		Boolean canSkipAll = canSkipAll(true);
-		
-		if(canSkipAll != null){
+		if(!isPlaying()){
+			new BotError(this, lang("CommandMusicSkipNotPlaying"));
+		}
+		else{
 			
 			MusicManager.get().emptyPlayer(this);
 			

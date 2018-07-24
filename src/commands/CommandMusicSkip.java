@@ -19,98 +19,90 @@ public class CommandMusicSkip extends MusicCommands {
 		}
 		else{
 			
-			Boolean canSkipAll = canSkipAll(false);
-			
-			if(canSkipAll != null){
+			if(!isPlaying()){
+				new BotError(this, lang("CommandMusicSkipNotPlaying"));
+			}
+			else{
 				
-				if(canSkipAll){
+				MusicPlayer player = MusicManager.get().getPlayer(this);
+				
+				if(getContent() == null){
 					
-					new CommandMusicSkipAll().action();
+					if(!isPlaying()){
+						new BotError(this, lang("NotPlaying"));
+					}
+					else{
+						if(this.hasMemory("MUSIC_LOOP")
+								&& (boolean)this.getMemory("MUSIC_LOOP")){
+							forget("MUSIC_LOOP");
+						}
+						if(player.skipTrack()){
+							sendInfoMessage(lang(
+									"SkippedNowPlaying",
+									code(player.getAudioPlayer()
+											.getPlayingTrack().getInfo().title)));
+						}
+						else{
+							sendInfoMessage(lang("NoMoreMusic"));
+							
+							MusicManager.get().emptyPlayer(this);
+						}
+						
+					}
 					
 				}
 				else{
 					
-					MusicPlayer player = MusicManager.get().getPlayer(this);
-					
-					if(getContent() == null){
+					try{
 						
-						if(!isPlaying()){
-							new BotError(this, lang("NotPlaying"));
+						int skipAmount = Integer.valueOf(getContent());
+						
+						if(skipAmount < 1){
+							throw new BadContentException();
 						}
 						else{
-							if(this.hasMemory("MUSIC_LOOP")
-									&& (boolean)this.getMemory("MUSIC_LOOP")){
-								forget("MUSIC_LOOP");
-							}
-							if(player.skipTrack()){
-								sendInfoMessage(lang(
-										"SkippedNowPlaying",
-										code(player.getAudioPlayer()
-												.getPlayingTrack().getInfo().title)));
+							
+							if(skipAmount <= player.getNumberOfTracks()){
+								
+								for(int i = 0; i < skipAmount; i++){
+									player.skipTrack();
+								}
+								
+								sendInfoMessage(lang("SkippedNowPlaying",
+										player.getAudioPlayer()
+												.getPlayingTrack()
+												.getInfo().title));
+								
 							}
 							else{
-								sendInfoMessage(lang("NoMoreMusic"));
 								
-								MusicManager.get().emptyPlayer(this);
+								new CommandConfirmed(this){
+									@Override
+									public String getConfMessage(){
+										return lang(
+												"OverflowConfirm",
+												code(skipAmount),
+												code(player
+														.getNumberOfTracks()));
+									}
+									
+									@Override
+									public void confirmed(){
+										callCommand(new CommandMusicSkipAll());
+									}
+								};
+								
 							}
 							
 						}
 						
 					}
-					else{
-						
-						try{
-							
-							int skipAmount = Integer.valueOf(getContent());
-							
-							if(skipAmount < 1){
-								throw new BadContentException();
-							}
-							else{
-								
-								if(skipAmount <= player.getNumberOfTracks()){
-									
-									for(int i = 0; i < skipAmount; i++){
-										player.skipTrack();
-									}
-									
-									sendInfoMessage(lang("SkippedNowPlaying",
-											player.getAudioPlayer()
-													.getPlayingTrack()
-													.getInfo().title));
-									
-								}
-								else{
-									
-									new CommandConfirmed(this){
-										@Override
-										public String getConfMessage(){
-											return lang(
-													"OverflowConfirm",
-													code(skipAmount),
-													code(player
-															.getNumberOfTracks()));
-										}
-										
-										@Override
-										public void confirmed(){
-											callCommand(new CommandMusicSkipAll());
-										}
-									};
-									
-								}
-								
-							}
-							
-						}
-						catch(NumberFormatException e){
-							new BotError(this, lang("NumberNotANumber"));
-						}
-						catch(BadContentException e){
-							new BotError(this, lang("NumberNotBetweenRange", 0,
-									100));
-						}
-						
+					catch(NumberFormatException e){
+						new BotError(this, lang("NumberNotANumber"));
+					}
+					catch(BadContentException e){
+						new BotError(this, lang("NumberNotBetweenRange", 0,
+								100));
 					}
 					
 				}
