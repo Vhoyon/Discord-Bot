@@ -19,6 +19,10 @@ public interface Utils {
 	default <EnvVar> EnvVar env(String key){
 		return env(key, null);
 	}
+	
+	default boolean hasEnv(String key){
+		return Environment.hasVar(key);
+	}
 
 	static String buildKey(String baseKey, String... additionalKeys){
 		StringBuilder keyBuilder = new StringBuilder(baseKey);
