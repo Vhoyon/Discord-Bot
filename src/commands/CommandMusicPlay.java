@@ -42,13 +42,13 @@ public class CommandMusicPlay extends MusicCommands {
 				
 				if(getContent() != null){
 					
-					String source;
-					
 					try{
+						
+						String source;
 						
 						if(!isUrl(getContent())){
 							
-							if(env("YOUTUBE_TOKEN") == null){
+							if(!hasEnv("YOUTUBE_TOKEN")){
 								throw new IllegalStateException("youtube");
 							}
 							
