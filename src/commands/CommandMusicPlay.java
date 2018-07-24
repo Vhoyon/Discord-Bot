@@ -46,39 +46,11 @@ public class CommandMusicPlay extends MusicCommands {
 						
 						String source;
 						
-						if(!isUrl(getContent())){
-							
-							if(!hasEnv("YOUTUBE_TOKEN")){
-								throw new IllegalStateException("youtube");
-							}
-							
-							YouTube youtube = new YouTube.Builder(
-									new NetHttpTransport(),
-									new JacksonFactory(),
-									new HttpRequestInitializer(){
-										public void initialize(
-												HttpRequest request)
-												throws IOException{}
-									}).setApplicationName("Discord Bot")
-									.build();
-							
-							YouTube.Search.List search = youtube.search().list(
-									"snippet");
-							
-							search.setMaxResults((long)1);
-							search.setQ(getContent());
-							search.setKey(env("YOUTUBE_TOKEN"));
-							
-							SearchListResponse response = search.execute();
-							
-							String id = response.getItems().get(0).getId()
-									.getVideoId();
-							
-							source = "https://www.youtube.com/watch?v=" + id;
-							
+						if(isUrl(getContent())){
+							source = getContent();
 						}
 						else{
-							source = getContent();
+							source = getSourceFromYoutube(getContent());
 						}
 						
 						connectIfNotPlaying();
@@ -113,6 +85,38 @@ public class CommandMusicPlay extends MusicCommands {
 			}
 			
 		}
+		
+	}
+	
+	private String getSourceFromYoutube(String query) throws IOException, IllegalStateException{
+		
+		if(!hasEnv("YOUTUBE_TOKEN")){
+			throw new IllegalStateException("youtube");
+		}
+		
+		YouTube youtube = new YouTube.Builder(
+				new NetHttpTransport(),
+				new JacksonFactory(),
+				new HttpRequestInitializer(){
+					public void initialize(
+							HttpRequest request)
+							throws IOException{}
+				}).setApplicationName("Discord Bot")
+				.build();
+		
+		YouTube.Search.List search = youtube.search().list(
+				"snippet");
+		
+		search.setMaxResults((long)1);
+		search.setQ(getContent());
+		search.setKey(env("YOUTUBE_TOKEN"));
+		
+		SearchListResponse response = search.execute();
+		
+		String id = response.getItems().get(0).getId()
+				.getVideoId();
+		
+		return "https://www.youtube.com/watch?v=" + id;
 		
 	}
 	
