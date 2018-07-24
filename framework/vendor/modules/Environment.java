@@ -131,6 +131,10 @@ public class Environment extends Module {
 		return (EnvVar)(String)value;
 	}
 	
+	public static boolean hasVar(String key){
+		return envVars.containsKey(key);
+	}
+	
 	@Override
 	protected void handleIssuesLogic() throws Exception{
 		
