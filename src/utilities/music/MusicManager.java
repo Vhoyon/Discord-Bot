@@ -69,12 +69,14 @@ public class MusicManager {
 		
 	}
 	
-	public void loadTrack(final BotCommand command, final String source){
+	public boolean loadTrack(final BotCommand command, final String source){
 		
 		MusicPlayer player = getPlayer(command);
 		
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
+				
+		boolean isLoaded = false;
 		
 		manager.loadItemOrdered(player, source, new AudioLoadResultHandler(){
 			
@@ -84,6 +86,8 @@ public class MusicManager {
 						command.code(track.getInfo().title)));
 				
 				player.playTrack(track);
+				
+				isLoaded = true;
 			}
 			
 			@Override
@@ -108,6 +112,8 @@ public class MusicManager {
 				
 				command.sendMessage(builder.toString());
 				
+				isLoaded = true;
+				
 			}
 			
 			@Override
@@ -123,6 +129,8 @@ public class MusicManager {
 			}
 			
 		});
+		
+		return isLoaded;
 		
 	}
 	
