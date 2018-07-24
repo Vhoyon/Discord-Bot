@@ -86,7 +86,11 @@ public class CommandMusicSkip extends MusicCommands {
 									
 									@Override
 									public void confirmed(){
-										callCommand(new CommandMusicSkipAll());
+										
+										MusicManager.get().emptyPlayer(CommandMusicSkip.this);
+										
+										sendInfoMessage(lang("SkippedAllMusic"));
+										
 									}
 								};
 								
