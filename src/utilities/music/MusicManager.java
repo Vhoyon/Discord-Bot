@@ -12,7 +12,7 @@ import utilities.BotCommand;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class MusicManager {
 	
@@ -70,29 +70,35 @@ public class MusicManager {
 		
 	}
 	
-	public boolean loadTrack(final BotCommand command, final String source){
+	public void loadTrack(final BotCommand command, final String source){
+		this.loadTrack(command, source, null);
+	}
+	
+	public void loadTrack(final BotCommand command, final String source, Consumer<MusicPlayer> onSuccessLoadBeforePlay){
 		
 		MusicPlayer player = getPlayer(command);
 		
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
 				
-		AtomicBoolean isLoaded = new AtomicBoolean(false);
-		
 		manager.loadItemOrdered(player, source, new AudioLoadResultHandler(){
 			
 			@Override
 			public void trackLoaded(AudioTrack track){
+				if(onSuccessLoadBeforePlay != null)
+					onSuccessLoadBeforePlay.accept(player);
+					
 				command.sendMessage(command.lang("MusicManagerTrackLoaded",
 						command.code(track.getInfo().title)));
 				
 				player.playTrack(track);
-				
-				isLoaded.set(true);
 			}
 			
 			@Override
 			public void playlistLoaded(AudioPlaylist playlist){
+				
+				if(onSuccessLoadBeforePlay != null)
+					onSuccessLoadBeforePlay.accept(player);
 				
 				StringBuilder builder = new StringBuilder();
 				
@@ -113,8 +119,6 @@ public class MusicManager {
 				
 				command.sendMessage(builder.toString());
 				
-				isLoaded.set(true);
-				
 			}
 			
 			@Override
@@ -130,8 +134,6 @@ public class MusicManager {
 			}
 			
 		});
-		
-		return isLoaded.get();
 		
 	}
 	

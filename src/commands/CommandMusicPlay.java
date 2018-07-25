@@ -26,9 +26,6 @@ public class CommandMusicPlay extends MusicCommands {
 	@Override
 	public void action(){
 		
-		if(getGuild() == null)
-			return;
-		
 		if(hasParameter("l")){
 			callCommand(MUSIC_REPLAY);
 		}
@@ -53,9 +50,7 @@ public class CommandMusicPlay extends MusicCommands {
 							source = getSourceFromYoutube(getContent());
 						}
 						
-						connectIfNotPlaying();
-						
-						MusicManager.get().loadTrack(this, source);
+						MusicManager.get().loadTrack(this, source, (player) -> connectIfNotPlaying());
 						
 					}
 					catch(IOException e){
@@ -133,10 +128,9 @@ public class CommandMusicPlay extends MusicCommands {
 
 	@Override
 	public ParametersHelp[] getParametersDescriptions() {
-		return new ParametersHelp[]{
-		
-			new ParametersHelp(lang("ReplayDescription"),"l" ,"latest")
-			
+		return new ParametersHelp[]
+		{
+			new ParametersHelp(lang("ReplayDescription"), "l" ,"latest")
 		};
 	}
 
