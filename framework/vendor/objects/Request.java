@@ -198,7 +198,8 @@ public class Request extends Translatable implements Utils {
 				int paramStartPos = -1;
 				int paramEndPos = -1;
 				
-				if(possibleParam.equals(getParametersPrefix() + "" + getParametersPrefix())){
+				if(possibleParam.equals(getParametersPrefix() + ""
+						+ getParametersPrefix())){
 					// If string is double parameter prefix, remove it and stop taking params
 					
 					paramStartPos = getContent().indexOf(possibleParam);
@@ -267,7 +268,8 @@ public class Request extends Translatable implements Utils {
 						
 						for(int j = 0; j < singleParams.length && canRoll; j++){
 							
-							Parameter newParam = new Parameter(singleParams[j], i + j);
+							Parameter newParam = new Parameter(singleParams[j],
+									i + j);
 							
 							if(parameters.containsValue(newParam)){
 								
@@ -563,7 +565,8 @@ public class Request extends Translatable implements Utils {
 		Parameter paramFound = getParameter(paramName);
 		
 		if(paramFound == null){
-			throw new NullPointerException("Parameter \"" + paramName + "\"is not present or linked in this request.");
+			throw new NullPointerException("Parameter \"" + paramName
+					+ "\"is not present or linked in this request.");
 		}
 		else{
 			
@@ -577,7 +580,8 @@ public class Request extends Translatable implements Utils {
 		}
 	}
 	
-	public void setParamsAsContentLess(ArrayList<String> paramsToTreatAsContentLess){
+	public void setParamsAsContentLess(
+			ArrayList<String> paramsToTreatAsContentLess){
 		
 		for(String paramName : paramsToTreatAsContentLess){
 			try{
