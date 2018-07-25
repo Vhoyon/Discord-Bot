@@ -175,12 +175,21 @@ public class Request extends Translatable implements Utils {
 				
 				String possibleParam = possibleParams.get(i);
 				
-				// If string is structured as a parameter, create it.
-				if(possibleParam.matches(getParametersPrefixProtected()
-						+ "{1,2}[^\\s]+")){
+				int paramStartPos = -1;
+				int paramEndPos = -1;
+				
+				if(possibleParam.equals(getParametersPrefix() + "" + getParametersPrefix())){
+					// If string is double parameter prefix, remove it and stop taking params
 					
-					int paramStartPos;
-					int paramEndPos;
+					paramStartPos = getContent().indexOf(possibleParam);
+					paramEndPos = paramStartPos + possibleParam.length();
+					
+					canRoll = false;
+					
+				}
+				else if(possibleParam.matches(getParametersPrefixProtected()
+						+ "{1,2}[^\\s]+")){
+					// If string is structured as a parameter, create it.
 					
 					paramStartPos = getContent().indexOf(possibleParam);
 					paramEndPos = paramStartPos + possibleParam.length();
@@ -286,11 +295,13 @@ public class Request extends Translatable implements Utils {
 						
 					}
 					
+				}
+				
+				if(paramStartPos != -1){
 					String contentToRemove = getContent().substring(
 							paramStartPos, paramEndPos);
 					
 					setContent(getContent().replaceFirst(contentToRemove, ""));
-					
 				}
 				
 			}
