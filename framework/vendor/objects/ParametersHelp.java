@@ -5,13 +5,20 @@ import java.util.ArrayList;
 public class ParametersHelp {
 	
 	private String parameterDescription;
+	private boolean acceptsContent;
 	private String param;
 	private String[] paramVariants;
 	
 	public ParametersHelp(String parameterDescription, String param,
 			String... paramVariants){
+		this(parameterDescription, true, param, paramVariants);
+	}
+	
+	public ParametersHelp(String parameterDescription, boolean acceptsContent, String param,
+			String... paramVariants){
 		
 		this.parameterDescription = parameterDescription;
+		this.acceptsContent = acceptsContent;
 		this.param = param;
 		this.paramVariants = paramVariants;
 		
@@ -19,6 +26,10 @@ public class ParametersHelp {
 	
 	public String getParameterDescription(){
 		return this.parameterDescription;
+	}
+	
+	public boolean doesAcceptsContent(){
+		return this.acceptsContent;
 	}
 	
 	public String getParam(){

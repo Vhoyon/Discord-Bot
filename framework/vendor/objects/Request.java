@@ -18,10 +18,15 @@ public class Request extends Translatable implements Utils {
 		private String parameterContent;
 		
 		private int position;
+		private boolean acceptsContent;
 		
-		protected Parameter(){}
+		protected Parameter(){
+			this.acceptsContent = true;
+		}
 		
 		public Parameter(String parameter){
+			this();
+			
 			if(parameter.matches(getParametersPrefixProtected() + "{1,2}.+")){
 				
 				int paramDeclaratorLength = parameter
@@ -66,7 +71,10 @@ public class Request extends Translatable implements Utils {
 		}
 		
 		protected void setContent(String parameterContent){
-			this.parameterContent = parameterContent.replaceAll("\"", "");
+			if(parameterContent == null)
+				this.parameterContent = null;
+			else
+				this.parameterContent = parameterContent.replaceAll("\"", "");
 		}
 		
 		public int getPosition(){
@@ -75,6 +83,18 @@ public class Request extends Translatable implements Utils {
 		
 		protected void setPosition(int position){
 			this.position = position;
+		}
+		
+		public boolean doesAcceptContent(){
+			return this.acceptsContent;
+		}
+		
+		protected void setAcceptingContent(boolean acceptsContent){
+			this.acceptsContent = acceptsContent;
+			
+			if(!acceptsContent && getContent() != null){
+				setContent(null);
+			}
 		}
 		
 		@Override
@@ -178,7 +198,8 @@ public class Request extends Translatable implements Utils {
 				int paramStartPos = -1;
 				int paramEndPos = -1;
 				
-				if(possibleParam.equals(getParametersPrefix() + "" + getParametersPrefix())){
+				if(possibleParam.equals(getParametersPrefix() + ""
+						+ getParametersPrefix())){
 					// If string is double parameter prefix, remove it and stop taking params
 					
 					paramStartPos = getContent().indexOf(possibleParam);
@@ -247,7 +268,8 @@ public class Request extends Translatable implements Utils {
 						
 						for(int j = 0; j < singleParams.length && canRoll; j++){
 							
-							Parameter newParam = new Parameter(singleParams[j], i + j);
+							Parameter newParam = new Parameter(singleParams[j],
+									i + j);
 							
 							if(parameters.containsValue(newParam)){
 								
@@ -536,6 +558,37 @@ public class Request extends Translatable implements Utils {
 				}
 				
 			});
+		
+	}
+	
+	protected void setParameterContentLess(String paramName){
+		Parameter paramFound = getParameter(paramName);
+		
+		if(paramFound == null){
+			throw new NullPointerException("Parameter \"" + paramName
+					+ "\"is not present or linked in this request.");
+		}
+		else{
+			
+			if(getContent() == null)
+				setContent(paramFound.getContent());
+			else
+				setContent(getContent() + " " + paramFound.getContent());
+			
+			paramFound.setAcceptingContent(false);
+			
+		}
+	}
+	
+	public void setParamsAsContentLess(
+			ArrayList<String> paramsToTreatAsContentLess){
+		
+		for(String paramName : paramsToTreatAsContentLess){
+			try{
+				this.setParameterContentLess(paramName);
+			}
+			catch(NullPointerException e){}
+		}
 		
 	}
 	
