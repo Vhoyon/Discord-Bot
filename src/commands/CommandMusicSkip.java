@@ -14,13 +14,17 @@ public class CommandMusicSkip extends MusicCommands {
 	@Override
 	public void action(){
 		
-		if(hasParameter("a")){
-			callCommand(new CommandMusicSkipAll());
+		if(!isPlaying()){
+			new BotError(this, lang("NotPlaying"));
 		}
 		else{
 			
-			if(!isPlaying()){
-				new BotError(this, lang("CommandMusicSkipNotPlaying"));
+			if(hasParameter("a")){
+				
+				MusicManager.get().emptyPlayer(this);
+				
+				sendInfoMessage(lang("SkippedAllMusic"));
+				
 			}
 			else{
 				
@@ -28,26 +32,20 @@ public class CommandMusicSkip extends MusicCommands {
 				
 				if(getContent() == null){
 					
-					if(!isPlaying()){
-						new BotError(this, lang("NotPlaying"));
+					if(this.hasMemory("MUSIC_LOOP")
+							&& (boolean)this.getMemory("MUSIC_LOOP")){
+						forget("MUSIC_LOOP");
+					}
+					if(player.skipTrack()){
+						sendInfoMessage(lang(
+								"SkippedNowPlaying",
+								code(player.getAudioPlayer()
+										.getPlayingTrack().getInfo().title)));
 					}
 					else{
-						if(this.hasMemory("MUSIC_LOOP")
-								&& (boolean)this.getMemory("MUSIC_LOOP")){
-							forget("MUSIC_LOOP");
-						}
-						if(player.skipTrack()){
-							sendInfoMessage(lang(
-									"SkippedNowPlaying",
-									code(player.getAudioPlayer()
-											.getPlayingTrack().getInfo().title)));
-						}
-						else{
-							sendInfoMessage(lang("NoMoreMusic"));
-							
-							MusicManager.get().emptyPlayer(this);
-						}
+						sendInfoMessage(lang("NoMoreMusic"));
 						
+						MusicManager.get().emptyPlayer(this);
 					}
 					
 				}
@@ -88,7 +86,11 @@ public class CommandMusicSkip extends MusicCommands {
 									
 									@Override
 									public void confirmed(){
-										callCommand(new CommandMusicSkipAll());
+										
+										MusicManager.get().emptyPlayer(CommandMusicSkip.this);
+										
+										sendInfoMessage(lang("SkippedAllMusic"));
+										
 									}
 								};
 								
@@ -128,8 +130,7 @@ public class CommandMusicSkip extends MusicCommands {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Skips all the commands. Basically does the same as entering "
-							+ buildVCommand("skip-all") + ".", "a", "all")
+					"Skips all the songs added and disconnect the bot.", "a", "all")
 		};
 	}
 	
