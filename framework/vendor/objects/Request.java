@@ -567,7 +567,10 @@ public class Request extends Translatable implements Utils {
 		}
 		else{
 			
-			setContent(getContent() + " " + paramFound.getContent());
+			if(getContent() == null)
+				setContent(paramFound.getContent());
+			else
+				setContent(getContent() + " " + paramFound.getContent());
 			
 			paramFound.setAcceptingContent(false);
 			
