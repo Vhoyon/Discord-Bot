@@ -45,7 +45,7 @@ public class Request extends Translatable implements Utils {
 		public Parameter(String paramName, String paramContent){
 			this(paramName);
 			
-			this.setParameterContent(paramContent);
+			this.setContent(paramContent);
 		}
 		
 		protected Parameter(String paramName, String paramContent, int position){
@@ -65,7 +65,7 @@ public class Request extends Translatable implements Utils {
 				return parameterContent;
 		}
 		
-		protected void setParameterContent(String parameterContent){
+		protected void setContent(String parameterContent){
 			this.parameterContent = parameterContent.replaceAll("\"", "");
 		}
 		
@@ -219,7 +219,7 @@ public class Request extends Translatable implements Utils {
 										.matches(getParametersPrefixProtected()
 												+ "{1,2}[^\\s]+")){
 									
-									newParam.setParameterContent(possibleParamContent);
+									newParam.setContent(possibleParamContent);
 									
 									i++;
 									
@@ -269,7 +269,7 @@ public class Request extends Translatable implements Utils {
 												.matches(getParametersPrefixProtected()
 														+ "{1,2}[^\\s]+")){
 											
-											newParam.setParameterContent(possibleParamContent);
+											newParam.setContent(possibleParamContent);
 											
 											i++;
 											
