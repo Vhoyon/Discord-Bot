@@ -19,7 +19,8 @@ public class CommandMusicSkip extends MusicCommands {
 		}
 		else{
 			
-			if(hasParameter("a")){
+			// Skip all songs if has appropriate parameter or content is "all"
+			if(hasParameter("a") || ("all".equals(getContent()))){
 				
 				MusicManager.get().emptyPlayer(this);
 				
@@ -43,9 +44,9 @@ public class CommandMusicSkip extends MusicCommands {
 										.getPlayingTrack().getInfo().title)));
 					}
 					else{
-						sendInfoMessage(lang("NoMoreMusic"));
-						
 						MusicManager.get().emptyPlayer(this);
+						
+						sendInfoMessage(lang("NoMoreMusic"));
 					}
 					
 				}
