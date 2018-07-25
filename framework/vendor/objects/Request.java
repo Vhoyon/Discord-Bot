@@ -17,6 +17,8 @@ public class Request extends Translatable implements Utils {
 		private String parameterName;
 		private String parameterContent;
 		
+		private int position;
+		
 		protected Parameter(){}
 		
 		public Parameter(String parameter){
@@ -34,10 +36,22 @@ public class Request extends Translatable implements Utils {
 			}
 		}
 		
+		protected Parameter(String paramName, int position){
+			this(paramName);
+			
+			this.setPosition(position);
+		}
+		
 		public Parameter(String paramName, String paramContent){
 			this(paramName);
 			
 			this.setParameterContent(paramContent);
+		}
+		
+		protected Parameter(String paramName, String paramContent, int position){
+			this(paramName, paramContent);
+			
+			this.setPosition(position);
 		}
 		
 		public String getName(){
@@ -53,6 +67,14 @@ public class Request extends Translatable implements Utils {
 		
 		protected void setParameterContent(String parameterContent){
 			this.parameterContent = parameterContent.replaceAll("\"", "");
+		}
+		
+		public int getPosition(){
+			return this.position;
+		}
+		
+		protected void setPosition(int position){
+			this.position = position;
 		}
 		
 		@Override
@@ -167,7 +189,7 @@ public class Request extends Translatable implements Utils {
 							+ "{2}[^\\s]+")){
 						// Doubled param prefix means that all letters count as one param
 						
-						Parameter newParam = new Parameter(possibleParam);
+						Parameter newParam = new Parameter(possibleParam, i);
 						
 						if(parameters.containsValue(newParam)){
 							
@@ -216,7 +238,7 @@ public class Request extends Translatable implements Utils {
 						
 						for(int j = 0; j < singleParams.length && canRoll; j++){
 							
-							Parameter newParam = new Parameter(singleParams[j]);
+							Parameter newParam = new Parameter(singleParams[j], i + j);
 							
 							if(parameters.containsValue(newParam)){
 								
