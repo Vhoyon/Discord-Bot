@@ -118,12 +118,20 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					
 					if(commandParamsHelp != null){
 						ArrayList<ArrayList<String>> paramsHelpMap = new ArrayList<>();
+						ArrayList<String> contentLessParams = new ArrayList<>();
 						
 						for(ParametersHelp commandParamHelp : commandParamsHelp){
+							
 							paramsHelpMap.add(commandParamHelp.getAllParams());
+							
+							if(!commandParamHelp.doesAcceptsContent()){
+								contentLessParams.add(commandParamHelp.getParam());
+							}
+							
 						}
 						
 						getRequest().setParamLinkMap(paramsHelpMap);
+						getRequest().setParamsAsContentLess(contentLessParams);
 					}
 					
 				}
