@@ -12,11 +12,13 @@ import utilities.music.MusicPlayer;
 
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import errorHandling.BotError;
-import vendor.modules.Environment;
 import vendor.objects.ParametersHelp;
+import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.lang.IllegalStateException;
 import java.net.URL;
 
 public class CommandMusicPlay extends MusicCommands {
@@ -31,6 +33,7 @@ public class CommandMusicPlay extends MusicCommands {
 			callCommand(MUSIC_REPLAY);
 		}
 		else{
+			
 			if(getContent() == null
 					&& !MusicManager.get().hasPlayer(getGuild())){
 				new BotError(this, lang("NoContent"));
@@ -39,51 +42,28 @@ public class CommandMusicPlay extends MusicCommands {
 				
 				if(getContent() != null){
 					
-					connectIfNotPlaying();
-					
-					String id;
-					String source;
-					
 					try{
 						
-						if(!isUrl(getContent())){
-							
-							YouTube youtube = new YouTube.Builder(
-									new NetHttpTransport(),
-									new JacksonFactory(),
-									new HttpRequestInitializer(){
-										public void initialize(
-												HttpRequest request)
-												throws IOException{}
-									}).setApplicationName("Discord Bot")
-									.build();
-							
-							YouTube.Search.List search = youtube.search().list(
-									"snippet");
-							
-							search.setMaxResults((long)1);
-							search.setQ(getContent());
-							search.setKey(Environment.getVar("YOUTUBE_TOKEN"));
-							
-							SearchListResponse response = search.execute();
-							
-							id = response.getItems().get(0).getId()
-									.getVideoId();
-							
-							source = "https://www.youtube.com/watch?v=" + id;
-							
-						}
-						else{
+						String source;
+						
+						if(isUrl(getContent())){
 							source = getContent();
 						}
+						else{
+							source = getSourceFromYoutube(getContent());
+						}
+						
+						connectIfNotPlaying();
 						
 						MusicManager.get().loadTrack(this, source);
 						
 					}
 					catch(IOException e){
-						
 						sendMessage(lang("SongByStringFail"));
-						
+					}
+					catch(IllegalStateException e){
+						Logger.log("Please setup your environment variable \"YOUTUBE_TOKEN\" to give users the ability to search using raw text!", LogType.WARNING);
+						sendMessage("The owner of this bot did not setup his tokens correctly, please try again using a link!");
 					}
 					
 				}
@@ -103,7 +83,40 @@ public class CommandMusicPlay extends MusicCommands {
 				}
 				
 			}
+			
 		}
+		
+	}
+	
+	private String getSourceFromYoutube(String query) throws IOException, IllegalStateException{
+		
+		if(!hasEnv("YOUTUBE_TOKEN")){
+			throw new IllegalStateException("youtube");
+		}
+		
+		YouTube youtube = new YouTube.Builder(
+				new NetHttpTransport(),
+				new JacksonFactory(),
+				new HttpRequestInitializer(){
+					public void initialize(
+							HttpRequest request)
+							throws IOException{}
+				}).setApplicationName("Discord Bot")
+				.build();
+		
+		YouTube.Search.List search = youtube.search().list(
+				"snippet");
+		
+		search.setMaxResults((long)1);
+		search.setQ(getContent());
+		search.setKey(env("YOUTUBE_TOKEN"));
+		
+		SearchListResponse response = search.execute();
+		
+		String id = response.getItems().get(0).getId()
+				.getVideoId();
+		
+		return "https://www.youtube.com/watch?v=" + id;
 		
 	}
 	
@@ -129,11 +142,12 @@ public class CommandMusicPlay extends MusicCommands {
 
 	public boolean isUrl(String string){
 		try{
-			URL url = new URL(string);
+			new URL(string);
 			return true;
 		}
 		catch(MalformedURLException e){
 			return false;
 		}
 	}
+	
 }
