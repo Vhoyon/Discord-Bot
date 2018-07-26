@@ -12,14 +12,20 @@ public class TextRegexField extends TextField {
 	
 	public TextRegexField(String name, String env, String defaultValue,
 			String regexToMatch, boolean isInverted){
-		this(name, env, defaultValue, regexToMatch, isInverted, false);
+		this(name, env, defaultValue, regexToMatch, isInverted, true);
 	}
 	
 	public TextRegexField(String name, String env, String defaultValue,
 			String regexToMatch, boolean isInverted, boolean shouldBox){
 		super(name, env, defaultValue);
 		
-		this.regexToMatch = shouldBox ? "^" + regexToMatch + "$" : regexToMatch;
+		if(!shouldBox || regexToMatch.matches("^\\^.*\\$$")){
+			this.regexToMatch = regexToMatch;
+		}
+		else{
+			this.regexToMatch = "^" + regexToMatch + "$";
+		}
+		
 		this.isInverted = isInverted;
 	}
 	
