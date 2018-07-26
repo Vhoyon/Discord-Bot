@@ -1,5 +1,11 @@
 package vendor.utilities.settings;
 
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
+
 public class TextRegexField extends TextField {
 	
 	private String regexToMatch;
@@ -19,11 +25,24 @@ public class TextRegexField extends TextField {
 			String regexToMatch, boolean isInverted, boolean shouldBox){
 		super(name, env, defaultValue);
 		
-		if(!shouldBox || regexToMatch.matches("^\\^.*\\$$")){
-			this.regexToMatch = regexToMatch;
+		try{
+			// Test if Regex provided is valid
+			Pattern.compile(regexToMatch);
+			
+			if(!shouldBox || regexToMatch.matches("^\\^.*\\$$")){
+				this.regexToMatch = regexToMatch;
+			}
+			else{
+				this.regexToMatch = "^" + regexToMatch + "$";
+			}
 		}
-		else{
-			this.regexToMatch = "^" + regexToMatch + "$";
+		catch(PatternSyntaxException e){
+			
+			Logger.log(e);
+			Logger.log("\nFix your regex quickly! In the meanwhile, any string will be accepted for the setting \"" + getName() + "\"...", LogType.WARNING);
+			
+			this.regexToMatch = null;
+			
 		}
 		
 		this.isInverted = isInverted;
@@ -34,7 +53,7 @@ public class TextRegexField extends TextField {
 			throws IllegalArgumentException{
 		String stringValue = super.sanitizeValue(value);
 		
-		if(stringValue.matches(this.regexToMatch) == this.isInverted){
+		if(this.regexToMatch != null && stringValue.matches(this.regexToMatch) == this.isInverted){
 			throw new IllegalArgumentException(
 					"Value does not match the required pattern!");
 		}
