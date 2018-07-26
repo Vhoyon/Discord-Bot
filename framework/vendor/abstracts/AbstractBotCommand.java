@@ -310,16 +310,26 @@ public abstract class AbstractBotCommand extends Translatable implements
 		remember(voiceChannel, BUFFER_VOICE_CHANNEL);
 	}
 	
-	public VoiceChannel getConnectedVoiceChannel(){
+	public VoiceChannel getConnectedVoiceChannelBot(){
 		return getGuild().getAudioManager().getConnectedChannel();
+	}
+	
+	public boolean isConnectedToVoiceChannelBot(){
+		return this.getConnectedVoiceChannelBot() != null;
+	}
+	
+	public VoiceChannel getConnectedVoiceChannelMember(){
+		return getMember().getVoiceState().getChannel();
+	}
+	
+	public boolean isConnectedToVoiceChannelMember(){
+		return this.getConnectedVoiceChannelMember() != null;
 	}
 	
 	public void disconnect(){
 		
-		if(getConnectedVoiceChannel() != null){
-			
+		if(isConnectedToVoiceChannelBot()){
 			getGuild().getAudioManager().closeAudioConnection();
-			
 		}
 		
 		forget(BUFFER_VOICE_CHANNEL);

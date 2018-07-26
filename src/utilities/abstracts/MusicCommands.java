@@ -1,6 +1,5 @@
 package utilities.abstracts;
 
-import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import utilities.BotCommand;
 
@@ -18,11 +17,9 @@ public abstract class MusicCommands extends BotCommand {
 		}
 		else{
 
-			VoiceChannel voiceChannel = getMember().getVoiceState()
-					.getChannel();
+			VoiceChannel voiceChannel = getConnectedVoiceChannelMember();
 
 			if (voiceChannel == null) {
-				sendInfoMessage(lang("NotConnected"));
 				return false;
 			}
 

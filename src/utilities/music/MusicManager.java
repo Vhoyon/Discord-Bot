@@ -74,20 +74,21 @@ public class MusicManager {
 		this.loadTrack(command, source, null);
 	}
 	
-	public void loadTrack(final BotCommand command, final String source, Consumer<MusicPlayer> onSuccessLoadBeforePlay){
+	public void loadTrack(final BotCommand command, final String source,
+			Consumer<MusicPlayer> onSuccessLoadBeforePlay){
 		
 		MusicPlayer player = getPlayer(command);
 		
 		command.getGuild().getAudioManager()
 				.setSendingHandler(player.getAudioHandler());
-				
+		
 		manager.loadItemOrdered(player, source, new AudioLoadResultHandler(){
 			
 			@Override
 			public void trackLoaded(AudioTrack track){
 				if(onSuccessLoadBeforePlay != null)
 					onSuccessLoadBeforePlay.accept(player);
-					
+				
 				command.sendMessage(command.lang("MusicManagerTrackLoaded",
 						command.code(track.getInfo().title)));
 				
