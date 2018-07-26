@@ -46,9 +46,15 @@ public class CommandMusicPlay extends MusicCommands {
 							String source;
 							
 							if(isUrl(getContent())){
+								sendInfoMessage("Getting data from "
+										+ ital(code(getContent())) + "...", true);
+								
 								source = getContent();
 							}
 							else{
+								sendInfoMessage("Searching Youtube for "
+										+ ital(code(getContent())) + "!", true);
+								
 								source = getSourceFromYoutube(getContent());
 							}
 							
