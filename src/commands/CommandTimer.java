@@ -1,8 +1,7 @@
 package commands;
 
-import utilities.BotCommand;
-import vendor.exceptions.NoContentException;
 import errorHandling.BotError;
+import utilities.BotCommand;
 import vendor.objects.ParametersHelp;
 
 public class CommandTimer extends BotCommand {
@@ -20,22 +19,19 @@ public class CommandTimer extends BotCommand {
 		
 		try{
 			
-			if(!hasParameter("h", "m", "s", "hours")){
+			if(!hasParameter("h", "m", "s")){
 				throw new NullPointerException();
 			}
 			
 			// seconds = Integer.parseInt(constraints[0]);
-			if(hasParameter("h", "hours")){
-				hours = Integer.parseInt(getParameter("h", "hours")
-						.getParameterContent());
+			if(hasParameter("h")){
+				hours = Integer.parseInt(getParameter("h").getContent());
 			}
 			if(hasParameter("m")){
-				minutes = Integer.parseInt(getParameter("m")
-						.getParameterContent());
+				minutes = Integer.parseInt(getParameter("m").getContent());
 			}
 			if(hasParameter("s")){
-				seconds = Integer.parseInt(getParameter("s")
-						.getParameterContent());
+				seconds = Integer.parseInt(getParameter("s").getContent());
 			}
 			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
@@ -64,7 +60,7 @@ public class CommandTimer extends BotCommand {
 			sendMessage("You must give an amount of time to the "
 					+ buildVCommand("timer") + " command for it to count");
 		}
-		catch(NumberFormatException | NoContentException e){
+		catch(NumberFormatException e){
 			new BotError(this, "One of the value provided isn't a number!");
 		}
 		
@@ -96,7 +92,6 @@ public class CommandTimer extends BotCommand {
 	
 	@Override
 	public boolean stopAction(){
-		kill();
 		return true;
 	}
 	
@@ -114,9 +109,12 @@ public class CommandTimer extends BotCommand {
 	public ParametersHelp[] getParametersDescriptions(){
 		return new ParametersHelp[]
 		{
-			new ParametersHelp("Sets the hours of the timer.", "h"),
-			new ParametersHelp("Sets the minutes of the timer.", "m"),
-			new ParametersHelp("Sets the seconds of the timer.", "s"),
+			new ParametersHelp("Sets the hours of the timer.", "h", "hour",
+					"hours"),
+			new ParametersHelp("Sets the minutes of the timer.", "m", "minute",
+					"minutes"),
+			new ParametersHelp("Sets the seconds of the timer.", "s", "second",
+					"seconds"),
 		};
 	}
 	

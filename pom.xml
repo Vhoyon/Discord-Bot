@@ -3,9 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>en.stephanomehawej</groupId>
     <artifactId>DiscordBot</artifactId>
-    <version>0.7.1</version>
+    <version>0.8.0</version>
     <name>Discord Bot</name>
     <description>A Discord bot to learn and have fun.</description>
+    
     <build>
         <sourceDirectory>src</sourceDirectory>
         <resources>
@@ -67,6 +68,7 @@
                 </dependencies>
             </plugin>
         </plugins>
+        <testSourceDirectory>tests</testSourceDirectory>
     </build>
 
     <repositories>
@@ -102,6 +104,12 @@
             <artifactId>fast-classpath-scanner</artifactId>
             <version>2.19.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-youtube</artifactId>
+            <version>v3-rev204-1.23.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -118,5 +126,9 @@
         </dependency>
 
     </dependencies>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 </project>

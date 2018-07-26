@@ -23,10 +23,9 @@ public class CommandMusicList extends MusicCommands {
 			AudioTrack currentTrack = MusicManager.get().getPlayer(this)
 					.getAudioPlayer().getPlayingTrack();
 			
-			sb.append(lang("CurrentTrack", currentTrack.getInfo().title));
+			sb.append(lang("CurrentTrack", code(currentTrack.getInfo().title)));
 			
-			if(MusicManager.get().getPlayer(this).getListener()
-					.getTrackSize() != 0){
+			if(MusicManager.get().getPlayer(this).getListener().getTrackSize() != 0){
 				
 				sb.append("\n\n").append(lang("Header")).append("\n\n");
 				
@@ -35,8 +34,9 @@ public class CommandMusicList extends MusicCommands {
 				for(AudioTrack track : MusicManager.get().getPlayer(this)
 						.getListener().getTracks()){
 					
-					sb.append(lang("TrackInfo", i++, track.getInfo().title))
-							.append("\n");
+					sb.append(
+							lang("TrackInfo", code(i++),
+									code(track.getInfo().title))).append("\n");
 					
 				}
 				
@@ -52,10 +52,10 @@ public class CommandMusicList extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_LIST;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Display a list of all the music that you have in the music list";
-
+		
 	}
 }

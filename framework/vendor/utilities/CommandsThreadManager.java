@@ -1,11 +1,11 @@
 package vendor.utilities;
 
-import java.util.Set;
-import java.util.Stack;
-
 import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandRouter;
 import vendor.objects.MessageEventDigger;
+
+import java.util.Set;
+import java.util.Stack;
 
 public class CommandsThreadManager {
 	
@@ -155,7 +155,7 @@ public class CommandsThreadManager {
 		Stack<AbstractCommandRouter> routers = getRunningCommandRouters();
 		
 		for(AbstractCommandRouter router : routers)
-			if(((AbstractBotCommand)router.getCommand()).stopAction())
+			if(((AbstractBotCommand)router.getCommand()).kill())
 				numberOfCommandsStopped++;
 		
 		return numberOfCommandsStopped;

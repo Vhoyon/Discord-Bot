@@ -32,7 +32,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 					
 					if(gamepool.remove(getContent()))
 						sendMessage(lang("RemovedGameSuccessMessage",
-								getContent()));
+								code(getContent())));
 					else
 						new BotError(this, lang("ErrorNoSuchGame",
 								buildVCommand(GAME_LIST)));
@@ -59,9 +59,9 @@ public class CommandGameRemove extends GameInteractionCommands {
 	public Object getCalls(){
 		return GAME_REMOVE;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Remove a game form the game list";
 	}
 }

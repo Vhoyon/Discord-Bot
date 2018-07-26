@@ -1,25 +1,34 @@
 package vendor.abstracts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import vendor.exceptions.NoContentException;
+import net.dv8tion.jda.core.managers.AccountManager;
+import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.core.requests.restaction.MessageAction;
+import vendor.exceptions.BadContentException;
+import vendor.interfaces.DiscordUtils;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Utils;
 import vendor.modules.Logger;
 import vendor.objects.Buffer;
+import vendor.objects.Mention;
 import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
+import vendor.utilities.FrameworkTemplate;
 import vendor.utilities.formatting.DiscordFormatter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.function.Consumer;
+
 public abstract class AbstractBotCommand extends Translatable implements
-		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter {
+		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
+		DiscordUtils {
 	
 	public enum BufferLevel{
 		CHANNEL, SERVER, USER
@@ -31,8 +40,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	private boolean isCopy;
 	
+	private boolean isAlive;
+	
 	public AbstractBotCommand(){
 		this.isCopy = false;
+		this.isAlive = true;
 	}
 	
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
@@ -72,11 +84,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	protected String getContent(){
+	public String getContent(){
 		return getRequest().getContent();
 	}
 	
-	protected String[] getSplitContent(){
+	public String[] getSplitContent(){
 		
 		if(getContent() != null)
 			return getContent().split(" ");
@@ -85,13 +97,25 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	protected String[] getSplitContentMaxed(int maxSize){
+	public String[] getSplitContentMaxed(int maxSize){
 		
 		if(getContent() != null)
 			return getContent().split(" ", maxSize);
 		else
 			return null;
 		
+	}
+	
+	public Mention getContentAsMention() throws BadContentException{
+		if(!isStringMention(getContent()))
+			throw new BadContentException("Content is not a mention.");
+		
+		return new Mention(getIdFromStringMention(getContent()),
+				getEventDigger());
+	}
+	
+	public boolean hasContent(){
+		return getContent() != null;
 	}
 	
 	public AbstractCommandRouter getRouter(){
@@ -149,6 +173,22 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
+	public Member getSelfMember(){
+		return getGuild().getSelfMember();
+	}
+	
+	public SelfUser getSelfUser(){
+		return FrameworkTemplate.jda.getSelfUser();
+	}
+	
+	public AccountManager getSelfUserManager(){
+		return getSelfUser().getManager();
+	}
+	
+	public Member getMember(){
+		return getEventDigger().getMember();
+	}
+	
 	public User getUser(){
 		return getEventDigger().getUser();
 	}
@@ -167,6 +207,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String getTextChannelId(){
 		return getEventDigger().getChannelId();
+	}
+	
+	public GuildController getGuildController(){
+		return new GuildController(getGuild());
 	}
 	
 	public Guild getGuild(){
@@ -206,20 +250,41 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return this.getRouter().isAlive();
+		return this.isAlive;
 	}
 	
-	public void kill(){
-		this.getRouter().interrupt();
+	public boolean kill(){
+		if(this.stopAction()){
+			this.getRouter().interrupt();
+			this.isAlive = false;
+		}
+		
+		return !this.isAlive();
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
 		return this.getRequest().getParameters();
 	}
 	
-	public Parameter getParameter(String... parameterNames)
-			throws NoContentException{
+	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
+		return this.getRequest().getParametersLinks();
+	}
+	
+	public Parameter getParameter(String... parameterNames){
 		return this.getRequest().getParameter(parameterNames);
+	}
+	
+	public Mention getParameterAsMention(String... parametersNames)
+			throws BadContentException{
+		
+		Parameter paramFound = getParameter(parametersNames);
+		
+		if(!isStringMention(paramFound.getContent()))
+			throw new BadContentException("Parameter content is not a mention.");
+		
+		return new Mention(getIdFromStringMention(paramFound.getContent()),
+				getEventDigger());
+		
 	}
 	
 	public boolean hasParameter(String parameterName){
@@ -228,6 +293,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public boolean hasParameter(String... parameterNames){
 		return this.getRequest().hasParameter(parameterNames);
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent){
+		this.getRequest().onParameterPresent(parameterName, onParamPresent);
 	}
 	
 	public boolean stopAction(){
@@ -240,20 +310,38 @@ public abstract class AbstractBotCommand extends Translatable implements
 		remember(voiceChannel, BUFFER_VOICE_CHANNEL);
 	}
 	
-	public VoiceChannel getConnectedVoiceChannel(){
+	public VoiceChannel getConnectedVoiceChannelBot(){
 		return getGuild().getAudioManager().getConnectedChannel();
+	}
+	
+	public boolean isConnectedToVoiceChannelBot(){
+		return this.getConnectedVoiceChannelBot() != null;
+	}
+	
+	public VoiceChannel getConnectedVoiceChannelMember(){
+		return getMember().getVoiceState().getChannel();
+	}
+	
+	public boolean isConnectedToVoiceChannelMember(){
+		return this.getConnectedVoiceChannelMember() != null;
 	}
 	
 	public void disconnect(){
 		
-		if(getConnectedVoiceChannel() != null){
-			
+		if(isConnectedToVoiceChannelBot()){
 			getGuild().getAudioManager().closeAudioConnection();
-			
 		}
 		
 		forget(BUFFER_VOICE_CHANNEL);
 		
+	}
+	
+	public void setSelfNickname(String nickname){
+		this.setNicknameOf(this.getSelfMember(), nickname);
+	}
+	
+	public void setNicknameOf(Member member, String nickname){
+		this.getGuildController().setNickname(member, nickname).complete();
 	}
 	
 	public String sendMessage(String messageToSend){
@@ -264,8 +352,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		}
 		
 		try{
-			return this.getTextContext().sendMessage(messageToSend).complete()
-					.getId();
+			return sendMessageForChannel(this.getTextContext(), messageToSend);
 		}
 		catch(IllegalArgumentException e){
 			log(e.getMessage());
@@ -275,10 +362,15 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String sendPrivateMessage(String messageToSend){
+		return this.sendMessageToMember(this.getMember(), messageToSend);
+	}
+	
+	public String sendMessageToMember(Member member, String messageToSend){
 		
-		PrivateChannel channel = getUser().openPrivateChannel().complete();
+		PrivateChannel channel = member.getUser().openPrivateChannel()
+				.complete();
 		
-		if(getUser().hasPrivateChannel()){
+		if(member.getUser().hasPrivateChannel()){
 			
 			if(messageToSend == null){
 				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
@@ -287,7 +379,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 			}
 			
 			try{
-				return channel.sendMessage(messageToSend).complete().getId();
+				return sendMessageForChannel(channel, messageToSend);
 			}
 			catch(IllegalArgumentException e){
 				log(e.getMessage());
@@ -351,12 +443,39 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String editMessage(String messageId, String newMessage){
-		return getTextContext().editMessageById(messageId, newMessage)
-				.complete().getId();
+		return editMessageForChannel(getTextContext(), messageId, newMessage);
 	}
 	
 	public void editMessageQueue(String messageId, String newMessage){
 		getTextContext().editMessageById(messageId, newMessage).queue();
+	}
+	
+	protected String sendMessageForChannel(MessageChannel channel,
+			String message){
+		return messageActionComplete(channel.sendMessage(message));
+	}
+	
+	protected String editMessageForChannel(MessageChannel channel,
+			String messageId, String newMessage){
+		return messageActionComplete(channel.editMessageById(messageId,
+				newMessage));
+	}
+	
+	private String messageActionComplete(MessageAction action){
+		return action.complete().getId();
+	}
+	
+	protected void callCommand(String commandName){
+		AbstractBotCommand command = (AbstractBotCommand)getRouter()
+				.getLinkableCommand(commandName);
+		
+		this.callCommand(command);
+	}
+	
+	protected void callCommand(AbstractBotCommand command){
+		command.putStateFromCommand(this);
+		
+		command.action();
 	}
 	
 	public void log(String message){
@@ -368,7 +487,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 *         followed by the <i>commandName</i> parameter.
 	 */
 	public String buildCommand(String command){
-		return getRouter().getCommandPrefix() + command;
+		return getRequest().getCommandPrefix() + command;
 	}
 	
 	/**
@@ -385,8 +504,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 *         Ressources followed by the <i>parameter</i> parameter.
 	 */
 	public String buildParameter(String parameter){
-		// TODO : Get the Parameter Prefix from the router
-		return "--" + parameter;
+		return String.join(
+				"",
+				Collections.nCopies(parameter.length() > 1 ? 2 : 1,
+						String.valueOf(getRequest().getParametersPrefix())))
+				+ parameter;
 	}
 	
 	/**
@@ -395,6 +517,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 */
 	public String buildVParameter(String parameter){
 		return code(buildParameter(parameter));
+	}
+	
+	@Override
+	public String formatParameter(String parameterToFormat){
+		return buildParameter(parameterToFormat);
 	}
 	
 }

@@ -1,25 +1,24 @@
 package vendor.utilities;
 
-import vendor.modules.Logger;
-import vendor.modules.Logger.LogType;
-import vendor.modules.Metrics;
-import vendor.interfaces.Console;
-import vendor.abstracts.AbstractMessageListener;
-import vendor.utilities.CommandsThreadManager;
-import vendor.objects.Buffer;
-
-import javax.security.auth.login.LoginException;
-
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import vendor.abstracts.AbstractMessageListener;
+import vendor.interfaces.Console;
+import vendor.modules.Logger;
+import vendor.modules.Logger.LogType;
+import vendor.modules.Metrics;
+import vendor.objects.Buffer;
+
+import javax.security.auth.login.LoginException;
 
 public class FrameworkTemplate {
 	
 	public static JDA jda;
 	public static String botToken;
 	
-	public static void startBot(Console console, AbstractMessageListener messageListener) throws Exception{
+	public static void startBot(Console console,
+			AbstractMessageListener messageListener) throws Exception{
 		
 		boolean success = false;
 		

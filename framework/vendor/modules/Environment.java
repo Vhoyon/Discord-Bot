@@ -1,18 +1,18 @@
 package vendor.modules;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import vendor.Framework;
 import vendor.abstracts.AbstractTerminalConsole;
 import vendor.abstracts.Module;
 import vendor.exceptions.BadFileContentException;
 import vendor.interfaces.Console;
 import vendor.ui.NotificationUI;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Environment extends Module {
 	
@@ -129,6 +129,10 @@ public class Environment extends Module {
 		}
 		
 		return (EnvVar)(String)value;
+	}
+	
+	public static boolean hasVar(String key){
+		return envVars.containsKey(key.toLowerCase());
 	}
 	
 	@Override
