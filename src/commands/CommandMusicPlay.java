@@ -29,24 +29,24 @@ public class CommandMusicPlay extends MusicCommands {
 		}
 		else{
 			
-			if(hasParameter("a")){
+			if(hasParameter("r")){
 
 
 				String sources[][] =
 				{
-					{"V-ed's playlist on soundcloud","https://soundcloud.com/v_ed/sets/musiiic"},
-					{"No Copyrights sounds Copyright free songs playlist on youtube" , "https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"},
-					{"No Copyrights sounds electronic playlist on youtube" , "https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"}
+					{"V-ed's playlist from soundcloud","https://soundcloud.com/v_ed/sets/musiiic"},
+					{"No Copyrights sounds Copyright free songs from youtube" , "https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"},
+					{"No Copyrights sounds electronic from youtube" , "https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"}
 					
 				};
 				
 				int rand = new Random().nextInt(sources.length);
 
+				sendInfoMessage( lang("Rand",sources[rand][0]),true);
 
 				MusicManager.get().loadTrack(this, sources[rand][1],
 						(player) -> connectIfNotPlaying());
 
-				sendInfoMessage( lang("Rand",sources[rand][0]),true);
 			}
 			else{
 				
@@ -166,8 +166,8 @@ public class CommandMusicPlay extends MusicCommands {
 	public ParametersHelp[] getParametersDescriptions(){
 		return new ParametersHelp[]
 		{
-			new ParametersHelp(lang("ReplayDescription"), "l", "latest"),
-			new ParametersHelp(lang("AnythingDescription"), "a", "anything")
+			new ParametersHelp(lang("ReplayDescription"), false, "l", "latest"),
+			new ParametersHelp(lang("AnythingDescription"), false, "r", "random")
 		};
 	}
 	
