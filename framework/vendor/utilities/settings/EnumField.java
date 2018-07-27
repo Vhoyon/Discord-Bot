@@ -34,7 +34,7 @@ public class EnumField extends TextField {
 	
 	@Override
 	protected String formatEnvironment(String envValue){
-		String[] possibleValues = envValue.split("\\|");
+		String[] possibleValues = envValue.split("\\s*\\|\\s*");
 		
 		String envDefaultValue = possibleValues[0];
 		
