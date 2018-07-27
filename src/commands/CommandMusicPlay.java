@@ -17,6 +17,7 @@ import vendor.objects.ParametersHelp;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Random;
 
 public class CommandMusicPlay extends MusicCommands {
 	
@@ -28,68 +29,95 @@ public class CommandMusicPlay extends MusicCommands {
 		}
 		else{
 			
-			if(hasParameter("l")){
-				callCommand(MUSIC_REPLAY);
+			if(hasParameter("a")){
+
+
+				String sources[][] =
+				{
+					{"V-ed's playlist on soundcloud","https://soundcloud.com/v_ed/sets/musiiic"},
+					{"No Copyrights sounds Copyright free songs playlist on youtube" , "https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"},
+					{"No Copyrights sounds electronic playlist on youtube" , "https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"}
+					
+				};
+				
+				int rand = new Random().nextInt(sources.length);
+
+
+				MusicManager.get().loadTrack(this, sources[rand][1],
+						(player) -> connectIfNotPlaying());
+
+				sendInfoMessage( lang("Rand",sources[rand][0]),true);
 			}
 			else{
 				
-				if(getContent() == null
-						&& !MusicManager.get().hasPlayer(getGuild())){
-					new BotError(this, lang("NoContent"));
+				if(hasParameter("l")){
+					callCommand(MUSIC_REPLAY);
 				}
 				else{
 					
-					if(getContent() != null){
-						
-						try{
-							
-							String source;
-							
-							if(isUrl(getContent())){
-								sendInfoMessage("Getting data from "
-										+ ital(code(getContent())) + "...", true);
-								
-								source = getContent();
-							}
-							else{
-								sendInfoMessage("Searching Youtube for "
-										+ ital(code(getContent())) + "!", true);
-								
-								source = getSourceFromYoutube(getContent());
-							}
-							
-							MusicManager.get().loadTrack(this, source,
-									(player) -> connectIfNotPlaying());
-							
-						}
-						catch(IOException e){
-							sendMessage(lang("SongByStringFail"));
-						}
-						catch(IllegalStateException e){
-							Logger.log(
-									"Please setup your environment variable \"YOUTUBE_TOKEN\" to give users the ability to search using raw text!",
-									LogType.WARNING);
-							sendMessage("The owner of this bot did not setup his tokens correctly, please try again using a link!");
-						}
-						
+					if(getContent() == null
+							&& !MusicManager.get().hasPlayer(getGuild())){
+						new BotError(this, lang("NoContent"));
 					}
 					else{
 						
-						MusicPlayer player = MusicManager.get().getPlayer(this);
-						
-						if(player.isPaused()){
-							player.setPause(false);
+						if(getContent() != null){
 							
-							sendMessage(lang("Resuming"));
+							try{
+								
+								String source;
+								
+								if(isUrl(getContent())){
+									
+									sendInfoMessage("Getting data from "
+											+ ital(code(getContent())) + "...",
+											true);
+									
+									source = getContent();
+								}
+								else{
+									
+									sendInfoMessage("Searching Youtube for "
+											+ ital(code(getContent())) + "!",
+											true);
+									
+									source = getSourceFromYoutube(getContent());
+								}
+								
+								MusicManager.get().loadTrack(this, source,
+										(player) -> connectIfNotPlaying());
+								
+							}
+							catch(IOException e){
+								sendMessage(lang("SongByStringFail"));
+							}
+							catch(IllegalStateException e){
+								Logger.log(
+										"Please setup your environment variable \"YOUTUBE_TOKEN\" to give users the ability to search using raw text!",
+										LogType.WARNING);
+								sendMessage("The owner of this bot did not setup his tokens correctly, please try again using a link!");
+							}
+							
 						}
 						else{
-							new BotError(this, lang("NoContent"));
+							
+							MusicPlayer player = MusicManager.get().getPlayer(
+									this);
+							
+							if(player.isPaused()){
+								player.setPause(false);
+								
+								sendMessage(lang("Resuming"));
+							}
+							else{
+								new BotError(this, lang("NoContent"));
+							}
+							
 						}
 						
 					}
 					
 				}
-				
 			}
 			
 		}
@@ -138,7 +166,8 @@ public class CommandMusicPlay extends MusicCommands {
 	public ParametersHelp[] getParametersDescriptions(){
 		return new ParametersHelp[]
 		{
-			new ParametersHelp(lang("ReplayDescription"), "l", "latest")
+			new ParametersHelp(lang("ReplayDescription"), "l", "latest"),
+			new ParametersHelp(lang("AnythingDescription"), "a", "anything")
 		};
 	}
 	
