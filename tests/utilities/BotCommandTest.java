@@ -1,19 +1,24 @@
-package test.java;
+package utilities;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.*;
 
 class BotCommandTest {
 	
+	BotCommand mockCommand;
+	
 	@BeforeEach
 	void setUp(){
-		
+		mockCommand = mock(BotCommand.class);
 	}
 	
 	@AfterEach
 	void tearDown(){
-		
+		mockCommand = null;
 	}
 	
 	@Test
