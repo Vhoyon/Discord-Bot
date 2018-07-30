@@ -137,14 +137,12 @@ public class Request implements Utils {
 		this(receivedMessage, DEFAULT_PARAMETER_PREFIX);
 	}
 	
-	public Request(String receivedMessage,
-			char parametersPrefix){
-		this(receivedMessage, DEFAULT_COMMAND_PREFIX,
-				parametersPrefix);
+	public Request(String receivedMessage, char parametersPrefix){
+		this(receivedMessage, DEFAULT_COMMAND_PREFIX, parametersPrefix);
 	}
 	
-	public Request(String receivedMessage,
-			String commandPrefix, char parametersPrefix){
+	public Request(String receivedMessage, String commandPrefix,
+			char parametersPrefix){
 		
 		this.commandPrefix = commandPrefix;
 		
@@ -173,6 +171,7 @@ public class Request implements Utils {
 			while(matcher.find()){
 				possibleParams.add(matcher.group());
 			}
+			
 			duplicateParams = new ArrayList<>();
 			
 			boolean canRoll = true;
@@ -471,7 +470,8 @@ public class Request implements Utils {
 	}
 	
 	public boolean hasError(){
-		return this.getDuplicateParamList() != null;
+		return this.getDuplicateParamList() != null
+				&& this.getDuplicateParamList().size() != 0;
 	}
 	
 	public String getDefaultErrorMessage(){
@@ -490,25 +490,30 @@ public class Request implements Utils {
 			
 			StringBuilder message = new StringBuilder();
 			
-			message.append(pluralTester)
-					.append(" has been entered more than once : ");
+			message.append(pluralTester).append(
+					" has been entered more than once : ");
 			
 			for(int i = 0; i < this.getDuplicateParamList().size(); i++){
 				
+				message.append("\n");
+				
 				if(this.getDuplicateParamList().size() != 1)
-					message.append("\n").append(i + 1).append(". ");
+					message.append(i + 1).append(". ");
+				else
+					message.append("~ ");
 				
 				message.append(this.getDuplicateParamList().get(i).getName());
 				
 			}
 			
 			if(this.getDuplicateParamList().size() == 1)
-				pluralTester = "the parameter";
+				pluralTester = "that parameter";
 			else
 				pluralTester = "those parameters";
 			
 			message.append("\n")
-					.append(format("Only the first instance of {1} will be taken into consideration.",
+					.append(format(
+							"Only the first instance of {1} will be taken into consideration.",
 							pluralTester));
 			
 			return message.toString();
@@ -562,8 +567,8 @@ public class Request implements Utils {
 	
 	public void setParamsAsContentLess(
 			ArrayList<String> paramsToTreatAsContentLess){
-		this.setParamsAsContentLess(
-				paramsToTreatAsContentLess.toArray(new String[0]));
+		this.setParamsAsContentLess(paramsToTreatAsContentLess
+				.toArray(new String[0]));
 	}
 	
 	public void setParamsAsContentLess(String[] paramsToTreatAsContentLess){
