@@ -30,7 +30,7 @@ public class Main {
 				System.out.println(programRequest.getError());
 			}
 			
-			Framework.build();
+			Framework.build(programRequest.hasParameter("d"));
 			
 			FrameworkTemplate.botToken = Environment.getVar("BOT_TOKEN");
 			

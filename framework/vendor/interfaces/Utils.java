@@ -2,6 +2,7 @@ package vendor.interfaces;
 
 import java.util.regex.Pattern;
 
+import vendor.Framework;
 import vendor.modules.Environment;
 
 public interface Utils {
@@ -26,7 +27,7 @@ public interface Utils {
 	}
 	
 	default boolean isDebugging(){
-		return env("DEBUG", false);
+		return (boolean)env("DEBUG", false) || Framework.isDebugging();
 	}
 	
 	default <EnvVar> EnvVar env(String key, Object defaultValue){
