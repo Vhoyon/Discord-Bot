@@ -7,7 +7,6 @@ import vendor.modules.Logger.LogType;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 public class Dictionary implements Utils {
 	
@@ -145,15 +144,8 @@ public class Dictionary implements Utils {
 			
 		}
 		
-		return this.convertToSpecialNotation(string);
+		return string;
 		
-	}
-	
-	protected String convertToSpecialNotation(String langString){
-		return Pattern.compile("[()\\[\\]%.+?^$\\\\|]").matcher(langString)
-				.replaceAll("\\\\$0").replaceAll("\\{0+", "\\{")
-				.replaceAll("\\{([1-9][0-9]*)\\}", "\\%$1\\$s")
-				.replaceAll("\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
 	}
 	
 	private String handleKey(String key){
