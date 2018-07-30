@@ -1,6 +1,5 @@
 package vendor.objects;
 
-import vendor.abstracts.Translatable;
 import vendor.interfaces.Utils;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Request extends Translatable implements Utils {
+public class Request implements Utils {
 	
 	public class Parameter {
 		
@@ -123,12 +122,8 @@ public class Request extends Translatable implements Utils {
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
 	public final static char DEFAULT_PARAMETER_PREFIX = '-';
 	
-	private final static String DEFAULT_LANG_DIRECTORY = "/vendor.lang.strings";
-	
 	private String command;
 	private String content;
-	
-	private String langDirectory;
 	
 	private String commandPrefix;
 	
@@ -136,29 +131,18 @@ public class Request extends Translatable implements Utils {
 	private HashMap<Parameter, ArrayList<String>> parametersLinks;
 	private char parametersPrefix;
 	
-	private String error;
+	private ArrayList<Parameter> duplicateParams;
 	
-	public Request(String receivedMessage, Dictionary dictionary){
-		this(receivedMessage, dictionary, DEFAULT_PARAMETER_PREFIX);
+	public Request(String receivedMessage){
+		this(receivedMessage, DEFAULT_PARAMETER_PREFIX);
 	}
 	
-	public Request(String receivedMessage, Dictionary dictionary,
+	public Request(String receivedMessage, char parametersPrefix){
+		this(receivedMessage, DEFAULT_COMMAND_PREFIX, parametersPrefix);
+	}
+	
+	public Request(String receivedMessage, String commandPrefix,
 			char parametersPrefix){
-		this(receivedMessage, dictionary, DEFAULT_COMMAND_PREFIX,
-				parametersPrefix);
-	}
-	
-	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, char parametersPrefix){
-		this(receivedMessage, dictionary, commandPrefix, parametersPrefix,
-				DEFAULT_LANG_DIRECTORY);
-	}
-	
-	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, char parametersPrefix, String langDirectory){
-		
-		this.setDictionary(dictionary);
-		this.langDirectory = langDirectory;
 		
 		this.commandPrefix = commandPrefix;
 		
@@ -187,7 +171,8 @@ public class Request extends Translatable implements Utils {
 			while(matcher.find()){
 				possibleParams.add(matcher.group());
 			}
-			ArrayList<Parameter> duplicateParams = new ArrayList<>();
+			
+			duplicateParams = new ArrayList<>();
 			
 			boolean canRoll = true;
 			
@@ -331,8 +316,6 @@ public class Request extends Translatable implements Utils {
 			if(getContent() != null)
 				setContent(getContent().trim().replaceAll("\"", ""));
 			
-			handleDuplicateParameter(duplicateParams);
-			
 		}
 		
 	}
@@ -417,14 +400,6 @@ public class Request extends Translatable implements Utils {
 		return Pattern.quote(String.valueOf(getParametersPrefix()));
 	}
 	
-	public String getError(){
-		return this.error;
-	}
-	
-	public boolean hasError(){
-		return this.getError() != null;
-	}
-	
 	// public boolean hasParameter(String parameterName){
 	// 	if(getParameters() == null)
 	// 		return false;
@@ -490,48 +465,58 @@ public class Request extends Translatable implements Utils {
 		
 	}
 	
-	private void handleDuplicateParameter(ArrayList<Parameter> duplicateParams){
+	public ArrayList<Parameter> getDuplicateParamList(){
+		return this.duplicateParams;
+	}
+	
+	public boolean hasError(){
+		return this.getDuplicateParamList() != null
+				&& this.getDuplicateParamList().size() != 0;
+	}
+	
+	public String getDefaultErrorMessage(){
 		
-		if(duplicateParams.size() != 0){
+		if(!hasError()){
+			return "This request has no errors!";
+		}
+		else{
 			
 			String pluralTester;
 			
-			if(duplicateParams.size() == 1)
-				pluralTester = langDirect(langDirectory
-						+ ".RequestParamStartSingle");
+			if(this.getDuplicateParamList().size() == 1)
+				pluralTester = "That parameter";
 			else
-				pluralTester = langDirect(langDirectory
-						+ ".RequestParamStartMultiple");
+				pluralTester = "Those parameters";
 			
 			StringBuilder message = new StringBuilder();
 			
-			message.append(pluralTester)
-					.append(" ")
-					.append(langDirect(langDirectory
-							+ ".RequestParamStartFollowing")).append(" ");
+			message.append(pluralTester).append(
+					" has been entered more than once : ");
 			
-			for(int i = 0; i < duplicateParams.size(); i++){
+			for(int i = 0; i < this.getDuplicateParamList().size(); i++){
 				
-				if(duplicateParams.size() != 1)
-					message.append("\n").append(i + 1).append(". ");
+				message.append("\n");
 				
-				message.append("`").append(duplicateParams.get(i).getName())
-						.append("`");
+				if(this.getDuplicateParamList().size() != 1)
+					message.append(i + 1).append(". ");
+				else
+					message.append("~ ");
+				
+				message.append(this.getDuplicateParamList().get(i).getName());
 				
 			}
 			
-			if(duplicateParams.size() == 1)
-				pluralTester = langDirect(langDirectory
-						+ ".RequestEndMessageSingle");
+			if(this.getDuplicateParamList().size() == 1)
+				pluralTester = "that parameter";
 			else
-				pluralTester = langDirect(langDirectory
-						+ ".RequestEndMessageMultiple");
+				pluralTester = "those parameters";
 			
-			message.append("\n*")
-					.append(langDirect(langDirectory + ".RequestEndMessage",
-							pluralTester)).append("*");
+			message.append("\n")
+					.append(format(
+							"Only the first instance of {1} will be taken into consideration.",
+							pluralTester));
 			
-			this.error = message.toString();
+			return message.toString();
 			
 		}
 		
@@ -582,6 +567,11 @@ public class Request extends Translatable implements Utils {
 	
 	public void setParamsAsContentLess(
 			ArrayList<String> paramsToTreatAsContentLess){
+		this.setParamsAsContentLess(paramsToTreatAsContentLess
+				.toArray(new String[0]));
+	}
+	
+	public void setParamsAsContentLess(String[] paramsToTreatAsContentLess){
 		
 		for(String paramName : paramsToTreatAsContentLess){
 			try{
