@@ -23,11 +23,10 @@ public class Main {
 			
 			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
 			
-			Request programRequest = new Request(requestableArgs,
-					new Dictionary());
+			Request programRequest = new Request(requestableArgs);
 			
 			if(programRequest.hasError()){
-				System.out.println(programRequest.getError());
+				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
 			Framework.build(programRequest.hasParameter("d"));

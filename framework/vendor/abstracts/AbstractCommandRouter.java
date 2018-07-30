@@ -51,12 +51,11 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		this.commandsRepo = commandsRepo;
 		
-		this.request = createRequest(receivedMessage, getDictionary());
+		this.request = createRequest(receivedMessage);
 		
 	}
 	
-	protected abstract Request createRequest(String receivedMessage,
-			Dictionary dict);
+	protected abstract Request createRequest(String receivedMessage);
 	
 	public Command getCommand(){
 		return this.command;

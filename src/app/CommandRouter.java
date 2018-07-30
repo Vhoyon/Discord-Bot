@@ -30,8 +30,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	@Override
-	protected Request createRequest(String receivedMessage, Dictionary dict){
-		return new Request(receivedMessage, dict, getCommandPrefix(),
+	protected Request createRequest(String receivedMessage){
+		return new Request(receivedMessage, getCommandPrefix(),
 				getCommandParameterPrefix());
 	}
 	
@@ -84,7 +84,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					catch(NullPointerException e){}
 					
 					if(request.hasError()){
-						setCommand(new BotError(request.getError(), false));
+						setCommand(new BotError(request.getDefaultErrorMessage(), false));
 						
 						getAbstractBotCommand().action();
 						setCommand(null);
