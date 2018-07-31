@@ -156,8 +156,6 @@ public class Request implements Utils {
 		if(getContent() != null){
 			
 			// Test if content contains parameters.
-			// The params must be right after command for it to trigger.
-			//				if(content.matches("(" + Parameter.PREFIX + ".+)+")){
 			
 			parameters = new HashMap<>();
 			
@@ -208,8 +206,7 @@ public class Request implements Utils {
 						
 						if(parameters.containsValue(newParam)){
 							
-							if(!duplicateParams.contains(newParam))
-								duplicateParams.add(newParam);
+							duplicateParams.add(newParam);
 							
 						}
 						else{
@@ -258,8 +255,7 @@ public class Request implements Utils {
 							
 							if(parameters.containsValue(newParam)){
 								
-								if(!duplicateParams.contains(newParam))
-									duplicateParams.add(newParam);
+								duplicateParams.add(newParam);
 								
 							}
 							else{
@@ -493,16 +489,26 @@ public class Request implements Utils {
 			message.append(pluralTester).append(
 					" has been entered more than once : ");
 			
+			ArrayList<Parameter> handledDupes = new ArrayList<>();
+			
 			for(int i = 0; i < this.getDuplicateParamList().size(); i++){
 				
-				message.append("\n");
+				Parameter param = this.getDuplicateParamList().get(i);
 				
-				if(this.getDuplicateParamList().size() != 1)
-					message.append(i + 1).append(". ");
-				else
-					message.append("~ ");
-				
-				message.append(this.getDuplicateParamList().get(i).getName());
+				if(!handledDupes.contains(param)){
+					
+					handledDupes.add(param);
+					
+					message.append("\n");
+					
+					if(this.getDuplicateParamList().size() != 1)
+						message.append(i + 1).append(". ");
+					else
+						message.append("~ ");
+					
+					message.append(param.getName());
+					
+				}
 				
 			}
 			
