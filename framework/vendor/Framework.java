@@ -12,6 +12,7 @@ public class Framework {
 	private static boolean IS_RUNNING_FROM_TERMINAL;
 	private static String RUNNABLE_SYSTEM_PATH;
 	private static Date BUILD_STARTED_AT;
+	private static boolean IS_DEBUGGING;
 	
 	private Framework(){}
 	
@@ -27,14 +28,22 @@ public class Framework {
 		return BUILD_STARTED_AT;
 	}
 	
+	public static boolean isDebugging(){
+		return IS_DEBUGGING;
+	}
+	
 	private static String[] modules =
 	{
 		"Environment", "Logger", "Metrics"
 	};
 	
 	public static void build() throws Exception{
+		Framework.build(false);
+	}
+	
+	public static void build(boolean isDebugging) throws Exception{
 		
-		Framework.setupGlobalVariables();
+		Framework.setupGlobalVariables(isDebugging);
 		
 		StringBuilder errors = new StringBuilder();
 		
@@ -75,11 +84,12 @@ public class Framework {
 		
 	}
 	
-	private static void setupGlobalVariables(){
+	private static void setupGlobalVariables(boolean isDebugging){
 		
 		IS_RUNNING_FROM_TERMINAL = getIsRunningFromTerminal();
 		RUNNABLE_SYSTEM_PATH = getRunnableFolderPath();
 		BUILD_STARTED_AT = getBuildStartedAt();
+		IS_DEBUGGING = isDebugging;
 		
 	}
 	
