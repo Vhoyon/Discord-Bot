@@ -84,7 +84,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					catch(NullPointerException e){}
 					
 					if(request.hasError()){
-						setCommand(new BotError(request.getDefaultErrorMessage(), false));
+						setCommand(new BotError(
+								request.getDefaultErrorMessage(), false));
 						
 						getAbstractBotCommand().action();
 						setCommand(null);
@@ -125,7 +126,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 							paramsHelpMap.add(commandParamHelp.getAllParams());
 							
 							if(!commandParamHelp.doesAcceptsContent()){
-								contentLessParams.add(commandParamHelp.getParam());
+								contentLessParams.add(commandParamHelp
+										.getParam());
 							}
 							
 						}
@@ -181,27 +183,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		
 		try{
 			
-			String textChannelKey = getEventDigger().getChannelKey();
-			
-			String settingsKey = Utils
-					.buildKey(textChannelKey, BUFFER_SETTINGS);
-			
-			boolean hasSettings = getBuffer().has(settingsKey);
-			
-			Setting settings;
-			
-			if(!hasSettings){
-				
-				settings = new Setting(getDictionary(), SETTINGS);
-				
-				getBuffer().push(settings, settingsKey);
-				
-			}
-			else{
-				settings = (Setting)getBuffer().get(settingsKey);
-			}
-			
-			String prefix = settings.getFieldValue("prefix");
+			String prefix = getSettings().getFieldValue("prefix");
 			
 			return prefix;
 			
@@ -217,14 +199,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		
 		try{
 			
-			String textChannelKey = getEventDigger().getChannelKey();
-			
-			String settingsKey = Utils
-					.buildKey(textChannelKey, BUFFER_SETTINGS);
-			
-			Setting settings = (Setting)getBuffer().get(settingsKey);
-			
-			char paramPrefix = settings.getFieldValue("param_prefix");
+			char paramPrefix = getSettings().getFieldValue("param_prefix");
 			
 			return paramPrefix;
 			
@@ -232,6 +207,31 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		catch(Exception e){
 			return Request.DEFAULT_PARAMETER_PREFIX;
 		}
+		
+	}
+	
+	public Setting getSettings(){
+		
+		String textChannelKey = getEventDigger().getChannelKey();
+		
+		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
+		
+		boolean hasSettings = getBuffer().has(settingsKey);
+		
+		Setting settings;
+		
+		if(!hasSettings){
+			
+			settings = new Setting(getDictionary(), SETTINGS);
+			
+			getBuffer().push(settings, settingsKey);
+			
+		}
+		else{
+			settings = (Setting)getBuffer().get(settingsKey);
+		}
+		
+		return settings;
 		
 	}
 	

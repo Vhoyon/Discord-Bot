@@ -33,7 +33,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	public Setting getSettings(){
-		return (Setting)getMemory(BUFFER_SETTINGS);
+		return getRouter().getSettings();
 	}
 	
 	public <SettingValue> SettingValue setting(String settingName){
