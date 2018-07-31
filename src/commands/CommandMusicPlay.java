@@ -30,23 +30,31 @@ public class CommandMusicPlay extends MusicCommands {
 		else{
 			
 			if(hasParameter("r")){
-
-
+				
 				String sources[][] =
 				{
-					{"V-ed's playlist from soundcloud","https://soundcloud.com/v_ed/sets/musiiic"},
-					{"No Copyrights sounds Copyright free songs from youtube" , "https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"},
-					{"No Copyrights sounds electronic from youtube" , "https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"}
-					
+					{
+						"V-ed's playlist from soundcloud",
+						"https://soundcloud.com/v_ed/sets/musiiic"
+					},
+					{
+						"No Copyrights sounds Copyright free songs from youtube",
+						"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
+					},
+					{
+						"No Copyrights sounds electronic from youtube",
+						"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
+					}
+				
 				};
 				
 				int rand = new Random().nextInt(sources.length);
-
-				sendInfoMessage( lang("Rand",sources[rand][0]),true);
-
+				
+				sendInfoMessage(lang("Rand", sources[rand][0]), true);
+				
 				MusicManager.get().loadTrack(this, sources[rand][1],
 						(player) -> connectIfNotPlaying());
-
+				
 			}
 			else{
 				
@@ -74,6 +82,7 @@ public class CommandMusicPlay extends MusicCommands {
 											true);
 									
 									source = getContent();
+									
 								}
 								else{
 									
@@ -82,6 +91,7 @@ public class CommandMusicPlay extends MusicCommands {
 											true);
 									
 									source = getSourceFromYoutube(getContent());
+									
 								}
 								
 								MusicManager.get().loadTrack(this, source,
@@ -118,6 +128,7 @@ public class CommandMusicPlay extends MusicCommands {
 					}
 					
 				}
+				
 			}
 			
 		}
@@ -159,7 +170,6 @@ public class CommandMusicPlay extends MusicCommands {
 	@Override
 	public String getCommandDescription(){
 		return "Start a song by giving a youtube link or restart a paused song by not giving a link";
-		
 	}
 	
 	@Override
@@ -167,7 +177,8 @@ public class CommandMusicPlay extends MusicCommands {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(lang("ReplayDescription"), false, "l", "latest"),
-			new ParametersHelp(lang("AnythingDescription"), false, "r", "random")
+			new ParametersHelp(lang("AnythingDescription"), false, "r",
+					"random")
 		};
 	}
 	
