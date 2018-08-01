@@ -9,7 +9,7 @@ public class MockFactory {
 	
 	public static Request createRequest(char paramPrefix){
 		Request request = spy(new Request(""));
-		doReturn('-').when(request).getParametersPrefix();
+		doReturn(paramPrefix).when(request).getParametersPrefix();
 		
 		return request;
 	}

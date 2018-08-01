@@ -37,17 +37,17 @@ class BotCommandTest {
 		
 		assertEquals(expected, mockCommand.formatParameter(testParameterName));
 	}
-
+	
 	@Test
 	void testFormatParameterLong(){
 		String testParameterName = "test";
-
-		Request request = MockFactory.createRequest('-');
-
-		doReturn(request).when(mockCommand).getRequest();
-
+		
+		Request mockRequest = MockFactory.createRequest('-');
+		
+		doReturn(mockRequest).when(mockCommand).getRequest();
+		
 		String expected = "`--" + testParameterName + "`";
-
+		
 		assertEquals(expected, mockCommand.formatParameter(testParameterName));
 	}
 	
