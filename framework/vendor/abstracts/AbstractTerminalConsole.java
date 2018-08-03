@@ -65,11 +65,11 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public void log(String logText, String logType, boolean hasAppendedDate){
 		
 		if(this.isWaitingForInput() && !this.isLogging())
-			System.out.println("---\n");
+			this.sendLog("---\n");
 		
 		this.isLogging.set(true);
 		
-		System.out.println(logText);
+		this.sendLog(logText);
 		
 		if(!this.isWaitingForInput()){
 			this.isLogging.set(false);
@@ -97,6 +97,17 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		}
 		
 		// logToChannel(logText, logType);
+	}
+	
+	protected void sendLog(String log){
+		this.sendLog(log, true);
+	}
+	
+	protected void sendLog(String log, boolean appendNewLine){
+		if(appendNewLine)
+			System.out.println(log);
+		else
+			System.out.print(log);
 	}
 	
 	/**
@@ -143,7 +154,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	private void printGetInputMessage(String message){
-		System.out.print("\n" + message + " ");
+		sendLog("\n" + message + " ", false);
 	}
 	
 	public String getInput(){
