@@ -57,17 +57,17 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		return this.isLogging.get();
 	}
 	
-	protected String getLatestInputMessage() {
+	protected String getLatestInputMessage(){
 		return this.latestInputMessage;
 	}
 	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
 		
-		this.isLogging.set(true);
-		
-		if(this.isWaitingForInput())
+		if(this.isWaitingForInput() && !this.isLogging())
 			System.out.println("---\n");
+		
+		this.isLogging.set(true);
 		
 		System.out.println(logText);
 		
@@ -75,7 +75,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			this.isLogging.set(false);
 		}
 		else{
-		
+			
 			if(loggingThread != null)
 				loggingThread.interrupt();
 			
@@ -85,10 +85,10 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 					Thread.sleep(250);
 					
 					printGetInputMessage(getLatestInputMessage());
+					
+					isLogging.set(false);
 				}
 				catch(InterruptedException e){}
-				
-				isLogging.set(false);
 				
 			});
 			
@@ -191,7 +191,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			};
 			break;
 		}
-
+		
 		String choiceSeparator = " / ";
 		
 		StringBuilder choiceBuilder = new StringBuilder();
@@ -202,8 +202,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			choiceBuilder.append(possibility).append(choiceSeparator);
 		}
 		
-		choiceBuilder
-				.delete(choiceBuilder.length() - choiceSeparator.length(), choiceBuilder.length());
+		choiceBuilder.delete(choiceBuilder.length() - choiceSeparator.length(),
+				choiceBuilder.length());
 		
 		choiceBuilder.append(")");
 		
