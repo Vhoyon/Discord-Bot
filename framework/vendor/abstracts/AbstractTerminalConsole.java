@@ -23,6 +23,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	private AtomicBoolean isWaitingForInput;
 	private Thread loggingThread;
 	
+	private String latestInputMessage;
+	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -30,6 +32,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		this.setInputPrefix(">");
 		this.isWaitingForInput.set(false);
+		this.latestInputMessage = "";
 	}
 	
 	public CommandsRepository getCommandsRepo(){
@@ -46,6 +49,10 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	public boolean isWaitingForInput(){
 		return this.isWaitingForInput.get();
+	}
+	
+	protected String getLatestInputMessage() {
+		return this.latestInputMessage;
 	}
 	
 	@Override
@@ -66,7 +73,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			try{
 				Thread.sleep(250);
 				
-				printGetInputMessage();
+				printGetInputMessage(getLatestInputMessage());
 				isWaitingForInput.set(true);
 			}
 			catch(InterruptedException e){}
@@ -131,6 +138,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public String getInput(String message){
 		
 		printGetInputMessage(message);
+		this.latestInputMessage = message;
 		
 		if(loggingThread != null)
 			loggingThread = null;
