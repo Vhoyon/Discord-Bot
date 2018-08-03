@@ -16,7 +16,7 @@ public class CommandMusicReplay extends MusicCommands {
 			
 			trackSource = (String)getMemory("LATEST_SONG");
 			
-			MusicManager.get().loadTrack(this, trackSource, (player) -> connectIfNotPlaying());
+			MusicManager.get().loadTrack(this, trackSource, this::connectIfNotPlaying);
 			
 		}
 		
