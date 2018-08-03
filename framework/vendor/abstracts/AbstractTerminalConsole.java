@@ -73,7 +73,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			try{
 				Thread.sleep(250);
 				
-				printGetInputMessage(getLatestInputMessage());
+				printGetInputMessage("\n" + getLatestInputMessage());
 				isWaitingForInput.set(true);
 			}
 			catch(InterruptedException e){}
