@@ -146,7 +146,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		choiceBuilder.append(")");
 		
-		boolean doesCommandStopsBot = false;
+		boolean isChoiceValid = false;
 		
 		String formattedInput = null;
 		
@@ -163,14 +163,14 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				
 				formattedInput = input.substring(0, 1).toLowerCase();
 				
-				for(int i = 0; i < choices.length && !doesCommandStopsBot; i++){
+				for(int i = 0; i < choices.length && !isChoiceValid; i++){
 					if(choices[i].equals(formattedInput))
-						doesCommandStopsBot = true;
+						isChoiceValid = true;
 				}
 				
 			}
 			
-		}while(!doesCommandStopsBot);
+		}while(!isChoiceValid);
 		
 		switch(formattedInput){
 		case "n":
