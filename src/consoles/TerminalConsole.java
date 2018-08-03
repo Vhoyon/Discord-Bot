@@ -48,7 +48,7 @@ public abstract class TerminalConsole extends AbstractTerminalConsole {
 			
 			do{
 				
-				String input = getInput(">");
+				String input = getInput();
 				
 				shouldStop = handleInput(input);
 				

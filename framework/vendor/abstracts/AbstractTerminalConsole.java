@@ -17,14 +17,26 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	private CommandsRepository commandsRepo;
 	
+	private String inputPrefix;
+	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
+		
+		this.setInputPrefix(">");
 	}
 	
 	public CommandsRepository getCommandsRepo(){
 		return commandsRepo;
+	}
+	
+	public void setInputPrefix(String inputPrefix){
+		this.inputPrefix = inputPrefix;
+	}
+	
+	public String getInputPrefix(){
+		return this.inputPrefix;
 	}
 	
 	@Override
@@ -71,11 +83,22 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 	}
 	
+	private void printGetInputMessage(){
+		this.printGetInputMessage(this.getInputPrefix());
+	}
+	
+	private void printGetInputMessage(String message){
+		System.out.print("\n" + message + " ");
+	}
+	
+	public String getInput(){
+		return this.getInput(this.getInputPrefix());
+	}
+	
 	@Override
 	public String getInput(String message){
 		
-		System.out.println();
-		System.out.print(message + " ");
+		printGetInputMessage(message);
 		
 		try{
 			return reader.readLine();
