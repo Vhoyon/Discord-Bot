@@ -19,6 +19,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	private String inputPrefix;
 	
+	private Thread loggingThread;
+	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -42,6 +44,23 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
 		System.out.println(logText);
+		
+		if(loggingThread != null){
+			loggingThread.interrupt();
+		}
+			
+		loggingThread = new Thread(() -> {
+			
+			try{
+				Thread.sleep(250);
+				
+				printGetInputMessage();
+			}
+			catch(InterruptedException e){}
+			
+		});
+		
+		loggingThread.start();
 		
 		// logToChannel(logText, logType);
 	}
@@ -99,6 +118,9 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public String getInput(String message){
 		
 		printGetInputMessage(message);
+		
+		if(loggingThread != null)
+			loggingThread = null;
 		
 		try{
 			return reader.readLine();
