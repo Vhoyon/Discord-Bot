@@ -3,6 +3,7 @@ package vendor.abstracts;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import vendor.interfaces.Console;
 import vendor.interfaces.Loggable;
@@ -19,6 +20,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	private String inputPrefix;
 	
+	private AtomicBoolean isWaitingForInput;
 	private Thread loggingThread;
 	
 	public AbstractTerminalConsole(){
@@ -27,6 +29,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
 		
 		this.setInputPrefix(">");
+		this.isWaitingForInput.set(false);
 	}
 	
 	public CommandsRepository getCommandsRepo(){
@@ -41,20 +44,30 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		return this.inputPrefix;
 	}
 	
+	public boolean isWaitingForInput(){
+		return this.isWaitingForInput.get();
+	}
+	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
+		
+		if(this.isWaitingForInput())
+			System.out.println("---\n");
+		
 		System.out.println(logText);
 		
-		if(loggingThread != null){
+		this.isWaitingForInput.set(false);
+		
+		if(loggingThread != null)
 			loggingThread.interrupt();
-		}
-			
+		
 		loggingThread = new Thread(() -> {
 			
 			try{
 				Thread.sleep(250);
 				
 				printGetInputMessage();
+				isWaitingForInput.set(true);
 			}
 			catch(InterruptedException e){}
 			
@@ -121,6 +134,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		if(loggingThread != null)
 			loggingThread = null;
+		
+		this.isWaitingForInput.set(true);
 		
 		try{
 			return reader.readLine();
