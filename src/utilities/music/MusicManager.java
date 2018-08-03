@@ -12,7 +12,6 @@ import utilities.BotCommand;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class MusicManager {
 	
@@ -75,7 +74,7 @@ public class MusicManager {
 	}
 	
 	public void loadTrack(final BotCommand command, final String source,
-			Consumer<MusicPlayer> onSuccessLoadBeforePlay){
+			Runnable onSuccessLoadBeforePlay){
 		
 		MusicPlayer player = getPlayer(command);
 		
@@ -87,7 +86,7 @@ public class MusicManager {
 			@Override
 			public void trackLoaded(AudioTrack track){
 				if(onSuccessLoadBeforePlay != null)
-					onSuccessLoadBeforePlay.accept(player);
+					onSuccessLoadBeforePlay.run();
 				
 				command.sendMessage(command.lang("MusicManagerTrackLoaded",
 						command.code(track.getInfo().title)));
@@ -99,7 +98,7 @@ public class MusicManager {
 			public void playlistLoaded(AudioPlaylist playlist){
 				
 				if(onSuccessLoadBeforePlay != null)
-					onSuccessLoadBeforePlay.accept(player);
+					onSuccessLoadBeforePlay.run();
 				
 				StringBuilder builder = new StringBuilder();
 				

@@ -45,7 +45,6 @@ public class CommandMusicPlay extends MusicCommands {
 						"No Copyrights sounds electronic from youtube",
 						"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
 					}
-				
 				};
 				
 				int rand = new Random().nextInt(sources.length);
@@ -53,7 +52,7 @@ public class CommandMusicPlay extends MusicCommands {
 				sendInfoMessage(lang("Rand", sources[rand][0]), true);
 				
 				MusicManager.get().loadTrack(this, sources[rand][1],
-						(player) -> connectIfNotPlaying());
+						this::connectIfNotPlaying);
 				
 			}
 			else{
@@ -95,7 +94,7 @@ public class CommandMusicPlay extends MusicCommands {
 								}
 								
 								MusicManager.get().loadTrack(this, source,
-										(player) -> connectIfNotPlaying());
+										this::connectIfNotPlaying);
 								
 							}
 							catch(IOException e){
