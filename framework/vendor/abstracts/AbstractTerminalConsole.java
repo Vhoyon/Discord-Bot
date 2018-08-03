@@ -1,15 +1,16 @@
 package vendor.abstracts;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import vendor.interfaces.Console;
 import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 import vendor.objects.CommandsRepository;
 import vendor.objects.TerminalCommandsLinker;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
@@ -19,12 +20,21 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	private String inputPrefix;
 	
+	private AtomicBoolean isWaitingForInput;
+	private AtomicBoolean isLogging;
+	private Thread loggingThread;
+	
+	private String latestInputMessage;
+	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
 		
 		this.setInputPrefix(">");
+		this.isWaitingForInput = new AtomicBoolean(false);
+		this.isLogging = new AtomicBoolean(false);
+		this.latestInputMessage = "";
 	}
 	
 	public CommandsRepository getCommandsRepo(){
@@ -39,11 +49,65 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		return this.inputPrefix;
 	}
 	
+	public boolean isWaitingForInput(){
+		return this.isWaitingForInput.get();
+	}
+	
+	public boolean isLogging(){
+		return this.isLogging.get();
+	}
+	
+	protected String getLatestInputMessage(){
+		return this.latestInputMessage;
+	}
+	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
-		System.out.println(logText);
+		
+		if(this.isWaitingForInput() && !this.isLogging())
+			this.sendLog("---\n");
+		
+		this.isLogging.set(true);
+		
+		this.sendLog(logText);
+		
+		if(!this.isWaitingForInput()){
+			this.isLogging.set(false);
+		}
+		else{
+			
+			if(loggingThread != null)
+				loggingThread.interrupt();
+			
+			loggingThread = new Thread(() -> {
+				
+				try{
+					Thread.sleep(250);
+					
+					printGetInputMessage(getLatestInputMessage());
+					
+					isLogging.set(false);
+				}
+				catch(InterruptedException e){}
+				
+			});
+			
+			loggingThread.start();
+			
+		}
 		
 		// logToChannel(logText, logType);
+	}
+	
+	protected void sendLog(String log){
+		this.sendLog(log, true);
+	}
+	
+	protected void sendLog(String log, boolean appendNewLine){
+		if(appendNewLine)
+			System.out.println(log);
+		else
+			System.out.print(log);
 	}
 	
 	/**
@@ -62,6 +126,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	protected boolean handleInput(String input){
+		
+		this.isWaitingForInput.set(false);
 		
 		if(input == null)
 			return false;
@@ -88,7 +154,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	protected void printGetInputMessage(String message){
-		System.out.print("\n" + message + " ");
+		sendLog("\n" + message + " ", false);
 	}
 	
 	public String getInput(){
@@ -99,6 +165,12 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public String getInput(String message){
 		
 		printGetInputMessage(message);
+		this.latestInputMessage = message;
+		
+		if(loggingThread != null)
+			loggingThread = null;
+		
+		this.isWaitingForInput.set(true);
 		
 		try{
 			return reader.readLine();
@@ -130,7 +202,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			};
 			break;
 		}
-
+		
 		String choiceSeparator = " / ";
 		
 		StringBuilder choiceBuilder = new StringBuilder();
@@ -141,8 +213,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			choiceBuilder.append(possibility).append(choiceSeparator);
 		}
 		
-		choiceBuilder
-				.delete(choiceBuilder.length() - choiceSeparator.length(), choiceBuilder.length());
+		choiceBuilder.delete(choiceBuilder.length() - choiceSeparator.length(),
+				choiceBuilder.length());
 		
 		choiceBuilder.append(")");
 		
