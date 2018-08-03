@@ -83,11 +83,11 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 	}
 	
-	private void printGetInputMessage(){
+	protected void printGetInputMessage(){
 		this.printGetInputMessage(this.getInputPrefix());
 	}
 	
-	private void printGetInputMessage(String message){
+	protected void printGetInputMessage(String message){
 		System.out.print("\n" + message + " ");
 	}
 	
