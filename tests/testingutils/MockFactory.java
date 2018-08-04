@@ -1,4 +1,4 @@
-package test.utils;
+package testingutils;
 
 import app.CommandRouter;
 import vendor.objects.Request;

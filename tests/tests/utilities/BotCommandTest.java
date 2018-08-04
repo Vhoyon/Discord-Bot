@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
-import test.utils.MockFactory;
+import testingutils.MockFactory;
 import utilities.BotCommand;
 import vendor.objects.Request;
 import vendor.utilities.settings.IntegerField;
