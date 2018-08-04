@@ -84,9 +84,13 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				try{
 					Thread.sleep(250);
 					
-					printGetInputMessage(getLatestInputMessage());
-					
-					isLogging.set(false);
+					if(isWaitingForInput()){
+						
+						printGetInputMessage(getLatestInputMessage());
+						
+						isLogging.set(false);
+						
+					}
 				}
 				catch(InterruptedException e){}
 				
@@ -173,7 +177,12 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		this.isWaitingForInput.set(true);
 		
 		try{
-			return reader.readLine();
+			
+			String userInput = reader.readLine();
+			
+			this.isWaitingForInput.set(false);
+			
+			return userInput;
 		}
 		catch(IOException e){
 			Logger.log(e);
@@ -185,6 +194,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	@Override
 	public int getConfirmation(String question, QuestionType questionType){
+		
+		this.isLogging.set(true);
 		
 		String[] choices = null;
 		
@@ -207,7 +218,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		StringBuilder choiceBuilder = new StringBuilder();
 		
-		choiceBuilder.append(" (");
+		choiceBuilder.append("(");
 		
 		for(String possibility : choices){
 			choiceBuilder.append(possibility).append(choiceSeparator);
@@ -224,7 +235,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		do{
 			
-			String input = getInput(question + choiceBuilder.toString()).trim();
+			String input = getInput(question + " " + choiceBuilder.toString()).trim();
 			
 			System.out.println();
 			
