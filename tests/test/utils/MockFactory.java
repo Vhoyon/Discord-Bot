@@ -1,9 +1,10 @@
 package test.utils;
 
+import app.CommandRouter;
 import vendor.objects.Request;
+import vendor.utilities.settings.Setting;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 public class MockFactory {
 	
@@ -12,6 +13,14 @@ public class MockFactory {
 		doReturn(paramPrefix).when(request).getParametersPrefix();
 		
 		return request;
+	}
+	
+	public static CommandRouter createRouter(Setting settings){
+		CommandRouter router = mock(CommandRouter.class);
+		
+		doReturn(settings).when(router).getSettings();
+		
+		return router;
 	}
 	
 }

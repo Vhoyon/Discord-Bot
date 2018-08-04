@@ -115,7 +115,7 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.3.0-M1</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -125,10 +125,25 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <powermock.version>1.7.1</powermock.version>
     </properties>
 
 </project>
