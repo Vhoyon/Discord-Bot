@@ -21,11 +21,20 @@ public class Mention implements Member {
 		this.digger = digger;
 		
 		this.mentionnedMember = this.digger.getGuild().getMember(
-				digger.getEvent().getJDA().getUserById(userId));
+				digger.getJDA().getUserById(userId));
 	}
 	
 	public boolean isMentionningSelf(){
 		return this.getUser().equals(this.digger.getUser());
+	}
+	
+	public boolean isUserBot(){
+		return this.getUser().isBot();
+	}
+	
+	public boolean isRunningBot(){
+		return this.digger.getRunningBot().getIdLong() == this.getUser()
+				.getIdLong();
 	}
 	
 	@Override

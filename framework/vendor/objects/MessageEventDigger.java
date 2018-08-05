@@ -1,9 +1,7 @@
 package vendor.objects;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import vendor.interfaces.Utils;
 
@@ -17,6 +15,10 @@ public class MessageEventDigger {
 	
 	public MessageReceivedEvent getEvent(){
 		return this.event;
+	}
+	
+	public JDA getJDA(){
+		return this.getEvent().getJDA();
 	}
 	
 	public String getGuildKey(){
@@ -65,6 +67,10 @@ public class MessageEventDigger {
 	
 	public String getUserName(){
 		return getUser().getName();
+	}
+	
+	public SelfUser getRunningBot(){
+		return this.getJDA().getSelfUser();
 	}
 	
 }

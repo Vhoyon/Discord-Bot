@@ -17,7 +17,6 @@ import vendor.objects.MessageEventDigger;
 import vendor.objects.Request;
 import vendor.objects.Request.Parameter;
 import vendor.res.FrameworkResources;
-import vendor.utilities.FrameworkTemplate;
 import vendor.utilities.formatting.DiscordFormatter;
 
 import java.util.ArrayList;
@@ -178,7 +177,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public SelfUser getSelfUser(){
-		return FrameworkTemplate.jda.getSelfUser();
+		return getEventDigger().getRunningBot();
 	}
 	
 	public AccountManager getSelfUserManager(){
