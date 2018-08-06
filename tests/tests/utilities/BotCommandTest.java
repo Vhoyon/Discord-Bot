@@ -39,12 +39,13 @@ class BotCommandTest {
 	@Test
 	void testFormatParameterShort(){
 		String testParameterName = "t";
+		char prefix = '-';
 		
-		Request request = MockFactory.createRequest('-');
+		Request request = MockFactory.createRequest(prefix);
 		
 		doReturn(request).when(mockCommand).getRequest();
 		
-		String expected = "`-" + testParameterName + "`";
+		String expected = "`" + prefix + testParameterName + "`";
 		
 		assertEquals(expected, mockCommand.formatParameter(testParameterName));
 	}
@@ -52,12 +53,13 @@ class BotCommandTest {
 	@Test
 	void testFormatParameterLong(){
 		String testParameterName = "test";
+		char prefix = '-';
 		
-		Request mockRequest = MockFactory.createRequest('-');
+		Request mockRequest = MockFactory.createRequest(prefix);
 		
 		doReturn(mockRequest).when(mockCommand).getRequest();
 		
-		String expected = "`--" + testParameterName + "`";
+		String expected = "`" + prefix + prefix + testParameterName + "`";
 		
 		assertEquals(expected, mockCommand.formatParameter(testParameterName));
 	}
