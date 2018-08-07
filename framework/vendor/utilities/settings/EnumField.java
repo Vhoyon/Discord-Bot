@@ -1,6 +1,7 @@
 package vendor.utilities.settings;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 
 public class EnumField extends TextField {
 	
@@ -53,12 +54,14 @@ public class EnumField extends TextField {
 	}
 	
 	@Override
-	protected String formatEnvironment(String envValue){
+	protected String formatEnvironment(String envValue)
+			throws IllegalFormatException{
 		String[] possibleValues = envValue.split("\\s*\\|\\s*");
 		
 		String envDefaultValue = possibleValues[0];
 		
-		this.values = this.getValuesArrayList(envDefaultValue, possibleValues);
+		this.values = this.getValuesArrayList(envDefaultValue,
+				(Object[])possibleValues);
 		
 		return envDefaultValue;
 	}
