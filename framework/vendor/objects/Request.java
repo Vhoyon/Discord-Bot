@@ -133,12 +133,26 @@ public class Request implements Utils {
 	
 	private ArrayList<Parameter> duplicateParams;
 	
+	public Request(String[] args){
+		this(args, DEFAULT_PARAMETER_PREFIX);
+	}
+	
 	public Request(String receivedMessage){
 		this(receivedMessage, DEFAULT_PARAMETER_PREFIX);
 	}
 	
+	public Request(String[] args, char parametersPrefix){
+		this(args, DEFAULT_COMMAND_PREFIX, parametersPrefix);
+	}
+	
 	public Request(String receivedMessage, char parametersPrefix){
 		this(receivedMessage, DEFAULT_COMMAND_PREFIX, parametersPrefix);
+	}
+	
+	public Request(String[] args, String commandPrefix,
+			char parametersPrefix){
+		this(buildMessageFromArgs(args, parametersPrefix), commandPrefix,
+				parametersPrefix);
 	}
 	
 	public Request(String receivedMessage, String commandPrefix,
@@ -148,12 +162,19 @@ public class Request implements Utils {
 		
 		this.parametersPrefix = parametersPrefix;
 		
-		String[] messageSplit = splitCommandAndContent(receivedMessage);
+		if(!receivedMessage.startsWith(commandPrefix)){
+			setContent(receivedMessage);
+		}
+		else{
+			
+			String[] messageSplit = splitCommandAndContent(receivedMessage);
+			
+			setCommand(messageSplit[0]);
+			setContent(messageSplit[1]);
+			
+		}
 		
-		setCommand(messageSplit[0]);
-		setContent(messageSplit[1]);
-		
-		if(getContent() != null){
+		if(hasContent()){
 			
 			// Test if content contains parameters.
 			
@@ -317,6 +338,9 @@ public class Request implements Utils {
 	}
 	
 	public String getCommand(){
+		if(!this.hasCommand())
+			return null;
+		
 		return this.getCommandNoFormat().substring(getCommandPrefix().length());
 	}
 	
@@ -326,6 +350,20 @@ public class Request implements Utils {
 	
 	public void setCommand(String command){
 		this.command = command;
+	}
+	
+	public boolean hasCommand(){
+		return this.getCommandNoFormat() != null;
+	}
+	
+	public boolean isCommand(){
+		return this.hasCommand() && this.getCommandNoFormat()
+				.matches("^\\Q" + getCommandPrefix() + "\\E.+$");
+	}
+	
+	public boolean isOnlyCommandPrefix(){
+		return this.hasCommand() && this.getCommandNoFormat()
+				.equals(getCommandPrefix());
 	}
 	
 	public String getContent(){
@@ -339,6 +377,10 @@ public class Request implements Utils {
 		else
 			this.content = content;
 		
+	}
+	
+	public boolean hasContent(){
+		return this.getContent() != null;
 	}
 	
 	public String getCommandPrefix(){
@@ -586,6 +628,32 @@ public class Request implements Utils {
 			catch(NullPointerException e){}
 		}
 		
+	}
+	
+	public static String buildMessageFromArgs(String[] args,
+			char parametersPrefix){
+		StringBuilder builder = new StringBuilder();
+		
+		for(String arg : args){
+			
+			String protectedParamPrefix = Pattern.quote(
+					String.valueOf(parametersPrefix));
+			String paramRegex = "^(" + protectedParamPrefix + "{1,2}.+|"
+					+ protectedParamPrefix + "{2})$";
+			
+			if(arg.matches(paramRegex)){
+				builder.append(arg);
+			}
+			else{
+				builder.append("\"").append(arg).append("\"");
+			}
+			
+			builder.append(" ");
+		}
+		
+		String argsRequest = builder.toString();
+		
+		return argsRequest.substring(0, argsRequest.length() - 1);
 	}
 	
 }
