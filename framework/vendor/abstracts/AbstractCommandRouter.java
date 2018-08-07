@@ -140,15 +140,13 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			Request request = getRequest();
 			String commandPrefix = getCommandPrefix();
 			
-			if(!request.getCommandNoFormat().startsWith(commandPrefix)){
+			if(!request.isCommand()){
 				throw new NoCommandException();
 			}
 			else{
 				
-				if(request.getCommandNoFormat().equals(commandPrefix)){
-					
+				if(request.isOnlyCommandPrefix()){
 					return commandWhenFromServerIsOnlyPrefix();
-					
 				}
 				
 			}

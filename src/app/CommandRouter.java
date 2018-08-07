@@ -45,7 +45,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			
 			setCommand(validateMessage());
 			
-			if(request.getCommandNoFormat().startsWith(getCommandPrefix())){
+			if(request.isCommand()){
 				
 				if(getCommand() == null){
 					

@@ -21,9 +21,7 @@ public class Main {
 		
 		try{
 			
-			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
-			
-			Request programRequest = new Request(requestableArgs);
+			Request programRequest = new Request(args);
 			
 			if(programRequest.hasError()){
 				System.out.println(programRequest.getDefaultErrorMessage());
@@ -98,24 +96,6 @@ public class Main {
 					+ clientId + "&scope=bot&permissions=0", false);
 		}
 		
-	}
-	
-	private static String convertArgsToString(String[] args){
-		StringBuilder builder = new StringBuilder();
-		
-		for(String arg : args){
-			
-			if(arg.startsWith("-")){
-				builder.append(arg);
-			}
-			else{
-				builder.append("\"").append(arg).append("\"");
-			}
-			
-			builder.append(" ");
-		}
-		
-		return builder.toString();
 	}
 	
 }
