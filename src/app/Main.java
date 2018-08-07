@@ -7,7 +7,6 @@ import vendor.Framework;
 import vendor.interfaces.Console;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
-import vendor.objects.Dictionary;
 import vendor.objects.Request;
 
 /**
