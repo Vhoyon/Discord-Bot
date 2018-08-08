@@ -1,5 +1,8 @@
 package vendor.modules;
 
+import vendor.abstracts.ModuleOutputtable;
+import vendor.interfaces.Loggable;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,10 +11,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import vendor.abstracts.Module;
-import vendor.interfaces.Loggable;
-
-public class Logger extends Module {
+public class Logger extends ModuleOutputtable {
 	
 	/**
 	 * The type of logging to prepend to the log message.
@@ -147,96 +147,88 @@ public class Logger extends Module {
 		log(message, logType.toString(), appendDate);
 	}
 	
-	public static void log(String message, String logType, boolean appendDate){
+	public static void log(String message, final String logType,
+			final boolean appendDate){
 		
 		if(message == null || message.length() == 0){
-			message = "Empty message given, using fail-safe error reporting.";
-			logType = LogType.ERROR.toString();
-			appendDate = true;
+			log("Empty message given, using fail-safe error reporting.",
+					LogType.ERROR, true);
 		}
-		
-		if(outputs.isEmpty() && !hasIssuedWarning){
-			hasIssuedWarning = true;
+		else{
 			
-			System.err
-					.println("[LOGGER WARNING] The Logger hasn't had any outputs attached and a logging call has been made - using the System's output by default. This warning will only be shown once.\n");
-		}
-		
-		StringBuilder builder = new StringBuilder();
-		
-		Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
-				message);
-		
-		if(matcher.find()){
+			StringBuilder builder = new StringBuilder();
 			
-			int whitespaceStartIndex = matcher.start();
-			int whitespaceEndIndex = matcher.end();
+			Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
+					message);
 			
-			String beforehandWhitespace = message.substring(
-					whitespaceStartIndex, whitespaceEndIndex);
-			
-			if(!message.startsWith("^")){
-				message = message.substring(whitespaceEndIndex);
+			if(matcher.find()){
 				
-				builder.append(beforehandWhitespace);
-			}
-			else{
-				message = message.substring(1);
+				int whitespaceStartIndex = matcher.start();
+				int whitespaceEndIndex = matcher.end();
 				
-				int secondCaretPos = message.indexOf("^");
+				String beforehandWhitespace = message.substring(
+						whitespaceStartIndex, whitespaceEndIndex);
 				
-				// No second caret
-				if(secondCaretPos != -1){
+				if(!message.startsWith("^")){
+					message = message.substring(whitespaceEndIndex);
 					
-					message = message.substring(secondCaretPos + 1);
+					builder.append(beforehandWhitespace);
+				}
+				else{
+					message = message.substring(1);
 					
-					builder.append(beforehandWhitespace.substring(1,
-							secondCaretPos + 1));
+					int secondCaretPos = message.indexOf("^");
+					
+					// No second caret
+					if(secondCaretPos != -1){
+						
+						message = message.substring(secondCaretPos + 1);
+						
+						builder.append(beforehandWhitespace, 1,
+								secondCaretPos + 1);
+						
+					}
 					
 				}
 				
 			}
 			
-		}
-		
-		boolean hasAddedPrefix = false;
-		
-		if(appendDate){
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
+			boolean hasAddedPrefix = false;
 			
-			builder.append("[").append(dateFormat.format(date)).append("]");
-			
-			hasAddedPrefix = true;
-		}
-		
-		if(logType != null){
-			builder.append("[").append(logType).append("]");
-			
-			hasAddedPrefix = true;
-		}
-		
-		if(hasAddedPrefix){
-			
-			if(separator != null){
-				builder.append(" ").append(separator);
+			if(appendDate){
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy/MM/dd HH:mm:ss");
+				Date date = new Date();
+				
+				builder.append("[").append(dateFormat.format(date)).append("]");
+				
+				hasAddedPrefix = true;
 			}
 			
-			builder.append(" ");
-			
-		}
-		
-		builder.append(message);
-		
-		String logText = builder.toString();
-		
-		if(outputs.size() == 0){
-			System.out.println(logText);
-		}
-		else{
-			for(Loggable output : outputs){
-				output.log(logText, logType, appendDate);
+			if(logType != null){
+				builder.append("[").append(logType).append("]");
+				
+				hasAddedPrefix = true;
 			}
+			
+			if(hasAddedPrefix){
+				
+				if(separator != null){
+					builder.append(" ").append(separator);
+				}
+				
+				builder.append(" ");
+				
+			}
+			
+			builder.append(message);
+			
+			String logText = builder.toString();
+			
+			hasIssuedWarning = handleMessageAndWarning(logText, outputs,
+					hasIssuedWarning,
+					(output) -> output.log(logText, logType, appendDate));
+			
 		}
 		
 	}

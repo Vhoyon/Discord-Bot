@@ -1,22 +1,24 @@
 package vendor.abstracts;
 
+import vendor.interfaces.Outputtable;
+
 import java.util.ArrayList;
 import java.util.function.Consumer;
-
-import vendor.interfaces.Outputtable;
 
 public abstract class ModuleOutputtable extends Module {
 	
 	protected static <E extends Outputtable> boolean handleMessageAndWarning(String message, ArrayList<E> outputs, boolean hasIssuedWarning, Consumer<E> onOutputs){
 		
-		if((outputs == null || outputs.isEmpty()) && !hasIssuedWarning){
+		boolean isOutputLess = outputs == null || outputs.isEmpty();
+		
+		if(isOutputLess && !hasIssuedWarning){
 			hasIssuedWarning = true;
 			
 			System.err
-					.println("[OUTPUT WARNING] The Logger hasn't had any outputs attached and a logging call has been made - using the System's output by default. This warning will only be shown once.\n");
+					.println("[OUTPUT WARNING] There is no outputs attached and a call to send data has been sent - using the System's output by default. This warning will only be shown once.\n");
 		}
 		
-		if((outputs == null || outputs.isEmpty())){
+		if(isOutputLess){
 			System.out.println(message);
 		}
 		else{
