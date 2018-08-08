@@ -82,6 +82,8 @@ public class Environment extends Module {
 				
 			}
 			
+			reader.close();
+			
 			handleIssues();
 			
 		}
@@ -260,11 +262,6 @@ public class Environment extends Module {
 		
 		InputStreamReader streamReader = new InputStreamReader(inputStream,
 				StandardCharsets.UTF_8);
-		
-		try{
-			inputStream.close();
-		}
-		catch(IOException e){}
 		
 		BufferedReader reader = new BufferedReader(streamReader);
 		

@@ -34,7 +34,7 @@ public class Framework {
 	
 	private static String[] modules =
 	{
-		"Environment", "Logger", "Metrics"
+		"Environment", "Logger", "Metrics", "Audit"
 	};
 	
 	public static void build() throws Exception{

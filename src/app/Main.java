@@ -2,12 +2,14 @@ package app;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
-import vendor.utilities.FrameworkTemplate;
 import vendor.Framework;
 import vendor.interfaces.Console;
+import vendor.modules.Audit;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
+import vendor.objects.AuditableFile;
 import vendor.objects.Request;
+import vendor.utilities.FrameworkTemplate;
 
 /**
  * 
@@ -27,6 +29,9 @@ public class Main {
 			}
 			
 			Framework.build(programRequest.hasParameter("d"));
+			
+			Audit.setOutputs(new AuditableFile("audit.txt", Framework
+					.runnableSystemPath()));
 			
 			FrameworkTemplate.botToken = Environment.getVar("BOT_TOKEN");
 			
