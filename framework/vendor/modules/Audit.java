@@ -23,7 +23,15 @@ public class Audit extends ModuleOutputtable {
 	public void build() throws Exception{
 		outputs = new ArrayList<>();
 		hasIssuedWarning = false;
-		separator = "-";
+		separator = null;
+	}
+	
+	protected static ArrayList<Auditable> getOutputs(){
+		return outputs;
+	}
+	
+	public static boolean hasOutputs(){
+		return getOutputs() != null && !getOutputs().isEmpty();
 	}
 	
 	/**
@@ -125,7 +133,12 @@ public class Audit extends ModuleOutputtable {
 		audit(message, true);
 	}
 	
-	public static void audit(String message, final boolean appendDate){
+	public static void audit(String message, boolean appendDate){
+		audit(message, appendDate, true);
+	}
+	
+	public static void audit(String message, final boolean appendDate,
+			final boolean shouldPrependAudit){
 		
 		if(message != null && message.length() != 0){
 			
@@ -157,8 +170,8 @@ public class Audit extends ModuleOutputtable {
 						
 						message = message.substring(secondCaretPos + 1);
 						
-						builder.append(beforehandWhitespace.substring(1,
-								secondCaretPos + 1));
+						builder.append(beforehandWhitespace, 1,
+								secondCaretPos + 1);
 						
 					}
 					
@@ -188,13 +201,13 @@ public class Audit extends ModuleOutputtable {
 				
 			}
 			
-			builder.append(message);
+			builder.append("\"").append(message).append("\"");
 			
 			String auditText = builder.toString();
 			
 			hasIssuedWarning = handleMessageAndWarning(auditText, outputs,
-					hasIssuedWarning,
-					(output) -> output.audit(auditText, appendDate));
+					hasIssuedWarning, (output) -> output.audit(auditText,
+							appendDate, shouldPrependAudit));
 			
 		}
 		

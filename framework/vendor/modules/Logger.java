@@ -35,6 +35,14 @@ public class Logger extends ModuleOutputtable {
 		hasIssuedWarning = false;
 		separator = "-";
 	}
+
+	protected static ArrayList<Loggable> getOutputs(){
+		return outputs;
+	}
+
+	public static boolean hasOutputs(){
+		return getOutputs() != null && !getOutputs().isEmpty();
+	}
 	
 	/**
 	 * Sets the separator for logs that has a prefix before the message.
