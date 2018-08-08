@@ -100,9 +100,10 @@ public class Environment extends Module {
 	public static <EnvVar> EnvVar getVar(String key, Object defaultValue){
 		if(envVars == null){
 			
-			Logger.log("A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
-					Logger.LogType.WARNING);
-					
+			if(Framework.isDebugging())
+				Logger.log("A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
+						Logger.LogType.WARNING);
+			
 			return (EnvVar)defaultValue;
 			
 		}
@@ -259,6 +260,11 @@ public class Environment extends Module {
 		
 		InputStreamReader streamReader = new InputStreamReader(inputStream,
 				StandardCharsets.UTF_8);
+		
+		try{
+			inputStream.close();
+		}
+		catch(IOException e){}
 		
 		BufferedReader reader = new BufferedReader(streamReader);
 		
