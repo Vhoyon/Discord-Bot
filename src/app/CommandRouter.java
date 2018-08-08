@@ -13,6 +13,7 @@ import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
 import vendor.interfaces.Emojis;
 import vendor.interfaces.Utils;
+import vendor.modules.Audit;
 import vendor.modules.Logger;
 import vendor.objects.*;
 import vendor.utilities.CommandsThreadManager;
@@ -46,6 +47,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			setCommand(validateMessage());
 			
 			if(request.isCommand()){
+				
+				Audit.audit(request.getInitialMessage());
 				
 				if(getCommand() == null){
 					

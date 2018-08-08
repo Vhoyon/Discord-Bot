@@ -122,6 +122,8 @@ public class Request implements Utils {
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
 	public final static char DEFAULT_PARAMETER_PREFIX = '-';
 	
+	private String initialMessage;
+	
 	private String command;
 	private String content;
 	
@@ -157,6 +159,8 @@ public class Request implements Utils {
 	
 	public Request(String receivedMessage, String commandPrefix,
 			char parametersPrefix){
+		
+		this.initialMessage = receivedMessage;
 		
 		this.commandPrefix = commandPrefix;
 		
@@ -335,6 +339,10 @@ public class Request implements Utils {
 			
 		}
 		
+	}
+	
+	public String getInitialMessage(){
+		return this.initialMessage;
 	}
 	
 	public String getCommand(){
