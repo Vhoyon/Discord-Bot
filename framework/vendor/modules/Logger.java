@@ -159,8 +159,7 @@ public class Logger extends ModuleOutputtable {
 			final boolean appendDate){
 		
 		if(message == null || message.length() == 0){
-			log("Empty message given, using fail-safe error reporting.",
-					LogType.ERROR, true);
+			log("[tried to log empty message]", LogType.ERROR, true);
 		}
 		else{
 			
