@@ -21,7 +21,6 @@ import vendor.utilities.formatting.DiscordFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -503,11 +502,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 *         Ressources followed by the <i>parameter</i> parameter.
 	 */
 	public String buildParameter(String parameter){
-		return String.join(
-				"",
-				Collections.nCopies(parameter.length() > 1 ? 2 : 1,
-						String.valueOf(getRequest().getParametersPrefix())))
-				+ parameter;
+		char p = getRequest().getParametersPrefix();
+		return (parameter.length() > 1 ? p + "" + p : p) + parameter;
 	}
 	
 	/**
