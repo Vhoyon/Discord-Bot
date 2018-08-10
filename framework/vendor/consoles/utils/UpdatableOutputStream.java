@@ -34,16 +34,17 @@ public abstract class UpdatableOutputStream extends PrintStream {
 		this.updateSystemOutput(this);
 	}
 	
-	
 	public void setIsWaitingForInput(boolean isWaitingForInput){
 		this.isWaitingForInput = isWaitingForInput;
 	}
+	
 	public void setIsPrinting(boolean isPrinting){
 		this.isPrinting = isPrinting;
 		
 		if(isPrinting == false && this.loggingThread != null)
 			this.loggingThread = null;
 	}
+	
 	public void setDelayedUpdate(int delayedUpdate){
 		this.delayedUpdate = delayedUpdate;
 	}
@@ -51,9 +52,11 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	public boolean isWaitingForInput(){
 		return this.isWaitingForInput;
 	}
+	
 	public boolean isPrinting(){
 		return this.isPrinting;
 	}
+	
 	public int getDelayedUpdate(){
 		return this.delayedUpdate;
 	}
@@ -61,6 +64,7 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	public String getLatestInputMessage(){
 		return this.latestInputMessage;
 	}
+	
 	public void setLatestInputMessage(String message){
 		this.latestInputMessage = message;
 	}
@@ -71,13 +75,13 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	
 	protected void updateSystemOutput(PrintStream printStream){
 		switch(this.outputType){
-			default:
-			case OUT:
-				System.setOut(printStream);
-				break;
-			case ERR:
-				System.setErr(printStream);
-				break;
+		default:
+		case OUT:
+			System.setOut(printStream);
+			break;
+		case ERR:
+			System.setErr(printStream);
+			break;
 		}
 	}
 	
@@ -102,22 +106,23 @@ public abstract class UpdatableOutputStream extends PrintStream {
 			if(loggingThread != null)
 				loggingThread.interrupt();
 			
-			loggingThread = new Thread(() -> {
-				
-				try{
-					Thread.sleep(getDelayedUpdate());
-					
-					if(isWaitingForInput()){
+			loggingThread = new Thread(
+					() -> {
 						
-						super.print(formatLatestInputMessage(getLatestInputMessage()));
+						try{
+							Thread.sleep(getDelayedUpdate());
+							
+							if(isWaitingForInput()){
+								
+								super.print(formatLatestInputMessage(getLatestInputMessage()));
+								
+								setIsPrinting(false);
+								
+							}
+						}
+						catch(InterruptedException e){}
 						
-						setIsPrinting(false);
-						
-					}
-				}
-				catch(InterruptedException e){}
-				
-			});
+					});
 			
 			loggingThread.start();
 			
@@ -173,7 +178,8 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	}
 	
 	@Override
-	public PrintStream format(final Locale l, final String format, final Object... args){
+	public PrintStream format(final Locale l, final String format,
+			final Object... args){
 		AtomicReference<PrintStream> returnVal = new AtomicReference<>();
 		
 		handlePrint(() -> returnVal.set(super.format(l, format, args)));

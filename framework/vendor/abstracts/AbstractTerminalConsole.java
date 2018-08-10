@@ -29,14 +29,16 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		this.setInputPrefix(">");
 		
-		this.outputStream = new UpdatableOutputStream(System.out, UpdatableOutputStream.Type.OUT){
+		this.outputStream = new UpdatableOutputStream(System.out,
+				UpdatableOutputStream.Type.OUT){
 			@Override
-			public String formatLatestInputMessage(String latestMessage) {
-				return AbstractTerminalConsole.this.formatInputMessage(latestMessage);
+			public String formatLatestInputMessage(String latestMessage){
+				return AbstractTerminalConsole.this
+						.formatInputMessage(latestMessage);
 			}
-		
+			
 			@Override
-			public String getUpdatingString() {
+			public String getUpdatingString(){
 				return "---";
 			}
 		};
@@ -209,7 +211,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		do{
 			
-			String input = getInput(question + " " + choiceBuilder.toString()).trim();
+			String input = getInput(question + " " + choiceBuilder.toString())
+					.trim();
 			
 			System.out.println();
 			
