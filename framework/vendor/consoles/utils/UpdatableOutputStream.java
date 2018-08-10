@@ -41,7 +41,7 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	public void setIsPrinting(boolean isPrinting){
 		this.isPrinting = isPrinting;
 		
-		if(this.loggingThread != null)
+		if(isPrinting == false && this.loggingThread != null)
 			this.loggingThread = null;
 	}
 	public void setDelayedUpdate(int delayedUpdate){
@@ -83,7 +83,7 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	
 	public abstract String getUpdatingString();
 	
-	public abstract void onSetupInputAgain(String latestMessage);
+	public abstract String formatLatestInputMessage(String latestMessage);
 	
 	private void handlePrint(Runnable action){
 		
@@ -109,7 +109,7 @@ public abstract class UpdatableOutputStream extends PrintStream {
 					
 					if(isWaitingForInput()){
 						
-						onSetupInputAgain(getLatestInputMessage());
+						super.print(formatLatestInputMessage(getLatestInputMessage()));
 						
 						setIsPrinting(false);
 						
