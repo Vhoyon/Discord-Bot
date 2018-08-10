@@ -32,7 +32,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		this.outputStream = new UpdatableOutputStream(System.out, UpdatableOutputStream.Type.OUT){
 			@Override
 			public void onSetupInputAgain(String latestMessage) {
-				AbstractTerminalConsole.this.printGetInputMessage(getLatestInputMessage());
+				AbstractTerminalConsole.this.printGetInputMessage(latestMessage);
 			}
 		
 			@Override
