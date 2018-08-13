@@ -602,12 +602,12 @@ public class Request implements Utils {
 		
 	}
 	
-	protected void setParameterContentLess(String paramName){
+	public void setParameterContentLess(String paramName){
 		Parameter paramFound = getParameter(paramName);
 		
 		if(paramFound == null){
 			throw new NullPointerException("Parameter \"" + paramName
-					+ "\"is not present or linked in this request.");
+					+ "\" is not present or linked in this request.");
 		}
 		else{
 			
