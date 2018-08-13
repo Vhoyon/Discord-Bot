@@ -22,16 +22,34 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	
 	private int delayedUpdate;
 	
+	public UpdatableOutputStream(PrintStream sysOutput){
+		this(sysOutput, null);
+	}
+	
 	public UpdatableOutputStream(PrintStream sysOutput, Type outputType){
 		super(sysOutput);
 		this.originalPrintStream = sysOutput;
-		this.outputType = outputType;
 		
 		this.setIsWaitingForInput(false);
 		this.setIsPrinting(false);
 		this.setDelayedUpdate(250);
 		
+		this.applyTo(outputType);
+	}
+	
+	public UpdatableOutputStream applyTo(Type outputType){
+		// Don't apply if already applied
+		if(this.outputType == outputType)
+			return this;
+		
+		if(this.outputType != null)
+			this.resetStream();
+		
+		this.outputType = outputType;
+		
 		this.updateSystemOutput(this);
+		
+		return this;
 	}
 	
 	public void setIsWaitingForInput(boolean isWaitingForInput){
@@ -69,8 +87,11 @@ public abstract class UpdatableOutputStream extends PrintStream {
 		this.latestInputMessage = message;
 	}
 	
-	public void resetStream(){
+	public UpdatableOutputStream resetStream(){
 		this.updateSystemOutput(this.originalPrintStream);
+		this.outputType = null;
+		
+		return this;
 	}
 	
 	protected void updateSystemOutput(PrintStream printStream){
