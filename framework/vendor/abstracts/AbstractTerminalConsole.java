@@ -29,8 +29,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		this.setInputPrefix(">");
 		
-		this.outputStream = new UpdatableOutputStream(System.out,
-				UpdatableOutputStream.Type.OUT){
+		this.outputStream = new UpdatableOutputStream(System.out){
 			@Override
 			public String formatLatestInputMessage(String latestMessage){
 				return AbstractTerminalConsole.this

@@ -23,7 +23,26 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	private int delayedUpdate;
 	
 	public UpdatableOutputStream(PrintStream sysOutput){
-		this(sysOutput, null);
+		// this(sysOutput, detectPrintStream(sysOutput));
+		super(sysOutput);
+		this.originalPrintStream = sysOutput;
+		
+		this.setIsWaitingForInput(false);
+		this.setIsPrinting(false);
+		this.setDelayedUpdate(250);
+		
+		this.outputType = detectPrintStream(sysOutput);
+		
+		this.updateSystemOutput(this);
+	}
+	
+	private static Type detectPrintStream(PrintStream sysOutput){
+		if(System.out.equals(sysOutput))
+			return Type.OUT;
+		else if(System.err.equals(sysOutput))
+			return Type.ERR;
+		
+		throw new RuntimeException("Parameter sysOutput is not a System PrintStream object : you should only use System.out and System.err!");
 	}
 	
 	public UpdatableOutputStream(PrintStream sysOutput, Type outputType){
@@ -34,22 +53,11 @@ public abstract class UpdatableOutputStream extends PrintStream {
 		this.setIsPrinting(false);
 		this.setDelayedUpdate(250);
 		
-		this.applyTo(outputType);
-	}
-	
-	public UpdatableOutputStream applyTo(Type outputType){
-		// Don't apply if already applied
-		if(this.outputType == outputType)
-			return this;
-		
-		if(this.outputType != null)
-			this.resetStream();
-		
-		this.outputType = outputType;
-		
-		this.updateSystemOutput(this);
-		
-		return this;
+		if(outputType != null){
+			this.outputType = outputType;
+			
+			this.updateSystemOutput(this);
+		}
 	}
 	
 	public void setIsWaitingForInput(boolean isWaitingForInput){
@@ -59,7 +67,7 @@ public abstract class UpdatableOutputStream extends PrintStream {
 	public void setIsPrinting(boolean isPrinting){
 		this.isPrinting = isPrinting;
 		
-		if(isPrinting == false && this.loggingThread != null)
+		if(!isPrinting && this.loggingThread != null)
 			this.loggingThread = null;
 	}
 	
