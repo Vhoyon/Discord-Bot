@@ -90,10 +90,10 @@ public class CommandHelp extends BotCommand {
 		{
 			new ParametersHelp(
 					"Send the requested help string to your private channel.",
-					"p", "private"),
+					false, "p", "private"),
 			new ParametersHelp(
 					"Shows the full descriptions of each commands inline.",
-					"f", "full")
+					false, "f", "full")
 		};
 	}
 	

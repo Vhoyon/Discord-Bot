@@ -131,7 +131,7 @@ public class CommandMusicSkip extends MusicCommands {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Skips all the songs added and disconnect the bot.", "a", "all")
+					"Skips all the songs added and disconnect the bot.", false, "a", "all")
 		};
 	}
 	

@@ -158,8 +158,8 @@ public class CommandSpam extends BotCommand {
 			new ParametersHelp(
 					"Specifies if the message should have its number appended at the end. This parameter will add "
 							+ code("#1")
-							+ " after the first message, for example.", "n",
-					"number")
+							+ " after the first message, for example.", false,
+					"n", "number")
 		};
 	}
 }

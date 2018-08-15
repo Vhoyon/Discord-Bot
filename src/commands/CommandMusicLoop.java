@@ -73,7 +73,7 @@ public class CommandMusicLoop extends MusicCommands {
 		{
 			new ParametersHelp(
 					"This makes the looping of a single song instead of the whole track playlist.",
-					"o", "one")
+					false, "o", "one")
 		};
 	}
 	

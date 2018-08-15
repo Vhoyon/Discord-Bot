@@ -119,7 +119,7 @@ public class CommandClear extends BotCommand {
 		{
 			new ParametersHelp(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
-					"s", "slow")
+					false, "s", "slow")
 		};
 	}
 	

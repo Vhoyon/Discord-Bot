@@ -165,7 +165,7 @@ public class CommandSetting extends BotCommand {
 									.getDefaultValue()) + ".", "volume"),
 			new ParametersHelp(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
-					"d")
+					false, "d")
 		};
 	}
 	
