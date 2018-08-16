@@ -62,13 +62,13 @@ public class CommandMusicPlay extends MusicCommands {
 				}
 				else{
 					
-					if(getContent() == null
+					if(!hasContent()
 							&& !MusicManager.get().hasPlayer(getGuild())){
 						new BotError(this, lang("NoContent"));
 					}
 					else{
 						
-						if(getContent() != null){
+						if(hasContent()){
 							
 							try{
 								

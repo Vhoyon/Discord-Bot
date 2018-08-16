@@ -10,7 +10,7 @@ public class CommandStop extends BotCommand {
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			
 			BotCommand commandToStop = (BotCommand)CommandsThreadManager
 					.getLatestRunningCommandExcept(this, getKey());

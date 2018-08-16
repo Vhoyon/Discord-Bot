@@ -17,7 +17,7 @@ public class CommandGameRoll extends GameInteractionCommands {
 			
 			int wantedRoll = 1;
 			
-			if(getContent() != null)
+			if(hasContent())
 				try{
 					wantedRoll = Integer.parseInt(getContent());
 				}

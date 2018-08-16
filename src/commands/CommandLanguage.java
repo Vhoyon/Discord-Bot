@@ -10,7 +10,7 @@ public class CommandLanguage extends BotCommand {
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			sendMessage(lang("NullContent", buildVCommand(LANGUAGE + " ["
 					+ lang("NullContentUsage") + "]"), buildVCommand(LANG
 					+ " [" + lang("NullContentUsage") + "]")));

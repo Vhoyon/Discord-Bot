@@ -31,7 +31,7 @@ public class CommandMusicSkip extends MusicCommands {
 				
 				MusicPlayer player = MusicManager.get().getPlayer(this);
 				
-				if(getContent() == null){
+				if(!hasContent()){
 					
 					if(this.hasMemory("MUSIC_LOOP")
 							&& (boolean)this.getMemory("MUSIC_LOOP")){

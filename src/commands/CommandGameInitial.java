@@ -11,7 +11,7 @@ public class CommandGameInitial extends GameInteractionCommands {
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage",
 					buildVCommand(getDefaultCall()
 							+ " [game 1],[game 2],[game 3],[...]")), false);
