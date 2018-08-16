@@ -2,7 +2,6 @@ package commands;
 
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
-import vendor.exceptions.BadParameterException;
 
 import errorHandling.BotError;
 

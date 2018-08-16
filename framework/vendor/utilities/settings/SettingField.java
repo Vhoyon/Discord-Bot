@@ -30,7 +30,12 @@ public abstract class SettingField<E> extends Translatable {
 		}
 		
 		try{
-			E envValue = (E)Environment.getVar(this.env);
+			E envValue = null;
+			
+			try{
+				envValue = (E)Environment.getVar(this.env);
+			}
+			catch(NullPointerException e){}
 			
 			if(envValue == null){
 				this.value = this.getDefaultValue();
