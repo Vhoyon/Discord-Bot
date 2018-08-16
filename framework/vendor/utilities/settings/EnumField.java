@@ -3,6 +3,8 @@ package vendor.utilities.settings;
 import java.util.ArrayList;
 import java.util.IllegalFormatException;
 
+import vendor.utilities.sanitizers.EnumSanitizer;
+
 public class EnumField extends TextField {
 	
 	protected class CaseArrayList extends ArrayList<String>{
@@ -37,16 +39,7 @@ public class EnumField extends TextField {
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		
-		String stringValue = super.sanitizeValue(value);
-		
-		if(!this.values.contains(stringValue)){
-			throw new IllegalArgumentException("The value " + stringValue
-					+ " is not a choice for this setting!");
-		}
-		
-		return stringValue;
-		
+		return EnumSanitizer.sanitizeValue(value, this.values);
 	}
 	
 	public ArrayList<String> getPossibleValues(){
