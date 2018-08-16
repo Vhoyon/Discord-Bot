@@ -19,19 +19,32 @@ public interface TextRegexSanitizer {
 	static String sanitizeValue(Object value, String regexToMatch,
 			boolean isInverted, boolean shouldBox)
 			throws IllegalArgumentException, PatternSyntaxException{
+		return TextRegexSanitizer.sanitizeValue(value, regexToMatch, isInverted, shouldBox, true);
+	}
+	
+	static String sanitizeValue(Object value, String regexToMatch,
+			boolean isInverted, boolean shouldBox, boolean shouldCheckPattern)
+			throws IllegalArgumentException, PatternSyntaxException{
 				
 		String stringValue = TextSanitizer.sanitizeValue(value);
 		
-		// Test if Regex provided is valid
-		Pattern.compile(regexToMatch);
-		
-		if(shouldBox && !regexToMatch.matches("^\\^.*\\$$")){
-			regexToMatch = "^" + regexToMatch + "$";
-		}
-		
-		if(regexToMatch != null && stringValue.matches(regexToMatch) == isInverted){
-			throw new IllegalArgumentException(
-					"Value does not match the required pattern!");
+		if(regexToMatch != null){
+			
+			if(shouldCheckPattern){
+				// Test if Regex provided is valid
+				Pattern.compile(regexToMatch);
+			}
+			
+			if(shouldBox && !regexToMatch.matches("^\\^.*\\$$")){
+				regexToMatch = "^" + regexToMatch + "$";
+			}
+			
+			// Test regex and invert if we need to
+			if(stringValue.matches(regexToMatch) == isInverted){
+				throw new IllegalArgumentException(
+						"Value does not match the required pattern!");
+			}
+			
 		}
 		
 		return stringValue;
