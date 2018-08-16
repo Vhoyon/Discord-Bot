@@ -188,12 +188,7 @@ public class Request implements Utils {
 			// in double quotes and put all what's found in the
 			// possibleParams ArrayList.
 			// Necessary since .split() removes the wanted Strings.
-			ArrayList<String> possibleParams = new ArrayList<>();
-			Matcher matcher = Pattern.compile(
-					"[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(content);
-			while(matcher.find()){
-				possibleParams.add(matcher.group());
-			}
+			ArrayList<String> possibleParams = splitSpacesExcludeQuotes(content);
 			
 			duplicateParams = new ArrayList<>();
 			
@@ -334,7 +329,7 @@ public class Request implements Utils {
 				
 			}
 			
-			if(getContent() != null)
+			if(hasContent())
 				setContent(getContent().trim().replaceAll("\"", ""));
 			
 		}
@@ -611,7 +606,7 @@ public class Request implements Utils {
 		}
 		else{
 			
-			if(getContent() == null)
+			if(!hasContent())
 				setContent(paramFound.getContent());
 			else
 				setContent(getContent() + " " + paramFound.getContent());
