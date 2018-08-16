@@ -2,10 +2,22 @@ package vendor.utilities.sanitizers;
 
 public interface IntegerSanitizer {
 	
-	static int sanitizeValue(Object value, int minValue, int maxValue)
+	static int sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		return IntegerSanitizer.sanitizeValue(object, Integer.MIN_VALUE,
+		return IntegerSanitizer.sanitizeValue(value, Integer.MIN_VALUE,
 				Integer.MAX_VALUE);
+	}
+	
+	static int sanitizeValueMin(Object value, int minValue)
+			throws IllegalArgumentException{
+		return IntegerSanitizer.sanitizeValue(value, minValue,
+				Integer.MAX_VALUE);
+	}
+	
+	static int sanitizeValueMax(Object value, int maxValue)
+			throws IllegalArgumentException{
+		return IntegerSanitizer.sanitizeValue(value, Integer.MIN_VALUE,
+				maxValue);
 	}
 	
 	static int sanitizeValue(Object value, int minValue, int maxValue)
@@ -27,12 +39,12 @@ public interface IntegerSanitizer {
 			throw new IllegalArgumentException("Value is not a number!");
 		}
 		
-		if(castedValue < minValue){
+		if(minValue != Integer.MIN_VALUE && castedValue < minValue){
 			throw new IllegalArgumentException("Value (" + castedValue
 					+ ") is lower than the minimum required (" + minValue
 					+ ")!");
 		}
-		else if(castedValue > maxValue){
+		else if(maxValue != Integer.MAX_VALUE && castedValue > maxValue){
 			throw new IllegalArgumentException("Value (" + castedValue
 					+ ") is higher than the maximum permitted (" + maxValue
 					+ ")!");

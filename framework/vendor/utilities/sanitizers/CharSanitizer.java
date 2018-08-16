@@ -4,7 +4,7 @@ public interface CharSanitizer {
 	
 	static char sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		String stringValue = value.toString();
+		String stringValue = TextSanitizer.sanitizeValue(value);
 		
 		if(stringValue.length() != 1){
 			throw new IllegalArgumentException(
