@@ -86,21 +86,19 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getRequest().getContent();
 	}
 	
-	public String[] getSplitContent(){
-		
-		if(getContent() != null)
-			return getContent().split(" ");
-		else
-			return null;
-		
+	public String[] getContentParsed(){
+		return this.getContentParsedMaxed(-1);
 	}
 	
-	public String[] getSplitContentMaxed(int maxSize){
+	public String[] getContentParsedMaxed(int maxSize){
 		
-		if(getContent() != null)
-			return getContent().split(" ", maxSize);
-		else
+		if(!this.hasContent())
 			return null;
+		
+		ArrayList<String> possibleContent =
+				splitSpacesExcludeQuotesMaxed(this.getContent(), maxSize);
+		
+		return possibleContent.toArray(new String[0]);
 		
 	}
 	
