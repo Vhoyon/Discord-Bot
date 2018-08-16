@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import vendor.exceptions.NoCommandException;
 import vendor.interfaces.Command;
+import vendor.interfaces.LinkableCommand;
 import vendor.interfaces.Translatable;
 import vendor.interfaces.Utils;
 import vendor.objects.*;
@@ -30,7 +31,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		try{
 			
 			Object bufferedDict = buffer.get(BUFFER_DICTIONARY,
-					eventDigger.getGuildId());
+					eventDigger.getGuildKey());
 			setDictionary((Dictionary)bufferedDict);
 			
 		}
@@ -40,7 +41,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			
 			try{
 				buffer.push(getDictionary(), BUFFER_DICTIONARY,
-						eventDigger.getGuildId());
+						eventDigger.getGuildKey());
 			}
 			catch(NullPointerException e1){}
 			
@@ -50,12 +51,11 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		this.commandsRepo = commandsRepo;
 		
-		this.request = createRequest(receivedMessage, getDictionary());
+		this.request = createRequest(receivedMessage);
 		
 	}
 	
-	protected abstract Request createRequest(String receivedMessage,
-			Dictionary dict);
+	protected abstract Request createRequest(String receivedMessage);
 	
 	public Command getCommand(){
 		return this.command;
@@ -95,6 +95,17 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		this.dict = dict;
 	}
 	
+	protected AbstractBotCommand getAbstractBotCommand(){
+		
+		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
+		
+		botCommand.setRouter(this);
+		botCommand.setDictionary(getDictionary());
+		
+		return botCommand;
+		
+	}
+	
 	/**
 	 * Method that validates the message received and return the command to
 	 * execute if it is not validated. In the case where the message received
@@ -129,15 +140,13 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			Request request = getRequest();
 			String commandPrefix = getCommandPrefix();
 			
-			if(!request.getCommandNoFormat().matches(commandPrefix + ".*")){
+			if(!request.isCommand()){
 				throw new NoCommandException();
 			}
 			else{
 				
-				if(request.getCommandNoFormat().equals(commandPrefix)){
-					
+				if(request.isOnlyCommandPrefix()){
 					return commandWhenFromServerIsOnlyPrefix();
-					
 				}
 				
 			}
@@ -161,5 +170,11 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	public abstract Command commandWhenFromServerIsOnlyPrefix();
 	
 	public abstract String getCommandPrefix();
+	
+	public abstract char getCommandParameterPrefix();
+	
+	public LinkableCommand getLinkableCommand(String commandName){
+		return this.getCommandsRepo().getContainer().initiateLink(commandName);
+	}
 	
 }

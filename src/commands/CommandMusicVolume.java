@@ -2,7 +2,6 @@ package commands;
 
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
-import vendor.exceptions.BadParameterException;
 
 import errorHandling.BotError;
 
@@ -17,16 +16,20 @@ public class CommandMusicVolume extends MusicCommands {
 			
 			int volume = Integer.valueOf(content);
 			
-			MusicManager.get().getPlayer(this).setVolume(volume);
-			
-			sendMessage(lang("ChangedSuccess", volume));
+			if(volume < 0 || volume > 100){
+				new BotError(this, lang("NumberNotBetweenRange", 0, 100));
+			}
+			else{
+				
+				MusicManager.get().getPlayer(this).setVolume(volume);
+				
+				sendMessage(lang("ChangedSuccess", volume));
+				
+			}
 			
 		}
 		catch(NumberFormatException e){
 			new BotError(this, lang("NumberNotANumber"));
-		}
-		catch(BadParameterException e){
-			new BotError(this, lang("NumberNotBetweenRange", 0, 100));
 		}
 		
 	}

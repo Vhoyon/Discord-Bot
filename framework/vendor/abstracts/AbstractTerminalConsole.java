@@ -1,9 +1,6 @@
 package vendor.abstracts;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
+import vendor.consoles.utils.UpdatableOutputStream;
 import vendor.interfaces.Console;
 import vendor.interfaces.Loggable;
 import vendor.modules.Logger;
@@ -11,27 +8,85 @@ import vendor.modules.Logger.LogType;
 import vendor.objects.CommandsRepository;
 import vendor.objects.TerminalCommandsLinker;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	protected BufferedReader reader;
 	
 	private CommandsRepository commandsRepo;
 	
+	private String inputPrefix;
+	
+	private UpdatableOutputStream outputStream;
+	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
+		
+		this.setInputPrefix(">");
+		
+		this.outputStream = new UpdatableOutputStream(System.out){
+			@Override
+			public String formatLatestInputMessage(String latestMessage){
+				return AbstractTerminalConsole.this
+						.formatInputMessage(latestMessage);
+			}
+			
+			@Override
+			public String getUpdatingString(){
+				return "---";
+			}
+		};
 	}
 	
 	public CommandsRepository getCommandsRepo(){
 		return commandsRepo;
 	}
 	
+	public void setInputPrefix(String inputPrefix){
+		this.inputPrefix = inputPrefix;
+	}
+	
+	public String getInputPrefix(){
+		return this.inputPrefix;
+	}
+	
+	protected void setIsWaitingForInput(boolean isWaitingForInput){
+		this.outputStream.setIsWaitingForInput(isWaitingForInput);
+	}
+	
+	public boolean isWaitingForInput(){
+		return this.outputStream.isWaitingForInput();
+	}
+	
+	protected void setIsLogging(boolean isLogging){
+		this.outputStream.setIsPrinting(isLogging);
+	}
+	
+	public boolean isLogging(){
+		return this.outputStream.isPrinting();
+	}
+	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
-		System.out.println(logText);
+		this.sendLog(logText);
 		
 		// logToChannel(logText, logType);
+	}
+	
+	protected void sendLog(String log){
+		this.sendLog(log, true);
+	}
+	
+	protected void sendLog(String log, boolean appendNewLine){
+		if(appendNewLine)
+			System.out.println(log);
+		else
+			System.out.print(log);
 	}
 	
 	/**
@@ -50,6 +105,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	protected boolean handleInput(String input){
+		
+		this.setIsWaitingForInput(false);
 		
 		if(input == null)
 			return false;
@@ -71,14 +128,36 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 	}
 	
+	protected void printGetInputMessage(){
+		this.printGetInputMessage(this.getInputPrefix());
+	}
+	
+	protected void printGetInputMessage(String message){
+		sendLog(formatInputMessage(message), false);
+	}
+	
+	protected String formatInputMessage(String message){
+		return "\n" + message + " ";
+	}
+	
+	public String getInput(){
+		return this.getInput(this.getInputPrefix());
+	}
+	
 	@Override
 	public String getInput(String message){
 		
-		System.out.println();
-		System.out.print(message + " ");
+		printGetInputMessage(message);
+		this.outputStream.setLatestInputMessage(message);
+		
+		this.setIsWaitingForInput(true);
 		
 		try{
-			return reader.readLine();
+			String userInput = reader.readLine();
+			
+			this.setIsWaitingForInput(false);
+			
+			return userInput;
 		}
 		catch(IOException e){
 			Logger.log(e);
@@ -90,6 +169,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	@Override
 	public int getConfirmation(String question, QuestionType questionType){
+		
+		this.setIsLogging(true);
 		
 		String[] choices = null;
 		
@@ -107,29 +188,30 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			};
 			break;
 		}
-
+		
 		String choiceSeparator = " / ";
 		
 		StringBuilder choiceBuilder = new StringBuilder();
 		
-		choiceBuilder.append(" (");
+		choiceBuilder.append("(");
 		
 		for(String possibility : choices){
 			choiceBuilder.append(possibility).append(choiceSeparator);
 		}
 		
-		choiceBuilder
-				.delete(choiceBuilder.length() - choiceSeparator.length(), choiceBuilder.length());
+		choiceBuilder.delete(choiceBuilder.length() - choiceSeparator.length(),
+				choiceBuilder.length());
 		
 		choiceBuilder.append(")");
 		
-		boolean doesCommandStopsBot = false;
+		boolean isChoiceValid = false;
 		
 		String formattedInput = null;
 		
 		do{
 			
-			String input = getInput(question + choiceBuilder.toString()).trim();
+			String input = getInput(question + " " + choiceBuilder.toString())
+					.trim();
 			
 			System.out.println();
 			
@@ -140,14 +222,14 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				
 				formattedInput = input.substring(0, 1).toLowerCase();
 				
-				for(int i = 0; i < choices.length && !doesCommandStopsBot; i++){
+				for(int i = 0; i < choices.length && !isChoiceValid; i++){
 					if(choices[i].equals(formattedInput))
-						doesCommandStopsBot = true;
+						isChoiceValid = true;
 				}
 				
 			}
 			
-		}while(!doesCommandStopsBot);
+		}while(!isChoiceValid);
 		
 		switch(formattedInput){
 		case "n":
@@ -172,6 +254,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public void onInitialized(){}
 	
 	@Override
-	public void onExit() throws Exception{}
+	public void onExit() throws Exception{
+		this.outputStream.resetStream();
+	}
 	
 }

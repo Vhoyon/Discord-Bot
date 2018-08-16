@@ -1,7 +1,7 @@
 package vendor.modules;
 
 import vendor.abstracts.ModuleOutputtable;
-import vendor.interfaces.Loggable;
+import vendor.interfaces.Auditable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,19 +11,9 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Logger extends ModuleOutputtable {
+public class Audit extends ModuleOutputtable {
 	
-	/**
-	 * The type of logging to prepend to the log message.
-	 * <p>
-	 * Take note that will be added to the message is literally the enum's
-	 * value.
-	 */
-	public static enum LogType{
-		INFO, WARNING, ERROR
-	}
-	
-	private static ArrayList<Loggable> outputs;
+	private static ArrayList<Auditable> outputs;
 	
 	private static boolean hasIssuedWarning;
 	
@@ -33,13 +23,13 @@ public class Logger extends ModuleOutputtable {
 	public void build() throws Exception{
 		outputs = new ArrayList<>();
 		hasIssuedWarning = false;
-		separator = "-";
+		separator = null;
 	}
-
-	protected static ArrayList<Loggable> getOutputs(){
+	
+	protected static ArrayList<Auditable> getOutputs(){
 		return outputs;
 	}
-
+	
 	public static boolean hasOutputs(){
 		return getOutputs() != null && !getOutputs().isEmpty();
 	}
@@ -59,26 +49,26 @@ public class Logger extends ModuleOutputtable {
 	 * Overwrite the output list with those passed as parameters.
 	 * 
 	 * @param outputs
-	 *            Objects implementing the {@link vendor.interfaces.Loggable
-	 *            Loggable} interface which are meant to receive logs from the
-	 *            Logger module.
+	 *            Objects implementing the {@link Auditable
+	 *            Auditable} interface which are meant to receive logs from the
+	 *            Audit module.
 	 */
-	public static void setOutputs(Loggable... outputs){
+	public static void setOutputs(Auditable... outputs){
 		if(outputs != null)
-			Logger.outputs = new ArrayList<>(Arrays.asList(outputs));
+			Audit.outputs = new ArrayList<>(Arrays.asList(outputs));
 	}
 	
 	/**
-	 * Adds an output to the already existing output list for the Logger module.
+	 * Adds an output to the already existing output list for the Audit module.
 	 * 
 	 * @param output
-	 *            Object implementing the {@link vendor.interfaces.Loggable
-	 *            Loggable} interface which is meant to receive logs from the
-	 *            Logger module.
+	 *            Object implementing the {@link Auditable
+	 *            Auditable} interface which is meant to receive logs from the
+	 *            Audit module.
 	 * @return <code>true</code> if the output was added successfully,
 	 *         <code>false</code> if the output is already in the outputs list.
 	 */
-	public static boolean addOutput(Loggable output){
+	public static boolean addOutput(Auditable output){
 		
 		if(outputs.contains(output)){
 			return false;
@@ -89,44 +79,44 @@ public class Logger extends ModuleOutputtable {
 	}
 	
 	/**
-	 * Adds multiple outputs to the already existing output list for the Logger
+	 * Adds multiple outputs to the already existing output list for the Audit
 	 * module.
 	 * 
 	 * @param outputs
-	 *            Objects implementing the {@link vendor.interfaces.Loggable
-	 *            Loggable} interface which are meant to receive logs from the
-	 *            Logger module.
+	 *            Objects implementing the {@link Auditable
+	 *            Auditable} interface which are meant to receive logs from the
+	 *            Audit module.
 	 */
-	public static void addOutputs(Loggable... outputs){
-		for(Loggable output : outputs){
-			Logger.addOutput(output);
+	public static void addOutputs(Auditable... outputs){
+		for(Auditable output : outputs){
+			Audit.addOutput(output);
 		}
 	}
 	
 	/**
-	 * Removes an output from the output list for the Logger module.
+	 * Removes an output from the output list for the Audit module.
 	 * 
 	 * @param output
-	 *            Object implementing the {@link vendor.interfaces.Loggable
-	 *            Loggable} interface.
+	 *            Object implementing the {@link Auditable
+	 *            Auditable} interface.
 	 * @return <code>true</code> if the output was in the list and has been
 	 *         removed, <code>false</code> if the output is not in the list.
 	 */
-	public static boolean removeOutput(Loggable output){
+	public static boolean removeOutput(Auditable output){
 		return outputs.remove(output);
 	}
 	
 	/**
-	 * Removes an output from the output list by it's index for the Logger
+	 * Removes an output from the output list by it's index for the Audit
 	 * module.
 	 * 
 	 * @param index
 	 *            The position of the output in the internal list.
-	 * @return The {@link vendor.interfaces.Loggable Loggable} object found at
+	 * @return The {@link Auditable Auditable} object found at
 	 *         this position, or <code>null</code> if the index is out of
 	 *         bounds.
 	 */
-	public static Loggable removeOutput(int index){
+	public static Auditable removeOutput(int index){
 		try{
 			return outputs.remove(index);
 		}
@@ -135,33 +125,22 @@ public class Logger extends ModuleOutputtable {
 		}
 	}
 	
-	public static void log(Exception e){
-		log(e.getMessage(), LogType.ERROR);
+	public static void audit(Exception e){
+		audit(e.getMessage());
 	}
 	
-	public static void log(String message){
-		log(message, (String)null, true);
+	public static void audit(String message){
+		audit(message, true);
 	}
 	
-	public static void log(String message, LogType logType){
-		log(message, logType, true);
+	public static void audit(String message, boolean appendDate){
+		audit(message, appendDate, true);
 	}
 	
-	public static void log(String message, boolean appendDate){
-		log(message, (String)null, appendDate);
-	}
-	
-	public static void log(String message, LogType logType, boolean appendDate){
-		log(message, logType.toString(), appendDate);
-	}
-	
-	public static void log(String message, final String logType,
-			final boolean appendDate){
+	public static void audit(String message, final boolean appendDate,
+			final boolean shouldPrependAudit){
 		
-		if(message == null || message.length() == 0){
-			log("[tried to log empty message]", LogType.ERROR, true);
-		}
-		else{
+		if(message != null && message.length() != 0){
 			
 			StringBuilder builder = new StringBuilder();
 			
@@ -212,12 +191,6 @@ public class Logger extends ModuleOutputtable {
 				hasAddedPrefix = true;
 			}
 			
-			if(logType != null){
-				builder.append("[").append(logType).append("]");
-				
-				hasAddedPrefix = true;
-			}
-			
 			if(hasAddedPrefix){
 				
 				if(separator != null){
@@ -228,13 +201,13 @@ public class Logger extends ModuleOutputtable {
 				
 			}
 			
-			builder.append(message);
+			builder.append("\"").append(message).append("\"");
 			
-			String logText = builder.toString();
+			String auditText = builder.toString();
 			
-			hasIssuedWarning = handleMessageAndWarning(logText, outputs,
-					hasIssuedWarning,
-					(output) -> output.log(logText, logType, appendDate));
+			hasIssuedWarning = handleMessageAndWarning(auditText, outputs,
+					hasIssuedWarning, (output) -> output.audit(auditText,
+							appendDate, shouldPrependAudit));
 			
 		}
 		

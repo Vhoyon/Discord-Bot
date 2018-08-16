@@ -2,13 +2,14 @@ package app;
 
 import consoles.TerminalConsole;
 import consoles.UIConsole;
-import vendor.utilities.FrameworkTemplate;
 import vendor.Framework;
 import vendor.interfaces.Console;
+import vendor.modules.Audit;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
-import vendor.objects.Dictionary;
+import vendor.objects.AuditableFile;
 import vendor.objects.Request;
+import vendor.utilities.FrameworkTemplate;
 
 /**
  * 
@@ -21,16 +22,16 @@ public class Main {
 		
 		try{
 			
-			String requestableArgs = "RUN_PROGRAM " + convertArgsToString(args);
-			
-			Request programRequest = new Request(requestableArgs,
-					new Dictionary());
+			Request programRequest = new Request(args);
 			
 			if(programRequest.hasError()){
-				System.out.println(programRequest.getError());
+				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
-			Framework.build();
+			Framework.build(programRequest.hasParameter("d"));
+			
+			Audit.setOutputs(new AuditableFile("audit.txt", Framework
+					.runnableSystemPath()));
 			
 			FrameworkTemplate.botToken = Environment.getVar("BOT_TOKEN");
 			
@@ -99,24 +100,6 @@ public class Main {
 					+ clientId + "&scope=bot&permissions=0", false);
 		}
 		
-	}
-	
-	private static String convertArgsToString(String[] args){
-		StringBuilder builder = new StringBuilder();
-		
-		for(String arg : args){
-			
-			if(arg.startsWith("-")){
-				builder.append(arg);
-			}
-			else{
-				builder.append("\"").append(arg).append("\"");
-			}
-			
-			builder.append(" ");
-		}
-		
-		return builder.toString();
 	}
 	
 }

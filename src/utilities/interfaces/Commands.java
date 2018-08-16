@@ -23,11 +23,9 @@ public interface Commands {
 	String TIMER = "timer";
 	String MUSIC_PLAY = "play";
 	String MUSIC_PAUSE = "pause";
+	String MUSIC_REPLAY = "replay";
 	String MUSIC_SKIP = "skip";
 	String MUSIC_LOOP = "loop";
-	String MUSIC_SKIP_ALL1 = "skip_all";
-	String MUSIC_SKIP_ALL2 = "skip-all";
-	String MUSIC_SKIP_ALL3 = "skipall";
 	String MUSIC_VOLUME = "volume";
 	String MUSIC_LIST = "list";
 	String MUSIC_DISCONNECT = "disconnect";

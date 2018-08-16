@@ -1,18 +1,18 @@
 package vendor.modules;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import vendor.Framework;
 import vendor.abstracts.AbstractTerminalConsole;
 import vendor.abstracts.Module;
 import vendor.exceptions.BadFileContentException;
 import vendor.interfaces.Console;
 import vendor.ui.NotificationUI;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Environment extends Module {
 	
@@ -82,6 +82,8 @@ public class Environment extends Module {
 				
 			}
 			
+			reader.close();
+			
 			handleIssues();
 			
 		}
@@ -98,6 +100,16 @@ public class Environment extends Module {
 	
 	@SuppressWarnings("unchecked")
 	public static <EnvVar> EnvVar getVar(String key, Object defaultValue){
+		if(envVars == null){
+			
+			if(Framework.isDebugging())
+				Logger.log("A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
+						Logger.LogType.WARNING);
+			
+			return (EnvVar)defaultValue;
+			
+		}
+		
 		String value = envVars.get(key.toLowerCase());
 		
 		if(value == null || value.equals("")){
@@ -129,6 +141,10 @@ public class Environment extends Module {
 		}
 		
 		return (EnvVar)(String)value;
+	}
+	
+	public static boolean hasVar(String key){
+		return envVars.containsKey(key.toLowerCase());
 	}
 	
 	@Override

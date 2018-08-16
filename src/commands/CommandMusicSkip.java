@@ -7,19 +7,24 @@ import utilities.specifics.CommandConfirmed;
 import vendor.exceptions.BadContentException;
 
 import errorHandling.BotError;
+import vendor.objects.ParametersHelp;
 
 public class CommandMusicSkip extends MusicCommands {
 	
 	@Override
 	public void action(){
 		
-		Boolean canSkipAll = canSkipAll(false);
-		
-		if(canSkipAll != null){
+		if(!isPlaying()){
+			new BotError(this, lang("NotPlaying"));
+		}
+		else{
 			
-			if(canSkipAll){
+			// Skip all songs if has appropriate parameter or content is "all"
+			if(hasParameter("a") || ("all".equals(getContent()))){
 				
-				new CommandMusicSkipAll().action();
+				MusicManager.get().emptyPlayer(this);
+				
+				sendInfoMessage(lang("SkippedAllMusic"));
 				
 			}
 			else{
@@ -28,24 +33,20 @@ public class CommandMusicSkip extends MusicCommands {
 				
 				if(getContent() == null){
 					
-					if(!isPlaying()){
-						new BotError(this, lang("NotPlaying"));
+					if(this.hasMemory("MUSIC_LOOP")
+							&& (boolean)this.getMemory("MUSIC_LOOP")){
+						forget("MUSIC_LOOP");
+					}
+					if(player.skipTrack()){
+						sendInfoMessage(lang(
+								"SkippedNowPlaying",
+								code(player.getAudioPlayer()
+										.getPlayingTrack().getInfo().title)));
 					}
 					else{
-						if (this.hasMemory("MUSIC_LOOP") && (boolean) this.getMemory("MUSIC_LOOP")) {
-							forget("MUSIC_LOOP");
-						}
-						if(player.skipTrack()){
-							sendInfoMessage(lang("SkippedNowPlaying", player
-									.getAudioPlayer().getPlayingTrack()
-									.getInfo().title));
-						}
-						else{
-							sendInfoMessage(lang("NoMoreMusic"));
-							
-							MusicManager.get().emptyPlayer(this);
-						}
+						MusicManager.get().emptyPlayer(this);
 						
+						sendInfoMessage(lang("NoMoreMusic"));
 					}
 					
 				}
@@ -66,10 +67,10 @@ public class CommandMusicSkip extends MusicCommands {
 									player.skipTrack();
 								}
 								
-								sendInfoMessage(lang(
-										"SkippedNowPlaying",
+								sendInfoMessage(lang("SkippedNowPlaying",
 										player.getAudioPlayer()
-												.getPlayingTrack().getInfo().title));
+												.getPlayingTrack()
+												.getInfo().title));
 								
 							}
 							else{
@@ -77,15 +78,19 @@ public class CommandMusicSkip extends MusicCommands {
 								new CommandConfirmed(this){
 									@Override
 									public String getConfMessage(){
-										return lang("OverflowConfirm",
-												skipAmount,
-												player.getNumberOfTracks());
+										return lang(
+												"OverflowConfirm",
+												code(skipAmount),
+												code(player
+														.getNumberOfTracks()));
 									}
 									
 									@Override
 									public void confirmed(){
 										
-										new CommandMusicSkipAll().action();
+										MusicManager.get().emptyPlayer(CommandMusicSkip.this);
+										
+										sendInfoMessage(lang("SkippedAllMusic"));
 										
 									}
 								};
@@ -99,8 +104,8 @@ public class CommandMusicSkip extends MusicCommands {
 						new BotError(this, lang("NumberNotANumber"));
 					}
 					catch(BadContentException e){
-						new BotError(this,
-								lang("NumberNotBetweenRange", 0, 100));
+						new BotError(this, lang("NumberNotBetweenRange", 0,
+								100));
 					}
 					
 				}
@@ -115,9 +120,19 @@ public class CommandMusicSkip extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_SKIP;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Skip the song that is currently playing";
 	}
+	
+	@Override
+	public ParametersHelp[] getParametersDescriptions(){
+		return new ParametersHelp[]
+		{
+			new ParametersHelp(
+					"Skips all the songs added and disconnect the bot.", false, "a", "all")
+		};
+	}
+	
 }

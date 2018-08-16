@@ -5,6 +5,7 @@ import vendor.modules.Environment;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 
+import java.util.IllegalFormatException;
 import java.util.function.Consumer;
 
 public abstract class SettingField<E> extends Translatable {
@@ -29,7 +30,12 @@ public abstract class SettingField<E> extends Translatable {
 		}
 		
 		try{
-			E envValue = (E)Environment.getVar(this.env);
+			E envValue = null;
+			
+			try{
+				envValue = (E)Environment.getVar(this.env);
+			}
+			catch(NullPointerException e){}
 			
 			if(envValue == null){
 				this.value = this.getDefaultValue();
@@ -38,7 +44,7 @@ public abstract class SettingField<E> extends Translatable {
 				this.value = this.formatEnvironment(envValue);
 			}
 		}
-		catch(ClassCastException e){
+		catch(ClassCastException | IllegalFormatException e){
 			
 			Logger.log(
 					"Environment variable is not formatted correctly for its data type! Using default value.",
@@ -57,6 +63,14 @@ public abstract class SettingField<E> extends Translatable {
 	
 	public final void setValue(E value) throws IllegalArgumentException{
 		this.setValue(value, null);
+	}
+	
+	public final void setToDefaultValue(){
+		this.setToDefaultValue(null);
+	}
+	
+	public final void setToDefaultValue(Consumer<E> onChange){
+		this.setValue(getDefaultValue(), onChange);
 	}
 	
 	public final void setValue(E value, Consumer<E> onChange)
@@ -80,7 +94,7 @@ public abstract class SettingField<E> extends Translatable {
 	protected abstract E sanitizeValue(Object value)
 			throws IllegalArgumentException;
 	
-	protected E formatEnvironment(E envValue){
+	protected E formatEnvironment(E envValue) throws IllegalFormatException{
 		return envValue;
 	}
 	

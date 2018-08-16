@@ -1,49 +1,99 @@
 package vendor.objects;
 
+import vendor.interfaces.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import vendor.abstracts.Translatable;
-import vendor.exceptions.NoContentException;
-import vendor.interfaces.Utils;
-
-public class Request extends Translatable implements Utils {
+public class Request implements Utils {
 	
 	public class Parameter {
 		
-		private String parameter;
+		private String parameterName;
 		private String parameterContent;
 		
-		protected Parameter(){}
+		private int position;
+		private boolean acceptsContent;
+		
+		protected Parameter(){
+			this.acceptsContent = true;
+		}
 		
 		public Parameter(String parameter){
-			if(parameter.matches(getParametersPrefix() + ".+"))
-				this.parameter = parameter.substring(getParametersPrefix().length());
-			else
-				this.parameter = parameter;
+			this();
+			
+			if(parameter.matches(getParametersPrefixProtected() + "{1,2}.+")){
+				
+				int paramDeclaratorLength = parameter
+						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
+						: 1;
+				
+				this.parameterName = parameter.substring(paramDeclaratorLength);
+				
+			}
+			else{
+				this.parameterName = parameter;
+			}
+		}
+		
+		protected Parameter(String paramName, int position){
+			this(paramName);
+			
+			this.setPosition(position);
 		}
 		
 		public Parameter(String paramName, String paramContent){
 			this(paramName);
 			
-			this.setParameterContent(paramContent);
+			this.setContent(paramContent);
 		}
 		
-		public String getParameter(){
-			return parameter;
+		protected Parameter(String paramName, String paramContent, int position){
+			this(paramName, paramContent);
+			
+			this.setPosition(position);
 		}
 		
-		public String getParameterContent(){
+		public String getName(){
+			return parameterName;
+		}
+		
+		public String getContent(){
 			if(parameterContent == null)
 				return null;
 			else
 				return parameterContent;
 		}
 		
-		protected void setParameterContent(String parameterContent){
-			this.parameterContent = parameterContent.replaceAll("\"", "");
+		protected void setContent(String parameterContent){
+			if(parameterContent == null)
+				this.parameterContent = null;
+			else
+				this.parameterContent = parameterContent.replaceAll("\"", "");
+		}
+		
+		public int getPosition(){
+			return this.position;
+		}
+		
+		protected void setPosition(int position){
+			this.position = position;
+		}
+		
+		public boolean doesAcceptContent(){
+			return this.acceptsContent;
+		}
+		
+		protected void setAcceptingContent(boolean acceptsContent){
+			this.acceptsContent = acceptsContent;
+			
+			if(!acceptsContent && getContent() != null){
+				setContent(null);
+			}
 		}
 		
 		@Override
@@ -55,8 +105,7 @@ public class Request extends Translatable implements Utils {
 				
 				Parameter parameterToCompare = (Parameter)obj;
 				
-				isEqual = getParameter().equals(
-						parameterToCompare.getParameter());
+				isEqual = getName().equals(parameterToCompare.getName());
 				
 			}
 			
@@ -65,64 +114,73 @@ public class Request extends Translatable implements Utils {
 		
 		@Override
 		public String toString(){
-			return this.getParameterContent();
+			return this.getContent();
 		}
 		
 	}
 	
 	public final static String DEFAULT_COMMAND_PREFIX = "!";
-	public final static String DEFAULT_PARAMETER_PREFIX = "-";
+	public final static char DEFAULT_PARAMETER_PREFIX = '-';
 	
-	private final static String DEFAULT_LANG_DIRECTORY = "/vendor.lang.strings";
+	private String initialMessage;
 	
 	private String command;
 	private String content;
 	
-	private String langDirectory;
-	
 	private String commandPrefix;
 	
 	private HashMap<String, Parameter> parameters;
-	private String parametersPrefix;
+	private HashMap<Parameter, ArrayList<String>> parametersLinks;
+	private char parametersPrefix;
 	
-	private String error;
+	private ArrayList<Parameter> duplicateParams;
 	
-	public Request(String receivedMessage, Dictionary dictionary){
-		this(receivedMessage, dictionary, DEFAULT_PARAMETER_PREFIX);
+	public Request(String[] args){
+		this(args, DEFAULT_PARAMETER_PREFIX);
 	}
 	
-	public Request(String receivedMessage, Dictionary dictionary,
-			String parametersPrefix){
-		this(receivedMessage, dictionary, DEFAULT_COMMAND_PREFIX,
+	public Request(String receivedMessage){
+		this(receivedMessage, DEFAULT_PARAMETER_PREFIX);
+	}
+	
+	public Request(String[] args, char parametersPrefix){
+		this(args, DEFAULT_COMMAND_PREFIX, parametersPrefix);
+	}
+	
+	public Request(String receivedMessage, char parametersPrefix){
+		this(receivedMessage, DEFAULT_COMMAND_PREFIX, parametersPrefix);
+	}
+	
+	public Request(String[] args, String commandPrefix,
+			char parametersPrefix){
+		this(buildMessageFromArgs(args, parametersPrefix), commandPrefix,
 				parametersPrefix);
 	}
 	
-	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, String parametersPrefix){
-		this(receivedMessage, dictionary, commandPrefix, parametersPrefix,
-				DEFAULT_LANG_DIRECTORY);
-	}
-	
-	public Request(String receivedMessage, Dictionary dictionary,
-			String commandPrefix, String parametersPrefix, String langDirectory){
+	public Request(String receivedMessage, String commandPrefix,
+			char parametersPrefix){
 		
-		this.setDictionary(dictionary);
-		this.langDirectory = langDirectory;
+		this.initialMessage = receivedMessage;
 		
 		this.commandPrefix = commandPrefix;
 		
 		this.parametersPrefix = parametersPrefix;
 		
-		String[] messageSplit = splitCommandAndContent(receivedMessage);
+		if(!receivedMessage.startsWith(commandPrefix)){
+			setContent(receivedMessage);
+		}
+		else{
+			
+			String[] messageSplit = splitCommandAndContent(receivedMessage);
+			
+			setCommand(messageSplit[0]);
+			setContent(messageSplit[1]);
+			
+		}
 		
-		setCommand(messageSplit[0]);
-		setContent(messageSplit[1]);
-		
-		if(getContent() != null){
+		if(hasContent()){
 			
 			// Test if content contains parameters.
-			// The params must be right after command for it to trigger.
-			//				if(content.matches("(" + Parameter.PREFIX + ".+)+")){
 			
 			parameters = new HashMap<>();
 			
@@ -136,7 +194,8 @@ public class Request extends Translatable implements Utils {
 			while(matcher.find()){
 				possibleParams.add(matcher.group());
 			}
-			ArrayList<Parameter> duplicateParams = new ArrayList<>();
+			
+			duplicateParams = new ArrayList<>();
 			
 			boolean canRoll = true;
 			
@@ -144,59 +203,133 @@ public class Request extends Translatable implements Utils {
 				
 				String possibleParam = possibleParams.get(i);
 				
-				// If string is structured as a parameter, create it.
-				if(possibleParam.matches(getParametersPrefix() + "[^\\s]+")){
-					
-					Parameter newParam = new Parameter(possibleParam);
-					
-					int paramStartPos;
-					int paramEndPos;
+				int paramStartPos = -1;
+				int paramEndPos = -1;
+				
+				if(possibleParam.equals(getParametersPrefix() + ""
+						+ getParametersPrefix())){
+					// If string is double parameter prefix, remove it and stop taking params
 					
 					paramStartPos = getContent().indexOf(possibleParam);
 					paramEndPos = paramStartPos + possibleParam.length();
 					
-					if(parameters.containsValue(newParam)){
+					canRoll = false;
+					
+				}
+				else if(possibleParam.matches(getParametersPrefixProtected()
+						+ "{1,2}[^\\s]+")){
+					// If string is structured as a parameter, create it.
+					
+					paramStartPos = getContent().indexOf(possibleParam);
+					paramEndPos = paramStartPos + possibleParam.length();
+					
+					if(possibleParam.matches(getParametersPrefixProtected()
+							+ "{2}[^\\s]+")){
+						// Doubled param prefix means that all letters count as one param
 						
-						if(!duplicateParams.contains(newParam))
+						Parameter newParam = new Parameter(possibleParam, i);
+						
+						if(parameters.containsValue(newParam)){
+							
 							duplicateParams.add(newParam);
+							
+						}
+						else{
+							
+							try{
+								
+								String possibleParamContent = possibleParams
+										.get(i + 1);
+								
+								// If the following String isn't another param, set
+								// said String as the content for the current param.
+								if(!possibleParamContent
+										.matches(getParametersPrefixProtected()
+												+ "{1,2}[^\\s]+")){
+									
+									newParam.setContent(possibleParamContent);
+									
+									i++;
+									
+									paramEndPos = getContent().indexOf(
+											possibleParamContent)
+											+ possibleParamContent.length();
+									
+								}
+								
+							}
+							catch(IndexOutOfBoundsException e){
+								canRoll = false;
+							}
+							
+							parameters.put(newParam.getName(), newParam);
+							
+						}
 						
 					}
 					else{
+						// Single param prefix means that all letters counts as a different param
 						
-						try{
+						String[] singleParams = possibleParam.substring(1,
+								possibleParam.length()).split("");
+						
+						for(int j = 0; j < singleParams.length && canRoll; j++){
 							
-							String possibleParamContent = possibleParams
-									.get(i + 1);
+							Parameter newParam = new Parameter(singleParams[j],
+									i + j);
 							
-							// If the following String isn't another param, set
-							// said String as the content for the current param.
-							if(!possibleParamContent
-									.matches(getParametersPrefix() + "[^\\s]+")){
+							if(parameters.containsValue(newParam)){
 								
-								newParam.setParameterContent(possibleParamContent);
+								duplicateParams.add(newParam);
 								
-								i++;
+							}
+							else{
 								
-								paramEndPos = getContent().indexOf(
-										possibleParamContent)
-										+ possibleParamContent.length();
+								if(j == singleParams.length - 1){
+									
+									try{
+										String possibleParamContent = possibleParams
+												.get(i + 1);
+										
+										// If the following String isn't another param, set
+										// said String as the content for the current param.
+										if(!possibleParamContent
+												.matches(getParametersPrefixProtected()
+														+ "{1,2}[^\\s]+")){
+											
+											newParam.setContent(possibleParamContent);
+											
+											i++;
+											
+											paramEndPos = getContent().indexOf(
+													possibleParamContent)
+													+ possibleParamContent
+															.length();
+											
+										}
+										
+									}
+									catch(IndexOutOfBoundsException e){
+										canRoll = false;
+									}
+									
+								}
+								
+								parameters.put(newParam.getName(), newParam);
 								
 							}
 							
 						}
-						catch(IndexOutOfBoundsException e){
-							canRoll = false;
-						}
-						
-						parameters.put(newParam.getParameter(), newParam);
 						
 					}
 					
+				}
+				
+				if(paramStartPos != -1){
 					String contentToRemove = getContent().substring(
 							paramStartPos, paramEndPos);
 					
 					setContent(getContent().replaceFirst(contentToRemove, ""));
-					
 				}
 				
 			}
@@ -204,26 +337,45 @@ public class Request extends Translatable implements Utils {
 			if(getContent() != null)
 				setContent(getContent().trim().replaceAll("\"", ""));
 			
-			handleDuplicateParameter(duplicateParams);
-			
 		}
 		
 	}
 	
+	public String getInitialMessage(){
+		return this.initialMessage;
+	}
+	
 	public String getCommand(){
-		return command.substring(getCommandPrefix().length());
+		if(!this.hasCommand())
+			return null;
+		
+		return this.getCommandNoFormat().substring(getCommandPrefix().length());
 	}
 	
 	public String getCommandNoFormat(){
-		return command;
+		return this.command;
 	}
 	
 	public void setCommand(String command){
 		this.command = command;
 	}
 	
+	public boolean hasCommand(){
+		return this.getCommandNoFormat() != null;
+	}
+	
+	public boolean isCommand(){
+		return this.hasCommand() && this.getCommandNoFormat()
+				.matches("^\\Q" + getCommandPrefix() + "\\E.+$");
+	}
+	
+	public boolean isOnlyCommandPrefix(){
+		return this.hasCommand() && this.getCommandNoFormat()
+				.equals(getCommandPrefix());
+	}
+	
 	public String getContent(){
-		return content;
+		return this.content;
 	}
 	
 	public void setContent(String content){
@@ -235,78 +387,109 @@ public class Request extends Translatable implements Utils {
 		
 	}
 	
+	public boolean hasContent(){
+		return this.getContent() != null;
+	}
+	
 	public String getCommandPrefix(){
 		return this.commandPrefix;
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
-		return parameters;
+		return this.parameters;
 	}
 	
-	public Parameter getParameter(String... parameterNames)
-			throws NoContentException{
+	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
+		return this.parametersLinks;
+	}
+	
+	public Parameter getParameter(String... parameterNames){
+		
+		if(!hasParameters()){
+			return null;
+		}
 		
 		if(parameterNames == null || parameterNames.length == 0)
 			throw new IllegalArgumentException(
 					"The parametersName parameter cannot be null / empty!");
 		
-		try{
+		for(String parameterName : parameterNames){
 			
-			for(String parameterName : parameterNames){
+			if(getParametersLinks() != null){
 				
-				Parameter paramFound = getParameters().get(parameterName);
-				
-				if(paramFound != null)
-					return paramFound;
+				for(Map.Entry<Parameter, ArrayList<String>> entry : getParametersLinks()
+						.entrySet()){
+					
+					if(entry.getValue().contains(parameterName))
+						return entry.getKey();
+					
+				}
 				
 			}
 			
+			Parameter paramFound = getParameters().get(parameterName);
+			
+			if(paramFound != null)
+				return paramFound;
+			
 		}
-		catch(NullPointerException e){
-			throw new NoContentException(getCommand());
-		}
 		
-		throw new NoContentException(getCommand());
+		return null;
 		
 	}
 	
-	public String getParametersPrefix(){
-		return parametersPrefix;
+	public char getParametersPrefix(){
+		return this.parametersPrefix;
 	}
 	
-	public String getError(){
-		return this.error;
+	private String getParametersPrefixProtected(){
+		return Pattern.quote(String.valueOf(getParametersPrefix()));
 	}
 	
-	public boolean hasError(){
-		return error != null;
-	}
+	// public boolean hasParameter(String parameterName){
+	// 	if(getParameters() == null)
+	// 		return false;
 	
-	public boolean hasParameter(String parameterName){
-		if (getParameters() == null)
-			return false;
-		
-		return getParameters().containsKey(parameterName);
-	}
+	// 	return this.getParameters().containsKey(parameterName);
+	// }
 	
 	public boolean hasParameter(String... parameterNames){
+		return getParameter(parameterNames) != null;
+	}
+	
+	public boolean hasParameters(){
+		return getParameters() != null;
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent){
+		onParameterPresent(parameterName, onParamPresent, null);
+	}
+	
+	public void onParameterPresent(String parameterName,
+			Consumer<Parameter> onParamPresent, Runnable onParamNotPresent){
 		
-		for(String parameterName : parameterNames)
-			if(this.hasParameter(parameterName))
-				return true;
+		Parameter param = null;
 		
-		return false;
+		param = getParameter(parameterName);
+		
+		if(param != null){
+			onParamPresent.accept(param);
+		}
+		else if(onParamNotPresent != null){
+			onParamNotPresent.run();
+		}
 		
 	}
 	
-	public boolean addParameter(String paramName){
-		return this.getParameters().put(paramName, new Parameter(paramName)) == null;
-	}
+	// public boolean addParameter(String paramName){
+	// 	return this.getParameters().put(paramName, new Parameter(paramName)) == null;
+	// }
 	
-	public boolean addParameter(String paramName, String paramContent){
-		return this.getParameters().put(paramName,
-				new Parameter(paramName, paramContent)) == null;
-	}
+	// public boolean addParameter(String paramName, String paramContent){
+	// 	return this.getParameters().put(paramName,
+	// 			new Parameter(paramName, paramContent)) == null;
+	// }
 	
 	private String[] splitCommandAndContent(String command){
 		
@@ -328,52 +511,157 @@ public class Request extends Translatable implements Utils {
 		
 	}
 	
-	private void handleDuplicateParameter(ArrayList<Parameter> duplicateParams){
+	public ArrayList<Parameter> getDuplicateParamList(){
+		return this.duplicateParams;
+	}
+	
+	public boolean hasError(){
+		return this.getDuplicateParamList() != null
+				&& this.getDuplicateParamList().size() != 0;
+	}
+	
+	public String getDefaultErrorMessage(){
 		
-		if(duplicateParams.size() != 0){
+		if(!hasError()){
+			return "This request has no errors!";
+		}
+		else{
 			
 			String pluralTester;
 			
-			if(duplicateParams.size() == 1)
-				pluralTester = langDirect(langDirectory
-						+ ".RequestParamStartSingle");
+			if(this.getDuplicateParamList().size() == 1)
+				pluralTester = "That parameter";
 			else
-				pluralTester = langDirect(langDirectory
-						+ ".RequestParamStartMultiple");
+				pluralTester = "Those parameters";
 			
 			StringBuilder message = new StringBuilder();
 			
-			message.append(pluralTester)
-					.append(" ")
-					.append(langDirect(langDirectory
-							+ ".RequestParamStartFollowing")).append(" ");
+			message.append(pluralTester).append(
+					" has been entered more than once : ");
 			
-			for(int i = 0; i < duplicateParams.size(); i++){
+			ArrayList<Parameter> handledDupes = new ArrayList<>();
+			
+			for(int i = 0; i < this.getDuplicateParamList().size(); i++){
 				
-				if(duplicateParams.size() != 1)
-					message.append("\n").append(i + 1).append(". ");
+				Parameter param = this.getDuplicateParamList().get(i);
 				
-				message.append("`")
-						.append(duplicateParams.get(i).getParameter())
-						.append("`");
+				if(!handledDupes.contains(param)){
+					
+					handledDupes.add(param);
+					
+					message.append("\n");
+					
+					if(this.getDuplicateParamList().size() != 1)
+						message.append(i + 1).append(". ");
+					else
+						message.append("~ ");
+					
+					message.append(param.getName());
+					
+				}
 				
 			}
 			
-			if(duplicateParams.size() == 1)
-				pluralTester = langDirect(langDirectory
-						+ ".RequestEndMessageSingle");
+			if(this.getDuplicateParamList().size() == 1)
+				pluralTester = "that parameter";
 			else
-				pluralTester = langDirect(langDirectory
-						+ ".RequestEndMessageMultiple");
+				pluralTester = "those parameters";
 			
-			message.append("\n*")
-					.append(langDirect(langDirectory + ".RequestEndMessage",
-							pluralTester)).append("*");
+			message.append("\n")
+					.append(format(
+							"Only the first instance of {1} will be taken into consideration.",
+							pluralTester));
 			
-			this.error = message.toString();
+			return message.toString();
 			
 		}
 		
+	}
+	
+	public void setParamLinkMap(ArrayList<ArrayList<String>> map){
+		
+		if(getParameters() != null)
+			getParameters().forEach((key, param) -> {
+				
+				for(ArrayList<String> paramsGroup : map){
+					
+					if(paramsGroup.contains(key)){
+						
+						if(this.parametersLinks == null){
+							this.parametersLinks = new HashMap<>();
+						}
+						
+						this.parametersLinks.put(param, paramsGroup);
+						break;
+						
+					}
+					
+				}
+				
+			});
+		
+	}
+	
+	public void setParameterContentLess(String paramName){
+		Parameter paramFound = getParameter(paramName);
+		
+		if(paramFound == null){
+			throw new NullPointerException("Parameter \"" + paramName
+					+ "\" is not present or linked in this request.");
+		}
+		else{
+			
+			if(getContent() == null)
+				setContent(paramFound.getContent());
+			else
+				setContent(getContent() + " " + paramFound.getContent());
+			
+			paramFound.setAcceptingContent(false);
+			
+		}
+	}
+	
+	public void setParamsAsContentLess(
+			ArrayList<String> paramsToTreatAsContentLess){
+		this.setParamsAsContentLess(paramsToTreatAsContentLess
+				.toArray(new String[0]));
+	}
+	
+	public void setParamsAsContentLess(String[] paramsToTreatAsContentLess){
+		
+		for(String paramName : paramsToTreatAsContentLess){
+			try{
+				this.setParameterContentLess(paramName);
+			}
+			catch(NullPointerException e){}
+		}
+		
+	}
+	
+	public static String buildMessageFromArgs(String[] args,
+			char parametersPrefix){
+		StringBuilder builder = new StringBuilder();
+		
+		for(String arg : args){
+			
+			String protectedParamPrefix = Pattern.quote(
+					String.valueOf(parametersPrefix));
+			String paramRegex = "^(" + protectedParamPrefix + "{1,2}.+|"
+					+ protectedParamPrefix + "{2})$";
+			
+			if(arg.matches(paramRegex)){
+				builder.append(arg);
+			}
+			else{
+				builder.append("\"").append(arg).append("\"");
+			}
+			
+			builder.append(" ");
+		}
+		
+		String argsRequest = builder.toString();
+		
+		return argsRequest.substring(0, argsRequest.length() - 1);
 	}
 	
 }
