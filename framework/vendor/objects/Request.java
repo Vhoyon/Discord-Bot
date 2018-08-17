@@ -320,7 +320,8 @@ public class Request implements Utils {
 					String contentToRemove = getContent().substring(
 							paramStartPos, paramEndPos);
 					
-					setContent(getContent().replaceFirst(contentToRemove, ""));
+					setContent(getContent().replaceFirst(
+							Pattern.quote(contentToRemove), ""));
 				}
 				
 			}
