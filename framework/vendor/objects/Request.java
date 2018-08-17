@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Request implements Utils {
@@ -19,43 +18,39 @@ public class Request implements Utils {
 		private int position;
 		private boolean acceptsContent;
 		
-		protected Parameter(){
-			this.acceptsContent = true;
-		}
+		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			this();
-			
-			if(parameter.matches(getParametersPrefixProtected() + "{1,2}.+")){
-				
-				int paramDeclaratorLength = parameter
-						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
-						: 1;
-				
-				this.parameterName = parameter.substring(paramDeclaratorLength);
-				
-			}
-			else{
-				this.parameterName = parameter;
-			}
+			this(parameter, -1);
 		}
 		
 		protected Parameter(String paramName, int position){
-			this(paramName);
-			
-			this.setPosition(position);
+			this(paramName, null, position);
 		}
 		
 		public Parameter(String paramName, String paramContent){
-			this(paramName);
-			
-			this.setContent(paramContent);
+			this(paramName, paramContent, -1);
 		}
 		
 		protected Parameter(String paramName, String paramContent, int position){
-			this(paramName, paramContent);
+			
+			if(paramName.matches(getParametersPrefixProtected() + "{1,2}.+")){
+				
+				int paramDeclaratorLength = paramName
+						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
+						: 1;
+				
+				this.parameterName = paramName.substring(paramDeclaratorLength);
+				
+			}
+			else{
+				this.parameterName = paramName;
+			}
 			
 			this.setPosition(position);
+			this.setContent(paramContent);
+			this.acceptsContent = true;
+			
 		}
 		
 		public String getName(){
@@ -99,17 +94,18 @@ public class Request implements Utils {
 		@Override
 		public boolean equals(Object obj){
 			
-			boolean isEqual = false;
-			
 			if(obj instanceof Parameter){
+				
+				if(getName() == null)
+					return false;
 				
 				Parameter parameterToCompare = (Parameter)obj;
 				
-				isEqual = getName().equals(parameterToCompare.getName());
+				return getName().equals(parameterToCompare.getName());
 				
 			}
 			
-			return isEqual;
+			return false;
 		}
 		
 		@Override
