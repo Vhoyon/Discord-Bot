@@ -1,5 +1,7 @@
 package vendor.utilities.settings;
 
+import vendor.utilities.sanitizers.TextNotEmptySanitizer;
+
 public class TextNotEmptyField extends TextField {
 	
 	public TextNotEmptyField(String name, String env, String defaultValue){
@@ -9,13 +11,7 @@ public class TextNotEmptyField extends TextField {
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		String stringValue = super.sanitizeValue(value);
-		
-		if(stringValue.length() == 0){
-			throw new IllegalArgumentException("Value cannot be empty!");
-		}
-		
-		return stringValue;
+		return TextNotEmptySanitizer.sanitizeValue(value);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package vendor.utilities.settings;
 
+import vendor.utilities.sanitizers.CharSanitizer;
+
 public class CharField extends SettingField<Character> {
 	
 	public CharField(String name, String env, char defaultValue){
@@ -9,14 +11,7 @@ public class CharField extends SettingField<Character> {
 	@Override
 	protected Character sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		String stringValue = value.toString();
-		
-		if(stringValue.length() != 1){
-			throw new IllegalArgumentException(
-					"Only one character is expected!");
-		}
-		
-		return stringValue.charAt(0);
+		return CharSanitizer.sanitizeValue(value);
 	}
 	
 }

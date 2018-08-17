@@ -1,5 +1,7 @@
 package vendor.utilities.settings;
 
+import vendor.utilities.sanitizers.IntegerSanitizer;
+
 public class IntegerField extends SettingField<Integer> {
 	
 	private int min;
@@ -20,36 +22,7 @@ public class IntegerField extends SettingField<Integer> {
 	@Override
 	protected Integer sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		
-		int castedValue;
-		
-		try{
-			
-			if (value instanceof String) {
-				castedValue = Integer.valueOf((String)value);
-			}
-			else {
-				castedValue = (Integer)value;
-			}
-			
-		}
-		catch(Exception e){
-			throw new IllegalArgumentException("Value is not a number!");
-		}
-		
-		if(castedValue < this.min){
-			throw new IllegalArgumentException("Value (" + castedValue
-					+ ") is lower than the minimum required (" + this.min
-					+ ")!");
-		}
-		else if(castedValue > this.max){
-			throw new IllegalArgumentException("Value (" + castedValue
-					+ ") is higher than the maximum required (" + this.max
-					+ ")!");
-		}
-		
-		return castedValue;
-		
+		return IntegerSanitizer.sanitizeValue(value, this.min, this.max);
 	}
 	
 }
