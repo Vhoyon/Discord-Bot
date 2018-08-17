@@ -147,8 +147,7 @@ public class Request implements Utils {
 		this(receivedMessage, DEFAULT_COMMAND_PREFIX, parametersPrefix);
 	}
 	
-	public Request(String[] args, String commandPrefix,
-			char parametersPrefix){
+	public Request(String[] args, String commandPrefix, char parametersPrefix){
 		this(buildMessageFromArgs(args, parametersPrefix), commandPrefix,
 				parametersPrefix);
 	}
@@ -357,13 +356,14 @@ public class Request implements Utils {
 	}
 	
 	public boolean isCommand(){
-		return this.hasCommand() && this.getCommandNoFormat()
-				.matches("^\\Q" + getCommandPrefix() + "\\E.+$");
+		return this.hasCommand()
+				&& this.getCommandNoFormat().matches(
+						"^" + Pattern.quote(getCommandPrefix()) + ".+$");
 	}
 	
 	public boolean isOnlyCommandPrefix(){
-		return this.hasCommand() && this.getCommandNoFormat()
-				.equals(getCommandPrefix());
+		return this.hasCommand()
+				&& this.getCommandNoFormat().equals(getCommandPrefix());
 	}
 	
 	public String getContent(){
@@ -636,8 +636,8 @@ public class Request implements Utils {
 		
 		for(String arg : args){
 			
-			String protectedParamPrefix = Pattern.quote(
-					String.valueOf(parametersPrefix));
+			String protectedParamPrefix = Pattern.quote(String
+					.valueOf(parametersPrefix));
 			String paramRegex = "^(" + protectedParamPrefix + "{1,2}.+|"
 					+ protectedParamPrefix + "{2})$";
 			
