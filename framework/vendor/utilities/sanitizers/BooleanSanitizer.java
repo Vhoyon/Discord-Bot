@@ -2,8 +2,8 @@ package vendor.utilities.sanitizers;
 
 public interface BooleanSanitizer {
 	
-	static boolean sanitizeValue(Object value)
-			throws IllegalArgumentException{
+	static boolean sanitizeValue(Object value) throws IllegalArgumentException{
+		
 		boolean castedValue;
 		
 		try{
@@ -32,6 +32,7 @@ public interface BooleanSanitizer {
 		}
 		
 		return castedValue;
+		
 	}
 	
 }

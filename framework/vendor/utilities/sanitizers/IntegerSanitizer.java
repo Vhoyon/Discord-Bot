@@ -2,8 +2,7 @@ package vendor.utilities.sanitizers;
 
 public interface IntegerSanitizer {
 	
-	static int sanitizeValue(Object value)
-			throws IllegalArgumentException{
+	static int sanitizeValue(Object value) throws IllegalArgumentException{
 		return IntegerSanitizer.sanitizeValue(value, Integer.MIN_VALUE,
 				Integer.MAX_VALUE);
 	}
@@ -27,10 +26,10 @@ public interface IntegerSanitizer {
 		
 		try{
 			
-			if (value instanceof String) {
+			if(value instanceof String){
 				castedValue = Integer.valueOf((String)value);
 			}
-			else {
+			else{
 				castedValue = (Integer)value;
 			}
 			

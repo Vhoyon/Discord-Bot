@@ -14,20 +14,20 @@ public interface TextLengthSanitizer {
 	
 	static String sanitizeValue(Object value, int minLength, int maxLength)
 			throws IllegalArgumentException{
-				
+		
 		String stringValue = TextSanitizer.sanitizeValue(value);
 		
 		int stringLength = stringValue.length();
 		
 		if(minLength != Integer.MIN_VALUE && stringLength < minLength){
 			throw new IllegalArgumentException(
-					"This setting's value needs to have at least "
-							+ minLength + " characters!");
+					"This setting's value needs to have at least " + minLength
+							+ " characters!");
 		}
 		else if(maxLength != Integer.MAX_VALUE && stringLength > maxLength){
 			throw new IllegalArgumentException(
-					"This setting's value cannot have more than "
-							+ maxLength + " characters!");
+					"This setting's value cannot have more than " + maxLength
+							+ " characters!");
 		}
 		
 		return stringValue;

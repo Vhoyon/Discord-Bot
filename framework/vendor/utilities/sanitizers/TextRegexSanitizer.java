@@ -11,21 +11,23 @@ public interface TextRegexSanitizer {
 	}
 	
 	static String sanitizeValue(Object value, String regexToMatch,
-			boolean isInverted)
-			throws IllegalArgumentException, PatternSyntaxException{
-		return TextRegexSanitizer.sanitizeValue(value, regexToMatch, isInverted, true);
+			boolean isInverted) throws IllegalArgumentException,
+			PatternSyntaxException{
+		return TextRegexSanitizer.sanitizeValue(value, regexToMatch,
+				isInverted, true);
 	}
 	
 	static String sanitizeValue(Object value, String regexToMatch,
 			boolean isInverted, boolean shouldBox)
 			throws IllegalArgumentException, PatternSyntaxException{
-		return TextRegexSanitizer.sanitizeValue(value, regexToMatch, isInverted, shouldBox, true);
+		return TextRegexSanitizer.sanitizeValue(value, regexToMatch,
+				isInverted, shouldBox, true);
 	}
 	
 	static String sanitizeValue(Object value, String regexToMatch,
 			boolean isInverted, boolean shouldBox, boolean shouldCheckPattern)
 			throws IllegalArgumentException, PatternSyntaxException{
-				
+		
 		String stringValue = TextSanitizer.sanitizeValue(value);
 		
 		if(regexToMatch != null){
