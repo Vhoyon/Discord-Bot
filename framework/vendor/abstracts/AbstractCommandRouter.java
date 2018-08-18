@@ -99,8 +99,12 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
 		
-		botCommand.setRouter(this);
-		botCommand.setDictionary(getDictionary());
+		if(botCommand != null){
+			
+			botCommand.setRouter(this);
+			botCommand.setDictionary(getDictionary());
+			
+		}
 		
 		return botCommand;
 		
