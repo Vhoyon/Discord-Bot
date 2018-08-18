@@ -603,10 +603,14 @@ public class Request implements Utils {
 		}
 		else{
 			
-			if(!hasContent())
-				setContent(paramFound.getContent());
-			else
-				setContent(getContent() + " " + paramFound.getContent());
+			if(paramFound.getContent() != null){
+				
+				if(!hasContent())
+					setContent(paramFound.getContent());
+				else
+					setContent(getContent() + " " + paramFound.getContent());
+				
+			}
 			
 			paramFound.setAcceptingContent(false);
 			
