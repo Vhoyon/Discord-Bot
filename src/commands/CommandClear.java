@@ -7,10 +7,13 @@ import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import vendor.objects.ParametersHelp;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
- * Classe qui permet d'effacer tout les messages dans le chat ou on l'invoque.
+ * This command clears every messages that matches the request's conditions in
+ * the TextChannel where it was called from.
  * 
  * @author Stephano
  */
@@ -31,58 +34,7 @@ public class CommandClear extends BotCommand {
 				
 				try{
 					
-					MessageHistory history = getTextContext().getHistory();
-					
-					boolean isEmpty;
-					
-					boolean deletingIndividually = false;
-					
-					boolean waitForDeletionToContinue = hasParameter("s");
-					
-					do{
-						
-						List<Message> messages = history.retrievePast(100)
-								.complete();
-						
-						if(!(isEmpty = messages.isEmpty())){
-							
-							if(!deletingIndividually){
-								
-								try{
-									
-									if(!waitForDeletionToContinue){
-										getTextContext().deleteMessages(
-												messages).queue();
-									}
-									else{
-										getTextContext().deleteMessages(
-												messages).complete();
-									}
-									
-								}
-								catch(IllegalArgumentException e){
-									deletingIndividually = true;
-								}
-								
-							}
-							else{
-								
-								for(Message message : messages){
-									
-									if(!waitForDeletionToContinue){
-										message.delete().queue();
-									}
-									else{
-										message.delete().complete();
-									}
-									
-								}
-								
-							}
-							
-						}
-						
-					}while(!isEmpty && isAlive());
+					deleteAllMessages();
 					
 					if(isAlive())
 						sendMessage("Cleared everything!");
@@ -95,6 +47,110 @@ public class CommandClear extends BotCommand {
 			}
 			
 		};
+		
+	}
+	
+	protected void deleteAllMessages() throws PermissionException{
+		this.deleteMessagesIf(null);
+	}
+	
+	protected void deleteMessagesIf(Predicate<Message> messageCondition)
+			throws PermissionException{
+		
+		MessageHistory messageHistory = getTextContext().getHistory();
+		
+		boolean shouldCompleteBeforeNext = hasParameter("s");
+		
+		final List<Message> fullMessageHistory = this.getFullMessageList(
+				messageHistory, messageCondition);
+		
+		boolean deletingIndividually = messageCondition != null
+				|| fullMessageHistory.size() < 2;
+		
+		final int batchSize = 100;
+		
+		for(int i = 0; i < fullMessageHistory.size() && isAlive(); i += batchSize){
+			
+			List<Message> currentMessageList = null;
+			
+			try{
+				currentMessageList = fullMessageHistory.subList(i, i
+						+ batchSize);
+			}
+			catch(IndexOutOfBoundsException e){
+				currentMessageList = fullMessageHistory.subList(i,
+						fullMessageHistory.size());
+			}
+			
+			if(!deletingIndividually){
+				
+				try{
+					
+					if(shouldCompleteBeforeNext){
+						getTextContext().deleteMessages(currentMessageList)
+								.complete();
+					}
+					else{
+						getTextContext().deleteMessages(currentMessageList)
+								.queue();
+					}
+					
+				}
+				catch(IllegalArgumentException e){
+					deletingIndividually = true;
+				}
+				
+			}
+			
+			if(deletingIndividually){
+				
+				for(Message message : currentMessageList){
+					
+					if(shouldCompleteBeforeNext){
+						message.delete().complete();
+					}
+					else{
+						message.delete().queue();
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+	protected List<Message> getFullMessageList(MessageHistory messageHistory){
+		return this.getFullMessageList(messageHistory, null);
+	}
+	
+	protected List<Message> getFullMessageList(MessageHistory messageHistory,
+			Predicate<Message> messageCondition){
+		
+		boolean isEmpty;
+		
+		do{
+			
+			isEmpty = messageHistory.retrievePast(100).complete().isEmpty();
+			
+		}while(!isEmpty && isAlive());
+		
+		List<Message> fullHistory = messageHistory.getRetrievedHistory();
+		
+		if(messageCondition == null)
+			return fullHistory;
+		
+		ArrayList<Message> messagesWithCondition = new ArrayList<>();
+		
+		fullHistory.forEach(message -> {
+			
+			if(messageCondition.test(message))
+				messagesWithCondition.add(message);
+			
+		});
+		
+		return messagesWithCondition;
 		
 	}
 	
