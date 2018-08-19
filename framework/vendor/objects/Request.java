@@ -657,7 +657,8 @@ public class Request implements Utils {
 		
 		String argsRequest = builder.toString();
 		
-		return argsRequest.substring(0, argsRequest.length() - 1);
+		return argsRequest.isEmpty() ? "" : argsRequest.substring(0,
+				argsRequest.length() - 1);
 	}
 	
 }
