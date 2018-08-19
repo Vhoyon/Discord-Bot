@@ -1,10 +1,12 @@
 package commands;
 
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
+import vendor.exceptions.BadContentException;
 import vendor.objects.ParametersHelp;
 
 import java.util.ArrayList;
@@ -22,31 +24,70 @@ public class CommandClear extends BotCommand {
 	@Override
 	public void action(){
 		
-		new CommandConfirmed(this){
+		if(!hasParameter("u")){
 			
-			@Override
-			public String getConfMessage(){
-				return lang("ConfirmMessage");
-			}
-			
-			@Override
-			public void confirmed(){
+			new CommandConfirmed(this){
 				
-				try{
-					
-					deleteAllMessages();
-					
-					if(isAlive())
-						sendMessage("Cleared everything!");
-					
-				}
-				catch(PermissionException e){
-					sendMessage(lang("NoPermission"));
+				@Override
+				public String getConfMessage(){
+					return lang("ConfirmMessage");
 				}
 				
+				@Override
+				public void confirmed(){
+					
+					try{
+						
+						deleteAllMessages();
+						
+						if(isAlive())
+							sendMessage("Cleared everything!");
+						
+					}
+					catch(PermissionException e){
+						sendMessage(lang("NoPermission"));
+					}
+					
+				}
+				
+			};
+		}
+		else{
+			
+			try{
+				final Member usr = getParameterAsMention("u");
+				
+				new CommandConfirmed(this){
+					
+					@Override
+					public String getConfMessage(){
+						return lang("ConfUsrClear", code(usr.getEffectiveName()));
+					}
+					
+					@Override
+					public void confirmed(){
+						
+						try{
+							deleteMessagesIf(message -> usr.equals(message
+									.getMember()));
+							
+							if(isAlive())
+								sendInfoMessage("Cleared " + usr.getAsMention()
+										+ "'s messages!");
+							
+						}
+						catch(PermissionException e){
+							sendMessage(lang("NoPermission"));
+						}
+					}
+					
+				};
+			}
+			catch(BadContentException e){
+				sendMessage(lang("MentionError", code("@[username]")));
 			}
 			
-		};
+		}
 		
 	}
 	
@@ -64,8 +105,7 @@ public class CommandClear extends BotCommand {
 		final List<Message> fullMessageHistory = this.getFullMessageList(
 				messageHistory, messageCondition);
 		
-		boolean deletingIndividually = messageCondition != null
-				|| fullMessageHistory.size() < 2;
+		boolean deletingIndividually = fullMessageHistory.size() < 2;
 		
 		final int batchSize = 100;
 		
