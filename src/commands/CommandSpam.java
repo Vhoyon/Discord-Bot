@@ -48,6 +48,9 @@ public class CommandSpam extends BotCommand {
 											.getRoleById(
 													getIdFromStringMentionRole(possibleMention)));
 				}
+				else{
+					throw new BadContentException();
+				}
 				
 			}
 			catch(BadContentException e){
