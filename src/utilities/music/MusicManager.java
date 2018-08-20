@@ -25,6 +25,12 @@ public class MusicManager {
 		AudioSourceManagers.registerLocalSource(manager);
 	}
 	
+	/**
+	 * Gets the MusicManager for the whole bot, such has there is only one instance at a time.
+	 *
+	 * @version 1.0
+	 * @since v0.4.0
+	 */
 	public static MusicManager get(){
 		
 		if(musicManager == null){

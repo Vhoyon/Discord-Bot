@@ -13,6 +13,14 @@ import vendor.abstracts.AbstractUIConsole;
 import vendor.modules.Logger;
 import vendor.objects.LoggableJTextArea;
 
+/**
+ * Vhoyon's custom implementation of the {@link vendor.abstracts.AbstractUIConsole AbstractUIConsole} that allows us to get a visual console for managing our bot's state.
+ *
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ * @see vendor.abstracts.AbstractUIConsole
+ */
 public abstract class UIConsole extends AbstractUIConsole {
 	
 	private JButton actionButton;

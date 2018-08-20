@@ -162,7 +162,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	}
 	
 	/**
-	 * @return <code>null</code> by default, can be overridden to return another
+	 * @return {@code null} by default, can be overridden to return another
 	 *         value for {@link #validateMessage()}.
 	 */
 	protected Command commandIfValidated(){

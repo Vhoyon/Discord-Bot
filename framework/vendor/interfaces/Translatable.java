@@ -33,7 +33,7 @@ public interface Translatable {
 	 *            Replacements values for String formatting (change variables in
 	 *            the Strings).
 	 * @return The language String found in the resources with the variables
-	 *         replaced, or <code>null</code> if there is absolutely no string
+	 *         replaced, or {@code null} if there is absolutely no string
 	 *         found in the resources.
 	 * @see #langDirect(String key)
 	 */
@@ -51,7 +51,7 @@ public interface Translatable {
 	 * 
 	 * @param key
 	 *            The key to search the resource lang files for.
-	 * @return The language String found in the resources, or <code>null</code>
+	 * @return The language String found in the resources, or {@code null}
 	 *         if there is absolutely no string found in the resources.
 	 * @see #langDirect(String key, Object... replacements)
 	 */
