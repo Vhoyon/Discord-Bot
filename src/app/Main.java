@@ -93,7 +93,9 @@ public class Main {
 	}
 	
 	/**
-	 * Logs a link to the linked loggers that makes this bot join a server of choice with the condition that the {@code CLIENT_ID} environment variable is not empty.
+	 * Logs a link to the linked loggers that makes this bot join a server of
+	 * choice with the condition that the {@code CLIENT_ID} environment variable
+	 * is not empty.
 	 *
 	 * @since v0.4.0
 	 */

@@ -8,7 +8,8 @@ import vendor.objects.CommandLinksContainer;
 import vendor.utilities.formatting.DiscordFormatter;
 
 /**
- * Linker that links the commands package which should contain all of the commands available in Discord for our bot.
+ * Linker that links the commands package which should contain all of the
+ * commands available in Discord for our bot.
  *
  * @version 1.0
  * @since v0.4.0

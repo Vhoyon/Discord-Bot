@@ -4,7 +4,8 @@ import vendor.objects.Language;
 import vendor.utilities.settings.*;
 
 /**
- * Interface that hold the Resources for our bot, such as the prefixes, the buffer storage names, the languages definitions and the setting definitions.
+ * Interface that hold the Resources for our bot, such as the prefixes, the
+ * buffer storage names, the languages definitions and the setting definitions.
  * 
  * @version 1.0
  * @since v0.4.0

@@ -9,9 +9,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Handles all the tracks inside of a {@link MusicPlayer} and gives utility methods such as giving the playlist's size, queuing new tracks, deleting the queue or even starting the next track.
+ * Handles all the tracks inside of a {@link MusicPlayer} and gives utility
+ * methods such as giving the playlist's size, queuing new tracks, deleting the
+ * queue or even starting the next track.
  * <p>
- *     This also handles the logic of what happens when a track ends, on which the looping methods are determined in.
+ * This also handles the logic of what happens when a track ends, on which the
+ * looping methods are determined in.
  * </p>
  * 
  * @version 1.0

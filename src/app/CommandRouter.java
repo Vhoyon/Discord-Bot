@@ -23,7 +23,9 @@ import vendor.utilities.settings.Setting;
 import java.util.ArrayList;
 
 /**
- * This is the custom Router for Vhoyon's bot that routes common commands to their appropriate actions, such as handling confirmations, calling Request's linkages, etc.
+ * This is the custom Router for Vhoyon's bot that routes common commands to
+ * their appropriate actions, such as handling confirmations, calling Request's
+ * linkages, etc.
  *
  * @version 1.0
  * @since v0.4.0
@@ -231,9 +233,12 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	/**
-	 * Gets the {@link vendor.utilities.settings.Setting Setting} object from the Buffer for the TextChannel of this Router or create it if there is currently none in the Buffer.
+	 * Gets the {@link vendor.utilities.settings.Setting Setting} object from
+	 * the Buffer for the TextChannel of this Router or create it if there is
+	 * currently none in the Buffer.
 	 *
-	 * @return The {@link vendor.utilities.settings.Setting Setting} object from the associated buffer.
+	 * @return The {@link vendor.utilities.settings.Setting Setting} object from
+	 *         the associated buffer.
 	 * @since 0.9.0
 	 */
 	public Setting getSettings(){
