@@ -5,6 +5,13 @@ import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 
 import net.dv8tion.jda.core.audio.AudioSendHandler;
 
+/**
+ * Handles individual tracks codec parameters.
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author Stephano Mehawej
+ */
 public class AudioHandler implements AudioSendHandler {
 	
 	private final AudioPlayer audioPlayer;

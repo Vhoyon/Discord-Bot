@@ -1,13 +1,23 @@
 package utilities.music;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * Handles all the tracks inside of a {@link MusicPlayer} and gives utility methods such as giving the playlist's size, queuing new tracks, deleting the queue or even starting the next track.
+ * <p>
+ *     This also handles the logic of what happens when a track ends, on which the looping methods are determined in.
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author Stephano Mehawej
+ */
 public class AudioListener extends AudioEventAdapter {
 	
 	private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue<>();
@@ -16,15 +26,29 @@ public class AudioListener extends AudioEventAdapter {
 	public AudioListener(MusicPlayer player){
 		this.player = player;
 	}
-	
+
+	/**
+	 * @return The current tracks as a {@link BlockingQueue} of {@link AudioTrack}. The track playing will not be in this list.
+	 * @since v0.4.0
+	 */
 	public BlockingQueue<AudioTrack> getTracks(){
 		return tracks;
 	}
-	
+
+	/**
+	 * @return The playlist's size in terms of how many tracks there is remaining in this playlist.
+	 * @since v0.4.0
+	 */
 	public int getTrackSize(){
 		return tracks.size();
 	}
-	
+
+	/**
+	 * Starts the next track in the playlist immediately if there is remaining tracks.
+	 * 
+	 * @return {@code false} if there is no remaining track to be played or if the next track couldn't start for some reason, or {@code true} otherwise.
+	 * @since v0.4.0
+	 */
 	public boolean nextTrack(){
 		
 		if(tracks.isEmpty()){
@@ -60,7 +84,11 @@ public class AudioListener extends AudioEventAdapter {
 		}
 
 	}
-	
+
+	/**
+	 * @param track {@link AudioTrack} to be queued for a future play. If nothing is playing, the track will start playing immediately.
+	 * @since v0.4.0
+	 */
 	public void queue(AudioTrack track){
 		
 		if(!player.getAudioPlayer().startTrack(track, true))
@@ -68,6 +96,11 @@ public class AudioListener extends AudioEventAdapter {
 		
 	}
 	
+	/**
+	 * Removes all the tracks from this playlist.
+	 * 
+	 * @since v0.4.0
+	 */
 	public void purgeQueue() {
         tracks.clear();
     }

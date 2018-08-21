@@ -11,15 +11,28 @@ import utilities.BotCommand;
  *
  * @version 1.0
  * @since v0.4.0
+ * @author Stephano Mehawej
  */
 public class MusicPlayer {
-	
+
+	/**
+	 * Represents the max comfortable value for listening in Discord.
+	 * 
+	 * @since v0.4.0
+	 */
 	public final static int MAX_VOLUME = 20;
 	
 	private final AudioPlayer audioPlayer;
 	private final AudioListener listener;
 	private final BotCommand command;
-	
+
+	/**
+	 * Creates a MusicPlayer that sets its initial volume to the setting "{@code volume}" from the BotCommand supplied in the {@code command} parameter.
+	 * 
+	 * @param audioPlayer The AudioPlayer to play music out of.
+	 * @param command The command to get the context for handling different tasks such as connections management.
+	 * @since v0.4.0
+	 */
 	public MusicPlayer(AudioPlayer audioPlayer, BotCommand command){
 		this.audioPlayer = audioPlayer;
 		this.command = command;
@@ -155,16 +168,29 @@ public class MusicPlayer {
 	 * Gets the status of wheter the player (bot) is connected to a VoiceChannel
 	 *
 	 * @return {@code true} if the player (bot) is connected to a {@link net.dv8tion.jda.core.entities.VoiceChannel VoiceChannel}, {@code false} otherwise.
-	 * @since 
+	 * @since v0.4.0
 	 */
 	public boolean isConnectedToVoiceChannel(){
 		return this.getConnectedChannel() != null;
 	}
-	
+
+	/**
+	 * Closes the connection of this player to the VoiceChannel - meaning in other words that the bot will leave the VoiceChannel.
+	 * 
+	 * @since v0.4.0
+	 */
 	public void closeConnection(){
 		this.getGuild().getAudioManager().closeAudioConnection();
 	}
-	
+
+	/**
+	 * Sets the volume of this player.
+	 * <br>
+	 * There is a formula applied to it where the volume is transformed to behave like a percentage : therefore, the volume is divided by <i><u>100 / {@value #MAX_VOLUME}</u></i> ({@value #MAX_VOLUME} being taken from the static variable {@code MusicPlayer.MAX_VOLUME}).
+	 *
+	 * @param volume Integer that represents the volume in percentage of comfortable listening value.
+	 * @since v0.4.0
+	 */
 	public void setVolume(int volume){
 		this.getAudioPlayer().setVolume(
 				(int)Math.ceil((double)volume

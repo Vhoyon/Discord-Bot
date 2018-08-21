@@ -16,7 +16,7 @@ import vendor.utilities.FrameworkTemplate;
  * 
  * @version 1.0
  * @since 0.1.0
- * @author Stephano
+ * @author Stephano Mehawej
  */
 public class Main {
 	
