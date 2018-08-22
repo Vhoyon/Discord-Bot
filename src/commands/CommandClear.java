@@ -24,7 +24,7 @@ public class CommandClear extends BotCommand {
 	@Override
 	public void action(){
 		
-		if(!hasParameter("u")){
+		if(!hasParameter("u","s","b")){
 			
 			new CommandConfirmed(this){
 				
@@ -55,13 +55,24 @@ public class CommandClear extends BotCommand {
 		else{
 			
 			try{
-				final Member usr = getParameterAsMention("u");
+				final Member usr;
 				
+				if(hasParameter("b")){
+
+					usr = getSelfMember();
+				}
+				else if(hasParameter("s")){
+					usr = getMember();
+				}
+				else{
+					usr = getParameterAsMention("u");
+				}
 				new CommandConfirmed(this){
 					
 					@Override
 					public String getConfMessage(){
-						return lang("ConfUsrClear", code(usr.getEffectiveName()));
+						return lang("ConfUsrClear",
+								code(usr.getEffectiveName()));
 					}
 					
 					@Override
@@ -100,7 +111,7 @@ public class CommandClear extends BotCommand {
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
 		
-		boolean shouldCompleteBeforeNext = hasParameter("s");
+		boolean shouldCompleteBeforeNext = hasParameter("i");
 		
 		final List<Message> fullMessageHistory = this.getFullMessageList(
 				messageHistory, messageCondition);
@@ -215,7 +226,14 @@ public class CommandClear extends BotCommand {
 		{
 			new ParametersHelp(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
-					false, "s", "slow")
+					false, "i", "interactive"),
+			new ParametersHelp(
+				"Allows you to delete your own messages.",
+				false, "s", "self"),
+			new ParametersHelp(
+				"Allows you to delete all of the bots messages.",
+				false, "b", "bot"),
+			
 		};
 	}
 	
