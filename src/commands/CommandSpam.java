@@ -9,6 +9,29 @@ import vendor.objects.ParametersHelp;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Command to spam people. Thus its name. It's a fun command.
+ * <p>
+ * This command has few parameters to change its behavior :
+ * <ul>
+ * <li>Not adding content sends a generic message while adding content to the
+ * command's request will send it as the spamming message;</li>
+ * <li>Adding the parameter {@code -c} (or {@code --count}) and a number
+ * afterward allows to change the number of messages to be sent (default is
+ * {@code 10});</li>
+ * <li>Adding the flag {@code -n} (or {@code --number}) allows to append the
+ * current position of the spam after the message (e.g. : {@code [message] #1});
+ * </li>
+ * <li>Adding the parameter {@code -u} (or {@code --user}) and a mention as the
+ * parameter content will spam all of the found users in the mention found (be
+ * it a direct mention or a role mention). Bots will not be spammed.</li>
+ * </ul>
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandSpam extends BotCommand {
 	
 	@Override
@@ -115,13 +138,15 @@ public class CommandSpam extends BotCommand {
 						else if(membersToSpam != null){
 							
 							for(Member member : membersToSpam){
-								new Thread(() -> sendMessageToMember(member,
-										messageToSend)).start();
+								if(!member.getUser().isBot())
+									new Thread(() -> sendMessageToMember(
+											member, messageToSend)).start();
 							}
 							
 						}
 						
 					}
+					
 				}
 				catch(InterruptedException e){}
 				
@@ -162,4 +187,5 @@ public class CommandSpam extends BotCommand {
 					"n", "number")
 		};
 	}
+	
 }

@@ -8,6 +8,28 @@ import vendor.utilities.settings.SettingField;
 
 import java.util.function.Consumer;
 
+/**
+ * Command to interact with the settings of this bot. There's quite a few things
+ * you can do, here's a small list :
+ * <ul>
+ * <li>Don't add any content to the available parameters to see their current
+ * and default values;</li>
+ * <li>Add the flag {@code -d} (<i>or {@code default}</i>) to set back the
+ * settings added as parameters (which has <b>no text afterward</b>) to their
+ * default state. Any parameters that has content will not be set back to its
+ * default;</li>
+ * <li>Add content after the parameters that you want to change to set its
+ * value. Appropriate error messages will be sent if validations fails.</li>
+ * </ul>
+ * <p>
+ * Run the command {@code !!help setting} to see more about available parameters
+ * (in other words, available settings)!
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.7.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandSetting extends BotCommand {
 	
 	private boolean shouldSwitchToDefault;
@@ -66,6 +88,24 @@ public class CommandSetting extends BotCommand {
 		
 	}
 	
+	/**
+	 * Method to prevent code duplicatas that executes the logic to change a
+	 * setting while still validating values and handling error messages sent on
+	 * validation fail. <br>
+	 * This method also handles the logic for displaying the default/current
+	 * value of a setting and setting back a setting to its default.
+	 * 
+	 * @param settingName
+	 *            The name of the setting to apply the logic of upon.
+	 * @param parameterName
+	 *            The name of the parameter to link with the request (this is
+	 *            used to know what content will be taken from the request to
+	 *            apply on the setting found using the name given by the
+	 *            parameter {@code settingName}.
+	 * @param onSuccess
+	 *            Arbitrary code to run when changing the setting was a success.
+	 * @since v0.7.0
+	 */
 	public void tryAndChangeSetting(String settingName, String parameterName,
 			Consumer<Object> onSuccess){
 		
@@ -165,7 +205,7 @@ public class CommandSetting extends BotCommand {
 									.getDefaultValue()) + ".", "volume"),
 			new ParametersHelp(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
-					false, "d")
+					false, "d", "default")
 		};
 	}
 	

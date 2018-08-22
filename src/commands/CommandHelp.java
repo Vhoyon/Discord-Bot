@@ -7,10 +7,14 @@ import vendor.modules.Logger;
 import vendor.objects.ParametersHelp;
 
 /**
- * Classe qui envois un message a l'utilisateur qui demande de l'aide avec une
- * liste complète des commandes.
+ * Command that send a message to the server by default with a help string
+ * containing all of the commands available with the possibility to send it
+ * privately, detailed or to get the help of another command by adding the
+ * command's name as content.
  * 
- * @author Stephano
+ * @version 1.0
+ * @since v0.4.0
+ * @author Stephano Mehawej
  */
 
 public class CommandHelp extends BotCommand {

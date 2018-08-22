@@ -7,6 +7,15 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import errorHandling.BotError;
 
+/**
+ * Command that sends a message containing a list of the tracks that are
+ * currently in the playlist of the MusicPlayer of the VoiceChannel that is
+ * currently connected to.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandMusicList extends MusicCommands {
 	
 	@Override
@@ -56,6 +65,6 @@ public class CommandMusicList extends MusicCommands {
 	@Override
 	public String getCommandDescription(){
 		return "Display a list of all the music that you have in the music list";
-		
 	}
+	
 }

@@ -5,6 +5,23 @@ import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import vendor.utilities.CommandsThreadManager;
 
+/**
+ * Command that stops a running command.
+ * <p>
+ * There is two mode to this command :
+ * <ol>
+ * <li>Calling the command without any content, which finds the latest running
+ * command and confirms with the user that he wants to stop the found command;</li>
+ * <li>Giving the name of the command the users wants to stop as content to the
+ * command request to directly (<i>so <b>no</b> confirmation here</i>) stop the
+ * command requested if it is running.</li>
+ * </ol>
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandStop extends BotCommand {
 	
 	@Override
@@ -62,8 +79,15 @@ public class CommandStop extends BotCommand {
 		
 	}
 	
+	/**
+	 * Applies the logic to stop a command.
+	 * 
+	 * @param commandToStop
+	 *            The command to stop.
+	 * @since v0.6.0
+	 */
 	private void stopCommandLogic(BotCommand commandToStop){
-
+		
 		if(commandToStop.kill())
 			sendInfoMessage(lang("CommandFullyStoppedMessage",
 					code(commandToStop.getCommandName()), EMOJI_OK_HAND));
@@ -83,4 +107,5 @@ public class CommandStop extends BotCommand {
 	public String getCommandDescription(){
 		return "This command stops the specified command";
 	}
+	
 }
