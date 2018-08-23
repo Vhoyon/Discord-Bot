@@ -1,8 +1,10 @@
 package vendor.utilities.sanitizers;
 
+import vendor.exceptions.BadFormatException;
+
 public interface BooleanSanitizer {
 	
-	static boolean sanitizeValue(Object value) throws IllegalArgumentException{
+	static boolean sanitizeValue(Object value) throws BadFormatException{
 		
 		boolean castedValue;
 		
@@ -27,8 +29,8 @@ public interface BooleanSanitizer {
 			
 		}
 		catch(Exception e){
-			throw new IllegalArgumentException(
-					"Value cannot be something else than \"true\" or \"false\"!");
+			throw new BadFormatException(
+					"Value cannot be something else than \"true\" or \"false\"!", 1);
 		}
 		
 		return castedValue;

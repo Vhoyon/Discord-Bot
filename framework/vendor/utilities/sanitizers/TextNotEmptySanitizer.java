@@ -1,13 +1,15 @@
 package vendor.utilities.sanitizers;
 
+import vendor.exceptions.BadFormatException;
+
 public interface TextNotEmptySanitizer {
 	
-	static String sanitizeValue(Object value) throws IllegalArgumentException{
+	static String sanitizeValue(Object value) throws BadFormatException{
 		
 		String stringValue = TextSanitizer.sanitizeValue(value);
 		
 		if(stringValue.length() == 0){
-			throw new IllegalArgumentException("Value cannot be empty!");
+			throw new BadFormatException("Value cannot be empty!", 1);
 		}
 		
 		return stringValue;
