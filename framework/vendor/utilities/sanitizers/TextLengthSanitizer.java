@@ -1,33 +1,37 @@
 package vendor.utilities.sanitizers;
 
+import vendor.exceptions.BadFormatException;
+
 public interface TextLengthSanitizer {
 	
-	static String sanitizeValueMin(Object value, int minLength){
+	static String sanitizeValueMin(Object value, int minLength)
+			throws BadFormatException{
 		return TextLengthSanitizer.sanitizeValue(value, minLength,
 				Integer.MAX_VALUE);
 	}
 	
-	static String sanitizeValueMax(Object value, int maxLength){
+	static String sanitizeValueMax(Object value, int maxLength)
+			throws BadFormatException{
 		return TextLengthSanitizer.sanitizeValue(value, Integer.MIN_VALUE,
 				maxLength);
 	}
 	
 	static String sanitizeValue(Object value, int minLength, int maxLength)
-			throws IllegalArgumentException{
+			throws BadFormatException{
 		
 		String stringValue = TextSanitizer.sanitizeValue(value);
 		
 		int stringLength = stringValue.length();
 		
 		if(minLength != Integer.MIN_VALUE && stringLength < minLength){
-			throw new IllegalArgumentException(
+			throw new BadFormatException(
 					"This setting's value needs to have at least " + minLength
-							+ " characters!");
+							+ " characters!", 1);
 		}
 		else if(maxLength != Integer.MAX_VALUE && stringLength > maxLength){
-			throw new IllegalArgumentException(
+			throw new BadFormatException(
 					"This setting's value cannot have more than " + maxLength
-							+ " characters!");
+							+ " characters!", 2);
 		}
 		
 		return stringValue;
