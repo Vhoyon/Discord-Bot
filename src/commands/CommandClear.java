@@ -40,7 +40,7 @@ public class CommandClear extends BotCommand {
 						
 						deleteAllMessages();
 						
-						if(isAlive())
+						if(isAlive() && hasParameter("n"))
 							sendMessage("Cleared everything!");
 						
 					}
@@ -81,7 +81,7 @@ public class CommandClear extends BotCommand {
 							deleteMessagesIf(message -> usr.equals(message
 									.getMember()));
 							
-							if(isAlive())
+							if(isAlive() && hasParameter("n"))
 								sendInfoMessage("Cleared " + usr.getAsMention()
 										+ "'s messages!");
 							
@@ -235,7 +235,9 @@ public class CommandClear extends BotCommand {
 			new ParametersHelp(
 				"Allows you to delete all of the bots messages.",
 				false, "b", "bot"),
-			
+			new ParametersHelp(
+				"This makes the bot notify the text channel of what it cleared.",
+				false, "n", "notify"),
 		};
 	}
 	
