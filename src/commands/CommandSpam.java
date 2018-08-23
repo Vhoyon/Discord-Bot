@@ -1,5 +1,6 @@
 package commands;
 
+import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import utilities.BotCommand;
@@ -9,8 +10,6 @@ import vendor.objects.ParametersHelp;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import errorHandling.BotError;
 
 public class CommandSpam extends BotCommand {
 	
@@ -31,20 +30,28 @@ public class CommandSpam extends BotCommand {
 				
 				if(isStringMention(possibleMention)){
 					memberToSpam = getParameterAsMention("u");
+					
+					if(getSelfMember().equals(memberToSpam))
+						throw new BadContentException(
+								"You think I'll spam myself? C'mon, I'm better than that...");
+					else if(memberToSpam.getUser().isBot())
+						throw new BadContentException(
+								"I won't spam my fellow bots!");
 				}
 				else if(isStringMentionRole(possibleMention)){
 					Role role = getGuild().getRoleById(
 							getIdFromStringMentionRole(possibleMention));
 					
-					membersToSpam = getGuild()
-							.getMembersWithRoles(role);
+					membersToSpam = getGuild().getMembersWithRoles(role);
 					
 					if(membersToSpam.size() == 0)
-						throw new BadContentException("The role you mentionned has no member in it, nobody was spammed!");
+						throw new BadContentException(
+								"The role you mentionned has no member in it, nobody was spammed!");
 				}
 				else{
-					throw new BadContentException("Your mention is not valid. Tag a user (or a role!) with "
-							+ code("@[username|role]") + "!");
+					throw new BadContentException(
+							"Your mention is not valid. Tag a user (or a role!) with "
+									+ code("@[username|role]") + "!");
 				}
 				
 			}
