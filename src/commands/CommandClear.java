@@ -1,5 +1,6 @@
 package commands;
 
+import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
@@ -24,37 +25,18 @@ public class CommandClear extends BotCommand {
 	@Override
 	public void action(){
 		
-		if(!hasParameter("u","s","b")){
+		String confirmationMessage;
+		String notifyMessage;
+		
+		if(!hasParameter("u", "s", "b")){
 			
-			new CommandConfirmed(this){
-				
-				@Override
-				public String getConfMessage(){
-					return lang("ConfirmMessage");
-				}
-				
-				@Override
-				public void confirmed(){
-					
-					try{
-						
-						deleteAllMessages();
-						
-						if(isAlive() && hasParameter("n"))
-							sendMessage("Cleared everything!");
-						
-					}
-					catch(PermissionException e){
-						sendMessage(lang("NoPermission"));
-					}
-					
-				}
-				
-			};
+			doClearLogic(lang("ConfirmMessage"), "Cleared everything!");
+			
 		}
 		else{
 			
 			try{
+				
 				final Member usr;
 				
 				if(hasParameter("u")){
@@ -66,38 +48,61 @@ public class CommandClear extends BotCommand {
 				else{
 					usr = getSelfMember();
 				}
-				new CommandConfirmed(this){
-					
-					@Override
-					public String getConfMessage(){
-						return lang("ConfUsrClear",
-								code(usr.getEffectiveName()));
-					}
-					
-					@Override
-					public void confirmed(){
-						
-						try{
-							deleteMessagesIf(message -> usr.equals(message
-									.getMember()));
-							
-							if(isAlive() && hasParameter("n"))
-								sendInfoMessage("Cleared " + usr.getAsMention()
-										+ "'s messages!");
-							
-						}
-						catch(PermissionException e){
-							sendMessage(lang("NoPermission"));
-						}
-					}
-					
-				};
+				
+				confirmationMessage = lang("ConfUsrClear",
+						code(usr.getEffectiveName()));
+				notifyMessage = "Cleared " + usr.getAsMention()
+						+ "'s messages!";
+				
+				doClearLogic(confirmationMessage, notifyMessage,
+						message -> usr.equals(message.getMember()));
+				
 			}
 			catch(BadContentException e){
 				sendMessage(lang("MentionError", code("@[username]")));
 			}
 			
 		}
+		
+	}
+	
+	protected void doClearLogic(final String confMessage,
+			final String notifyMessage){
+		this.doClearLogic(confMessage, notifyMessage, null);
+	}
+	
+	protected void doClearLogic(final String confMessage,
+			final String notifyMessage,
+			final Predicate<Message> messageCondition){
+		
+		new CommandConfirmed(this){
+			
+			@Override
+			public String getConfMessage(){
+				return confMessage;
+			}
+			
+			@Override
+			public void confirmed(){
+				
+				try{
+					
+					if(messageCondition == null)
+						deleteAllMessages();
+					else
+						deleteMessagesIf(messageCondition);
+					
+					if(notifyMessage != null && isAlive() && hasParameter("n"))
+						sendInfoMessage(notifyMessage);
+					
+				}
+				catch(PermissionException e){
+					new BotError(CommandClear.this, lang("NoPermission"));
+				}
+				
+			}
+			
+		};
 		
 	}
 	
@@ -227,17 +232,16 @@ public class CommandClear extends BotCommand {
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
 					false, "i", "interactive"),
 			new ParametersHelp(
-				"Allows you to delete the messages of a user you specifie.",
-				true, "u", "user"),
+					"Allows you to delete the messages of a user you specifie.",
+					true, "u", "user"),
+			new ParametersHelp("Allows you to delete your own messages.",
+					false, "s", "self"),
 			new ParametersHelp(
-				"Allows you to delete your own messages.",
-				false, "s", "self"),
+					"Allows you to delete all of the bots messages.", false,
+					"b", "bot"),
 			new ParametersHelp(
-				"Allows you to delete all of the bots messages.",
-				false, "b", "bot"),
-			new ParametersHelp(
-				"This makes the bot notify the text channel of what it cleared.",
-				false, "n", "notify"),
+					"This makes the bot notify the text channel of what it cleared.",
+					false, "n", "notify"),
 		};
 	}
 	
