@@ -10,7 +10,7 @@ import vendor.utilities.settings.*;
  */
 public interface Resources {
 	
-	String PREFIX = "!!";
+	String PREFIX = "\\";
 	char PARAMETER_PREFIX = '-';
 	
 	String BUFFER_GAMEPOOL = "GAMEPOOL";
