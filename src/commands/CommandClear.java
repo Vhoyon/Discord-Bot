@@ -57,15 +57,14 @@ public class CommandClear extends BotCommand {
 			try{
 				final Member usr;
 				
-				if(hasParameter("b")){
-
-					usr = getSelfMember();
+				if(hasParameter("u")){
+					usr = getParameterAsMention("u");
 				}
 				else if(hasParameter("s")){
 					usr = getMember();
 				}
 				else{
-					usr = getParameterAsMention("u");
+					usr = getSelfMember();
 				}
 				new CommandConfirmed(this){
 					
@@ -227,6 +226,9 @@ public class CommandClear extends BotCommand {
 			new ParametersHelp(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
 					false, "i", "interactive"),
+			new ParametersHelp(
+				"Allows you to delete the messages of a user you specifie.",
+				false, "u", "user"),
 			new ParametersHelp(
 				"Allows you to delete your own messages.",
 				false, "s", "self"),
