@@ -70,76 +70,72 @@ public class CommandSpam extends BotCommand {
 				}
 			});
 			
-			if(!shouldSendToMember
-					|| (shouldSendToMember && (memberToSpam != null || membersToSpam != null))){
+			String message;
+			
+			if(hasContent()){
 				
-				String message;
-				
-				if(hasContent()){
-					
-					if(shouldSendToMember){
-						message = ital(getMember().getAsMention()
-								+ " is spamming you this :")
-								+ " " + getContent();
-					}
-					else{
-						message = getContent();
-					}
-					
+				if(shouldSendToMember){
+					message = ital(getMember().getAsMention()
+							+ " is spamming you this :")
+							+ " " + getContent();
 				}
 				else{
+					message = getContent();
+				}
+				
+			}
+			else{
+				
+				if(shouldSendToMember){
+					message = ital(getMember().getAsMention()
+							+ " is spamming you!");
+				}
+				else{
+					message = ital(bold(getMember().getAsMention()))
+							+ " is spamming y'all!";
+				}
+				
+			}
+			
+			boolean shouldAppendNumber = hasParameter("n");
+			
+			for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
+				
+				try{
 					
-					if(shouldSendToMember){
-						message = ital(getMember().getAsMention()
-								+ " is spamming you!");
+					if(i != 0)
+						Thread.sleep(1250);
+					
+					String messageToSend = shouldAppendNumber ? message + " #"
+							+ (i + 1) : message;
+					
+					if(!shouldSendToMember){
+						
+						sendMessage(messageToSend);
+						
 					}
 					else{
-						message = ital(bold(getMember().getAsMention()))
-								+ " is spamming y'all!";
-					}
-					
-				}
-				
-				boolean shouldAppendNumber = hasParameter("n");
-				
-				for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
-					
-					try{
 						
-						if(i != 0)
-							Thread.sleep(1250);
-						
-						String messageToSend = shouldAppendNumber ? message + " #"
-								+ (i + 1) : message;
-						
-						if(!shouldSendToMember){
-							
-							sendMessage(messageToSend);
-							
-						}
-						else{
-							
-							if(memberToSpam != null){
-								if(i == 0 && memberToSpam.isMentionningSelf()){
-									sendMessage("I like how you are spamming yourself. Good job.");
-								}
-								
-								sendMessageToMember(memberToSpam, messageToSend);
+						if(memberToSpam != null){
+							if(i == 0 && memberToSpam.isMentionningSelf()){
+								sendMessage("I like how you are spamming yourself. Good job.");
 							}
-							else if(membersToSpam != null){
-								
-								for(Member member : membersToSpam){
-									new Thread(() -> sendMessageToMember(member,
-											messageToSend)).start();
-								}
-								
+							
+							sendMessageToMember(memberToSpam, messageToSend);
+						}
+						else if(membersToSpam != null){
+							
+							for(Member member : membersToSpam){
+								new Thread(() -> sendMessageToMember(member,
+										messageToSend)).start();
 							}
 							
 						}
+						
 					}
-					catch(InterruptedException e){}
 					
 				}
+				catch(InterruptedException e){}
 				
 			}
 			
