@@ -228,7 +228,7 @@ public class CommandClear extends BotCommand {
 					false, "i", "interactive"),
 			new ParametersHelp(
 				"Allows you to delete the messages of a user you specifie.",
-				false, "u", "user"),
+				true, "u", "user"),
 			new ParametersHelp(
 				"Allows you to delete your own messages.",
 				false, "s", "self"),
