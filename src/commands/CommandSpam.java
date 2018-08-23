@@ -1,6 +1,7 @@
 package commands;
 
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
 import vendor.objects.Mention;
@@ -9,24 +10,14 @@ import vendor.objects.ParametersHelp;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import errorHandling.BotError;
+
 public class CommandSpam extends BotCommand {
 	
 	@Override
 	public void action(){
 		
-		// Defaults to 10 messages.
-		AtomicInteger numberOfSpam = new AtomicInteger(10);
-		
-		onParameterPresent("c", param -> {
-			try{
-				
-				numberOfSpam.set(Integer.parseInt(param.getContent()));
-				
-			}
-			catch(NumberFormatException e){
-				
-			}
-		});
+		boolean canSpam = true;
 		
 		boolean shouldSendToMember = hasParameter("u");
 		
@@ -42,91 +33,113 @@ public class CommandSpam extends BotCommand {
 					memberToSpam = getParameterAsMention("u");
 				}
 				else if(isStringMentionRole(possibleMention)){
+					Role role = getGuild().getRoleById(
+							getIdFromStringMentionRole(possibleMention));
+					
 					membersToSpam = getGuild()
-							.getMembersWithRoles(
-									getGuild()
-											.getRoleById(
-													getIdFromStringMentionRole(possibleMention)));
+							.getMembersWithRoles(role);
+					
+					if(membersToSpam.size() == 0)
+						throw new BadContentException("The role you mentionned has no member in it, nobody was spammed!");
 				}
 				else{
-					throw new BadContentException();
+					throw new BadContentException("Your mention is not valid. Tag a user (or a role!) with "
+							+ code("@[username|role]") + "!");
 				}
 				
 			}
 			catch(BadContentException e){
-				sendMessage("The member specified is not valid. Tag him with "
-						+ code("@[username]") + "!");
+				new BotError(this, e.getMessage());
+				canSpam = false;
 			}
 		}
 		
-		if(!shouldSendToMember
-				|| (shouldSendToMember && (memberToSpam != null || membersToSpam != null))){
+		if(canSpam){
 			
-			String message;
+			// Defaults to 10 messages.
+			AtomicInteger numberOfSpam = new AtomicInteger(10);
 			
-			if(hasContent()){
-				
-				if(shouldSendToMember){
-					message = ital(getMember().getAsMention()
-							+ " is spamming you this :")
-							+ " " + getContent();
-				}
-				else{
-					message = getContent();
-				}
-				
-			}
-			else{
-				
-				if(shouldSendToMember){
-					message = ital(getMember().getAsMention()
-							+ " is spamming you!");
-				}
-				else{
-					message = ital(bold(getMember().getAsMention()))
-							+ " is spamming y'all!";
-				}
-				
-			}
-			
-			boolean shouldAppendNumber = hasParameter("n");
-			
-			for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
-				
+			onParameterPresent("c", param -> {
 				try{
 					
-					if(i != 0)
-						Thread.sleep(1250);
+					numberOfSpam.set(Integer.parseInt(param.getContent()));
 					
-					String messageToSend = shouldAppendNumber ? message + " #"
-							+ (i + 1) : message;
+				}
+				catch(NumberFormatException e){
 					
-					if(!shouldSendToMember){
-						
-						sendMessage(messageToSend);
-						
+				}
+			});
+			
+			if(!shouldSendToMember
+					|| (shouldSendToMember && (memberToSpam != null || membersToSpam != null))){
+				
+				String message;
+				
+				if(hasContent()){
+					
+					if(shouldSendToMember){
+						message = ital(getMember().getAsMention()
+								+ " is spamming you this :")
+								+ " " + getContent();
 					}
 					else{
-						
-						if(memberToSpam != null){
-							if(i == 0 && memberToSpam.isMentionningSelf()){
-								sendMessage("I like how you are spamming yourself. Good job.");
-							}
-							
-							sendMessageToMember(memberToSpam, messageToSend);
-						}
-						else if(membersToSpam != null){
-							
-							for(Member member : membersToSpam){
-								new Thread(() -> sendMessageToMember(member,
-										messageToSend)).start();
-							}
-							
-						}
-						
+						message = getContent();
 					}
+					
 				}
-				catch(InterruptedException e){}
+				else{
+					
+					if(shouldSendToMember){
+						message = ital(getMember().getAsMention()
+								+ " is spamming you!");
+					}
+					else{
+						message = ital(bold(getMember().getAsMention()))
+								+ " is spamming y'all!";
+					}
+					
+				}
+				
+				boolean shouldAppendNumber = hasParameter("n");
+				
+				for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
+					
+					try{
+						
+						if(i != 0)
+							Thread.sleep(1250);
+						
+						String messageToSend = shouldAppendNumber ? message + " #"
+								+ (i + 1) : message;
+						
+						if(!shouldSendToMember){
+							
+							sendMessage(messageToSend);
+							
+						}
+						else{
+							
+							if(memberToSpam != null){
+								if(i == 0 && memberToSpam.isMentionningSelf()){
+									sendMessage("I like how you are spamming yourself. Good job.");
+								}
+								
+								sendMessageToMember(memberToSpam, messageToSend);
+							}
+							else if(membersToSpam != null){
+								
+								for(Member member : membersToSpam){
+									new Thread(() -> sendMessageToMember(member,
+											messageToSend)).start();
+								}
+								
+							}
+							
+						}
+					}
+					catch(InterruptedException e){}
+					
+				}
 				
 			}
 			
