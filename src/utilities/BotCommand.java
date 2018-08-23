@@ -3,6 +3,7 @@ package utilities;
 import app.CommandRouter;
 import utilities.interfaces.*;
 import vendor.abstracts.AbstractBotCommand;
+import vendor.exceptions.BadFormatException;
 import vendor.utilities.settings.Setting;
 
 import java.util.function.Consumer;
@@ -46,12 +47,13 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		
 	}
 	
-	public void setSetting(String settingName, Object value){
+	public void setSetting(String settingName, Object value)
+			throws BadFormatException{
 		this.setSetting(settingName, value, null);
 	}
 	
 	public void setSetting(String settingName, Object value,
-			Consumer<Object> onChange){
+			Consumer<Object> onChange) throws BadFormatException{
 		
 		Setting settings = this.getSettings();
 		
