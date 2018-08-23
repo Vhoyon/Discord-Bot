@@ -1,6 +1,6 @@
 package vendor.exceptions;
 
-public class BadFormatException extends RuntimeException {
+public class BadFormatException extends IllegalArgumentException {
 	
 	private int code;
 	
