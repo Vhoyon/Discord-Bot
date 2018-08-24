@@ -22,6 +22,10 @@ public class CommandSetting extends BotCommand {
 		private String parameterName;
 		private boolean isPresent;
 		
+		public SettingChanger(String settingAndParamName){
+			this(settingAndParamName, settingAndParamName);
+		}
+		
 		public SettingChanger(String settingName, String parameterName){
 			super(CommandSetting.this);
 			
@@ -164,14 +168,14 @@ public class CommandSetting extends BotCommand {
 	
 	protected void setupSettings(){
 		
-		new SettingChanger<String>("prefix", "prefix"){
+		new SettingChanger<String>("prefix"){
 			@Override
 			public void onSuccess(String newPrefix){
 				sendMessage("You switched the prefix to " + code(newPrefix) + "!");
 			}
 		};
 		
-		new SettingChanger<Character>("param_prefix", "param_prefix"){
+		new SettingChanger<Character>("param_prefix"){
 			@Override
 			public void onSuccess(Character newParamPrefix){
 				sendMessage("You switched the parameters prefix to "
@@ -182,7 +186,7 @@ public class CommandSetting extends BotCommand {
 			}
 		};
 		
-		new SettingChanger<String>("nickname", "nickname"){
+		new SettingChanger<String>("nickname"){
 			@Override
 			public void onSuccess(String newNickname){
 				setSelfNickname(newNickname);
@@ -192,7 +196,7 @@ public class CommandSetting extends BotCommand {
 			}
 		};
 		
-		new SettingChanger<Boolean>("confirm_stop", "confirm_stop"){
+		new SettingChanger<Boolean>("confirm_stop"){
 			@Override
 			public void onSuccess(Boolean isConfirming){
 				if(isConfirming){
@@ -204,7 +208,7 @@ public class CommandSetting extends BotCommand {
 			}
 		};
 		
-		new SettingChanger<Integer>("volume", "volume"){
+		new SettingChanger<Integer>("volume"){
 			@Override
 			public void onSuccess(Integer volume){
 				if(MusicManager.get().hasPlayer(this.getGuild())){
