@@ -46,7 +46,7 @@ public class CommandClear extends BotCommand {
 					usr = getMember();
 				}
 				else{
-					usr = getSelfMember();
+					usr = getBotMember();
 				}
 				
 				confirmationMessage = lang("ConfUsrClear",

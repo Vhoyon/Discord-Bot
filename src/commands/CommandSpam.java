@@ -31,7 +31,7 @@ public class CommandSpam extends BotCommand {
 				if(isStringMention(possibleMention)){
 					memberToSpam = getParameterAsMention("u");
 					
-					if(getSelfMember().equals(memberToSpam))
+					if(getBotMember().equals(memberToSpam))
 						throw new BadContentException(
 								"You think I'll spam myself? C'mon, I'm better than that...");
 					else if(memberToSpam.getUser().isBot())

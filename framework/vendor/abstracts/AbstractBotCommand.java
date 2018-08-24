@@ -166,16 +166,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
-	public Member getSelfMember(){
+	public Member getBotMember(){
 		return getGuild().getSelfMember();
 	}
 	
-	public SelfUser getSelfUser(){
+	public SelfUser getBotUser(){
 		return getEventDigger().getRunningBot();
 	}
 	
-	public AccountManager getSelfUserManager(){
-		return getSelfUser().getManager();
+	public AccountManager getBotUserManager(){
+		return getBotUser().getManager();
 	}
 	
 	public Member getMember(){
@@ -329,7 +329,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public void setSelfNickname(String nickname){
-		this.setNicknameOf(this.getSelfMember(), nickname);
+		this.setNicknameOf(this.getBotMember(), nickname);
 	}
 	
 	public void setNicknameOf(Member member, String nickname){
