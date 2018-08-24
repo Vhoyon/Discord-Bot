@@ -3,6 +3,7 @@ package commands;
 import errorHandling.BotError;
 import utilities.BotCommand;
 import utilities.music.MusicManager;
+import vendor.exceptions.BadFormatException;
 import vendor.objects.ParametersHelp;
 import vendor.utilities.settings.SettingField;
 
@@ -152,7 +153,7 @@ public class CommandSetting extends BotCommand {
 						try{
 							setSetting(settingName, parameterContent, onSuccess);
 						}
-						catch(IllegalArgumentException e){
+						catch(BadFormatException e){
 							new BotError(this, e.getMessage());
 						}
 						
