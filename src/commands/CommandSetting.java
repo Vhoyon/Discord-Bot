@@ -65,6 +65,8 @@ public class CommandSetting extends BotCommand {
 					
 					settingField.setToDefaultValue(onSuccess);
 					
+					this.setSendable(true);
+					
 					sendMessage("The setting "
 							+ code(settingName)
 							+ " has been set back to its default ("
@@ -73,8 +75,6 @@ public class CommandSetting extends BotCommand {
 					
 				}
 				else{
-					
-					this.setSendable(false);
 					
 					Object defaultSettingValue = settingField
 							.getDefaultValue();
