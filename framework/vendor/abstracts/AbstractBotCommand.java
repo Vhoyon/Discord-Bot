@@ -38,11 +38,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	private boolean isCopy;
 	
-	private boolean isAlive;
-	
 	public AbstractBotCommand(){
 		this.isCopy = false;
-		this.isAlive = true;
 	}
 	
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
@@ -246,13 +243,12 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return this.isAlive;
+		return !this.getRouter().isInterrupted();
 	}
 	
 	public boolean kill(){
 		if(this.stopAction()){
 			this.getRouter().interrupt();
-			this.isAlive = false;
 		}
 		
 		return !this.isAlive();
