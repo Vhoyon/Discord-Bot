@@ -21,6 +21,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	private String inputPrefix;
 	
 	private UpdatableOutputStream outputStream;
+	private UpdatableOutputStream errorStream;
 	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
@@ -41,6 +42,18 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				return "---";
 			}
 		};
+		this.errorStream = new UpdatableOutputStream(System.err){
+			@Override
+			public String formatLatestInputMessage(String latestMessage){
+				return AbstractTerminalConsole.this
+						.formatInputMessage(latestMessage);
+			}
+			
+			@Override
+			public String getUpdatingString(){
+				return "!---!";
+			}
+		};
 	}
 	
 	public CommandsRepository getCommandsRepo(){
@@ -57,6 +70,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	protected void setIsWaitingForInput(boolean isWaitingForInput){
 		this.outputStream.setIsWaitingForInput(isWaitingForInput);
+		this.errorStream.setIsWaitingForInput(isWaitingForInput);
 	}
 	
 	public boolean isWaitingForInput(){
@@ -65,6 +79,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	protected void setIsLogging(boolean isLogging){
 		this.outputStream.setIsPrinting(isLogging);
+		this.errorStream.setIsPrinting(isLogging);
 	}
 	
 	public boolean isLogging(){
@@ -149,6 +164,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		printGetInputMessage(message);
 		this.outputStream.setLatestInputMessage(message);
+		this.errorStream.setLatestInputMessage(message);
 		
 		this.setIsWaitingForInput(true);
 		
@@ -256,6 +272,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	@Override
 	public void onExit() throws Exception{
 		this.outputStream.resetStream();
+		this.errorStream.resetStream();
 	}
 	
 }
