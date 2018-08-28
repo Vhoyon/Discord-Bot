@@ -1,8 +1,9 @@
 package vendor.utilities.settings;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
+import java.util.Arrays;
 
+import vendor.exceptions.BadFormatException;
 import vendor.utilities.sanitizers.EnumSanitizer;
 
 public class EnumField extends TextField {
@@ -48,31 +49,28 @@ public class EnumField extends TextField {
 	
 	@Override
 	protected String formatEnvironment(String envValue)
-			throws IllegalFormatException{
-		String[] possibleValues = envValue.split("\\s*\\|\\s*");
+			throws BadFormatException{
+		this.values = new CaseArrayList();
 		
-		String envDefaultValue = possibleValues[0];
+		try{
+			this.values.addAll(EnumSanitizer.formatEnvironmentValue(envValue));
+		}
+		catch(NullPointerException e){
+			throw new BadFormatException();
+		}
 		
-		this.values = this.getValuesArrayList(envDefaultValue,
-				(Object[])possibleValues);
-		
-		return envDefaultValue;
+		return this.values.get(0);
 	}
 	
 	private ArrayList<String> getValuesArrayList(Object defaultValue,
 			Object... otherValues){
 		
-		ArrayList<String> newValues = new CaseArrayList();
+		CaseArrayList newValues = new CaseArrayList();
 		
 		newValues.add(defaultValue.toString());
 		
 		for(Object otherValue : otherValues){
-			if(!defaultValue.equals(otherValue)){
-				try{
-					newValues.add(otherValue.toString());
-				}
-				catch(NullPointerException e){}
-			}
+			newValues.add(otherValue.toString());
 		}
 		
 		return newValues;
