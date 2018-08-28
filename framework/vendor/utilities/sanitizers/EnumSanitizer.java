@@ -24,7 +24,7 @@ public interface EnumSanitizer {
 	}
 	
 	static ArrayList<String> formatEnvironment(String envKey){
-		return formatEnvironmentValue(Environment.getVar(envKey, null));
+		return formatEnvironmentValue(Environment.getVar(envKey));
 	}
 	
 	static ArrayList<String> formatEnvironmentValue(String envValue){

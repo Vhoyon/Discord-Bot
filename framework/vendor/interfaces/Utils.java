@@ -33,7 +33,7 @@ public interface Utils {
 		return (boolean)env("DEBUG", false) || Framework.isDebugging();
 	}
 	
-	default <EnvVar> EnvVar env(String key, Object defaultValue){
+	default <EnvVar> EnvVar env(String key, EnvVar defaultValue){
 		return Environment.getVar(key, defaultValue);
 	}
 	
