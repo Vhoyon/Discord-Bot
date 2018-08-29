@@ -198,9 +198,11 @@ public class CommandClear extends BotCommand {
 		
 		ArrayList<Message> messagesWithCondition = new ArrayList<>();
 		
+		boolean invert = hasParameter("i");
+		
 		fullHistory.forEach(message -> {
 			
-			if(messageCondition.test(message))
+			if(messageCondition.test(message) != invert)
 				messagesWithCondition.add(message);
 			
 		});
@@ -236,6 +238,8 @@ public class CommandClear extends BotCommand {
 			new ParametersHelp(
 					"Allows you to delete all of the bots messages.", false,
 					"b", "bot"),
+			new ParametersHelp("Inverts the condition applied to the command (example : using this in combination with " + formatParameter("s") + " would clear messages of everyone but yourself).",
+					false, "i", "invert"),
 			new ParametersHelp(
 					"This makes the bot notify the text channel of what it cleared.",
 					false, "n", "notify"),
