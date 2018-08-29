@@ -202,6 +202,7 @@ public class CommandClear extends BotCommand {
 		
 		fullHistory.forEach(message -> {
 			
+			// If inverting, the condition must be false to clear this message
 			if(messageCondition.test(message) != invert)
 				messagesWithCondition.add(message);
 			
