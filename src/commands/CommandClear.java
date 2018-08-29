@@ -115,7 +115,7 @@ public class CommandClear extends BotCommand {
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
 		
-		boolean shouldCompleteBeforeNext = hasParameter("i");
+		boolean shouldCompleteBeforeNext = hasParameter("w");
 		
 		final List<Message> fullMessageHistory = this.getFullMessageList(
 				messageHistory, messageCondition);
@@ -229,11 +229,8 @@ public class CommandClear extends BotCommand {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
-					false, "i", "interactive"),
-			new ParametersHelp(
-					"Allows you to delete the messages of a user you specifie.",
-					true, "u", "user"),
+					"Allows you to delete the messages of a user you specify.",
+					"u", "user"),
 			new ParametersHelp("Allows you to delete your own messages.",
 					false, "s", "self"),
 			new ParametersHelp(
@@ -242,6 +239,9 @@ public class CommandClear extends BotCommand {
 			new ParametersHelp(
 					"This makes the bot notify the text channel of what it cleared.",
 					false, "n", "notify"),
+			new ParametersHelp(
+					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
+					false, "w", "wait"),
 		};
 	}
 	
