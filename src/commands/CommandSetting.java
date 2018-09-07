@@ -3,9 +3,13 @@ package commands;
 import errorHandling.BotError;
 import utilities.BotCommand;
 import utilities.music.MusicManager;
+import vendor.exceptions.BadFormatException;
+import vendor.modules.Logger;
 import vendor.objects.ParametersHelp;
+import vendor.objects.Request.Parameter;
 import vendor.utilities.settings.SettingField;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /**
@@ -32,133 +36,237 @@ import java.util.function.Consumer;
  */
 public class CommandSetting extends BotCommand {
 	
+	/**
+	 * Class that facilitates the logic to change settings based on the code it
+	 * gets given in its {@link #onSuccess(Object) onSuccess(T)} method.<br>
+	 * It also allows to not execute the {@link #sendMessage(String)} (<i>and
+	 * its variants</i>) methods by overriding those methods to execute only
+	 * under the right state.
+	 * 
+	 * @param <T>
+	 * @version 1.0
+	 * @since v0.10.0
+	 * @author V-ed (Guillaume Marcoux)
+	 */
+	protected abstract class SettingChanger<T> extends BotCommand {
+		
+		public boolean shouldSendMessages;
+		
+		private String settingName;
+		private String parameterName;
+		private boolean isPresent;
+		
+		public SettingChanger(String settingAndParamName){
+			this(settingAndParamName, settingAndParamName);
+		}
+		
+		public SettingChanger(String settingName, String parameterName){
+			super(CommandSetting.this);
+			
+			this.shouldSendMessages = true;
+			this.settingName = settingName;
+			this.parameterName = parameterName;
+			this.isPresent = this.hasParameter(this.parameterName);
+			
+			CommandSetting.this.settings.add(this);
+		}
+		
+		@Override
+		public void action(){
+			
+			@SuppressWarnings("unchecked")
+			Consumer<Object> onSuccess = (value) -> {
+				try{
+					onSuccess((T)value);
+				}
+				catch(ClassCastException e){
+					Logger.log(
+							"One of your SettingChanger is not well typed : make sure that your settings configuration and your SettingChanger in CommandSetting are synchronized correctly!",
+							Logger.LogType.ERROR);
+				}
+			};
+			
+			Parameter param = getParameter(this.parameterName);
+			
+			String parameterContent = param.getContent();
+			
+			if(parameterContent == null){
+				
+				SettingField<Object> settingField = getSettings().getField(
+						this.settingName);
+				
+				if(CommandSetting.this.shouldSwitchToDefault){
+					
+					this.setSendable(false);
+					
+					settingField.setToDefaultValue(onSuccess);
+					
+					this.setSendable(true);
+					
+					sendMessage("The setting " + code(settingName)
+							+ " has been set back to its default ("
+							+ ital(code(settingField.getDefaultValue())) + ")!");
+					
+				}
+				else{
+					
+					Object defaultSettingValue = settingField.getDefaultValue();
+					Object currentSettingValue = settingField.getValue();
+					
+					sendMessage("The default value for the setting "
+							+ code(settingName) + " is : "
+							+ ital(code(defaultSettingValue))
+							+ ". Current value : " + code(currentSettingValue)
+							+ ".");
+					
+				}
+				
+			}
+			else{
+				
+				try{
+					setSetting(settingName, parameterContent, onSuccess);
+				}
+				catch(BadFormatException e){
+					new BotError(this, e.getMessage());
+				}
+				
+			}
+			
+		}
+		
+		public abstract void onSuccess(T value);
+		
+		public boolean isPresent(){
+			return this.isPresent;
+		}
+		
+		public void setSendable(boolean shouldSendMessages){
+			this.shouldSendMessages = shouldSendMessages;
+		}
+		
+		@Override
+		public Object getCalls(){
+			return null;
+		}
+		
+		@Override
+		public String sendMessage(String messageToSend){
+			return this.shouldSendMessages ? super.sendMessage(messageToSend)
+					: null;
+		}
+		
+		@Override
+		public String lang(String key){
+			return this.shouldSendMessages ? super.lang(key) : null;
+		}
+		
+		@Override
+		public String lang(String key, Object... replacements){
+			return this.shouldSendMessages ? super.lang(key, replacements)
+					: null;
+		}
+		
+	}
+	
 	private boolean shouldSwitchToDefault;
+	private ArrayList<SettingChanger<?>> settings = new ArrayList<>();
 	
 	@Override
 	public void action(){
 		
 		this.shouldSwitchToDefault = hasParameter("d");
 		
-		tryAndChangeSetting("prefix", "prefix", (value) -> {
-			sendMessage("You switched the prefix to " + code(value) + "!");
-		});
+		this.setupSettings();
 		
-		tryAndChangeSetting(
-				"param_prefix",
-				"param_prefix",
-				(value) -> {
-					sendMessage("You switched the parameters prefix to "
-							+ code(value)
-							+ " ("
-							+ ital("and of course "
-									+ code(value.toString() + value.toString()))
-							+ ")!");
-				});
+		boolean hasAtLeastOneSetting = false;
 		
-		tryAndChangeSetting("nickname", "nickname", (value) -> {
-			setSelfNickname(value.toString());
+		for(SettingChanger<?> setting : settings){
 			
-			sendMessage("The nickname of the bot is now set to " + code(value)
-					+ "!");
-		});
-		
-		tryAndChangeSetting(
-				"confirm_stop",
-				"confirm_stop",
-				(value) -> {
-					boolean isConfirming = (boolean)value;
-					
-					if(isConfirming){
-						sendMessage("Stopping the most recent running command will now ask for a confirmation.");
-					}
-					else{
-						sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
-					}
-				});
-		
-		tryAndChangeSetting("volume", "volume", (value) -> {
-			
-			if(MusicManager.get().hasPlayer(this.getGuild())){
-				MusicManager.get().getPlayer(this).setVolume((int)value);
+			if(setting.isPresent()){
+				
+				setting.action();
+				
+				if(!hasAtLeastOneSetting)
+					hasAtLeastOneSetting = true;
+				
 			}
 			
-			sendMessage("The default volume will now be " + code(value) + "!");
-			
-		});
+		}
+		
+		if(!hasAtLeastOneSetting){
+			new BotError(
+					this,
+					"You haven't entered a single setting parameter to change - get to know which ones are available using "
+							+ buildVCommand(HELP + " " + "setting") + "!");
+		}
 		
 	}
 	
 	/**
-	 * Method to prevent code duplicatas that executes the logic to change a
-	 * setting while still validating values and handling error messages sent on
-	 * validation fail. <br>
-	 * This method also handles the logic for displaying the default/current
-	 * value of a setting and setting back a setting to its default.
+	 * Method to setup all the available settings, confirming their types and
+	 * defining the arbitrary code to run on success.<br>
+	 * This setup requires the use of the SettingChanger class that handles all
+	 * the storage and when-to-call logic. Simply create a new SettingChanger,
+	 * define its {@code onSuccess} method and you'll be good to go.
 	 * 
-	 * @param settingName
-	 *            The name of the setting to apply the logic of upon.
-	 * @param parameterName
-	 *            The name of the parameter to link with the request (this is
-	 *            used to know what content will be taken from the request to
-	 *            apply on the setting found using the name given by the
-	 *            parameter {@code settingName}.
-	 * @param onSuccess
-	 *            Arbitrary code to run when changing the setting was a success.
-	 * @since v0.7.0
+	 * @since v0.10.0
 	 */
-	public void tryAndChangeSetting(String settingName, String parameterName,
-			Consumer<Object> onSuccess){
+	protected void setupSettings(){
 		
-		onParameterPresent(
-				parameterName,
-				param -> {
-					
-					String parameterContent = param.getContent();
-					
-					if(parameterContent == null){
-						
-						SettingField<Object> settingField = getSettings()
-								.getField(settingName);
-						
-						if(this.shouldSwitchToDefault){
-							
-							settingField.setToDefaultValue(onSuccess);
-							
-							sendMessage("The setting "
-									+ code(settingName)
-									+ " has been set back to its default ("
-									+ ital(code(settingField.getDefaultValue()))
-									+ ")!");
-							
-						}
-						else{
-							
-							Object defaultSettingValue = settingField
-									.getDefaultValue();
-							Object currentSettingValue = settingField
-									.getValue();
-							
-							sendMessage("The default value for the setting "
-									+ code(settingName) + " is : "
-									+ ital(code(defaultSettingValue))
-									+ ". Current value : "
-									+ code(currentSettingValue) + ".");
-							
-						}
-						
-					}
-					else{
-						
-						try{
-							setSetting(settingName, parameterContent, onSuccess);
-						}
-						catch(IllegalArgumentException e){
-							new BotError(this, e.getMessage());
-						}
-						
-					}
-					
-				});
+		new SettingChanger<String>("prefix"){
+			@Override
+			public void onSuccess(String newPrefix){
+				sendMessage("You switched the prefix to " + code(newPrefix)
+						+ "!");
+			}
+		};
+		
+		new SettingChanger<Character>("param_prefix"){
+			@Override
+			public void onSuccess(Character newParamPrefix){
+				sendMessage("You switched the parameters prefix to "
+						+ code(newParamPrefix)
+						+ " ("
+						+ ital("and of course "
+								+ code(newParamPrefix + "" + newParamPrefix))
+						+ ")!");
+			}
+		};
+		
+		new SettingChanger<String>("nickname"){
+			@Override
+			public void onSuccess(String newNickname){
+				setSelfNickname(newNickname);
+				
+				sendMessage("The nickname of the bot is now set to "
+						+ code(newNickname) + "!");
+			}
+		};
+		
+		new SettingChanger<Boolean>("confirm_stop"){
+			@Override
+			public void onSuccess(Boolean isConfirming){
+				if(isConfirming){
+					sendMessage("Stopping the most recent running command will now ask for a confirmation.");
+				}
+				else{
+					sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
+				}
+			}
+		};
+		
+		new SettingChanger<Integer>("volume"){
+			@Override
+			public void onSuccess(Integer volume){
+				if(MusicManager.get().hasPlayer(this.getGuild())){
+					MusicManager.get().getPlayer(this).setVolume(volume);
+				}
+				
+				sendMessage("The default volume will now be " + code(volume)
+						+ "!");
+			}
+		};
 		
 	}
 	

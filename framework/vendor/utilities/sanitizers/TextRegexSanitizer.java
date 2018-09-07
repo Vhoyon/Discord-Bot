@@ -3,15 +3,17 @@ package vendor.utilities.sanitizers;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import vendor.exceptions.BadFormatException;
+
 public interface TextRegexSanitizer {
 	
 	static String sanitizeValue(Object value, String regexToMatch)
-			throws IllegalArgumentException, PatternSyntaxException{
+			throws BadFormatException, PatternSyntaxException{
 		return TextRegexSanitizer.sanitizeValue(value, regexToMatch, false);
 	}
 	
 	static String sanitizeValue(Object value, String regexToMatch,
-			boolean isInverted) throws IllegalArgumentException,
+			boolean isInverted) throws BadFormatException,
 			PatternSyntaxException{
 		return TextRegexSanitizer.sanitizeValue(value, regexToMatch,
 				isInverted, true);
@@ -19,14 +21,14 @@ public interface TextRegexSanitizer {
 	
 	static String sanitizeValue(Object value, String regexToMatch,
 			boolean isInverted, boolean shouldBox)
-			throws IllegalArgumentException, PatternSyntaxException{
+			throws BadFormatException, PatternSyntaxException{
 		return TextRegexSanitizer.sanitizeValue(value, regexToMatch,
 				isInverted, shouldBox, true);
 	}
 	
 	static String sanitizeValue(Object value, String regexToMatch,
 			boolean isInverted, boolean shouldBox, boolean shouldCheckPattern)
-			throws IllegalArgumentException, PatternSyntaxException{
+			throws BadFormatException, PatternSyntaxException{
 		
 		String stringValue = TextSanitizer.sanitizeValue(value);
 		
@@ -43,8 +45,8 @@ public interface TextRegexSanitizer {
 			
 			// Test regex and invert if we need to
 			if(stringValue.matches(regexToMatch) == isInverted){
-				throw new IllegalArgumentException(
-						"Value does not match the required pattern!");
+				throw new BadFormatException(
+						"Value does not match the required pattern!", 1);
 			}
 			
 		}

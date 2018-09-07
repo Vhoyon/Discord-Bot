@@ -1,6 +1,8 @@
 package commands;
 
+import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
 import vendor.objects.Mention;
@@ -37,19 +39,7 @@ public class CommandSpam extends BotCommand {
 	@Override
 	public void action(){
 		
-		// Defaults to 10 messages.
-		AtomicInteger numberOfSpam = new AtomicInteger(10);
-		
-		onParameterPresent("c", param -> {
-			try{
-				
-				numberOfSpam.set(Integer.parseInt(param.getContent()));
-				
-			}
-			catch(NumberFormatException e){
-				
-			}
-		});
+		boolean canSpam = true;
 		
 		boolean shouldSendToMember = hasParameter("u");
 		
@@ -63,24 +53,52 @@ public class CommandSpam extends BotCommand {
 				
 				if(isStringMention(possibleMention)){
 					memberToSpam = getParameterAsMention("u");
+					
+					if(getBotMember().equals(memberToSpam))
+						throw new BadContentException(
+								"You think I'll spam myself? C'mon, I'm better than that...");
+					else if(memberToSpam.getUser().isBot())
+						throw new BadContentException(
+								"I won't spam my fellow bots!");
 				}
 				else if(isStringMentionRole(possibleMention)){
-					membersToSpam = getGuild()
-							.getMembersWithRoles(
-									getGuild()
-											.getRoleById(
-													getIdFromStringMentionRole(possibleMention)));
+					Role role = getGuild().getRoleById(
+							getIdFromStringMentionRole(possibleMention));
+					
+					membersToSpam = getGuild().getMembersWithRoles(role);
+					
+					if(membersToSpam.size() == 0)
+						throw new BadContentException(
+								"The role you mentionned has no member in it, nobody was spammed!");
+				}
+				else{
+					throw new BadContentException(
+							"Your mention is not valid. Tag a user (or a role!) with "
+									+ code("@[username|role]") + "!");
 				}
 				
 			}
 			catch(BadContentException e){
-				sendMessage("The member specified is not valid. Tag him with "
-						+ code("@[username]") + "!");
+				new BotError(this, e.getMessage());
+				canSpam = false;
 			}
 		}
 		
-		if(!shouldSendToMember
-				|| (shouldSendToMember && (memberToSpam != null || membersToSpam != null))){
+		if(canSpam){
+			
+			// Defaults to 10 messages.
+			AtomicInteger numberOfSpam = new AtomicInteger(10);
+			
+			onParameterPresent("c", param -> {
+				try{
+					
+					numberOfSpam.set(Integer.parseInt(param.getContent()));
+					
+				}
+				catch(NumberFormatException e){
+					
+				}
+			});
 			
 			String message;
 			

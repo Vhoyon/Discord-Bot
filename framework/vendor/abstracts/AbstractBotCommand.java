@@ -38,11 +38,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	private boolean isCopy;
 	
-	private boolean isAlive;
-	
 	public AbstractBotCommand(){
 		this.isCopy = false;
-		this.isAlive = true;
 	}
 	
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
@@ -169,16 +166,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
-	public Member getSelfMember(){
+	public Member getBotMember(){
 		return getGuild().getSelfMember();
 	}
 	
-	public SelfUser getSelfUser(){
+	public SelfUser getBotUser(){
 		return getEventDigger().getRunningBot();
 	}
 	
-	public AccountManager getSelfUserManager(){
-		return getSelfUser().getManager();
+	public AccountManager getBotUserManager(){
+		return getBotUser().getManager();
 	}
 	
 	public Member getMember(){
@@ -246,13 +243,12 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return this.isAlive;
+		return !this.getRouter().isInterrupted();
 	}
 	
 	public boolean kill(){
 		if(this.stopAction()){
 			this.getRouter().interrupt();
-			this.isAlive = false;
 		}
 		
 		return !this.isAlive();
@@ -333,7 +329,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public void setSelfNickname(String nickname){
-		this.setNicknameOf(this.getSelfMember(), nickname);
+		this.setNicknameOf(this.getBotMember(), nickname);
 	}
 	
 	public void setNicknameOf(Member member, String nickname){

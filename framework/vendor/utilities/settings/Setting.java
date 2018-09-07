@@ -1,5 +1,6 @@
 package vendor.utilities.settings;
 
+import vendor.exceptions.BadFormatException;
 import vendor.objects.Dictionary;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class Setting {
 	}
 	
 	public boolean save(String settingName, Object value,
-			Consumer<Object> onChange) throws IllegalArgumentException{
+			Consumer<Object> onChange) throws BadFormatException{
 		
 		if(!hasField(settingName)){
 			return false;
