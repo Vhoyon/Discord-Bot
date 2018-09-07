@@ -3,7 +3,6 @@ package utilities.specifics;
 import utilities.BotCommand;
 import utilities.interfaces.Commands;
 import utilities.interfaces.Resources;
-import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandConfirmed;
 
 /**

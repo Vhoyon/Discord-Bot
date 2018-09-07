@@ -44,6 +44,9 @@ public class CommandSetting extends BotCommand {
 	 * under the right state.
 	 * 
 	 * @param <T>
+	 *            The type of the setting to deal with. This type will be used
+	 *            when sending the object to the {@link #onSuccess(Object)
+	 *            onSuccess(T)} method.
 	 * @version 1.0
 	 * @since v0.10.0
 	 * @author V-ed (Guillaume Marcoux)

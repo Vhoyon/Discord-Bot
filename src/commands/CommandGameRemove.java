@@ -74,7 +74,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 	public ParametersHelp[] getParametersDescriptions(){
 		return new ParametersHelp[]
 		{
-			new ParametersHelp("Removes all games from the list.", "a", "all")
+			new ParametersHelp("Removes all games from the list.", "a", "all"),
 		};
 	}
 	
