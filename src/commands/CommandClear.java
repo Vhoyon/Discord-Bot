@@ -68,11 +68,39 @@ public class CommandClear extends BotCommand {
 		
 	}
 	
+	/**
+	 * Executes the logic to clear the messages without any conditions. This is
+	 * a way to call {@link #deleteAllMessages()} and still handle the
+	 * confirmation/notification behavior, for example.
+	 * 
+	 * @param confMessage
+	 *            The message to send as confirmation if necessary
+	 * @param notifyMessage
+	 *            The message to send to notify that every message has been
+	 *            deleted
+	 * @since v0.10.0
+	 */
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage){
 		this.doClearLogic(confMessage, notifyMessage, null);
 	}
 	
+	/**
+	 * Executes the logic to clear the messages with a condition (given by the
+	 * parameter {@code messageCondition}. This is a way to call
+	 * {@link #deleteAllMessages()} and still handle the
+	 * confirmation/notification behavior, for example.
+	 *
+	 * @param confMessage
+	 *            The message to send as confirmation if necessary
+	 * @param notifyMessage
+	 *            The message to send to notify that every message has been
+	 *            deleted
+	 * @param messageCondition
+	 *            The condition applied to each message individually. Can be
+	 *            {@code null} to not do any condition management.
+	 * @since v0.10.0
+	 */
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage,
 			final Predicate<Message> messageCondition){
@@ -273,10 +301,10 @@ public class CommandClear extends BotCommand {
 		fullHistory.forEach(message -> {
 			
 			// If inverting, the condition must be false to clear this message
-			if(messageCondition.test(message) != invert)
-				messagesWithCondition.add(message);
-			
-		});
+				if(messageCondition.test(message) != invert)
+					messagesWithCondition.add(message);
+				
+			});
 		
 		return messagesWithCondition;
 		
@@ -309,7 +337,10 @@ public class CommandClear extends BotCommand {
 			new ParametersHelp(
 					"Allows you to delete all of the bots messages.", false,
 					"b", "bot"),
-			new ParametersHelp("Inverts the condition applied to the command (example : using this in combination with " + formatParameter("s") + " would clear messages of everyone but yourself).",
+			new ParametersHelp(
+					"Inverts the condition applied to the command (example : using this in combination with "
+							+ formatParameter("s")
+							+ " would clear messages of everyone but yourself).",
 					false, "i", "invert"),
 			new ParametersHelp(
 					"This makes the bot notify the text channel of what it cleared.",

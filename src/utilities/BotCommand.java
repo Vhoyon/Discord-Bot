@@ -62,9 +62,9 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 * Gets the {@link vendor.utilities.settings.Setting Setting} object from
 	 * this command's router.
 	 *
-	 * @version 1.0
 	 * @since v0.8.0
 	 * @see app.CommandRouter#getSettings()
+	 * @return The {@link Setting} object of this {@link app.CommandRouter Router}.
 	 */
 	public Setting getSettings(){
 		return getRouter().getSettings();
@@ -100,9 +100,11 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 *             {@code value} parameter is not the type of the
 	 *             {@link vendor.utilities.settings.SettingField SettingField}
 	 *             associated with the {@code name} provided.
-	 * @version 1.0
 	 * @since v0.8.0
 	 * @see #setSetting(String, Object, Consumer)
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
 	 */
 	public void setSetting(String settingName, Object value)
 			throws BadFormatException{
@@ -129,8 +131,10 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 *             {@code value} parameter is not the type of the
 	 *             {@link vendor.utilities.settings.SettingField SettingField}
 	 *             associated with the {@code name} provided.
-	 * @version 1.0
 	 * @since v0.8.0
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
 	 */
 	public void setSetting(String settingName, Object value,
 			Consumer<Object> onChange) throws BadFormatException{

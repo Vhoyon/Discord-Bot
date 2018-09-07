@@ -18,6 +18,12 @@ import java.io.IOException;
  */
 public abstract class TerminalConsole extends AbstractTerminalConsole {
 	
+	/**
+	 * Constructor that simply calls {@link AbstractTerminalConsole}'s
+	 * {@link AbstractTerminalConsole#AbstractTerminalConsole() constructor}.
+	 * 
+	 * @since v0.4.0
+	 */
 	public TerminalConsole(){
 		super();
 	}

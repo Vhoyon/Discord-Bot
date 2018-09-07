@@ -5,7 +5,8 @@ import vendor.abstracts.AbstractBotError;
 
 /**
  * Vhoyon's custom implementation of the AbstractBotError class to format error
- * messages like we want.
+ * messages like we want. We implemented it to send an info message for added
+ * squiggly lines.
  *
  * @version 1.0
  * @since v0.4.0
