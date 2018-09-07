@@ -179,7 +179,7 @@ public class Request implements Utils {
 		
 	}
 	
-	private class PossibleParam{
+	private class PossibleParam {
 		String name;
 		int index;
 		int startPos;
@@ -209,14 +209,17 @@ public class Request implements Utils {
 		
 		for(int i = 0; i < possibleParams.size() && canRoll; i++){
 			
-			PossibleParam possibleParam = new PossibleParam(possibleParams.get(i), i, -1, -1);
+			PossibleParam possibleParam = new PossibleParam(
+					possibleParams.get(i), i, -1, -1);
 			
 			if(possibleParam.name.equals(getParametersPrefix() + ""
 					+ getParametersPrefix())){
 				// If string is double parameter prefix, remove it and stop taking params
 				
-				possibleParam.startPos = getContent().indexOf(possibleParam.name);
-				possibleParam.endPos = possibleParam.startPos + possibleParam.name.length();
+				possibleParam.startPos = getContent().indexOf(
+						possibleParam.name);
+				possibleParam.endPos = possibleParam.startPos
+						+ possibleParam.name.length();
 				
 				canRoll = false;
 				
@@ -245,7 +248,7 @@ public class Request implements Utils {
 		
 	}
 	
-	private boolean tryGetParamContent(Parameter newParameter, 
+	private boolean tryGetParamContent(Parameter newParameter,
 			PossibleParam possibleParam, ArrayList<String> possibleParamList){
 		
 		String possibleParamContent;
@@ -259,7 +262,6 @@ public class Request implements Utils {
 			return false;
 		}
 		
-		
 		// If the following String isn't another param, set
 		// said String as the content for the current param.
 		if(!stringIsParameter(possibleParamContent)){
@@ -268,10 +270,8 @@ public class Request implements Utils {
 			
 			possibleParam.index++;
 			
-			possibleParam.endPos = getContent().indexOf(
-					possibleParamContent)
-					+ possibleParamContent
-							.length();
+			possibleParam.endPos = getContent().indexOf(possibleParamContent)
+					+ possibleParamContent.length();
 			
 		}
 		
@@ -280,16 +280,19 @@ public class Request implements Utils {
 	}
 	
 	private boolean stringIsParameter(String string){
-		return string != null && string.matches(getParametersPrefixProtected()
-				+ "{1,2}[^\\s]+");
+		return string != null
+				&& string.matches(getParametersPrefixProtected()
+						+ "{1,2}[^\\s]+");
 	}
 	
-	private boolean handleParameterCreation(PossibleParam possibleParam, ArrayList<String> possibleParamsList){
+	private boolean handleParameterCreation(PossibleParam possibleParam,
+			ArrayList<String> possibleParamsList){
 		
 		boolean canRoll = true;
 		
 		possibleParam.startPos = getContent().indexOf(possibleParam.name);
-				possibleParam.endPos = possibleParam.startPos + possibleParam.name.length();
+		possibleParam.endPos = possibleParam.startPos
+				+ possibleParam.name.length();
 		
 		if(possibleParam.name.matches(getParametersPrefixProtected()
 				+ "{2}[^\\s]+")){
@@ -306,7 +309,7 @@ public class Request implements Utils {
 			else{
 				
 				canRoll = tryGetParamContent(newParam, possibleParam,
-								possibleParamsList);
+						possibleParamsList);
 				
 				parameters.put(newParam.getName(), newParam);
 				
@@ -334,7 +337,7 @@ public class Request implements Utils {
 					if(j == singleParams.length - 1){
 						
 						canRoll = tryGetParamContent(newParam, possibleParam,
-										possibleParamsList);
+								possibleParamsList);
 						
 					}
 					
