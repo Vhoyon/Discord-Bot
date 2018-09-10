@@ -5,13 +5,14 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
+import vendor.interfaces.Stoppable;
 import vendor.objects.Mention;
 import vendor.objects.ParametersHelp;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CommandSpam extends BotCommand {
+public class CommandSpam extends BotCommand implements Stoppable {
 	
 	@Override
 	public void action(){
