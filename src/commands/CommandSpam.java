@@ -106,9 +106,9 @@ public class CommandSpam extends BotCommand {
 			
 			boolean shouldAppendNumber = hasParameter("n");
 			
-			for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
+			try{
 				
-				try{
+				for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
 					
 					if(i != 0)
 						Thread.sleep(1250);
@@ -142,9 +142,9 @@ public class CommandSpam extends BotCommand {
 					}
 					
 				}
-				catch(InterruptedException e){}
 				
 			}
+			catch(InterruptedException e){}
 			
 		}
 		
