@@ -20,7 +20,7 @@ public class GamePool extends Pool<String> {
 	 *            The games to initialize the pool with.
 	 * @since v0.4.0
 	 */
-	public GamePool(String[] games){
+	public GamePool(String... games){
 		super(games);
 	}
 	

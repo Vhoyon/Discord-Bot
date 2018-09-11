@@ -3,7 +3,6 @@ package utilities.specifics;
 import utilities.BotCommand;
 import utilities.interfaces.Commands;
 import utilities.interfaces.Resources;
-import vendor.abstracts.AbstractBotCommand;
 import vendor.abstracts.AbstractCommandConfirmed;
 
 /**
@@ -24,7 +23,7 @@ public abstract class CommandConfirmed extends AbstractCommandConfirmed
 	 * <p>
 	 * This usage does not get the context from the current request, so you need
 	 * to add it in some way (<i>e.g. : using
-	 * {@link vendor.abstracts.AbstractBotCommand#putStateFromCommand(AbstractBotCommand)}
+	 * {@link vendor.abstracts.AbstractBotCommand#putStateFromCommand(vendor.abstracts.AbstractBotCommand)}
 	 * </i>), and calling {@link #action()} too.
 	 * </p>
 	 * 
