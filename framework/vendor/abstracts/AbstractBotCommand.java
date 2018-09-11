@@ -243,7 +243,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return !this.getRouter().isInterrupted();
+		return !this.getRouter().isDead();
 	}
 	
 	public boolean kill(){
