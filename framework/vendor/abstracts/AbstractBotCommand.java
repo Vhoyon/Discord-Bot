@@ -245,7 +245,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public boolean kill(){
 		
-		if(this instanceof Stoppable && ((Stoppable)this).stopAction()){
+		if(this instanceof Stoppable && ((Stoppable)this).stopMiddleware()){
 			this.getRouter().interrupt();
 		}
 		

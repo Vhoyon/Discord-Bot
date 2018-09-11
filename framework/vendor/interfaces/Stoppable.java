@@ -2,6 +2,8 @@ package vendor.interfaces;
 
 public interface Stoppable {
 	
-	boolean stopAction();
+	default boolean stopMiddleware(){
+		return true;
+	}
 	
 }

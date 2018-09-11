@@ -92,11 +92,6 @@ public class CommandTimer extends BotCommand implements Stoppable {
 	}
 	
 	@Override
-	public boolean stopAction(){
-		return true;
-	}
-	
-	@Override
 	public Object getCalls(){
 		return TIMER;
 	}
