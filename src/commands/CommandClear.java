@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
 import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import vendor.exceptions.BadContentException;
+import vendor.interfaces.Stoppable;
 import vendor.objects.ParametersHelp;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.function.Predicate;
  * 
  * @author Stephano
  */
-public class CommandClear extends BotCommand {
+public class CommandClear extends BotCommand implements Stoppable {
 	
 	@Override
 	public void action(){
@@ -203,18 +204,13 @@ public class CommandClear extends BotCommand {
 		fullHistory.forEach(message -> {
 			
 			// If inverting, the condition must be false to clear this message
-			if(messageCondition.test(message) != invert)
-				messagesWithCondition.add(message);
-			
-		});
+				if(messageCondition.test(message) != invert)
+					messagesWithCondition.add(message);
+				
+			});
 		
 		return messagesWithCondition;
 		
-	}
-	
-	@Override
-	public boolean stopAction(){
-		return true;
 	}
 	
 	@Override
@@ -239,7 +235,10 @@ public class CommandClear extends BotCommand {
 			new ParametersHelp(
 					"Allows you to delete all of the bots messages.", false,
 					"b", "bot"),
-			new ParametersHelp("Inverts the condition applied to the command (example : using this in combination with " + formatParameter("s") + " would clear messages of everyone but yourself).",
+			new ParametersHelp(
+					"Inverts the condition applied to the command (example : using this in combination with "
+							+ formatParameter("s")
+							+ " would clear messages of everyone but yourself).",
 					false, "i", "invert"),
 			new ParametersHelp(
 					"This makes the bot notify the text channel of what it cleared.",

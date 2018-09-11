@@ -2,9 +2,10 @@ package commands;
 
 import errorHandling.BotError;
 import utilities.BotCommand;
+import vendor.interfaces.Stoppable;
 import vendor.objects.ParametersHelp;
 
-public class CommandTimer extends BotCommand {
+public class CommandTimer extends BotCommand implements Stoppable {
 	
 	private int seconds;
 	private int hours;
@@ -88,11 +89,6 @@ public class CommandTimer extends BotCommand {
 	
 	private String formatDate(int hours, int minutes, int seconds){
 		return formatS("%02d:%02d:%02d", hours, minutes, seconds);
-	}
-	
-	@Override
-	public boolean stopAction(){
-		return true;
 	}
 	
 	@Override

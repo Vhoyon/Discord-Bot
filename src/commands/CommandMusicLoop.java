@@ -58,11 +58,6 @@ public class CommandMusicLoop extends MusicCommands {
 	}
 	
 	@Override
-	public boolean stopAction(){
-		return super.stopAction();
-	}
-	
-	@Override
 	public String getCommandDescription(){
 		return "Skip the song that is currently playing";
 	}
