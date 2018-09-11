@@ -1,24 +1,36 @@
 package consoles;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import vendor.abstracts.AbstractUIConsole;
 import vendor.modules.Logger;
 import vendor.objects.LoggableJTextArea;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+/**
+ * Vhoyon's custom implementation of the
+ * {@link vendor.abstracts.AbstractUIConsole AbstractUIConsole} that allows us
+ * to get a visual console for managing our bot's state.
+ *
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ * @see vendor.abstracts.AbstractUIConsole
+ */
 public abstract class UIConsole extends AbstractUIConsole {
 	
 	private JButton actionButton;
 	
 	private LoggableJTextArea log;
 	
+	/**
+	 * Constructor that simply calls {@link AbstractUIConsole}'s
+	 * {@link AbstractUIConsole#AbstractUIConsole() constructor}.
+	 *
+	 * @since v0.4.0
+	 */
 	public UIConsole(){
 		super();
 	}

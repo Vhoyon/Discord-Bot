@@ -2,6 +2,13 @@ package commands;
 
 import utilities.abstracts.SimpleTextCommand;
 
+/**
+ * Easter egg command. We b0ts never terminates.
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandTerminate extends SimpleTextCommand {
 	
 	@Override
@@ -13,9 +20,10 @@ public class CommandTerminate extends SimpleTextCommand {
 	public Object getCalls(){
 		return TERMINATE;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Terminate the bot";
 	}
+	
 }

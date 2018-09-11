@@ -19,6 +19,29 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
+/**
+ * Command to play a track into the VoiceChannel of the user that used this
+ * command if he is connected to a VoiceChannel.
+ * <p>
+ * Many utilities are packed into this command :
+ * <ul>
+ * <li>Putting a link in the content of it allows the MusicManager to search
+ * through that link for a possible audio source and play it immediately or
+ * append the track to the MusicPlayer's playlist if there is already music
+ * playing;</li>
+ * <li>Putting a track's title to search through YouTube and play the first
+ * result found in the same way expressed above;</li>
+ * <li>Having a paused track and inputting this command without any content
+ * tries to play back the paused track;</li>
+ * <li>Play a random playlist using the {@code -r} (<i>or {@code --random}</i>)
+ * flag.</li>
+ * </ul>
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandMusicPlay extends MusicCommands {
 	
 	@Override
@@ -134,6 +157,20 @@ public class CommandMusicPlay extends MusicCommands {
 		
 	}
 	
+	/**
+	 * Finds the source of a video by searching YouTube using the query's text.
+	 * This would be like if a user searched in the search bar of YouTube.
+	 * 
+	 * @param query
+	 *            The text query to search with.
+	 * @return The URL in a String form of the first video found from YouTube
+	 *         using the {@code query} parameter.
+	 * @throws IOException
+	 *             If any errors happened while searching for the video online.
+	 * @throws IllegalStateException
+	 *             If the environment variable {@code YOUTUBE_TOKEN} is not set
+	 * @since v0.9.0
+	 */
 	private String getSourceFromYoutube(String query) throws IOException,
 			IllegalStateException{
 		
@@ -181,6 +218,15 @@ public class CommandMusicPlay extends MusicCommands {
 		};
 	}
 	
+	/**
+	 * Determines if the given parameter {@code string} is a URL or not.
+	 * 
+	 * @param string
+	 *            The string to test.
+	 * @return {@code true} if the string is formed as an URL, {@code false}
+	 *         otherwise.
+	 * @since v0.9.0
+	 */
 	public boolean isUrl(String string){
 		try{
 			new URL(string);

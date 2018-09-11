@@ -4,6 +4,19 @@ import errorHandling.BotError;
 import utilities.abstracts.MusicCommands;
 import vendor.objects.ParametersHelp;
 
+/**
+ * Command that tells the associated MusicPlayer to loop songs. Two loop modes
+ * are available :
+ * <ol>
+ * <li>PLAYLIST (<i><b>default</b></i>) : loops the playlist after the last
+ * track was hit;</li>
+ * <li>SINGLE : loops a single track over and over (until stopped, of course).</li>
+ * </ol>
+ * 
+ * @version 1.0
+ * @since v0.6.0
+ * @author Stephano Mehawej
+ */
 public class CommandMusicLoop extends MusicCommands {
 	
 	@Override

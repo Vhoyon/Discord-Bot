@@ -3,7 +3,16 @@ package commands;
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
 
+/**
+ * Command that replays the latest track that was in the playlist for this
+ * command's context.
+ * 
+ * @version 1.0
+ * @since v0.9.0
+ * @author Stephano Mehawej
+ */
 public class CommandMusicReplay extends MusicCommands {
+	
 	@Override
 	public void action(){
 		
@@ -12,11 +21,10 @@ public class CommandMusicReplay extends MusicCommands {
 		}
 		else{
 			
-			String trackSource = null;
+			String trackSource = (String)getMemory("LATEST_SONG");
 			
-			trackSource = (String)getMemory("LATEST_SONG");
-			
-			MusicManager.get().loadTrack(this, trackSource, this::connectIfNotPlaying);
+			MusicManager.get().loadTrack(this, trackSource,
+					this::connectIfNotPlaying);
 			
 		}
 		
@@ -26,4 +34,10 @@ public class CommandMusicReplay extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_REPLAY;
 	}
+	
+	@Override
+	public String getCommandDescription(){
+		return super.getCommandDescription(); // TODO : Write description for CommandMusicReplay
+	}
+	
 }

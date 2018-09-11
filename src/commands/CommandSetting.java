@@ -12,8 +12,45 @@ import vendor.utilities.settings.SettingField;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+/**
+ * Command to interact with the settings of this bot. There's quite a few things
+ * you can do, here's a small list :
+ * <ul>
+ * <li>Don't add any content to the available parameters to see their current
+ * and default values;</li>
+ * <li>Add the flag {@code -d} (<i>or {@code default}</i>) to set back the
+ * settings added as parameters (which has <b>no text afterward</b>) to their
+ * default state. Any parameters that has content will not be set back to its
+ * default;</li>
+ * <li>Add content after the parameters that you want to change to set its
+ * value. Appropriate error messages will be sent if validations fails.</li>
+ * </ul>
+ * <p>
+ * Run the command {@code !!help setting} to see more about available parameters
+ * (in other words, available settings)!
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.7.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandSetting extends BotCommand {
 	
+	/**
+	 * Class that facilitates the logic to change settings based on the code it
+	 * gets given in its {@link #onSuccess(Object) onSuccess(T)} method.<br>
+	 * It also allows to not execute the {@link #sendMessage(String)} (<i>and
+	 * its variants</i>) methods by overriding those methods to execute only
+	 * under the right state.
+	 * 
+	 * @param <T>
+	 *            The type of the setting to deal with. This type will be used
+	 *            when sending the object to the {@link #onSuccess(Object)
+	 *            onSuccess(T)} method.
+	 * @version 1.0
+	 * @since v0.10.0
+	 * @author V-ed (Guillaume Marcoux)
+	 */
 	protected abstract class SettingChanger<T> extends BotCommand {
 		
 		public boolean shouldSendMessages;
@@ -38,7 +75,7 @@ public class CommandSetting extends BotCommand {
 		}
 		
 		@Override
-		public void action() {
+		public void action(){
 			
 			@SuppressWarnings("unchecked")
 			Consumer<Object> onSuccess = (value) -> {
@@ -46,18 +83,20 @@ public class CommandSetting extends BotCommand {
 					onSuccess((T)value);
 				}
 				catch(ClassCastException e){
-					Logger.log("One of your SettingChanger is not well typed : make sure that your settings configuration and your SettingChanger in CommandSetting are synchronized correctly!", Logger.LogType.ERROR);
+					Logger.log(
+							"One of your SettingChanger is not well typed : make sure that your settings configuration and your SettingChanger in CommandSetting are synchronized correctly!",
+							Logger.LogType.ERROR);
 				}
 			};
 			
 			Parameter param = getParameter(this.parameterName);
 			
 			String parameterContent = param.getContent();
-				
+			
 			if(parameterContent == null){
 				
-				SettingField<Object> settingField = getSettings()
-						.getField(this.settingName);
+				SettingField<Object> settingField = getSettings().getField(
+						this.settingName);
 				
 				if(CommandSetting.this.shouldSwitchToDefault){
 					
@@ -67,25 +106,21 @@ public class CommandSetting extends BotCommand {
 					
 					this.setSendable(true);
 					
-					sendMessage("The setting "
-							+ code(settingName)
+					sendMessage("The setting " + code(settingName)
 							+ " has been set back to its default ("
-							+ ital(code(settingField.getDefaultValue()))
-							+ ")!");
+							+ ital(code(settingField.getDefaultValue())) + ")!");
 					
 				}
 				else{
 					
-					Object defaultSettingValue = settingField
-							.getDefaultValue();
-					Object currentSettingValue = settingField
-							.getValue();
+					Object defaultSettingValue = settingField.getDefaultValue();
+					Object currentSettingValue = settingField.getValue();
 					
 					sendMessage("The default value for the setting "
 							+ code(settingName) + " is : "
 							+ ital(code(defaultSettingValue))
-							+ ". Current value : "
-							+ code(currentSettingValue) + ".");
+							+ ". Current value : " + code(currentSettingValue)
+							+ ".");
 					
 				}
 				
@@ -114,23 +149,25 @@ public class CommandSetting extends BotCommand {
 		}
 		
 		@Override
-		public Object getCalls() {
+		public Object getCalls(){
 			return null;
 		}
 		
 		@Override
-		public String sendMessage(String messageToSend) {
-			return this.shouldSendMessages ? super.sendMessage(messageToSend) : null;
+		public String sendMessage(String messageToSend){
+			return this.shouldSendMessages ? super.sendMessage(messageToSend)
+					: null;
 		}
 		
 		@Override
-		public String lang(String key) {
+		public String lang(String key){
 			return this.shouldSendMessages ? super.lang(key) : null;
 		}
 		
 		@Override
-		public String lang(String key, Object... replacements) {
-			return this.shouldSendMessages ? super.lang(key, replacements) : null;
+		public String lang(String key, Object... replacements){
+			return this.shouldSendMessages ? super.lang(key, replacements)
+					: null;
 		}
 		
 	}
@@ -161,17 +198,30 @@ public class CommandSetting extends BotCommand {
 		}
 		
 		if(!hasAtLeastOneSetting){
-			new BotError(this, "You haven't entered a single setting parameter to change - get to know which ones are available using " + buildVCommand(HELP + " " + "setting") + "!");
+			new BotError(
+					this,
+					"You haven't entered a single setting parameter to change - get to know which ones are available using "
+							+ buildVCommand(HELP + " " + "setting") + "!");
 		}
 		
 	}
 	
+	/**
+	 * Method to setup all the available settings, confirming their types and
+	 * defining the arbitrary code to run on success.<br>
+	 * This setup requires the use of the SettingChanger class that handles all
+	 * the storage and when-to-call logic. Simply create a new SettingChanger,
+	 * define its {@code onSuccess} method and you'll be good to go.
+	 * 
+	 * @since v0.10.0
+	 */
 	protected void setupSettings(){
 		
 		new SettingChanger<String>("prefix"){
 			@Override
 			public void onSuccess(String newPrefix){
-				sendMessage("You switched the prefix to " + code(newPrefix) + "!");
+				sendMessage("You switched the prefix to " + code(newPrefix)
+						+ "!");
 			}
 		};
 		
@@ -179,7 +229,8 @@ public class CommandSetting extends BotCommand {
 			@Override
 			public void onSuccess(Character newParamPrefix){
 				sendMessage("You switched the parameters prefix to "
-						+ code(newParamPrefix) + " ("
+						+ code(newParamPrefix)
+						+ " ("
 						+ ital("and of course "
 								+ code(newParamPrefix + "" + newParamPrefix))
 						+ ")!");
@@ -215,7 +266,8 @@ public class CommandSetting extends BotCommand {
 					MusicManager.get().getPlayer(this).setVolume(volume);
 				}
 				
-				sendMessage("The default volume will now be " + code(volume) + "!");
+				sendMessage("The default volume will now be " + code(volume)
+						+ "!");
 			}
 		};
 		

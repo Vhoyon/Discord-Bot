@@ -1,12 +1,29 @@
 package consoles;
 
-import java.io.IOException;
-
 import vendor.abstracts.AbstractTerminalConsole;
 import vendor.modules.Logger;
 
+import java.io.IOException;
+
+/**
+ * Vhoyon's custom implementation of the
+ * {@link vendor.abstracts.AbstractTerminalConsole AbstractTerminalConsole} that
+ * allows us to get commands to start, stop, exit, etc our bot from the
+ * Terminal.
+ *
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ * @see vendor.abstracts.AbstractTerminalConsole
+ */
 public abstract class TerminalConsole extends AbstractTerminalConsole {
 	
+	/**
+	 * Constructor that simply calls {@link AbstractTerminalConsole}'s
+	 * {@link AbstractTerminalConsole#AbstractTerminalConsole() constructor}.
+	 * 
+	 * @since v0.4.0
+	 */
 	public TerminalConsole(){
 		super();
 	}

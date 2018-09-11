@@ -13,16 +13,16 @@ public class CommandsThreadManager {
 	
 	/**
 	 * Method that determines whether a command is running by scanning all the
-	 * threads used in the server of the <code>commandID</code> parameter,
-	 * looking for the desired <code>command</code> parameter.
+	 * threads used in the server of the {@code commandID} parameter,
+	 * looking for the desired {@code command} parameter.
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
 	 * @param eventDigger
-	 *            The server's <code>commandID</code> required to search for
+	 *            The server's {@code commandID} required to search for
 	 *            commands running in said server's text channel.
 	 * @return The command found with all of it's attribute in a
-	 *         <code>Command</code> object, <code>null</code> if the command
+	 *         {@code Command} object, {@code null} if the command
 	 *         wasn't found.
 	 */
 	public static AbstractBotCommand getCommandRunning(String commandName,
@@ -132,16 +132,16 @@ public class CommandsThreadManager {
 	 * Method that quickly tells if a command is running based off its name in
 	 * the guild provided in parameters.
 	 * <p>
-	 * Internally, this uses the method <code>getCommandRunning()</code> and
-	 * tests if that returns <code>null</code> or not.
+	 * Internally, this uses the method {@code getCommandRunning()} and
+	 * tests if that returns {@code null} or not.
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
 	 * @param eventDigger
-	 *            The server's <code>commandID</code> required to search for
+	 *            The server's {@code commandID} required to search for
 	 *            commands running in said server.
-	 * @return <code>true</code> if the command is running in the specified
-	 *         command id, <code>false</code> otherwise.
+	 * @return {@code true} if the command is running in the specified
+	 *         command id, {@code false} otherwise.
 	 */
 	public static boolean isCommandRunning(String commandName,
 			MessageEventDigger eventDigger, AbstractCommandRouter router){

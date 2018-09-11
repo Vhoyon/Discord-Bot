@@ -37,7 +37,7 @@ public class Audit extends ModuleOutputtable {
 	/**
 	 * Sets the separator for logs that has a prefix before the message.
 	 * <p>
-	 * Set to <code>null</code> if you don't want any separator.
+	 * Set to {@code null} if you don't want any separator.
 	 * 
 	 * @param newSeparator
 	 */
@@ -65,8 +65,8 @@ public class Audit extends ModuleOutputtable {
 	 *            Object implementing the {@link Auditable
 	 *            Auditable} interface which is meant to receive logs from the
 	 *            Audit module.
-	 * @return <code>true</code> if the output was added successfully,
-	 *         <code>false</code> if the output is already in the outputs list.
+	 * @return {@code true} if the output was added successfully,
+	 *         {@code false} if the output is already in the outputs list.
 	 */
 	public static boolean addOutput(Auditable output){
 		
@@ -99,8 +99,8 @@ public class Audit extends ModuleOutputtable {
 	 * @param output
 	 *            Object implementing the {@link Auditable
 	 *            Auditable} interface.
-	 * @return <code>true</code> if the output was in the list and has been
-	 *         removed, <code>false</code> if the output is not in the list.
+	 * @return {@code true} if the output was in the list and has been
+	 *         removed, {@code false} if the output is not in the list.
 	 */
 	public static boolean removeOutput(Auditable output){
 		return outputs.remove(output);
@@ -113,7 +113,7 @@ public class Audit extends ModuleOutputtable {
 	 * @param index
 	 *            The position of the output in the internal list.
 	 * @return The {@link Auditable Auditable} object found at
-	 *         this position, or <code>null</code> if the index is out of
+	 *         this position, or {@code null} if the index is out of
 	 *         bounds.
 	 */
 	public static Auditable removeOutput(int index){

@@ -19,6 +19,8 @@ import java.util.function.Predicate;
  * This command clears every messages that matches the request's conditions in
  * the TextChannel where it was called from.
  * 
+ * @version 1.0
+ * @since v0.4.0
  * @author Stephano
  */
 public class CommandClear extends BotCommand implements Stoppable {
@@ -67,11 +69,39 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 	}
 	
+	/**
+	 * Executes the logic to clear the messages without any conditions. This is
+	 * a way to call {@link #deleteAllMessages()} and still handle the
+	 * confirmation/notification behavior, for example.
+	 * 
+	 * @param confMessage
+	 *            The message to send as confirmation if necessary
+	 * @param notifyMessage
+	 *            The message to send to notify that every message has been
+	 *            deleted
+	 * @since v0.10.0
+	 */
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage){
 		this.doClearLogic(confMessage, notifyMessage, null);
 	}
 	
+	/**
+	 * Executes the logic to clear the messages with a condition (given by the
+	 * parameter {@code messageCondition}. This is a way to call
+	 * {@link #deleteAllMessages()} and still handle the
+	 * confirmation/notification behavior, for example.
+	 *
+	 * @param confMessage
+	 *            The message to send as confirmation if necessary
+	 * @param notifyMessage
+	 *            The message to send to notify that every message has been
+	 *            deleted
+	 * @param messageCondition
+	 *            The condition applied to each message individually. Can be
+	 *            {@code null} to not do any condition management.
+	 * @since v0.10.0
+	 */
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage,
 			final Predicate<Message> messageCondition){
@@ -107,10 +137,47 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 	}
 	
+	/**
+	 * Deletes all the messages in the TextChannel where this command was called
+	 * from.
+	 * <p>
+	 * This deletion is done by batch of 100 messages until it can't anymore
+	 * (Discord doesn't allow do batch delete messages older than 2 weeks old,
+	 * so we batch delete all we can and delete individually the rest).
+	 * </p>
+	 * 
+	 * @throws PermissionException
+	 *             Thrown if the bot does not have the sufficient permissions to
+	 *             delete a message in the list.
+	 * @since v0.10.0
+	 * @see #deleteMessagesIf(Predicate)
+	 */
 	protected void deleteAllMessages() throws PermissionException{
 		this.deleteMessagesIf(null);
 	}
 	
+	/**
+	 * Deletes all the messages in the TextChannel where this command was called
+	 * from and applies the condition supplied by the predicate as a parameter
+	 * (view {@code messageCondition}).
+	 * <p>
+	 * This deletion is done by batch of 100 messages until it can't anymore
+	 * (Discord doesn't allow do batch delete messages older than 2 weeks old,
+	 * so we batch delete all we can and delete individually the rest).
+	 * </p>
+	 * 
+	 * @param messageCondition
+	 *            This parameter is used to run arbitrary code to make a
+	 *            condition on the message itself. You could use this to only
+	 *            delete the messages of certain users, for example. Can be
+	 *            {@code null} (or see {@link #deleteAllMessages()}) to not have
+	 *            any condition and delete all messages.
+	 * @throws PermissionException
+	 *             Thrown if the bot does not have the sufficient permissions to
+	 *             delete a message in the list.
+	 * @since v0.10.0
+	 * @see #deleteAllMessages()
+	 */
 	protected void deleteMessagesIf(Predicate<Message> messageCondition)
 			throws PermissionException{
 		
@@ -177,10 +244,41 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 	}
 	
+	/**
+	 * Gets the full message list from the {@code messageHistory} parameter.
+	 * 
+	 * @param messageHistory
+	 *            The {@link MessageHistory} object used by this TextChannel to
+	 *            reference which history should be searched for.
+	 * @return A {@link List} of of all {@link Message} that is present in the
+	 *         TextChannel where this command was invoked.
+	 * @since v0.10.0
+	 * @see #getFullMessageList(MessageHistory, Predicate)
+	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory){
 		return this.getFullMessageList(messageHistory, null);
 	}
 	
+	/**
+	 * Gets the full message list that matches the condition supplied by the
+	 * {@code messageCondition} parameter out of the {@code messageHistory}
+	 * parameter.
+	 *
+	 * @param messageHistory
+	 *            The {@link MessageHistory} object used by this TextChannel to
+	 *            reference which history should be searched for.
+	 * @param messageCondition
+	 *            This parameter is used to run arbitrary code to make a
+	 *            condition on the message itself. You could use this to only
+	 *            find the messages of certain users, for example. Can be
+	 *            {@code null} (or see
+	 *            {@link #getFullMessageList(MessageHistory)}) to not have any
+	 *            condition and find all messages.
+	 * @return A {@link List} of of all {@link Message} that is present in the
+	 *         TextChannel where this command was invoked.
+	 * @since v0.10.0
+	 * @see #getFullMessageList(MessageHistory)
+	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
 			Predicate<Message> messageCondition){
 		
