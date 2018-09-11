@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
+import vendor.interfaces.Stoppable;
 import vendor.objects.Mention;
 import vendor.objects.ParametersHelp;
 
@@ -34,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since v0.4.0
  * @author V-ed (Guillaume Marcoux)
  */
-public class CommandSpam extends BotCommand {
+public class CommandSpam extends BotCommand implements Stoppable {
 	
 	@Override
 	public void action(){
@@ -129,9 +130,9 @@ public class CommandSpam extends BotCommand {
 			
 			boolean shouldAppendNumber = hasParameter("n");
 			
-			for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
+			try{
 				
-				try{
+				for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
 					
 					if(i != 0)
 						Thread.sleep(1250);
@@ -166,17 +167,12 @@ public class CommandSpam extends BotCommand {
 					}
 					
 				}
-				catch(InterruptedException e){}
 				
 			}
+			catch(InterruptedException e){}
 			
 		}
 		
-	}
-	
-	@Override
-	public boolean stopAction(){
-		return true;
 	}
 	
 	@Override

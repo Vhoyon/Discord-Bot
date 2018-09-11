@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
 import utilities.BotCommand;
 import utilities.specifics.CommandConfirmed;
 import vendor.exceptions.BadContentException;
+import vendor.interfaces.Stoppable;
 import vendor.objects.ParametersHelp;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.function.Predicate;
  * @since v0.4.0
  * @author Stephano
  */
-public class CommandClear extends BotCommand {
+public class CommandClear extends BotCommand implements Stoppable {
 	
 	@Override
 	public void action(){
@@ -308,11 +309,6 @@ public class CommandClear extends BotCommand {
 		
 		return messagesWithCondition;
 		
-	}
-	
-	@Override
-	public boolean stopAction(){
-		return true;
 	}
 	
 	@Override

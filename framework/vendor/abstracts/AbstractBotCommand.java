@@ -6,10 +6,7 @@ import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import vendor.exceptions.BadContentException;
-import vendor.interfaces.DiscordUtils;
-import vendor.interfaces.Emojis;
-import vendor.interfaces.LinkableCommand;
-import vendor.interfaces.Utils;
+import vendor.interfaces.*;
 import vendor.modules.Logger;
 import vendor.objects.Buffer;
 import vendor.objects.Mention;
@@ -128,8 +125,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		if(!this.hasContent())
 			return null;
 		
-		ArrayList<String> possibleContent =
-				splitSpacesExcludeQuotesMaxed(this.getContent(), maxSize);
+		ArrayList<String> possibleContent = splitSpacesExcludeQuotesMaxed(
+				this.getContent(), maxSize);
 		
 		return possibleContent.toArray(new String[0]);
 		
@@ -279,15 +276,17 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return !this.getRouter().isInterrupted();
+		return !this.getRouter().isDead();
 	}
 	
 	public boolean kill(){
-		if(this.stopAction()){
+		
+		if(this instanceof Stoppable && ((Stoppable)this).stopMiddleware()){
 			this.getRouter().interrupt();
 		}
 		
 		return !this.isAlive();
+		
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
@@ -326,10 +325,6 @@ public abstract class AbstractBotCommand extends Translatable implements
 	public void onParameterPresent(String parameterName,
 			Consumer<Parameter> onParamPresent){
 		this.getRequest().onParameterPresent(parameterName, onParamPresent);
-	}
-	
-	public boolean stopAction(){
-		return false;
 	}
 	
 	public void connect(VoiceChannel voiceChannel){
