@@ -1,11 +1,11 @@
 package vendor.utilities.sanitizers;
 
+import vendor.exceptions.BadFormatException;
+import vendor.modules.Environment;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-
-import vendor.exceptions.BadFormatException;
-import vendor.modules.Environment;
 
 public interface EnumSanitizer {
 	
@@ -27,14 +27,18 @@ public interface EnumSanitizer {
 		return formatEnvironmentValue(Environment.getVar(envKey));
 	}
 	
-	static ArrayList<String> formatEnvironmentValue(String envValue){
+	static ArrayList<String> formatEnvironmentValue(String envValue)
+			throws BadFormatException{
 		
-		if(envValue == null)
-			return null;
+		// Verify that environment is of format "[...]| [...] | [...]"
+		// Resetting envValue here is not necessary, but this will make it future-proof
+		envValue = TextRegexSanitizer.sanitizeValue(envValue,
+				"([^\\s]+\\s*\\|\\s*[^\\s]+)+");
 		
 		String[] possibleValues = envValue.trim().split("\\s*\\|\\s*");
 		
-		ArrayList<String> values = new ArrayList<>(Arrays.asList(possibleValues));
+		ArrayList<String> values = new ArrayList<>(
+				Arrays.asList(possibleValues));
 		
 		// Remove duplicate while keeping the order of the values
 		LinkedHashSet<String> hs = new LinkedHashSet<>();

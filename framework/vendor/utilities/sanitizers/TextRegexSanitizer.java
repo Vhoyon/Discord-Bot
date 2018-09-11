@@ -1,9 +1,9 @@
 package vendor.utilities.sanitizers;
 
+import vendor.exceptions.BadFormatException;
+
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import vendor.exceptions.BadFormatException;
 
 public interface TextRegexSanitizer {
 	
@@ -30,7 +30,7 @@ public interface TextRegexSanitizer {
 			boolean isInverted, boolean shouldBox, boolean shouldCheckPattern)
 			throws BadFormatException, PatternSyntaxException{
 		
-		String stringValue = TextSanitizer.sanitizeValue(value);
+		String stringValue = TextNotEmptySanitizer.sanitizeValue(value);
 		
 		if(regexToMatch != null){
 			
@@ -46,7 +46,7 @@ public interface TextRegexSanitizer {
 			// Test regex and invert if we need to
 			if(stringValue.matches(regexToMatch) == isInverted){
 				throw new BadFormatException(
-						"Value does not match the required pattern!", 1);
+						"Value does not match the required pattern!", 2);
 			}
 			
 		}
