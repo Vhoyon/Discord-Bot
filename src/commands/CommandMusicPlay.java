@@ -200,7 +200,7 @@ public class CommandMusicPlay extends MusicCommands {
 			
 			// Define format to get the data we want
 			// This is done using the particularity of replacing regex capturing groups
-			String dataRegex = "^([^\\s].*)\\s*\\{([^\\s].*)\\}$";
+			String dataRegex = "^(\\S.*)\\s*\\{(\\S.*)\\}$";
 			for(String envPlaylist : envPlaylists){
 				String envPlaylistName = envPlaylist
 						.replaceAll(dataRegex, "$1"); // return first capturing group
