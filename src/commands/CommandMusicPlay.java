@@ -45,13 +45,17 @@ import java.util.Random;
  * @author V-ed (Guillaume Marcoux)
  */
 public class CommandMusicPlay extends MusicCommands {
-
+	
 	/**
-	 * Class to hold the values of 
+	 * Class that holds the values of a track to be played, tracking its name
+	 * and its source to be able to send messages like we want.
+	 * 
+	 * @author V-ed (Guillaume Marcoux)
+	 * @since v0.10.0
 	 */
 	protected class SourceTrack {
-		String name;
-		String source;
+		protected String name;
+		protected String source;
 		
 		public SourceTrack(String name, String source){
 			this.name = name;
@@ -156,6 +160,13 @@ public class CommandMusicPlay extends MusicCommands {
 		
 	}
 	
+	/**
+	 * Gets a random track/playlist from a predetermined list of sources or from
+	 * the environment if the latter is configured so.
+	 * 
+	 * @return A {@link SourceTrack} that holds the name and the source of the
+	 *         track/playlist to play.
+	 */
 	protected SourceTrack getRandomTrack(){
 		
 		String sources[][] =
