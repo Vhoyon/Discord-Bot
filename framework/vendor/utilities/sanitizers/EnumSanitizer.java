@@ -30,10 +30,12 @@ public interface EnumSanitizer {
 	static ArrayList<String> formatEnvironmentValue(String envValue)
 			throws BadFormatException{
 		
-		// Verify that environment is of format "[...]| [...] | [...]"
+		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums
 		// Resetting envValue here is not necessary, but this will make it future-proof
-		envValue = TextRegexSanitizer.sanitizeValue(envValue,
-				"([^\\s]+\\s*\\|\\s*[^\\s]+)+");
+		envValue = TextRegexSanitizer
+				.sanitizeValue(
+						envValue,
+						"[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*(\\|[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*[^\\n \\t|]*)*");
 		
 		String[] possibleValues = envValue.trim().split("\\s*\\|\\s*");
 		
