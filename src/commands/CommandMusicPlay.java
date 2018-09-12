@@ -13,10 +13,12 @@ import utilities.music.MusicPlayer;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 import vendor.objects.ParametersHelp;
+import vendor.utilities.sanitizers.EnumSanitizer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -43,6 +45,19 @@ import java.util.Random;
  * @author V-ed (Guillaume Marcoux)
  */
 public class CommandMusicPlay extends MusicCommands {
+
+	/**
+	 * Class to hold the values of 
+	 */
+	protected class SourceTrack {
+		String name;
+		String source;
+		
+		public SourceTrack(String name, String source){
+			this.name = name;
+			this.source = source;
+		}
+	}
 	
 	@Override
 	public void action(){
@@ -54,27 +69,11 @@ public class CommandMusicPlay extends MusicCommands {
 			
 			if(hasParameter("r")){
 				
-				String sources[][] =
-				{
-					{
-						"V-ed's playlist from soundcloud",
-						"https://soundcloud.com/v_ed/sets/musiiic"
-					},
-					{
-						"No Copyrights sounds Copyright free songs from youtube",
-						"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
-					},
-					{
-						"No Copyrights sounds electronic from youtube",
-						"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
-					}
-				};
+				SourceTrack playlistFound = getRandomTrack();
 				
-				int rand = new Random().nextInt(sources.length);
+				sendInfoMessage(lang("Rand", code(playlistFound.name)));
 				
-				sendInfoMessage(lang("Rand", sources[rand][0]), true);
-				
-				MusicManager.get().loadTrack(this, sources[rand][1],
+				MusicManager.get().loadTrack(this, playlistFound.source,
 						this::connectIfNotPlaying);
 				
 			}
@@ -154,6 +153,55 @@ public class CommandMusicPlay extends MusicCommands {
 			}
 			
 		}
+		
+	}
+	
+	protected SourceTrack getRandomTrack(){
+		
+		String sources[][] =
+		{
+			{
+				"V-ed's playlist from SoundCloud",
+				"https://soundcloud.com/v_ed/sets/musiiic"
+			},
+			{
+				"NoCopyrightsSounds Copyright free songs from YouTube",
+				"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
+			},
+			{
+				"NoCopyrightsSounds electronic from YouTube",
+				"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
+			}
+		};
+		
+		ArrayList<SourceTrack> playlistList = new ArrayList<>();
+		
+		if(!hasEnv("PLAYLISTS_PLAY_RANDOM")
+				|| !env("PLAYLISTS_PLAY_OVERWRITE", true)){
+			for(String[] source : sources){
+				playlistList.add(new SourceTrack(source[0], source[1]));
+			}
+		}
+		
+		if(hasEnv("PLAYLISTS_PLAY_RANDOM")){
+			ArrayList<String> envPlaylists = EnumSanitizer
+					.formatEnvironment("PLAYLISTS_PLAY_RANDOM");
+			
+			// Define format to get the data we want
+			// This is done using the particularity of replacing regex capturing groups
+			String dataRegex = "^([^\\s].*)\\s*\\{([^\\s].*)\\}$";
+			for(String envPlaylist : envPlaylists){
+				String envPlaylistName = envPlaylist
+						.replaceAll(dataRegex, "$1"); // return first capturing group
+				String envPlaylistSource = envPlaylist.replaceAll(dataRegex,
+						"$2"); // return second capturing group
+				
+				playlistList.add(new SourceTrack(envPlaylistName,
+						envPlaylistSource));
+			}
+		}
+		
+		return playlistList.get(new Random().nextInt(playlistList.size()));
 		
 	}
 	
