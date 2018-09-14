@@ -28,21 +28,29 @@ public interface EnumSanitizer {
 	
 	static ArrayList<String> extractEnumFromString(String stringValue)
 			throws BadFormatException{
+		return extractEnumFromString(stringValue, '|');
+	}
+	
+	static ArrayList<String> extractEnumFromString(String stringValue,
+			char separator) throws BadFormatException{
 		
-		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums
-		// Resetting envValue here is not necessary, but this will make it future-proof
-		stringValue = TextRegexSanitizer
-				.sanitizeValue(
-						stringValue,
-						"[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*(\\|[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*[^\\n \\t|]*)*");
+		String pSep = String.format("\\%s", separator);
+		
+		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums.
+		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
+		// ~ Resetting stringValue here is not necessary, but this will make it future-proof ~
+		stringValue = TextRegexSanitizer.sanitizeValue(stringValue, "[^\\n"
+				+ pSep + "]*[^\\r\\n\\t\\f\\v " + pSep + "][^\\n" + pSep
+				+ "]*(" + pSep + "[^\\n" + pSep + "]*[^\\r\\n\\t\\f\\v " + pSep
+				+ "][^\\n" + pSep + "]*[^\\n \\t" + pSep + "]*)*");
 		
 		String[] possibleValues = stringValue.trim().split(
-				"\\s*(?<!\\\\)\\|\\s*");
+				"\\s*(?<!\\\\)" + pSep + "\\s*");
 		
 		ArrayList<String> values = new ArrayList<>();
 		
 		for(String possibleValue : possibleValues){
-			values.add(possibleValue.replaceAll("\\\\\\|", "|"));
+			values.add(possibleValue.replaceAll("\\\\" + pSep + "", "|"));
 		}
 		
 		// Remove duplicate while keeping the order of the values
