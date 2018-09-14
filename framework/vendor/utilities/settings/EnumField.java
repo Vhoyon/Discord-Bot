@@ -1,10 +1,9 @@
 package vendor.utilities.settings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import vendor.exceptions.BadFormatException;
 import vendor.utilities.sanitizers.EnumSanitizer;
+
+import java.util.ArrayList;
 
 public class EnumField extends TextField {
 	
@@ -52,12 +51,7 @@ public class EnumField extends TextField {
 			throws BadFormatException{
 		this.values = new CaseArrayList();
 		
-		try{
-			this.values.addAll(EnumSanitizer.formatEnvironmentValue(envValue));
-		}
-		catch(NullPointerException e){
-			throw new BadFormatException();
-		}
+		this.values.addAll(EnumSanitizer.extractEnumFromString(envValue));
 		
 		return this.values.get(0);
 	}
