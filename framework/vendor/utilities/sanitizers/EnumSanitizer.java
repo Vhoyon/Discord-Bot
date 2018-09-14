@@ -1,11 +1,10 @@
 package vendor.utilities.sanitizers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-
 import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public interface EnumSanitizer {
 	
@@ -24,17 +23,35 @@ public interface EnumSanitizer {
 	}
 	
 	static ArrayList<String> formatEnvironment(String envKey){
-		return formatEnvironmentValue(Environment.getVar(envKey));
+		return extractEnumFromString(Environment.getVar(envKey));
 	}
 	
-	static ArrayList<String> formatEnvironmentValue(String envValue){
+	static ArrayList<String> extractEnumFromString(String stringValue)
+			throws BadFormatException{
+		return extractEnumFromString(stringValue, '|');
+	}
+	
+	static ArrayList<String> extractEnumFromString(String stringValue,
+			char separator) throws BadFormatException{
 		
-		if(envValue == null)
-			return null;
+		String pSep = String.format("\\%s", separator);
 		
-		String[] possibleValues = envValue.trim().split("\\s*\\|\\s*");
+		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums.
+		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
+		// ~ Resetting stringValue here is not necessary, but this will make it future-proof ~
+		stringValue = TextRegexSanitizer.sanitizeValue(stringValue, "[^\\n"
+				+ pSep + "]*[^\\r\\n\\t\\f\\v " + pSep + "][^\\n" + pSep
+				+ "]*(" + pSep + "[^\\n" + pSep + "]*[^\\r\\n\\t\\f\\v " + pSep
+				+ "][^\\n" + pSep + "]*[^\\n \\t" + pSep + "]*)*");
 		
-		ArrayList<String> values = new ArrayList<>(Arrays.asList(possibleValues));
+		String[] possibleValues = stringValue.trim().split(
+				"\\s*(?<!\\\\)" + pSep + "\\s*");
+		
+		ArrayList<String> values = new ArrayList<>();
+		
+		for(String possibleValue : possibleValues){
+			values.add(possibleValue.replaceAll("\\\\" + pSep + "", "|"));
+		}
 		
 		// Remove duplicate while keeping the order of the values
 		LinkedHashSet<String> hs = new LinkedHashSet<>();
