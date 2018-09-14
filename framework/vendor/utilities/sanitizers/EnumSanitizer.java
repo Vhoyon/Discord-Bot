@@ -4,7 +4,6 @@ import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 public interface EnumSanitizer {
@@ -37,10 +36,13 @@ public interface EnumSanitizer {
 						envValue,
 						"[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*(\\|[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*[^\\n \\t|]*)*");
 		
-		String[] possibleValues = envValue.trim().split("\\s*\\|\\s*");
+		String[] possibleValues = envValue.trim().split("\\s*(?<!\\\\)\\|\\s*");
 		
-		ArrayList<String> values = new ArrayList<>(
-				Arrays.asList(possibleValues));
+		ArrayList<String> values = new ArrayList<>();
+		
+		for(String possibleValue : possibleValues){
+			values.add(possibleValue.replaceAll("\\\\\\|", "|"));
+		}
 		
 		// Remove duplicate while keeping the order of the values
 		LinkedHashSet<String> hs = new LinkedHashSet<>();
