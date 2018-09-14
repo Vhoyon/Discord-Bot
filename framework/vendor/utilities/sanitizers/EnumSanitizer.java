@@ -23,20 +23,21 @@ public interface EnumSanitizer {
 	}
 	
 	static ArrayList<String> formatEnvironment(String envKey){
-		return formatEnvironmentValue(Environment.getVar(envKey));
+		return extractEnumFromString(Environment.getVar(envKey));
 	}
 	
-	static ArrayList<String> formatEnvironmentValue(String envValue)
+	static ArrayList<String> extractEnumFromString(String stringValue)
 			throws BadFormatException{
 		
 		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums
 		// Resetting envValue here is not necessary, but this will make it future-proof
-		envValue = TextRegexSanitizer
+		stringValue = TextRegexSanitizer
 				.sanitizeValue(
-						envValue,
+						stringValue,
 						"[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*(\\|[^\\n|]*[^\\r\\n\\t\\f\\v |][^\\n|]*[^\\n \\t|]*)*");
 		
-		String[] possibleValues = envValue.trim().split("\\s*(?<!\\\\)\\|\\s*");
+		String[] possibleValues = stringValue.trim().split(
+				"\\s*(?<!\\\\)\\|\\s*");
 		
 		ArrayList<String> values = new ArrayList<>();
 		

@@ -51,7 +51,7 @@ public class EnumField extends TextField {
 			throws BadFormatException{
 		this.values = new CaseArrayList();
 		
-		this.values.addAll(EnumSanitizer.formatEnvironmentValue(envValue));
+		this.values.addAll(EnumSanitizer.extractEnumFromString(envValue));
 		
 		return this.values.get(0);
 	}
