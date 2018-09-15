@@ -50,7 +50,7 @@ public interface EnumSanitizer {
 		ArrayList<String> values = new ArrayList<>();
 		
 		for(String possibleValue : possibleValues){
-			values.add(possibleValue.replaceAll("\\\\" + pSep + "", "|"));
+			values.add(possibleValue.replaceAll("\\\\" + pSep, String.valueOf(separator)));
 		}
 		
 		// Remove duplicate while keeping the order of the values
