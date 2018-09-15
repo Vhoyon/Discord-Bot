@@ -22,7 +22,8 @@ public interface EnumSanitizer {
 		
 	}
 	
-	static ArrayList<String> formatEnvironment(String envKey){
+	static ArrayList<String> formatEnvironment(String envKey)
+			throws BadFormatException{
 		return extractEnumFromString(Environment.getVar(envKey));
 	}
 	

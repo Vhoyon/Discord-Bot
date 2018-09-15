@@ -10,13 +10,16 @@ import errorHandling.BotError;
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
 import utilities.music.MusicPlayer;
+import vendor.exceptions.BadFormatException;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 import vendor.objects.ParametersHelp;
+import vendor.utilities.sanitizers.EnumSanitizer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -44,6 +47,23 @@ import java.util.Random;
  */
 public class CommandMusicPlay extends MusicCommands {
 	
+	/**
+	 * Class that holds the values of a track to be played, tracking its name
+	 * and its source to be able to send messages like we want.
+	 * 
+	 * @author V-ed (Guillaume Marcoux)
+	 * @since v0.10.0
+	 */
+	protected class SourceTrack {
+		protected String name;
+		protected String source;
+		
+		public SourceTrack(String name, String source){
+			this.name = name;
+			this.source = source;
+		}
+	}
+	
 	@Override
 	public void action(){
 		
@@ -54,27 +74,11 @@ public class CommandMusicPlay extends MusicCommands {
 			
 			if(hasParameter("r")){
 				
-				String sources[][] =
-				{
-					{
-						"V-ed's playlist from soundcloud",
-						"https://soundcloud.com/v_ed/sets/musiiic"
-					},
-					{
-						"No Copyrights sounds Copyright free songs from youtube",
-						"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
-					},
-					{
-						"No Copyrights sounds electronic from youtube",
-						"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
-					}
-				};
+				SourceTrack playlistFound = getRandomTrack();
 				
-				int rand = new Random().nextInt(sources.length);
+				sendInfoMessage(lang("Rand", code(playlistFound.name)));
 				
-				sendInfoMessage(lang("Rand", sources[rand][0]), true);
-				
-				MusicManager.get().loadTrack(this, sources[rand][1],
+				MusicManager.get().loadTrack(this, playlistFound.source,
 						this::connectIfNotPlaying);
 				
 			}
@@ -154,6 +158,87 @@ public class CommandMusicPlay extends MusicCommands {
 			}
 			
 		}
+		
+	}
+	
+	/**
+	 * Gets a random track/playlist from a predetermined list of sources or from
+	 * the environment if the latter is configured so.
+	 * 
+	 * @return A {@link SourceTrack} that holds the name and the source of the
+	 *         track/playlist to play.
+	 */
+	protected SourceTrack getRandomTrack(){
+		
+		ArrayList<SourceTrack> playlistList = new ArrayList<>();
+		
+		boolean shouldAddInlineSources;
+		
+		try{
+			
+			if(hasEnv("PLAYLISTS_PLAY_RANDOM")){
+				ArrayList<String> envPlaylists = EnumSanitizer
+						.formatEnvironment("PLAYLISTS_PLAY_RANDOM");
+				
+				// Define format to get the data we want
+				// This is done using the particularity of replacing regex capturing groups
+				String dataRegex = "^(\\S.*)\\s*\\{(\\S.*)\\}$";
+				for(String envPlaylist : envPlaylists){
+					String envPlaylistName = envPlaylist.replaceAll(dataRegex,
+							"$1"); // return first capturing group
+					String envPlaylistSource = envPlaylist.replaceAll(
+							dataRegex, "$2"); // return second capturing group
+					
+					playlistList.add(new SourceTrack(envPlaylistName,
+							envPlaylistSource));
+				}
+			}
+			
+			shouldAddInlineSources = !hasEnv("PLAYLISTS_PLAY_RANDOM")
+					|| !env("PLAYLISTS_PLAY_OVERWRITE", true);
+			
+		}
+		catch(BadFormatException e){
+			
+			String logMessage;
+			
+			if(e.getErrorCode() == 1){
+				logMessage = "The values added in the PLAYLISTS_PLAY_RANDOM env variable are not formatted correctly, make sure you follow the pattern correctly!";
+			}
+			else{
+				logMessage = e.getMessage();
+			}
+			
+			Logger.log(logMessage, LogType.ERROR);
+			
+			shouldAddInlineSources = true;
+			
+		}
+		
+		if(shouldAddInlineSources){
+			
+			String sources[][] =
+			{
+				{
+					"V-ed's playlist from SoundCloud",
+					"https://soundcloud.com/v_ed/sets/musiiic"
+				},
+				{
+					"NoCopyrightsSounds Copyright free songs from YouTube",
+					"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
+				},
+				{
+					"NoCopyrightsSounds electronic from YouTube",
+					"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
+				}
+			};
+			
+			for(String[] source : sources){
+				playlistList.add(new SourceTrack(source[0], source[1]));
+			}
+		}
+		
+		return playlistList.get(new Random().nextInt(playlistList.size()));
 		
 	}
 	
