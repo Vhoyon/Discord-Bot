@@ -10,6 +10,7 @@ import errorHandling.BotError;
 import utilities.abstracts.MusicCommands;
 import utilities.music.MusicManager;
 import utilities.music.MusicPlayer;
+import vendor.exceptions.BadFormatException;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 import vendor.objects.ParametersHelp;
@@ -169,46 +170,71 @@ public class CommandMusicPlay extends MusicCommands {
 	 */
 	protected SourceTrack getRandomTrack(){
 		
-		String sources[][] =
-		{
-			{
-				"V-ed's playlist from SoundCloud",
-				"https://soundcloud.com/v_ed/sets/musiiic"
-			},
-			{
-				"NoCopyrightsSounds Copyright free songs from YouTube",
-				"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
-			},
-			{
-				"NoCopyrightsSounds electronic from YouTube",
-				"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
-			}
-		};
-		
 		ArrayList<SourceTrack> playlistList = new ArrayList<>();
 		
-		if(!hasEnv("PLAYLISTS_PLAY_RANDOM")
-				|| !env("PLAYLISTS_PLAY_OVERWRITE", true)){
-			for(String[] source : sources){
-				playlistList.add(new SourceTrack(source[0], source[1]));
+		boolean shouldAddInlineSources;
+		
+		try{
+			
+			if(hasEnv("PLAYLISTS_PLAY_RANDOM")){
+				ArrayList<String> envPlaylists = EnumSanitizer
+						.formatEnvironment("PLAYLISTS_PLAY_RANDOM");
+				
+				// Define format to get the data we want
+				// This is done using the particularity of replacing regex capturing groups
+				String dataRegex = "^(\\S.*)\\s*\\{(\\S.*)\\}$";
+				for(String envPlaylist : envPlaylists){
+					String envPlaylistName = envPlaylist.replaceAll(dataRegex,
+							"$1"); // return first capturing group
+					String envPlaylistSource = envPlaylist.replaceAll(
+							dataRegex, "$2"); // return second capturing group
+					
+					playlistList.add(new SourceTrack(envPlaylistName,
+							envPlaylistSource));
+				}
 			}
+			
+			shouldAddInlineSources = !hasEnv("PLAYLISTS_PLAY_RANDOM")
+					|| !env("PLAYLISTS_PLAY_OVERWRITE", true);
+			
+		}
+		catch(BadFormatException e){
+			
+			String logMessage;
+			
+			if(e.getErrorCode() == 1){
+				logMessage = "The values added in the PLAYLISTS_PLAY_RANDOM env variable are not formatted correctly, make sure you follow the pattern correctly!";
+			}
+			else{
+				logMessage = e.getMessage();
+			}
+			
+			Logger.log(logMessage, LogType.ERROR);
+			
+			shouldAddInlineSources = true;
+			
 		}
 		
-		if(hasEnv("PLAYLISTS_PLAY_RANDOM")){
-			ArrayList<String> envPlaylists = EnumSanitizer
-					.formatEnvironment("PLAYLISTS_PLAY_RANDOM");
+		if(shouldAddInlineSources){
 			
-			// Define format to get the data we want
-			// This is done using the particularity of replacing regex capturing groups
-			String dataRegex = "^(\\S.*)\\s*\\{(\\S.*)\\}$";
-			for(String envPlaylist : envPlaylists){
-				String envPlaylistName = envPlaylist
-						.replaceAll(dataRegex, "$1"); // return first capturing group
-				String envPlaylistSource = envPlaylist.replaceAll(dataRegex,
-						"$2"); // return second capturing group
-				
-				playlistList.add(new SourceTrack(envPlaylistName,
-						envPlaylistSource));
+			String sources[][] =
+			{
+				{
+					"V-ed's playlist from SoundCloud",
+					"https://soundcloud.com/v_ed/sets/musiiic"
+				},
+				{
+					"NoCopyrightsSounds Copyright free songs from YouTube",
+					"https://www.youtube.com/watch?v=2jwj9wVx3mg&list=PLRBp0Fe2GpgnIh0AiYKh7o7HnYAej-5ph"
+				},
+				{
+					"NoCopyrightsSounds electronic from YouTube",
+					"https://www.youtube.com/watch?v=tua4SVV-GSE&list=PLRBp0Fe2GpgnZOm5rCopMAOYhZCPoUyO5"
+				}
+			};
+			
+			for(String[] source : sources){
+				playlistList.add(new SourceTrack(source[0], source[1]));
 			}
 		}
 		
