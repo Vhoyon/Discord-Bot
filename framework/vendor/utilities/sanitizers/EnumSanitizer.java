@@ -39,11 +39,13 @@ public interface EnumSanitizer {
 		
 		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums.
 		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
-		// ~ Resetting stringValue here is not necessary, but this will make it future-proof ~
+		// Make sure to use the latest version on this website (click the v1 button to check).
 		stringValue = TextRegexSanitizer.sanitizeValue(stringValue, "[^\\n"
-				+ pSep + "]*[^\\r\\n\\t\\f\\v " + pSep + "][^\\n" + pSep
-				+ "]*(" + pSep + "[^\\n" + pSep + "]*[^\\r\\n\\t\\f\\v " + pSep
-				+ "][^\\n" + pSep + "]*[^\\n \\t" + pSep + "]*)*");
+				+ pSep + "]*([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\" + pSep
+				+ ")[^\\n" + pSep + "]*(" + pSep + "[^\\n" + pSep
+				+ "]*([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\" + pSep + ")[^\\n"
+				+ pSep + "]*[^\\n \\t" + pSep + "]*)*");
+		// ~ Resetting stringValue here was not necessary, but this will make it future-proof ~
 		
 		String[] possibleValues = stringValue.trim().split(
 				"\\s*(?<!\\\\)" + pSep + "\\s*");
@@ -51,7 +53,8 @@ public interface EnumSanitizer {
 		ArrayList<String> values = new ArrayList<>();
 		
 		for(String possibleValue : possibleValues){
-			values.add(possibleValue.replaceAll("\\\\" + pSep, String.valueOf(separator)));
+			values.add(possibleValue.replaceAll("\\\\" + pSep,
+					String.valueOf(separator)));
 		}
 		
 		// Remove duplicate while keeping the order of the values
