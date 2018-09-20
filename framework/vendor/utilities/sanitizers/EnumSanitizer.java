@@ -63,7 +63,8 @@ public interface EnumSanitizer {
 		
 	}
 	
-	static String verifyStringFormat(String stringValue, char separator){
+	static String verifyStringFormat(String stringValue, char separator)
+			throws BadFormatException{
 		
 		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
 		// Make sure to use the latest version on this website (click the v1 button to check).
