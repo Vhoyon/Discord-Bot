@@ -37,18 +37,14 @@ public interface EnumSanitizer {
 		
 		String pSep = String.format("\\%s", separator);
 		
-		// Verify that environment is of format "[...]| [...] | [...]" while allowing single choice enums.
-		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
-		// Make sure to use the latest version on this website (click the v1 button to check).
-		stringValue = TextRegexSanitizer.sanitizeValue(stringValue, "[^\\n"
-				+ pSep + "]*([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\" + pSep
-				+ ")[^\\n" + pSep + "]*(" + pSep + "[^\\n" + pSep
-				+ "]*([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\" + pSep + ")[^\\n"
-				+ pSep + "]*[^\\n \\t" + pSep + "]*)*");
+		// Verify that string is of format "[...]| [...] | [...]" while allowing single choice enums.
 		// ~ Resetting stringValue here was not necessary, but this will make it future-proof ~
+		stringValue = verifyStringFormat(stringValue, separator);
+		
+		String expNonProtectedSeparator = "(?<!\\\\)" + pSep;
 		
 		String[] possibleValues = stringValue.trim().split(
-				"\\s*(?<!\\\\)" + pSep + "\\s*");
+				"\\s*" + expNonProtectedSeparator + "\\s*");
 		
 		ArrayList<String> values = new ArrayList<>();
 		
@@ -64,6 +60,27 @@ public interface EnumSanitizer {
 		values.addAll(hs);
 		
 		return values;
+		
+	}
+	
+	static String verifyStringFormat(String stringValue, char separator){
+		
+		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
+		// Make sure to use the latest version on this website (click the v1 button to check).
+		
+		String pSep = String.format("\\%s", separator);
+		
+		String expAnyNonBreakOrSep = "[^\\n" + pSep + "]*";
+		String expAnyNonSpaceOrSep = "([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\"
+				+ pSep + ")";
+		
+		String expValidWord = expAnyNonBreakOrSep + expAnyNonSpaceOrSep
+				+ expAnyNonBreakOrSep;
+		String expAdditionalValidWords = "(" + pSep + expValidWord + ")*";
+		
+		String expEnumFormat = expValidWord + expAdditionalValidWords;
+		
+		return TextRegexSanitizer.sanitizeValue(stringValue, expEnumFormat);
 		
 	}
 	

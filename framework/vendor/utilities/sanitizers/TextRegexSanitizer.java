@@ -20,8 +20,8 @@ public interface TextRegexSanitizer {
 	}
 	
 	static String sanitizeValue(Object value, String regexToMatch,
-			boolean isInverted, boolean shouldBox)
-			throws BadFormatException, PatternSyntaxException{
+			boolean isInverted, boolean shouldBox) throws BadFormatException,
+			PatternSyntaxException{
 		return TextRegexSanitizer.sanitizeValue(value, regexToMatch,
 				isInverted, shouldBox, true);
 	}
