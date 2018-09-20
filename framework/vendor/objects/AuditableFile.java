@@ -11,6 +11,8 @@ public class AuditableFile implements Auditable {
 	
 	private File auditableFile;
 	
+	private boolean hasSentWarning;
+	
 	public AuditableFile(String fileName, String folder){
 		this(folder + (folder.endsWith(File.separator) ? "" : File.separator)
 				+ fileName);
@@ -18,6 +20,7 @@ public class AuditableFile implements Auditable {
 	
 	public AuditableFile(String filePath){
 		this.auditableFile = new File(filePath);
+		this.hasSentWarning = false;
 	}
 	
 	public File getFile(){
@@ -40,30 +43,31 @@ public class AuditableFile implements Auditable {
 			
 		}
 		catch(IllegalAccessError e){
-			Logger.log("The specified audit file is not owned by the bot.",
-					Logger.LogType.ERROR);
+			sendErrorMessage(
+					"The specified audit file is not owned by the bot.",
+					auditFile);
 		}
 		catch(IOException e){
 			
 			if(!auditFile.exists()){
-				Logger.log(
+				sendErrorMessage(
 						"The audit file does not exist and could not be created. Running the bot in admin mode might fix this.",
-						Logger.LogType.ERROR);
+						auditFile);
 			}
 			else if(auditFile.isDirectory()){
-				Logger.log(
+				sendErrorMessage(
 						"The location given for the audit is a directory. Please go change the location in your code to point to a file.",
-						Logger.LogType.ERROR);
+						auditFile);
 			}
 			else if(!Files.isWritable(auditFile.toPath())){
-				Logger.log(
+				sendErrorMessage(
 						"The file is not writable. Running the bot in admin mode might fix this.",
-						Logger.LogType.ERROR);
+						auditFile);
 			}
 			else{
-				Logger.log(
+				sendErrorMessage(
 						"An unspecified error happened. Please try to run the bot again!",
-						Logger.LogType.ERROR);
+						auditFile);
 			}
 			
 		}
@@ -102,6 +106,21 @@ public class AuditableFile implements Auditable {
 		}
 		
 		return writer;
+		
+	}
+	
+	protected void sendErrorMessage(String message, File auditFile){
+		
+		if(!this.hasSentWarning){
+			
+			this.hasSentWarning = true;
+			
+			String fileLocation = "File : \"" + auditFile.getAbsolutePath() + "\"";
+			String onlyOneWarningString = "This warning will only be shown once!";
+			
+			Logger.log(message + "\n\t" + fileLocation + "\n\t" + onlyOneWarningString, Logger.LogType.ERROR);
+			
+		}
 		
 	}
 	
