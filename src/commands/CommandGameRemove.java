@@ -3,13 +3,22 @@ package commands;
 import utilities.abstracts.GameInteractionCommands;
 import utilities.specifics.GamePool;
 import errorHandling.BotError;
+import vendor.objects.ParametersHelp;
 
+/**
+ * Command that removes a game from the game pool using its name as a search
+ * mechanism.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandGameRemove extends GameInteractionCommands {
 	
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage",
 					buildVCommand(getDefaultCall() + " [game name]"),
 					buildVCommand(getDefaultCall() + " "
@@ -22,11 +31,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
 				
 				if(hasParameter("all")){
-					
-					do{
-						gamepool.remove(0);
-					}while(!gamepool.isEmpty());
-					
+					gamepool.clear();
 				}
 				else{
 					
@@ -64,4 +69,13 @@ public class CommandGameRemove extends GameInteractionCommands {
 	public String getCommandDescription(){
 		return "Remove a game form the game list";
 	}
+	
+	@Override
+	public ParametersHelp[] getParametersDescriptions(){
+		return new ParametersHelp[]
+		{
+			new ParametersHelp("Removes all games from the list.", "a", "all"),
+		};
+	}
+	
 }

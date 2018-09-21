@@ -1,7 +1,9 @@
 package vendor.utilities.settings;
 
+import vendor.exceptions.BadFormatException;
+import vendor.utilities.sanitizers.EnumSanitizer;
+
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
 
 public class EnumField extends TextField {
 	
@@ -37,16 +39,7 @@ public class EnumField extends TextField {
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		
-		String stringValue = super.sanitizeValue(value);
-		
-		if(!this.values.contains(stringValue)){
-			throw new IllegalArgumentException("The value " + stringValue
-					+ " is not a choice for this setting!");
-		}
-		
-		return stringValue;
-		
+		return EnumSanitizer.sanitizeValue(value, this.values);
 	}
 	
 	public ArrayList<String> getPossibleValues(){
@@ -55,31 +48,23 @@ public class EnumField extends TextField {
 	
 	@Override
 	protected String formatEnvironment(String envValue)
-			throws IllegalFormatException{
-		String[] possibleValues = envValue.split("\\s*\\|\\s*");
+			throws BadFormatException{
+		this.values = new CaseArrayList();
 		
-		String envDefaultValue = possibleValues[0];
+		this.values.addAll(EnumSanitizer.extractEnumFromString(envValue));
 		
-		this.values = this.getValuesArrayList(envDefaultValue,
-				(Object[])possibleValues);
-		
-		return envDefaultValue;
+		return this.values.get(0);
 	}
 	
 	private ArrayList<String> getValuesArrayList(Object defaultValue,
 			Object... otherValues){
 		
-		ArrayList<String> newValues = new CaseArrayList();
+		CaseArrayList newValues = new CaseArrayList();
 		
 		newValues.add(defaultValue.toString());
 		
 		for(Object otherValue : otherValues){
-			if(!defaultValue.equals(otherValue)){
-				try{
-					newValues.add(otherValue.toString());
-				}
-				catch(NullPointerException e){}
-			}
+			newValues.add(otherValue.toString());
 		}
 		
 		return newValues;

@@ -2,9 +2,18 @@ package commands;
 
 import errorHandling.BotError;
 import utilities.BotCommand;
+import vendor.interfaces.Stoppable;
 import vendor.objects.ParametersHelp;
 
-public class CommandTimer extends BotCommand {
+/**
+ * Command to create a timer in the TextChannel where this command was called
+ * from.
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
+public class CommandTimer extends BotCommand implements Stoppable {
 	
 	private int seconds;
 	private int hours;
@@ -66,6 +75,15 @@ public class CommandTimer extends BotCommand {
 		
 	}
 	
+	/**
+	 * Sets the class' variables using the remaining time as a seconds
+	 * measurement.
+	 * 
+	 * @param remainingTime
+	 *            Time in seconds that is remaining to update hours, minutes and
+	 *            seconds variables.
+	 * @since v0.4.0
+	 */
 	private void timeConstruct(int remainingTime){
 		
 		if(remainingTime / 3600 >= 0){
@@ -86,13 +104,21 @@ public class CommandTimer extends BotCommand {
 		
 	}
 	
+	/**
+	 * Formats the date of hours, minutes and seconds into a single string.
+	 * 
+	 * @param hours
+	 *            The integer value of hours to show.
+	 * @param minutes
+	 *            The integer value of minutes to show.
+	 * @param seconds
+	 *            The integer value of seconds to show.
+	 * @return A string formatted with time such that it returns
+	 *         {@code HH:MM:SS}.
+	 * @since v0.4.0
+	 */
 	private String formatDate(int hours, int minutes, int seconds){
 		return formatS("%02d:%02d:%02d", hours, minutes, seconds);
-	}
-	
-	@Override
-	public boolean stopAction(){
-		return true;
 	}
 	
 	@Override

@@ -1,5 +1,8 @@
 package vendor.interfaces;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import vendor.Framework;
@@ -30,7 +33,7 @@ public interface Utils {
 		return (boolean)env("DEBUG", false) || Framework.isDebugging();
 	}
 	
-	default <EnvVar> EnvVar env(String key, Object defaultValue){
+	default <EnvVar> EnvVar env(String key, EnvVar defaultValue){
 		return Environment.getVar(key, defaultValue);
 	}
 	
@@ -49,6 +52,43 @@ public interface Utils {
 			keyBuilder.append("_").append(additionalKey);
 
 		return keyBuilder.toString();
+	}
+	
+	default ArrayList<String> splitSpacesExcludeQuotes(String string){
+		ArrayList<String> possibleStrings = new ArrayList<>();
+		Matcher matcher = Pattern.compile(
+				"[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(string);
+		while(matcher.find()){
+			possibleStrings.add(matcher.group());
+		}
+		
+		return possibleStrings;
+	}
+	
+	default ArrayList<String> splitSpacesExcludeQuotesMaxed(String string,
+			int maxSize){
+		
+		if(maxSize == 0){
+			ArrayList<String> singleEntry = new ArrayList<>();
+			singleEntry.add(string);
+			
+			return singleEntry;
+		}
+		
+		ArrayList<String> fullSplit = splitSpacesExcludeQuotes(string);
+		
+		if(maxSize < 0 || fullSplit.size() <= maxSize){
+			return fullSplit;
+		}
+		
+		List<String> splittedUpTo = fullSplit.subList(0, maxSize - 1);
+		List<String> allOthers = fullSplit.subList(maxSize, fullSplit.size() - 1);
+		
+		ArrayList<String> allAndTruncated = new ArrayList<>();
+		allAndTruncated.addAll(splittedUpTo);
+		allAndTruncated.add(String.join(" ", allOthers));
+		
+		return allAndTruncated;
 	}
 	
 }

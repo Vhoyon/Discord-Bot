@@ -1,5 +1,12 @@
 package utilities.interfaces;
 
+/**
+ * Simple interface to keep track of the commands name.
+ *
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public interface Commands {
 	
 	//	String TEST = "test";

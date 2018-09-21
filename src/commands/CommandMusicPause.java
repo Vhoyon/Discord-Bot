@@ -6,6 +6,15 @@ import utilities.music.MusicPlayer;
 
 import errorHandling.BotError;
 
+/**
+ * Pauses the music only if the bot is already playing some music in a
+ * VoiceChannel of this guild. It uses the {@link MusicManager} to deal with the
+ * logic of pausing a track.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandMusicPause extends MusicCommands {
 	
 	@Override
@@ -38,9 +47,10 @@ public class CommandMusicPause extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_PAUSE;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Stop the music until you start it back up";
 	}
+	
 }

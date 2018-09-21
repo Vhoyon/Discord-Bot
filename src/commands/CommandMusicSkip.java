@@ -9,6 +9,27 @@ import vendor.exceptions.BadContentException;
 import errorHandling.BotError;
 import vendor.objects.ParametersHelp;
 
+/**
+ * Command that skips tracks on demand. If there is no song that is playing
+ * currently, it tells the user that there is no music to skip.
+ * <p>
+ * The default behavior is to skip a single track, but the user can add the
+ * parameter {@code -a} or enter "{@code all}" as the command's content to skip
+ * all tracks if he so desires.
+ * </p>
+ * <p>
+ * There is also the option to skip a number of tracks, and to do so, the user
+ * can enter the number of tracks to skip as the command's content and bot will
+ * skip this amount of tracks before playing the next track in the list. <br>
+ * In the case where he tries to skip more than the number of tracks available
+ * in the current playlist, a confirmation message will ask the user if he
+ * confirms to skip through all tracks.
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandMusicSkip extends MusicCommands {
 	
 	@Override
@@ -31,17 +52,16 @@ public class CommandMusicSkip extends MusicCommands {
 				
 				MusicPlayer player = MusicManager.get().getPlayer(this);
 				
-				if(getContent() == null){
+				if(!hasContent()){
 					
 					if(this.hasMemory("MUSIC_LOOP")
 							&& (boolean)this.getMemory("MUSIC_LOOP")){
 						forget("MUSIC_LOOP");
 					}
 					if(player.skipTrack()){
-						sendInfoMessage(lang(
-								"SkippedNowPlaying",
-								code(player.getAudioPlayer()
-										.getPlayingTrack().getInfo().title)));
+						sendInfoMessage(lang("SkippedNowPlaying",
+								code(player.getAudioPlayer().getPlayingTrack()
+										.getInfo().title)));
 					}
 					else{
 						MusicManager.get().emptyPlayer(this);
@@ -67,10 +87,10 @@ public class CommandMusicSkip extends MusicCommands {
 									player.skipTrack();
 								}
 								
-								sendInfoMessage(lang("SkippedNowPlaying",
+								sendInfoMessage(lang(
+										"SkippedNowPlaying",
 										player.getAudioPlayer()
-												.getPlayingTrack()
-												.getInfo().title));
+												.getPlayingTrack().getInfo().title));
 								
 							}
 							else{
@@ -81,14 +101,14 @@ public class CommandMusicSkip extends MusicCommands {
 										return lang(
 												"OverflowConfirm",
 												code(skipAmount),
-												code(player
-														.getNumberOfTracks()));
+												code(player.getNumberOfTracks()));
 									}
 									
 									@Override
 									public void confirmed(){
 										
-										MusicManager.get().emptyPlayer(CommandMusicSkip.this);
+										MusicManager.get().emptyPlayer(
+												CommandMusicSkip.this);
 										
 										sendInfoMessage(lang("SkippedAllMusic"));
 										
@@ -104,8 +124,8 @@ public class CommandMusicSkip extends MusicCommands {
 						new BotError(this, lang("NumberNotANumber"));
 					}
 					catch(BadContentException e){
-						new BotError(this, lang("NumberNotBetweenRange", 0,
-								100));
+						new BotError(this,
+								lang("NumberNotBetweenRange", 0, 100));
 					}
 					
 				}
@@ -131,7 +151,8 @@ public class CommandMusicSkip extends MusicCommands {
 		return new ParametersHelp[]
 		{
 			new ParametersHelp(
-					"Skips all the songs added and disconnect the bot.", false, "a", "all")
+					"Skips all the songs added and disconnect the bot.", false,
+					"a", "all")
 		};
 	}
 	

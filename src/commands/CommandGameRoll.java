@@ -6,6 +6,18 @@ import utilities.specifics.GamePool;
 
 import java.util.Random;
 
+/**
+ * Command that rolls a dice to get a random game out of the game pool for its
+ * user to decide on what to play.
+ * <p>
+ * If user adds a number after the command name, this number will be used to
+ * roll a number of times. The roll will be random every time.
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandGameRoll extends GameInteractionCommands {
 	
 	@Override
@@ -17,7 +29,7 @@ public class CommandGameRoll extends GameInteractionCommands {
 			
 			int wantedRoll = 1;
 			
-			if(getContent() != null)
+			if(hasContent())
 				try{
 					wantedRoll = Integer.parseInt(getContent());
 				}
@@ -77,4 +89,5 @@ public class CommandGameRoll extends GameInteractionCommands {
 	public String getCommandDescription(){
 		return "Use this command tu select a random game from your list when you don't know what to play.";
 	}
+	
 }

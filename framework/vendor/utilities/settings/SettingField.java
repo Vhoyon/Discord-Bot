@@ -1,11 +1,11 @@
 package vendor.utilities.settings;
 
 import vendor.abstracts.Translatable;
+import vendor.exceptions.BadFormatException;
 import vendor.modules.Environment;
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
 
-import java.util.IllegalFormatException;
 import java.util.function.Consumer;
 
 public abstract class SettingField<E> extends Translatable {
@@ -44,7 +44,7 @@ public abstract class SettingField<E> extends Translatable {
 				this.value = this.formatEnvironment(envValue);
 			}
 		}
-		catch(ClassCastException | IllegalFormatException e){
+		catch(ClassCastException | BadFormatException e){
 			
 			Logger.log(
 					"Environment variable is not formatted correctly for its data type! Using default value.",
@@ -61,7 +61,7 @@ public abstract class SettingField<E> extends Translatable {
 		return this.defaultValue;
 	}
 	
-	public final void setValue(E value) throws IllegalArgumentException{
+	public final void setValue(E value) throws BadFormatException{
 		this.setValue(value, null);
 	}
 	
@@ -74,10 +74,10 @@ public abstract class SettingField<E> extends Translatable {
 	}
 	
 	public final void setValue(E value, Consumer<E> onChange)
-			throws IllegalArgumentException{
+			throws BadFormatException{
 		
 		if(value == null){
-			throw new IllegalArgumentException("Value cannot be null!");
+			throw new BadFormatException("Value cannot be null!", 0);
 		}
 		
 		this.value = this.sanitizeValue(value);
@@ -94,7 +94,7 @@ public abstract class SettingField<E> extends Translatable {
 	protected abstract E sanitizeValue(Object value)
 			throws IllegalArgumentException;
 	
-	protected E formatEnvironment(E envValue) throws IllegalFormatException{
+	protected E formatEnvironment(E envValue) throws BadFormatException{
 		return envValue;
 	}
 	

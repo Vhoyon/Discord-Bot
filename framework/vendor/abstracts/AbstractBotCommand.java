@@ -6,10 +6,7 @@ import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import vendor.exceptions.BadContentException;
-import vendor.interfaces.DiscordUtils;
-import vendor.interfaces.Emojis;
-import vendor.interfaces.LinkableCommand;
-import vendor.interfaces.Utils;
+import vendor.interfaces.*;
 import vendor.modules.Logger;
 import vendor.objects.Buffer;
 import vendor.objects.Mention;
@@ -24,10 +21,33 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+/**
+ * Class that implements all the logic to execute actions for a Discord command on the the bot will need to respond to. Note that this does not mean the action is implemented : that's the exact reason why this class is abstract : you need to implement your own action logic for this abstract BotCommand to have any value.
+ * This class has many utilities for handling different condition types for doing appropriate actions depending on the command you are trying to implement. They should all be available inside the {@code action()} method body, so fire up your IDE to get auto completion to know more about available methods!
+ *
+ * @version 1.0
+ * @since v0.7.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
 		DiscordUtils {
 	
+	/**
+	 * Enum that defines which level should the Buffer saves the object given in appropriate methods.
+	 * <p>
+	 * Here's the meaning of the possibilities :
+	 * </p>
+	 * <ul>
+	 * <li>BufferLevel.CHANNEL : Saves the object for a TextChannel, meaning other channels in the same server may not have access to the data stored in here (DEFAULT);</li>
+	 * <li>BufferLevel.SERVER : Saves the object for a Server (Guild, in Discord's terms), meaning this data could apply to every TextChannel in the same server;</li>
+	 * <li>BufferLevel.USER : Saves the object for a User's ID, meaning this data is only accessible when this user calls a command.</li>
+	 * </ul>
+	 *
+	 * @version 1.0
+	 * @since v0.7.0
+	 * @see AbstractBotCommand#DEFAULT_BUFFER_LEVEL
+	 */
 	public enum BufferLevel{
 		CHANNEL, SERVER, USER
 	}
@@ -38,18 +58,28 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	private boolean isCopy;
 	
-	private boolean isAlive;
-	
 	public AbstractBotCommand(){
 		this.isCopy = false;
-		this.isAlive = true;
 	}
 	
+	/**
+	 * Creates a new AbstractBotCommand with the same context as the command added in the parameter {@code commandToCopy}.
+	 *
+	 * @version 1.0
+	 * @since v0.7.0
+	 * @see #putStateFromCommand(AbstractBotCommand)
+	 */
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
 		this();
 		putStateFromCommand(commandToCopy);
 	}
 	
+	/**
+	 * Sets the context of the command in the parameter {@code commandToCopy} into this command by giving the same router and dictionary pf the commandToCopy and flag this command as a copy.
+	 *
+	 * @version 1.0
+	 * @since v0.7.0
+	 */
 	public void putStateFromCommand(AbstractBotCommand commandToCopy){
 		
 		setRouter(commandToCopy.getRouter());
@@ -86,21 +116,19 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getRequest().getContent();
 	}
 	
-	public String[] getSplitContent(){
-		
-		if(getContent() != null)
-			return getContent().split(" ");
-		else
-			return null;
-		
+	public String[] getContentParsed(){
+		return this.getContentParsedMaxed(-1);
 	}
 	
-	public String[] getSplitContentMaxed(int maxSize){
+	public String[] getContentParsedMaxed(int maxSize){
 		
-		if(getContent() != null)
-			return getContent().split(" ", maxSize);
-		else
+		if(!this.hasContent())
 			return null;
+		
+		ArrayList<String> possibleContent = splitSpacesExcludeQuotesMaxed(
+				this.getContent(), maxSize);
+		
+		return possibleContent.toArray(new String[0]);
 		
 	}
 	
@@ -171,16 +199,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getEvent();
 	}
 	
-	public Member getSelfMember(){
+	public Member getBotMember(){
 		return getGuild().getSelfMember();
 	}
 	
-	public SelfUser getSelfUser(){
+	public SelfUser getBotUser(){
 		return getEventDigger().getRunningBot();
 	}
 	
-	public AccountManager getSelfUserManager(){
-		return getSelfUser().getManager();
+	public AccountManager getBotUserManager(){
+		return getBotUser().getManager();
 	}
 	
 	public Member getMember(){
@@ -248,16 +276,17 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean isAlive(){
-		return this.isAlive;
+		return !this.getRouter().isDead();
 	}
 	
 	public boolean kill(){
-		if(this.stopAction()){
+		
+		if(this instanceof Stoppable && ((Stoppable)this).stopMiddleware()){
 			this.getRouter().interrupt();
-			this.isAlive = false;
 		}
 		
 		return !this.isAlive();
+		
 	}
 	
 	public HashMap<String, Parameter> getParameters(){
@@ -298,10 +327,6 @@ public abstract class AbstractBotCommand extends Translatable implements
 		this.getRequest().onParameterPresent(parameterName, onParamPresent);
 	}
 	
-	public boolean stopAction(){
-		return false;
-	}
-	
 	public void connect(VoiceChannel voiceChannel){
 		getGuild().getAudioManager().openAudioConnection(voiceChannel);
 		
@@ -335,7 +360,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public void setSelfNickname(String nickname){
-		this.setNicknameOf(this.getSelfMember(), nickname);
+		this.setNicknameOf(this.getBotMember(), nickname);
 	}
 	
 	public void setNicknameOf(Member member, String nickname){

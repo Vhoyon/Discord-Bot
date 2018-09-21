@@ -1,10 +1,18 @@
 package commands;
 
-import java.util.ArrayList;
-
 import utilities.abstracts.GameInteractionCommands;
 import utilities.specifics.GamePool;
 
+import java.util.ArrayList;
+
+/**
+ * Command that lists the games that are in the game pool and sends a message
+ * with said list.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandGameList extends GameInteractionCommands {
 	
 	@Override
@@ -39,9 +47,10 @@ public class CommandGameList extends GameInteractionCommands {
 	public Object getCalls(){
 		return GAME_LIST;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Display a list of all the games that you have in the games list";
 	}
+	
 }

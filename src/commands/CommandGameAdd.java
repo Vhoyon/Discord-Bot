@@ -4,12 +4,20 @@ import errorHandling.BotError;
 import utilities.abstracts.GameInteractionCommands;
 import utilities.specifics.GamePool;
 
+/**
+ * Command that adds a game (simple message string) to the game pool for this
+ * TextChannel.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandGameAdd extends GameInteractionCommands {
 	
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage",
 					buildVCommand(getDefaultCall() + " [game name]")));
 		}

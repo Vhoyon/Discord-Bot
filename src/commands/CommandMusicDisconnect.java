@@ -5,6 +5,14 @@ import utilities.music.MusicManager;
 
 import errorHandling.BotError;
 
+/**
+ * Command that disconnects the bot from the connected VoiceChannel and empties
+ * the music playlist.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandMusicDisconnect extends MusicCommands {
 	
 	@Override
@@ -25,9 +33,10 @@ public class CommandMusicDisconnect extends MusicCommands {
 	public Object getCalls(){
 		return MUSIC_DISCONNECT;
 	}
-
+	
 	@Override
-	public String getCommandDescription() {
+	public String getCommandDescription(){
 		return "Disconnect the bot from the voice channel";
 	}
+	
 }

@@ -46,7 +46,7 @@ BOT_TOKEN=     # <-- This is where your Bot Token should be pasted to!
 
 Now, you can run the bot again, which will detect the `.env` file and wait for your input to bring the bot to life.
 
-Once started, if you followed [these instructions](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token) correctly (_tip : the link provided to make your bot join a server will also be outputted to the Bot's console if you added the `CLIENT_ID` value to the `.env` file!_), you should see the Bot's status to come online. If you didn't change anything in the code yet, you should be able to send the command `!!help` in a Text Channel and see a list of the available commands!
+Once started, if you followed [these instructions](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token) correctly (_tip : the link provided to make your bot join a server will also be outputted to the Bot's console if you added the `CLIENT_ID` value to the `.env` file!_), you should see the Bot's status to come online. If you didn't change anything in the code yet, you should be able to send the command `\help` in a Text Channel and see a list of the available commands!
 
 ## Built With
 

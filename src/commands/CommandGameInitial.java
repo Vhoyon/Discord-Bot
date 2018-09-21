@@ -1,17 +1,25 @@
 package commands;
 
-import java.util.ArrayList;
-
 import errorHandling.BotError;
 import utilities.abstracts.GameInteractionCommands;
 import utilities.specifics.GamePool;
 
+import java.util.ArrayList;
+
+/**
+ * Command that initializes the game pool and is required for other game
+ * commands to be used.
+ * 
+ * @version 1.0
+ * @since v0.5.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandGameInitial extends GameInteractionCommands {
 	
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage",
 					buildVCommand(getDefaultCall()
 							+ " [game 1],[game 2],[game 3],[...]")), false);
@@ -47,7 +55,7 @@ public class CommandGameInitial extends GameInteractionCommands {
 	public Object getCalls(){
 		return GAME;
 	}
-
+	
 	@Override
 	public String getCommandDescription(){
 		return "Create a list of games that you usually play!";

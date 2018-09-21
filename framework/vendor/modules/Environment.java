@@ -99,21 +99,21 @@ public class Environment extends Module {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <EnvVar> EnvVar getVar(String key, Object defaultValue){
+	public static <EnvVar> EnvVar getVar(String key, EnvVar defaultValue){
 		if(envVars == null){
 			
 			if(Framework.isDebugging())
 				Logger.log("A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
 						Logger.LogType.WARNING);
 			
-			return (EnvVar)defaultValue;
+			return defaultValue;
 			
 		}
 		
 		String value = envVars.get(key.toLowerCase());
 		
 		if(value == null || value.equals("")){
-			return (EnvVar)defaultValue;
+			return defaultValue;
 		}
 		
 		if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")){

@@ -20,9 +20,13 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	private MessageEventDigger eventDigger;
 	protected Command command;
 	
+	private boolean isDead;
+	
 	public AbstractCommandRouter(MessageReceivedEvent event,
 			String receivedMessage, Buffer buffer,
 			CommandsRepository commandsRepo){
+		
+		this.isDead = false;
 		
 		this.buffer = buffer;
 		
@@ -99,8 +103,12 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
 		
-		botCommand.setRouter(this);
-		botCommand.setDictionary(getDictionary());
+		if(botCommand != null){
+			
+			botCommand.setRouter(this);
+			botCommand.setDictionary(getDictionary());
+			
+		}
 		
 		return botCommand;
 		
@@ -158,7 +166,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	}
 	
 	/**
-	 * @return <code>null</code> by default, can be overridden to return another
+	 * @return {@code null} by default, can be overridden to return another
 	 *         value for {@link #validateMessage()}.
 	 */
 	protected Command commandIfValidated(){
@@ -175,6 +183,17 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	public LinkableCommand getLinkableCommand(String commandName){
 		return this.getCommandsRepo().getContainer().initiateLink(commandName);
+	}
+
+	@Override
+	public void interrupt() {
+		super.interrupt();
+		
+		this.isDead = true;
+	}
+	
+	public boolean isDead(){
+		return this.isDead;
 	}
 	
 }

@@ -5,12 +5,21 @@ import vendor.objects.Dictionary;
 import vendor.objects.Language;
 import errorHandling.BotError;
 
+/**
+ * Command that changes the languages of the bot (strings that uses the
+ * {@link #lang(String)} method and its variants) for the TextChannel that this
+ * command was called from.
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
 public class CommandLanguage extends BotCommand {
 	
 	@Override
 	public void action(){
 		
-		if(getContent() == null){
+		if(!hasContent()){
 			sendMessage(lang("NullContent", buildVCommand(LANGUAGE + " ["
 					+ lang("NullContentUsage") + "]"), buildVCommand(LANG
 					+ " [" + lang("NullContentUsage") + "]")));

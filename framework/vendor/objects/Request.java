@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Request implements Utils {
@@ -19,43 +18,39 @@ public class Request implements Utils {
 		private int position;
 		private boolean acceptsContent;
 		
-		protected Parameter(){
-			this.acceptsContent = true;
-		}
+		protected Parameter(){}
 		
 		public Parameter(String parameter){
-			this();
-			
-			if(parameter.matches(getParametersPrefixProtected() + "{1,2}.+")){
-				
-				int paramDeclaratorLength = parameter
-						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
-						: 1;
-				
-				this.parameterName = parameter.substring(paramDeclaratorLength);
-				
-			}
-			else{
-				this.parameterName = parameter;
-			}
+			this(parameter, -1);
 		}
 		
 		protected Parameter(String paramName, int position){
-			this(paramName);
-			
-			this.setPosition(position);
+			this(paramName, null, position);
 		}
 		
 		public Parameter(String paramName, String paramContent){
-			this(paramName);
-			
-			this.setContent(paramContent);
+			this(paramName, paramContent, -1);
 		}
 		
 		protected Parameter(String paramName, String paramContent, int position){
-			this(paramName, paramContent);
+			
+			if(paramName.matches(getParametersPrefixProtected() + "{1,2}.+")){
+				
+				int paramDeclaratorLength = paramName
+						.matches(getParametersPrefixProtected() + "{2}.+") ? 2
+						: 1;
+				
+				this.parameterName = paramName.substring(paramDeclaratorLength);
+				
+			}
+			else{
+				this.parameterName = paramName;
+			}
 			
 			this.setPosition(position);
+			this.setContent(paramContent);
+			this.acceptsContent = true;
+			
 		}
 		
 		public String getName(){
@@ -99,17 +94,18 @@ public class Request implements Utils {
 		@Override
 		public boolean equals(Object obj){
 			
-			boolean isEqual = false;
-			
 			if(obj instanceof Parameter){
+				
+				if(getName() == null)
+					return false;
 				
 				Parameter parameterToCompare = (Parameter)obj;
 				
-				isEqual = getName().equals(parameterToCompare.getName());
+				return getName().equals(parameterToCompare.getName());
 				
 			}
 			
-			return isEqual;
+			return false;
 		}
 		
 		@Override
@@ -151,8 +147,7 @@ public class Request implements Utils {
 		this(receivedMessage, DEFAULT_COMMAND_PREFIX, parametersPrefix);
 	}
 	
-	public Request(String[] args, String commandPrefix,
-			char parametersPrefix){
+	public Request(String[] args, String commandPrefix, char parametersPrefix){
 		this(buildMessageFromArgs(args, parametersPrefix), commandPrefix,
 				parametersPrefix);
 	}
@@ -179,165 +174,182 @@ public class Request implements Utils {
 		}
 		
 		if(hasContent()){
+			setupParameters();
+		}
+		
+	}
+	
+	private class PossibleParam {
+		String name;
+		int index;
+		int startPos;
+		int endPos;
+		
+		public PossibleParam(String name, int index, int startPos, int endPos){
+			this.name = name;
+			this.index = index;
+			this.startPos = startPos;
+			this.endPos = endPos;
+		}
+	}
+	
+	private void setupParameters(){
+		
+		parameters = new HashMap<>();
+		
+		// Splits the content : Search for all spaces, except thoses
+		// in double quotes and put all what's found in the
+		// possibleParams ArrayList.
+		// Necessary since .split() removes the wanted Strings.
+		ArrayList<String> possibleParams = splitSpacesExcludeQuotes(content);
+		
+		duplicateParams = new ArrayList<>();
+		
+		boolean canRoll = true;
+		
+		for(int i = 0; i < possibleParams.size() && canRoll; i++){
 			
-			// Test if content contains parameters.
+			PossibleParam possibleParam = new PossibleParam(
+					possibleParams.get(i), i, -1, -1);
 			
-			parameters = new HashMap<>();
-			
-			// Splits the content : Search for all spaces, except thoses
-			// in double quotes and put all what's found in the
-			// possibleParams ArrayList.
-			// Necessary since .split() removes the wanted Strings.
-			ArrayList<String> possibleParams = new ArrayList<>();
-			Matcher matcher = Pattern.compile(
-					"[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(content);
-			while(matcher.find()){
-				possibleParams.add(matcher.group());
+			if(possibleParam.name.equals(getParametersPrefix() + ""
+					+ getParametersPrefix())){
+				// If string is double parameter prefix, remove it and stop taking params
+				
+				possibleParam.startPos = getContent().indexOf(
+						possibleParam.name);
+				possibleParam.endPos = possibleParam.startPos
+						+ possibleParam.name.length();
+				
+				canRoll = false;
+				
 			}
-			
-			duplicateParams = new ArrayList<>();
-			
-			boolean canRoll = true;
-			
-			for(int i = 0; i < possibleParams.size() && canRoll; i++){
+			else if(stringIsParameter(possibleParam.name)){
+				// If string is structured as a parameter, create it.
 				
-				String possibleParam = possibleParams.get(i);
-				
-				int paramStartPos = -1;
-				int paramEndPos = -1;
-				
-				if(possibleParam.equals(getParametersPrefix() + ""
-						+ getParametersPrefix())){
-					// If string is double parameter prefix, remove it and stop taking params
-					
-					paramStartPos = getContent().indexOf(possibleParam);
-					paramEndPos = paramStartPos + possibleParam.length();
-					
-					canRoll = false;
-					
-				}
-				else if(possibleParam.matches(getParametersPrefixProtected()
-						+ "{1,2}[^\\s]+")){
-					// If string is structured as a parameter, create it.
-					
-					paramStartPos = getContent().indexOf(possibleParam);
-					paramEndPos = paramStartPos + possibleParam.length();
-					
-					if(possibleParam.matches(getParametersPrefixProtected()
-							+ "{2}[^\\s]+")){
-						// Doubled param prefix means that all letters count as one param
-						
-						Parameter newParam = new Parameter(possibleParam, i);
-						
-						if(parameters.containsValue(newParam)){
-							
-							duplicateParams.add(newParam);
-							
-						}
-						else{
-							
-							try{
-								
-								String possibleParamContent = possibleParams
-										.get(i + 1);
-								
-								// If the following String isn't another param, set
-								// said String as the content for the current param.
-								if(!possibleParamContent
-										.matches(getParametersPrefixProtected()
-												+ "{1,2}[^\\s]+")){
-									
-									newParam.setContent(possibleParamContent);
-									
-									i++;
-									
-									paramEndPos = getContent().indexOf(
-											possibleParamContent)
-											+ possibleParamContent.length();
-									
-								}
-								
-							}
-							catch(IndexOutOfBoundsException e){
-								canRoll = false;
-							}
-							
-							parameters.put(newParam.getName(), newParam);
-							
-						}
-						
-					}
-					else{
-						// Single param prefix means that all letters counts as a different param
-						
-						String[] singleParams = possibleParam.substring(1,
-								possibleParam.length()).split("");
-						
-						for(int j = 0; j < singleParams.length && canRoll; j++){
-							
-							Parameter newParam = new Parameter(singleParams[j],
-									i + j);
-							
-							if(parameters.containsValue(newParam)){
-								
-								duplicateParams.add(newParam);
-								
-							}
-							else{
-								
-								if(j == singleParams.length - 1){
-									
-									try{
-										String possibleParamContent = possibleParams
-												.get(i + 1);
-										
-										// If the following String isn't another param, set
-										// said String as the content for the current param.
-										if(!possibleParamContent
-												.matches(getParametersPrefixProtected()
-														+ "{1,2}[^\\s]+")){
-											
-											newParam.setContent(possibleParamContent);
-											
-											i++;
-											
-											paramEndPos = getContent().indexOf(
-													possibleParamContent)
-													+ possibleParamContent
-															.length();
-											
-										}
-										
-									}
-									catch(IndexOutOfBoundsException e){
-										canRoll = false;
-									}
-									
-								}
-								
-								parameters.put(newParam.getName(), newParam);
-								
-							}
-							
-						}
-						
-					}
-					
-				}
-				
-				if(paramStartPos != -1){
-					String contentToRemove = getContent().substring(
-							paramStartPos, paramEndPos);
-					
-					setContent(getContent().replaceFirst(contentToRemove, ""));
-				}
+				canRoll = handleParameterCreation(possibleParam, possibleParams);
 				
 			}
 			
-			if(getContent() != null)
-				setContent(getContent().trim().replaceAll("\"", ""));
+			if(possibleParam.startPos != -1){
+				String contentToRemove = getContent().substring(
+						possibleParam.startPos, possibleParam.endPos);
+				
+				setContent(getContent().replaceFirst(
+						Pattern.quote(contentToRemove), ""));
+			}
+			
+			i = possibleParam.index;
 			
 		}
+		
+		if(hasContent())
+			setContent(getContent().trim().replaceAll("\"", ""));
+		
+	}
+	
+	private boolean tryGetParamContent(Parameter newParameter,
+			PossibleParam possibleParam, ArrayList<String> possibleParamList){
+		
+		String possibleParamContent;
+		
+		try{
+			possibleParamContent = possibleParamList
+					.get(possibleParam.index + 1);
+			
+		}
+		catch(IndexOutOfBoundsException e){
+			return false;
+		}
+		
+		// If the following String isn't another param, set
+		// said String as the content for the current param.
+		if(!stringIsParameter(possibleParamContent)){
+			
+			newParameter.setContent(possibleParamContent);
+			
+			possibleParam.index++;
+			
+			possibleParam.endPos = getContent().indexOf(possibleParamContent)
+					+ possibleParamContent.length();
+			
+		}
+		
+		return true;
+		
+	}
+	
+	private boolean stringIsParameter(String string){
+		return string != null
+				&& string.matches(getParametersPrefixProtected()
+						+ "{1,2}[^\\s]+");
+	}
+	
+	private boolean handleParameterCreation(PossibleParam possibleParam,
+			ArrayList<String> possibleParamsList){
+		
+		boolean canRoll = true;
+		
+		possibleParam.startPos = getContent().indexOf(possibleParam.name);
+		possibleParam.endPos = possibleParam.startPos
+				+ possibleParam.name.length();
+		
+		if(possibleParam.name.matches(getParametersPrefixProtected()
+				+ "{2}[^\\s]+")){
+			// Doubled param prefix means that all letters count as one param
+			
+			Parameter newParam = new Parameter(possibleParam.name,
+					possibleParam.index);
+			
+			if(parameters.containsValue(newParam)){
+				
+				duplicateParams.add(newParam);
+				
+			}
+			else{
+				
+				canRoll = tryGetParamContent(newParam, possibleParam,
+						possibleParamsList);
+				
+				parameters.put(newParam.getName(), newParam);
+				
+			}
+			
+		}
+		else{
+			// Single param prefix means that all letters counts as a different param
+			
+			String[] singleParams = possibleParam.name.substring(1,
+					possibleParam.name.length()).split("");
+			
+			for(int j = 0; j < singleParams.length && canRoll; j++){
+				
+				Parameter newParam = new Parameter(singleParams[j],
+						possibleParam.index + j);
+				
+				if(parameters.containsValue(newParam)){
+					
+					duplicateParams.add(newParam);
+					
+				}
+				else{
+					
+					if(j == singleParams.length - 1){
+						
+						canRoll = tryGetParamContent(newParam, possibleParam,
+								possibleParamsList);
+						
+					}
+					
+					parameters.put(newParam.getName(), newParam);
+					
+				}
+				
+			}
+			
+		}
+		
+		return canRoll;
 		
 	}
 	
@@ -365,13 +377,14 @@ public class Request implements Utils {
 	}
 	
 	public boolean isCommand(){
-		return this.hasCommand() && this.getCommandNoFormat()
-				.matches("^\\Q" + getCommandPrefix() + "\\E.+$");
+		return this.hasCommand()
+				&& this.getCommandNoFormat().matches(
+						"^" + Pattern.quote(getCommandPrefix()) + ".+$");
 	}
 	
 	public boolean isOnlyCommandPrefix(){
-		return this.hasCommand() && this.getCommandNoFormat()
-				.equals(getCommandPrefix());
+		return this.hasCommand()
+				&& this.getCommandNoFormat().equals(getCommandPrefix());
 	}
 	
 	public String getContent(){
@@ -611,10 +624,14 @@ public class Request implements Utils {
 		}
 		else{
 			
-			if(getContent() == null)
-				setContent(paramFound.getContent());
-			else
-				setContent(getContent() + " " + paramFound.getContent());
+			if(paramFound.getContent() != null){
+				
+				if(!hasContent())
+					setContent(paramFound.getContent());
+				else
+					setContent(getContent() + " " + paramFound.getContent());
+				
+			}
 			
 			paramFound.setAcceptingContent(false);
 			
@@ -644,8 +661,8 @@ public class Request implements Utils {
 		
 		for(String arg : args){
 			
-			String protectedParamPrefix = Pattern.quote(
-					String.valueOf(parametersPrefix));
+			String protectedParamPrefix = Pattern.quote(String
+					.valueOf(parametersPrefix));
 			String paramRegex = "^(" + protectedParamPrefix + "{1,2}.+|"
 					+ protectedParamPrefix + "{2})$";
 			
@@ -661,7 +678,8 @@ public class Request implements Utils {
 		
 		String argsRequest = builder.toString();
 		
-		return argsRequest.substring(0, argsRequest.length() - 1);
+		return argsRequest.isEmpty() ? "" : argsRequest.substring(0,
+				argsRequest.length() - 1);
 	}
 	
 }

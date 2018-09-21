@@ -5,11 +5,13 @@ import java.util.regex.PatternSyntaxException;
 
 import vendor.modules.Logger;
 import vendor.modules.Logger.LogType;
+import vendor.utilities.sanitizers.TextRegexSanitizer;
 
 public class TextRegexField extends TextField {
 	
 	private String regexToMatch;
 	private boolean isInverted;
+	private boolean shouldBox;
 	
 	public TextRegexField(String name, String env, String defaultValue,
 			String regexToMatch){
@@ -28,13 +30,6 @@ public class TextRegexField extends TextField {
 		try{
 			// Test if Regex provided is valid
 			Pattern.compile(regexToMatch);
-			
-			if(!shouldBox || regexToMatch.matches("^\\^.*\\$$")){
-				this.regexToMatch = regexToMatch;
-			}
-			else{
-				this.regexToMatch = "^" + regexToMatch + "$";
-			}
 		}
 		catch(PatternSyntaxException e){
 			
@@ -46,19 +41,14 @@ public class TextRegexField extends TextField {
 		}
 		
 		this.isInverted = isInverted;
+		this.shouldBox = shouldBox;
 	}
 	
 	@Override
 	protected String sanitizeValue(Object value)
 			throws IllegalArgumentException{
-		String stringValue = super.sanitizeValue(value);
-		
-		if(this.regexToMatch != null && stringValue.matches(this.regexToMatch) == this.isInverted){
-			throw new IllegalArgumentException(
-					"Value does not match the required pattern!");
-		}
-		
-		return stringValue;
+		return TextRegexSanitizer.sanitizeValue(value, this.regexToMatch,
+				this.isInverted, this.shouldBox, false);
 	}
 	
 }

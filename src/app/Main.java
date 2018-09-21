@@ -12,9 +12,11 @@ import vendor.objects.Request;
 import vendor.utilities.FrameworkTemplate;
 
 /**
+ * The main class for running Vhoyon's bot.
  * 
- * @author Stephano
- *
+ * @version 1.0
+ * @since 0.1.0
+ * @author Stephano Mehawej
  */
 public class Main {
 	
@@ -90,6 +92,13 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Logs a link to the linked loggers that makes this bot join a server of
+	 * choice with the condition that the {@code CLIENT_ID} environment variable
+	 * is not empty.
+	 *
+	 * @since v0.4.0
+	 */
 	private static void logLink(){
 		
 		String clientId = Environment.getVar("CLIENT_ID", null);

@@ -1,32 +1,46 @@
 package commands;
 
+import errorHandling.BotError;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import utilities.BotCommand;
 import vendor.exceptions.BadContentException;
+import vendor.interfaces.Stoppable;
 import vendor.objects.Mention;
 import vendor.objects.ParametersHelp;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CommandSpam extends BotCommand {
+/**
+ * Command to spam people. Thus its name. It's a fun command.
+ * <p>
+ * This command has few parameters to change its behavior :
+ * <ul>
+ * <li>Not adding content sends a generic message while adding content to the
+ * command's request will send it as the spamming message;</li>
+ * <li>Adding the parameter {@code -c} (or {@code --count}) and a number
+ * afterward allows to change the number of messages to be sent (default is
+ * {@code 10});</li>
+ * <li>Adding the flag {@code -n} (or {@code --number}) allows to append the
+ * current position of the spam after the message (e.g. : {@code [message] #1});
+ * </li>
+ * <li>Adding the parameter {@code -u} (or {@code --user}) and a mention as the
+ * parameter content will spam all of the found users in the mention found (be
+ * it a direct mention or a role mention). Bots will not be spammed.</li>
+ * </ul>
+ * </p>
+ * 
+ * @version 1.0
+ * @since v0.4.0
+ * @author V-ed (Guillaume Marcoux)
+ */
+public class CommandSpam extends BotCommand implements Stoppable {
 	
 	@Override
 	public void action(){
 		
-		// Defaults to 10 messages.
-		AtomicInteger numberOfSpam = new AtomicInteger(10);
-		
-		onParameterPresent("c", param -> {
-			try{
-				
-				numberOfSpam.set(Integer.parseInt(param.getContent()));
-				
-			}
-			catch(NumberFormatException e){
-				
-			}
-		});
+		boolean canSpam = true;
 		
 		boolean shouldSendToMember = hasParameter("u");
 		
@@ -40,24 +54,52 @@ public class CommandSpam extends BotCommand {
 				
 				if(isStringMention(possibleMention)){
 					memberToSpam = getParameterAsMention("u");
+					
+					if(getBotMember().equals(memberToSpam))
+						throw new BadContentException(
+								"You think I'll spam myself? C'mon, I'm better than that...");
+					else if(memberToSpam.getUser().isBot())
+						throw new BadContentException(
+								"I won't spam my fellow bots!");
 				}
 				else if(isStringMentionRole(possibleMention)){
-					membersToSpam = getGuild()
-							.getMembersWithRoles(
-									getGuild()
-											.getRoleById(
-													getIdFromStringMentionRole(possibleMention)));
+					Role role = getGuild().getRoleById(
+							getIdFromStringMentionRole(possibleMention));
+					
+					membersToSpam = getGuild().getMembersWithRoles(role);
+					
+					if(membersToSpam.size() == 0)
+						throw new BadContentException(
+								"The role you mentionned has no member in it, nobody was spammed!");
+				}
+				else{
+					throw new BadContentException(
+							"Your mention is not valid. Tag a user (or a role!) with "
+									+ code("@[username|role]") + "!");
 				}
 				
 			}
 			catch(BadContentException e){
-				sendMessage("The member specified is not valid. Tag him with "
-						+ code("@[username]") + "!");
+				new BotError(this, e.getMessage());
+				canSpam = false;
 			}
 		}
 		
-		if(!shouldSendToMember
-				|| (shouldSendToMember && (memberToSpam != null || membersToSpam != null))){
+		if(canSpam){
+			
+			// Defaults to 10 messages.
+			AtomicInteger numberOfSpam = new AtomicInteger(10);
+			
+			onParameterPresent("c", param -> {
+				try{
+					
+					numberOfSpam.set(Integer.parseInt(param.getContent()));
+					
+				}
+				catch(NumberFormatException e){
+					
+				}
+			});
 			
 			String message;
 			
@@ -88,9 +130,9 @@ public class CommandSpam extends BotCommand {
 			
 			boolean shouldAppendNumber = hasParameter("n");
 			
-			for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
+			try{
 				
-				try{
+				for(int i = 0; i < numberOfSpam.get() && isAlive(); i++){
 					
 					if(i != 0)
 						Thread.sleep(1250);
@@ -115,25 +157,22 @@ public class CommandSpam extends BotCommand {
 						else if(membersToSpam != null){
 							
 							for(Member member : membersToSpam){
-								new Thread(() -> sendMessageToMember(member,
-										messageToSend)).start();
+								if(!member.getUser().isBot())
+									new Thread(() -> sendMessageToMember(
+											member, messageToSend)).start();
 							}
 							
 						}
 						
 					}
+					
 				}
-				catch(InterruptedException e){}
 				
 			}
+			catch(InterruptedException e){}
 			
 		}
 		
-	}
-	
-	@Override
-	public boolean stopAction(){
-		return true;
 	}
 	
 	@Override
@@ -162,4 +201,5 @@ public class CommandSpam extends BotCommand {
 					"n", "number")
 		};
 	}
+	
 }
