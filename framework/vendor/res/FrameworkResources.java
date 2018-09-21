@@ -6,4 +6,6 @@ public interface FrameworkResources {
 	String BUFFER_DICTIONARY = "VHOYON_LANG_BUFFER";
 	String BUFFER_CONFIRMATION = "VHOYON_CONF_BUFFER";
 	
+	String AUDIT_HEADER = "[AUDIT]";
+	
 }
