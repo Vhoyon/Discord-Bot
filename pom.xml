@@ -1,28 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>en.stephanomehawej</groupId>
-    <artifactId>DiscordBot</artifactId>
+    
+    <groupId>io.github.vhoyon</groupId>
+    <artifactId>vhoyonbot</artifactId>
     <version>0.11.0-dev</version>
+    
     <name>Discord Bot</name>
     <description>A Discord bot to learn and have fun.</description>
     
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>src</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>res</directory>
-                <excludes>
-                    <exclude>.env</exclude>
-                </excludes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -68,7 +55,6 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <testSourceDirectory>tests</testSourceDirectory>
     </build>
 
     <repositories>
