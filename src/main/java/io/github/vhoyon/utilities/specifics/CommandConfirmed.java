@@ -3,7 +3,7 @@ package io.github.vhoyon.utilities.specifics;
 import io.github.vhoyon.utilities.BotCommand;
 import io.github.vhoyon.utilities.interfaces.Commands;
 import io.github.vhoyon.utilities.interfaces.Resources;
-import vendor.abstracts.AbstractCommandConfirmed;
+import io.github.vhoyon.vramework.abstracts.AbstractCommandConfirmed;
 
 /**
  * Vhoyon's implementation of the {@link AbstractCommandConfirmed} to generalize
@@ -23,7 +23,7 @@ public abstract class CommandConfirmed extends AbstractCommandConfirmed
 	 * <p>
 	 * This usage does not get the context from the current request, so you need
 	 * to add it in some way (<i>e.g. : using
-	 * {@link vendor.abstracts.AbstractBotCommand#putStateFromCommand(vendor.abstracts.AbstractBotCommand)}
+	 * {@link io.github.vhoyon.vramework.abstracts.AbstractBotCommand#putStateFromCommand(io.github.vhoyon.vramework.abstracts.AbstractBotCommand)}
 	 * </i>), and calling {@link #action()} too.
 	 * </p>
 	 * 

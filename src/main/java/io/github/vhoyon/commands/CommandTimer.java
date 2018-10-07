@@ -2,8 +2,8 @@ package io.github.vhoyon.commands;
 
 import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.BotCommand;
-import vendor.interfaces.Stoppable;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.interfaces.Stoppable;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command to create a timer in the TextChannel where this command was called

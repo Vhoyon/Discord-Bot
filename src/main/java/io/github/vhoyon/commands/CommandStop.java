@@ -3,7 +3,7 @@ package io.github.vhoyon.commands;
 import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.BotCommand;
 import io.github.vhoyon.utilities.specifics.CommandConfirmed;
-import vendor.utilities.CommandsThreadManager;
+import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 
 /**
  * Command that stops a running command.

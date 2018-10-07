@@ -1,8 +1,8 @@
 package utils;
 
 import io.github.vhoyon.app.CommandRouter;
-import vendor.objects.Request;
-import vendor.utilities.settings.Setting;
+import io.github.vhoyon.vramework.objects.Request;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
 
 import static org.mockito.Mockito.*;
 

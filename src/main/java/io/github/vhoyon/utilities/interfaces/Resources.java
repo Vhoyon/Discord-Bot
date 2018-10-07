@@ -1,7 +1,7 @@
 package io.github.vhoyon.utilities.interfaces;
 
-import vendor.objects.Language;
-import vendor.utilities.settings.*;
+import io.github.vhoyon.vramework.objects.Language;
+import io.github.vhoyon.vramework.utilities.settings.*;
 
 /**
  * Interface that hold the Resources for our bot, such as the prefixes, the

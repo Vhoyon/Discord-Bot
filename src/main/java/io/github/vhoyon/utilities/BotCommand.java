@@ -2,15 +2,15 @@ package io.github.vhoyon.utilities;
 
 import io.github.vhoyon.app.CommandRouter;
 import io.github.vhoyon.utilities.interfaces.*;
-import vendor.abstracts.AbstractBotCommand;
-import vendor.exceptions.BadFormatException;
-import vendor.utilities.settings.Setting;
+import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
 
 import java.util.function.Consumer;
 
 /**
  * Vhoyon's custom implementation of the
- * {@link vendor.abstracts.AbstractBotCommand AbstractBotCommand} to format
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractBotCommand AbstractBotCommand} to format
  * parameters how we want them and add few utilities such as Settings handling.
  *
  * @version 1.0
@@ -21,7 +21,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 		Commands, Resources {
 	
 	/**
-	 * @see vendor.abstracts.AbstractBotCommand#AbstractBotCommand()
+	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotCommand#AbstractBotCommand()
 	 *      AbstractBotCommand()
 	 */
 	public BotCommand(){
@@ -29,7 +29,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	/**
-	 * @see vendor.abstracts.AbstractBotCommand#AbstractBotCommand(AbstractBotCommand)
+	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotCommand#AbstractBotCommand(AbstractBotCommand)
 	 *      AbstractBotCommand(AbstractBotCommand commandToCopy)
 	 */
 	public BotCommand(BotCommand botCommandToCopy){
@@ -59,7 +59,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the {@link vendor.utilities.settings.Setting Setting} object from
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
 	 * this command's router.
 	 *
 	 * @since v0.8.0
@@ -71,7 +71,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the value of the {@link vendor.utilities.settings.SettingField
+	 * Gets the value of the {@link io.github.vhoyon.vramework.utilities.settings.SettingField
 	 * SettingField} associated to the name of the parameter {@code settingName}
 	 * .
 	 *
@@ -98,7 +98,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 *            {@code Object} value to be set to this setting.
 	 * @throws IllegalArgumentException
 	 *             {@code value} parameter is not the type of the
-	 *             {@link vendor.utilities.settings.SettingField SettingField}
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.SettingField SettingField}
 	 *             associated with the {@code name} provided.
 	 * @since v0.8.0
 	 * @see #setSetting(String, Object, Consumer)
@@ -129,7 +129,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 *            on change success.
 	 * @throws IllegalArgumentException
 	 *             {@code value} parameter is not the type of the
-	 *             {@link vendor.utilities.settings.SettingField SettingField}
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.SettingField SettingField}
 	 *             associated with the {@code name} provided.
 	 * @since v0.8.0
 	 * @throws BadFormatException

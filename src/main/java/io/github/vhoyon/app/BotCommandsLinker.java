@@ -2,10 +2,10 @@ package io.github.vhoyon.app;
 
 import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.interfaces.Commands;
-import vendor.abstracts.CommandsLinker;
-import vendor.interfaces.LinkableCommand;
-import vendor.objects.CommandLinksContainer;
-import vendor.utilities.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.abstracts.CommandsLinker;
+import io.github.vhoyon.vramework.interfaces.LinkableCommand;
+import io.github.vhoyon.vramework.objects.CommandLinksContainer;
+import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 
 /**
  * Linker that links the commands package which should contain all of the
@@ -14,7 +14,7 @@ import vendor.utilities.formatting.DiscordFormatter;
  * @version 1.0
  * @since v0.4.0
  * @author V-ed (Guillaume Marcoux)
- * @see vendor.abstracts.CommandsLinker
+ * @see io.github.vhoyon.vramework.abstracts.CommandsLinker
  */
 public class BotCommandsLinker extends CommandsLinker implements Commands,
 		DiscordFormatter {

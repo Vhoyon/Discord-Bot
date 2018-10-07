@@ -3,7 +3,7 @@ package io.github.vhoyon.commands;
 import io.github.vhoyon.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.utilities.specifics.GamePool;
 import io.github.vhoyon.errorHandling.BotError;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that removes a game from the game pool using its name as a search

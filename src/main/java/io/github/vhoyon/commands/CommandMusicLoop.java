@@ -2,7 +2,7 @@ package io.github.vhoyon.commands;
 
 import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.abstracts.MusicCommands;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that tells the associated MusicPlayer to loop songs. Two loop modes

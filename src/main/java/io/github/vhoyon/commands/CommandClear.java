@@ -7,9 +7,9 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
-import vendor.exceptions.BadContentException;
-import vendor.interfaces.Stoppable;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.exceptions.BadContentException;
+import io.github.vhoyon.vramework.interfaces.Stoppable;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 import java.util.ArrayList;
 import java.util.List;

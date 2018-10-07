@@ -2,9 +2,9 @@ package io.github.vhoyon.commands;
 
 import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.BotCommand;
-import vendor.exceptions.CommandNotFoundException;
-import vendor.modules.Logger;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.exceptions.CommandNotFoundException;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that send a message to the server by default with a help string

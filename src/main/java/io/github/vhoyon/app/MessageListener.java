@@ -1,25 +1,25 @@
 package io.github.vhoyon.app;
 
 import io.github.vhoyon.utilities.interfaces.Resources;
-import vendor.abstracts.AbstractCommandRouter;
-import vendor.abstracts.AbstractMessageListener;
-import vendor.abstracts.CommandsLinker;
-import vendor.objects.Buffer;
-import vendor.objects.CommandsRepository;
+import io.github.vhoyon.vramework.abstracts.AbstractCommandRouter;
+import io.github.vhoyon.vramework.abstracts.AbstractMessageListener;
+import io.github.vhoyon.vramework.abstracts.CommandsLinker;
+import io.github.vhoyon.vramework.objects.Buffer;
+import io.github.vhoyon.vramework.objects.CommandsRepository;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
  * This class implements the logic used by the
- * {@link vendor.abstracts.AbstractMessageListener AbstractMessageListener}
- * class to create the right {@link vendor.abstracts.CommandsLinker
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractMessageListener AbstractMessageListener}
+ * class to create the right {@link io.github.vhoyon.vramework.abstracts.CommandsLinker
  * CommandsLinker} (our {@link BotCommandsLinker}) and create the appropriate
- * {@link vendor.abstracts.AbstractCommandRouter AbstractCommandRouter} (our
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter AbstractCommandRouter} (our
  * {@link CommandRouter}).
  * 
  * @version 1.0
  * @since 0.1.0
  * @author Stephano
- * @see vendor.abstracts.AbstractMessageListener
+ * @see io.github.vhoyon.vramework.abstracts.AbstractMessageListener
  */
 public class MessageListener extends AbstractMessageListener implements
 		Resources {

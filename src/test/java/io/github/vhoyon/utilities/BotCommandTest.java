@@ -8,11 +8,11 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import utils.MockFactory;
-import vendor.objects.Request;
-import vendor.utilities.settings.IntegerField;
-import vendor.utilities.settings.Setting;
-import vendor.utilities.settings.SettingField;
-import vendor.utilities.settings.TextField;
+import io.github.vhoyon.vramework.objects.Request;
+import io.github.vhoyon.vramework.utilities.settings.IntegerField;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingField;
+import io.github.vhoyon.vramework.utilities.settings.TextField;
 
 import java.util.concurrent.atomic.AtomicReference;
 
