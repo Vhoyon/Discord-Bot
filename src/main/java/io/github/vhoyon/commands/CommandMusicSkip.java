@@ -5,8 +5,8 @@ import io.github.vhoyon.utilities.music.MusicManager;
 import io.github.vhoyon.utilities.music.MusicPlayer;
 import io.github.vhoyon.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.errorHandling.BotError;
-import vendor.exceptions.BadContentException;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.exceptions.BadContentException;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that skips tracks on demand. If there is no song that is playing

@@ -7,18 +7,18 @@ import io.github.vhoyon.utilities.abstracts.SimpleTextCommand;
 import io.github.vhoyon.utilities.interfaces.Commands;
 import io.github.vhoyon.utilities.interfaces.Resources;
 import io.github.vhoyon.utilities.specifics.CommandConfirmed;
-import vendor.abstracts.AbstractBotCommand;
-import vendor.abstracts.AbstractCommandRouter;
-import vendor.exceptions.NoCommandException;
-import vendor.interfaces.Command;
-import vendor.interfaces.Emojis;
-import vendor.interfaces.Utils;
-import vendor.modules.Audit;
-import vendor.modules.Logger;
-import vendor.objects.*;
-import vendor.utilities.CommandsThreadManager;
-import vendor.utilities.formatting.DiscordFormatter;
-import vendor.utilities.settings.Setting;
+import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
+import io.github.vhoyon.vramework.abstracts.AbstractCommandRouter;
+import io.github.vhoyon.vramework.exceptions.NoCommandException;
+import io.github.vhoyon.vramework.interfaces.Command;
+import io.github.vhoyon.vramework.interfaces.Emojis;
+import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.modules.Audit;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.objects.*;
+import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
+import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
 
 import java.util.ArrayList;
 
@@ -30,13 +30,13 @@ import java.util.ArrayList;
  * @version 1.0
  * @since v0.4.0
  * @author V-ed (Guillaume Marcoux)
- * @see vendor.abstracts.AbstractCommandRouter
+ * @see io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
  */
 public class CommandRouter extends AbstractCommandRouter implements Resources,
 		Commands, Emojis, DiscordFormatter {
 	
 	/**
-	 * @see vendor.abstracts.AbstractCommandRouter
+	 * @see io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
 	 */
 	public CommandRouter(MessageReceivedEvent event, String receivedMessage,
 			Buffer buffer, CommandsRepository commandsRepo){
@@ -233,11 +233,11 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	/**
-	 * Gets the {@link vendor.utilities.settings.Setting Setting} object from
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
 	 * the Buffer for the TextChannel of this Router or create it if there is
 	 * currently none in the Buffer.
 	 *
-	 * @return The {@link vendor.utilities.settings.Setting Setting} object from
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
 	 *         the associated buffer.
 	 * @since 0.9.0
 	 */

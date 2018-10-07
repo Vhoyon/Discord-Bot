@@ -10,11 +10,11 @@ import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.abstracts.MusicCommands;
 import io.github.vhoyon.utilities.music.MusicManager;
 import io.github.vhoyon.utilities.music.MusicPlayer;
-import vendor.exceptions.BadFormatException;
-import vendor.modules.Logger;
-import vendor.modules.Logger.LogType;
-import vendor.objects.ParametersHelp;
-import vendor.utilities.sanitizers.EnumSanitizer;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.modules.Logger.LogType;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

@@ -2,8 +2,8 @@ package io.github.vhoyon.commands;
 
 import io.github.vhoyon.utilities.BotCommand;
 import io.github.vhoyon.errorHandling.BotError;
-import vendor.objects.Dictionary;
-import vendor.objects.Language;
+import io.github.vhoyon.vramework.objects.Dictionary;
+import io.github.vhoyon.vramework.objects.Language;
 
 /**
  * Command that changes the languages of the bot (strings that uses the

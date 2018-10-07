@@ -2,14 +2,14 @@ package io.github.vhoyon.app;
 
 import io.github.vhoyon.consoles.TerminalConsole;
 import io.github.vhoyon.consoles.UIConsole;
-import vendor.Framework;
-import vendor.interfaces.Console;
-import vendor.modules.Audit;
-import vendor.modules.Environment;
-import vendor.modules.Logger;
-import vendor.objects.AuditableFile;
-import vendor.objects.Request;
-import vendor.utilities.FrameworkTemplate;
+import io.github.vhoyon.vramework.Framework;
+import io.github.vhoyon.vramework.interfaces.Console;
+import io.github.vhoyon.vramework.modules.Audit;
+import io.github.vhoyon.vramework.modules.Environment;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.objects.AuditableFile;
+import io.github.vhoyon.vramework.objects.Request;
+import io.github.vhoyon.vramework.utilities.FrameworkTemplate;
 
 /**
  * The main class for running Vhoyon's bot.
@@ -30,7 +30,7 @@ public class Main {
 				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
-			Framework.build(programRequest.hasParameter("d"));
+			Framework.build(Main.class, programRequest.hasParameter("d"));
 			
 			Audit.setOutputs(new AuditableFile("audit.txt", Framework
 					.runnableSystemPath()));

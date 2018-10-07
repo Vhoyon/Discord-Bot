@@ -4,10 +4,10 @@ import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.BotCommand;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
-import vendor.exceptions.BadContentException;
-import vendor.interfaces.Stoppable;
-import vendor.objects.Mention;
-import vendor.objects.ParametersHelp;
+import io.github.vhoyon.vramework.exceptions.BadContentException;
+import io.github.vhoyon.vramework.interfaces.Stoppable;
+import io.github.vhoyon.vramework.objects.Mention;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

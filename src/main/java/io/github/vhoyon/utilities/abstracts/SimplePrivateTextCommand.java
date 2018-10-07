@@ -2,11 +2,11 @@ package io.github.vhoyon.utilities.abstracts;
 
 import io.github.vhoyon.utilities.interfaces.Commands;
 import io.github.vhoyon.utilities.interfaces.Resources;
-import vendor.abstracts.AbstractTextCommand;
+import io.github.vhoyon.vramework.abstracts.AbstractTextCommand;
 
 /**
  * Simple class that implements the logic of
- * {@link vendor.abstracts.AbstractTextCommand AbstractTextCommand} so that a
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractTextCommand AbstractTextCommand} so that a
  * simple message can be sent via the private channel of the user that used this
  * command.
  *

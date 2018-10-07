@@ -3,11 +3,11 @@ package io.github.vhoyon.commands;
 import io.github.vhoyon.errorHandling.BotError;
 import io.github.vhoyon.utilities.BotCommand;
 import io.github.vhoyon.utilities.music.MusicManager;
-import vendor.exceptions.BadFormatException;
-import vendor.modules.Logger;
-import vendor.objects.ParametersHelp;
-import vendor.objects.Request.Parameter;
-import vendor.utilities.settings.SettingField;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.objects.Request.Parameter;
+import io.github.vhoyon.vramework.utilities.settings.SettingField;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;

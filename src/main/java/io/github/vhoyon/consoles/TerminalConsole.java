@@ -1,20 +1,20 @@
 package io.github.vhoyon.consoles;
 
-import vendor.abstracts.AbstractTerminalConsole;
-import vendor.modules.Logger;
+import io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole;
+import io.github.vhoyon.vramework.modules.Logger;
 
 import java.io.IOException;
 
 /**
  * Vhoyon's custom implementation of the
- * {@link vendor.abstracts.AbstractTerminalConsole AbstractTerminalConsole} that
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole AbstractTerminalConsole} that
  * allows us to get commands to start, stop, exit, etc our bot from the
  * Terminal.
  *
  * @version 1.0
  * @since v0.4.0
  * @author V-ed (Guillaume Marcoux)
- * @see vendor.abstracts.AbstractTerminalConsole
+ * @see io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole
  */
 public abstract class TerminalConsole extends AbstractTerminalConsole {
 	
