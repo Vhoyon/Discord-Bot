@@ -1,6 +1,6 @@
 package utils;
 
-import io.github.vhoyon.app.CommandRouter;
+import io.github.vhoyon.bot.app.CommandRouter;
 import io.github.vhoyon.vramework.objects.Request;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 
