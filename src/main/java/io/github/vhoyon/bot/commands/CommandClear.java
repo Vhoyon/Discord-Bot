@@ -3,15 +3,16 @@ package io.github.vhoyon.bot.commands;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
+import io.github.vhoyon.vramework.exceptions.BadContentException;
+import io.github.vhoyon.vramework.interfaces.Stoppable;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
-import io.github.vhoyon.vramework.exceptions.BadContentException;
-import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -25,14 +26,63 @@ import java.util.function.Predicate;
  */
 public class CommandClear extends BotCommand implements Stoppable {
 	
-	protected ArrayList<Predicate<Message>> conditions;
+	protected class ConditionMessage {
+		
+		protected int indice;
+		protected String langKey;
+		protected Object[] langReplacements;
+		
+		protected ConditionMessage(int indice, String langKey,
+				Object... langReplacements){
+			this.indice = indice;
+			this.langKey = langKey;
+			this.langReplacements = langReplacements;
+		}
+		
+	}
 	
-	protected void addCondition(Predicate<Message> condition){
+	protected class ConditionMessageReplacement {
+		
+		protected String name;
+		protected Object value;
+		
+		protected ConditionMessageReplacement(String name, Object value){
+			this.name = name;
+			this.value = value;
+			
+			if(CommandClear.this.conditionMessageReplacements == null)
+				CommandClear.this.conditionMessageReplacements = new HashMap<>();
+		}
+		
+	}
+	
+	protected HashMap<String, ConditionMessageReplacement> conditionMessageReplacements;
+	
+	protected ArrayList<Predicate<Message>> conditions;
+	protected int messageWeight = 0;
+	
+	protected void addCondition(String parameterUsed,
+			Predicate<Message> condition,
+			ConditionMessageReplacement... replacements){
 		
 		if(this.conditions == null)
 			this.conditions = new ArrayList<>();
 		
 		this.conditions.add(condition);
+		
+		onParameterPresent(parameterUsed, param -> {
+			
+			this.messageWeight += param.getWeight();
+			
+			if(replacements.length > 0
+					&& this.conditionMessageReplacements == null)
+				this.conditionMessageReplacements = new HashMap<>();
+			
+			for(ConditionMessageReplacement replacement : replacements)
+				this.conditionMessageReplacements.put(replacement.name,
+						replacement);
+			
+		});
 		
 	}
 	
@@ -41,37 +91,30 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		boolean shouldDoClear = true;
 		
-		String confirmationMessage = null;
-		String notifyMessage = null;
-		
-		if(!hasParameter("u", "s", "b")){
-			
-			confirmationMessage = lang("ConfirmMessage");
-			notifyMessage = "Cleared everything!";
-			
-		}
-		else{
+		if(hasParameter("u", "s", "b")){
 			
 			try{
+				
+				String paramUsed;
 				
 				final Member usr;
 				
 				if(hasParameter("u")){
 					usr = getParameterAsMention("u");
+					paramUsed = "u";
 				}
 				else if(hasParameter("s")){
 					usr = getMember();
+					paramUsed = "s";
 				}
 				else{
 					usr = getBotMember();
+					paramUsed = "b";
 				}
 				
-				confirmationMessage = lang("ConfUsrClear",
-						code(usr.getEffectiveName()));
-				notifyMessage = "Cleared " + usr.getAsMention()
-						+ "'s messages!";
-				
-				addCondition(message -> usr.equals(message.getMember()));
+				addCondition(paramUsed, message -> usr.equals(message
+						.getMember()), new ConditionMessageReplacement("user",
+						usr.getAsMention()));
 				
 			}
 			catch(BadContentException e){
@@ -83,7 +126,87 @@ public class CommandClear extends BotCommand implements Stoppable {
 		}
 		
 		if(shouldDoClear)
-			doClearLogic(confirmationMessage, notifyMessage);
+			doClearLogic(hasParameter("i"));
+		
+	}
+	
+	protected Object getRepl(String name){
+		if(this.conditionMessageReplacements == null)
+			return null;
+		
+		return this.conditionMessageReplacements.get(name).value;
+	}
+	
+	protected HashMap<Integer, ConditionMessage> getConditionMessagesConfirmation(){
+		
+		HashMap<Integer, ConditionMessage> conditionMessagesConfirmation = new HashMap<>();
+		
+		ConditionMessage[] condMessages = new ConditionMessage[]
+		{
+			new ConditionMessage(-4, "ConfBotInv"),
+			new ConditionMessage(-2, "ConfSelfInv", getRepl("user")),
+			new ConditionMessage(-1, "ConfUsrInv", getRepl("user")),
+			new ConditionMessage(0, "ConfAll"),
+			new ConditionMessage(1, "ConfUsr", getRepl("user")),
+			new ConditionMessage(2, "ConfSelf", getRepl("user")),
+			new ConditionMessage(4, "ConfBot"),
+		};
+		
+		for(ConditionMessage condMessage : condMessages)
+			conditionMessagesConfirmation.put(condMessage.indice, condMessage);
+		
+		return conditionMessagesConfirmation;
+		
+	}
+	
+	protected HashMap<Integer, ConditionMessage> getConditionMessagesNotification(){
+		
+		HashMap<Integer, ConditionMessage> conditionMessagesConfirmation = new HashMap<>();
+		
+		ConditionMessage[] condMessages = new ConditionMessage[]
+		{
+			new ConditionMessage(-4, "NotifBotInv"),
+			new ConditionMessage(-2, "NotifSelfInv", getRepl("user")),
+			new ConditionMessage(-1, "NotifUsrInv", getRepl("user")),
+			new ConditionMessage(0, "NotifAll"),
+			new ConditionMessage(1, "NotifUsr", getRepl("user")),
+			new ConditionMessage(2, "NotifSelf", getRepl("user")),
+			new ConditionMessage(4, "NotifBot"),
+		};
+		
+		for(ConditionMessage condMessage : condMessages)
+			conditionMessagesConfirmation.put(condMessage.indice, condMessage);
+		
+		return conditionMessagesConfirmation;
+		
+	}
+	
+	/**
+	 * Executes the logic to clear the messages with the conditions present in
+	 * the value of CommandClear's conditions array. This method resolves the
+	 * confirmation and notification messages based on the weight of the current
+	 * conditions status.
+	 * 
+	 * @see #doClearLogic(String, String, boolean)
+	 */
+	protected void doClearLogic(boolean shouldInvert){
+		
+		if(shouldInvert)
+			this.messageWeight *= -1;
+		
+		ConditionMessage conditionMessageConf = this
+				.getConditionMessagesConfirmation().get(this.messageWeight);
+		
+		String confMessage = lang(conditionMessageConf.langKey,
+				conditionMessageConf.langReplacements);
+		
+		ConditionMessage conditionMessageNotif = this
+				.getConditionMessagesNotification().get(this.messageWeight);
+		
+		String notifMessage = lang(conditionMessageNotif.langKey,
+				conditionMessageNotif.langReplacements);
+		
+		doClearLogic(confMessage, notifMessage, shouldInvert);
 		
 	}
 	
@@ -99,7 +222,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @since v0.10.0
 	 */
 	protected void doClearLogic(final String confMessage,
-			final String notifyMessage){
+			final String notifyMessage, boolean shouldInvert){
 		
 		new CommandConfirmed(this){
 			
@@ -113,7 +236,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 				
 				try{
 					
-					deleteMessages(CommandClear.this.conditions);
+					deleteMessages(CommandClear.this.conditions, shouldInvert);
 					
 					if(notifyMessage != null && isAlive() && hasParameter("n"))
 						sendInfoMessage(notifyMessage);
@@ -151,15 +274,15 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @since v0.10.0
 	 */
 	protected void deleteMessages(
-			final ArrayList<Predicate<Message>> messageConditions)
-			throws PermissionException{
+			final ArrayList<Predicate<Message>> messageConditions,
+			boolean shouldInvert) throws PermissionException{
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
 		
 		boolean shouldCompleteBeforeNext = hasParameter("w");
 		
 		final List<Message> fullMessageHistory = this.getFullMessageList(
-				messageHistory, messageConditions);
+				messageHistory, messageConditions, shouldInvert);
 		
 		boolean deletingIndividually = fullMessageHistory.size() < 2;
 		
@@ -167,7 +290,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		for(int i = 0; i < fullMessageHistory.size() && isAlive(); i += batchSize){
 			
-			List<Message> currentMessageList = null;
+			List<Message> currentMessageList;
 			
 			try{
 				currentMessageList = fullMessageHistory.subList(i, i
@@ -226,11 +349,12 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @return A {@link List} of of all {@link Message} that is present in the
 	 *         TextChannel where this command was invoked.
 	 * @since v0.10.0
-	 * @see #getFullMessageList(MessageHistory, Predicate)
+	 * @see #getFullMessageList(MessageHistory, Predicate, boolean)
 	 */
-	protected List<Message> getFullMessageList(MessageHistory messageHistory){
+	protected List<Message> getFullMessageList(MessageHistory messageHistory,
+			boolean shouldInvert){
 		return this.getFullMessageList(messageHistory,
-				(ArrayList<Predicate<Message>>)null);
+				(ArrayList<Predicate<Message>>)null, shouldInvert);
 	}
 	
 	/**
@@ -246,21 +370,21 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 *            condition on the message itself. You could use this to only
 	 *            find the messages of certain users, for example. Can be
 	 *            {@code null} (or see
-	 *            {@link #getFullMessageList(MessageHistory)}) to not have any
-	 *            condition and find all messages.
+	 *            {@link #getFullMessageList(MessageHistory, boolean)}) to not
+	 *            have any condition and find all messages.
 	 * @return A {@link List} of of all {@link Message} that is present in the
 	 *         TextChannel where this command was invoked.
 	 * @since v0.10.0
-	 * @see #getFullMessageList(MessageHistory)
-	 * @see #getFullMessageList(MessageHistory, ArrayList)
+	 * @see #getFullMessageList(MessageHistory, boolean)
+	 * @see #getFullMessageList(MessageHistory, ArrayList, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
-			Predicate<Message> messageCondition){
+			Predicate<Message> messageCondition, boolean shouldInvert){
 		
 		ArrayList<Predicate<Message>> singleCondition = new ArrayList<>();
 		singleCondition.add(messageCondition);
 		
-		return getFullMessageList(messageHistory, singleCondition);
+		return getFullMessageList(messageHistory, singleCondition, shouldInvert);
 		
 	}
 	
@@ -277,17 +401,18 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 *            conditions on the message itself. You could use this to only
 	 *            find the messages of certain users, for example. Can be
 	 *            {@code null} (or see
-	 *            {@link #getFullMessageList(MessageHistory)}) to not have any
-	 *            condition and find all messages.
+	 *            {@link #getFullMessageList(MessageHistory, boolean)}) to not
+	 *            have any condition and find all messages.
 	 * @return A {@link List} of of all {@link Message} that is present in the
 	 *         TextChannel where this command was invoked with the conditions
 	 *         applied.
 	 * @since v0.10.0
-	 * @see #getFullMessageList(MessageHistory)
-	 * @see #getFullMessageList(MessageHistory, Predicate)
+	 * @see #getFullMessageList(MessageHistory, boolean)
+	 * @see #getFullMessageList(MessageHistory, Predicate, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
-			ArrayList<Predicate<Message>> messageConditions){
+			ArrayList<Predicate<Message>> messageConditions,
+			boolean shouldInvert){
 		
 		boolean isEmpty;
 		
@@ -303,8 +428,6 @@ public class CommandClear extends BotCommand implements Stoppable {
 			return fullHistory;
 		
 		ArrayList<Message> messagesWithCondition = new ArrayList<>();
-		
-		boolean invert = hasParameter("i");
 		
 		boolean conditionsGateIsAnd = !hasParameter("or");
 		
@@ -326,7 +449,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 			}
 			
 			// If inverting, the condition must be false to clear this message
-			if(shouldDelete != invert)
+			if(shouldDelete != shouldInvert)
 				messagesWithCondition.add(message);
 			
 		});
@@ -352,11 +475,11 @@ public class CommandClear extends BotCommand implements Stoppable {
 		{
 			new ParametersHelp(
 					"Allows you to delete the messages of a user you specify.",
-					"u", "user"),
+					1, "u", "user"),
 			new ParametersHelp("Allows you to delete your own messages.",
-					false, "s", "self"),
+					false, 2, "s", "self"),
 			new ParametersHelp(
-					"Allows you to delete all of the bots messages.", false,
+					"Allows you to delete all of the bots messages.", false, 3,
 					"b", "bot"),
 			new ParametersHelp(
 					"Inverts the condition applied to the command (example : using this in combination with "
