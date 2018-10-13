@@ -6,13 +6,13 @@ import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.utilities.MessageManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -26,44 +26,26 @@ import java.util.function.Predicate;
  */
 public class CommandClear extends BotCommand implements Stoppable {
 	
-	protected class ConditionMessage {
-		
-		protected int indice;
-		protected String langKey;
-		protected Object[] langReplacements;
-		
-		protected ConditionMessage(int indice, String langKey,
-				Object... langReplacements){
-			this.indice = indice;
-			this.langKey = langKey;
-			this.langReplacements = langReplacements;
-		}
-		
-	}
-	
-	protected class ConditionMessageReplacement {
-		
-		protected String name;
-		protected Object value;
-		
-		protected ConditionMessageReplacement(String name, Object value){
-			this.name = name;
-			this.value = value;
-			
-			if(CommandClear.this.conditionMessageReplacements == null)
-				CommandClear.this.conditionMessageReplacements = new HashMap<>();
-		}
-		
-	}
-	
-	protected HashMap<String, ConditionMessageReplacement> conditionMessageReplacements;
-	
 	protected ArrayList<Predicate<Message>> conditions;
 	protected int messageWeight = 0;
 	
+	protected MessageManager confManager;
+	protected MessageManager notifyManager;
+	
+	protected void addReplacement(String key, Object value){
+		
+		if(confManager == null){
+			confManager = new MessageManager();
+			notifyManager = new MessageManager();
+		}
+		
+		confManager.addReplacement(key, value);
+		notifyManager.addReplacement(key, value);
+		
+	}
+	
 	protected void addCondition(String parameterUsed,
-			Predicate<Message> condition,
-			ConditionMessageReplacement... replacements){
+			Predicate<Message> condition){
 		
 		if(this.conditions == null)
 			this.conditions = new ArrayList<>();
@@ -73,14 +55,6 @@ public class CommandClear extends BotCommand implements Stoppable {
 		onParameterPresent(parameterUsed, param -> {
 			
 			this.messageWeight += param.getWeight();
-			
-			if(replacements.length > 0
-					&& this.conditionMessageReplacements == null)
-				this.conditionMessageReplacements = new HashMap<>();
-			
-			for(ConditionMessageReplacement replacement : replacements)
-				this.conditionMessageReplacements.put(replacement.name,
-						replacement);
 			
 		});
 		
@@ -112,9 +86,10 @@ public class CommandClear extends BotCommand implements Stoppable {
 					paramUsed = "b";
 				}
 				
-				addCondition(paramUsed, message -> usr.equals(message
-						.getMember()), new ConditionMessageReplacement("user",
-						usr.getAsMention()));
+				addReplacement("user", usr.getAsMention());
+				
+				addCondition(paramUsed,
+						message -> usr.equals(message.getMember()));
 				
 			}
 			catch(BadContentException e){
@@ -130,54 +105,33 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 	}
 	
-	protected Object getRepl(String name){
-		if(this.conditionMessageReplacements == null)
-			return null;
+	protected void setupConfMessages(){
 		
-		return this.conditionMessageReplacements.get(name).value;
-	}
-	
-	protected HashMap<Integer, ConditionMessage> getConditionMessagesConfirmation(){
+		if(this.confManager == null)
+			this.confManager = new MessageManager();
 		
-		HashMap<Integer, ConditionMessage> conditionMessagesConfirmation = new HashMap<>();
-		
-		ConditionMessage[] condMessages = new ConditionMessage[]
-		{
-			new ConditionMessage(-4, "ConfBotInv"),
-			new ConditionMessage(-2, "ConfSelfInv", getRepl("user")),
-			new ConditionMessage(-1, "ConfUsrInv", getRepl("user")),
-			new ConditionMessage(0, "ConfAll"),
-			new ConditionMessage(1, "ConfUsr", getRepl("user")),
-			new ConditionMessage(2, "ConfSelf", getRepl("user")),
-			new ConditionMessage(4, "ConfBot"),
-		};
-		
-		for(ConditionMessage condMessage : condMessages)
-			conditionMessagesConfirmation.put(condMessage.indice, condMessage);
-		
-		return conditionMessagesConfirmation;
+		this.confManager.addMessage(-4, "ConfBotInv");
+		this.confManager.addMessage(-2, "ConfSelfInv", "user");
+		this.confManager.addMessage(-1, "ConfUsrInv", "user");
+		this.confManager.addMessage(0, "ConfAll");
+		this.confManager.addMessage(1, "ConfUsr", "user");
+		this.confManager.addMessage(2, "ConfSelf", "user");
+		this.confManager.addMessage(4, "ConfBot");
 		
 	}
 	
-	protected HashMap<Integer, ConditionMessage> getConditionMessagesNotification(){
+	protected void setupNotifyMessages(){
 		
-		HashMap<Integer, ConditionMessage> conditionMessagesConfirmation = new HashMap<>();
+		if(this.notifyManager == null)
+			this.notifyManager = new MessageManager();
 		
-		ConditionMessage[] condMessages = new ConditionMessage[]
-		{
-			new ConditionMessage(-4, "NotifBotInv"),
-			new ConditionMessage(-2, "NotifSelfInv", getRepl("user")),
-			new ConditionMessage(-1, "NotifUsrInv", getRepl("user")),
-			new ConditionMessage(0, "NotifAll"),
-			new ConditionMessage(1, "NotifUsr", getRepl("user")),
-			new ConditionMessage(2, "NotifSelf", getRepl("user")),
-			new ConditionMessage(4, "NotifBot"),
-		};
-		
-		for(ConditionMessage condMessage : condMessages)
-			conditionMessagesConfirmation.put(condMessage.indice, condMessage);
-		
-		return conditionMessagesConfirmation;
+		this.notifyManager.addMessage(-4, "NotifBotInv");
+		this.notifyManager.addMessage(-2, "NotifSelfInv", "user");
+		this.notifyManager.addMessage(-1, "NotifUsrInv", "user");
+		this.notifyManager.addMessage(0, "NotifAll");
+		this.notifyManager.addMessage(1, "NotifUsr", "user");
+		this.notifyManager.addMessage(2, "NotifSelf", "user");
+		this.notifyManager.addMessage(4, "NotifBot");
 		
 	}
 	
@@ -194,17 +148,13 @@ public class CommandClear extends BotCommand implements Stoppable {
 		if(shouldInvert)
 			this.messageWeight *= -1;
 		
-		ConditionMessage conditionMessageConf = this
-				.getConditionMessagesConfirmation().get(this.messageWeight);
+		setupConfMessages();
+		setupNotifyMessages();
 		
-		String confMessage = lang(conditionMessageConf.langKey,
-				conditionMessageConf.langReplacements);
-		
-		ConditionMessage conditionMessageNotif = this
-				.getConditionMessagesNotification().get(this.messageWeight);
-		
-		String notifMessage = lang(conditionMessageNotif.langKey,
-				conditionMessageNotif.langReplacements);
+		String confMessage = confManager.getMessage(this.messageWeight,
+				this.getDictionary(), this);
+		String notifMessage = notifyManager.getMessage(this.messageWeight,
+				this.getDictionary(), this);
 		
 		doClearLogic(confMessage, notifMessage, shouldInvert);
 		
