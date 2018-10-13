@@ -146,6 +146,15 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 										.getParam());
 							}
 							
+							if(commandParamHelp.getWeight() != 0){
+								try{
+									getRequest().setParameterWeight(
+											commandParamHelp.getParam(),
+											commandParamHelp.getWeight());
+								}
+								catch(IllegalArgumentException e){}
+							}
+							
 						}
 						
 						getRequest().setParamLinkMap(paramsHelpMap);
@@ -233,11 +242,13 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting
+	 * Setting} object from
 	 * the Buffer for the TextChannel of this Router or create it if there is
 	 * currently none in the Buffer.
 	 *
-	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting
+	 *         Setting} object from
 	 *         the associated buffer.
 	 * @since 0.9.0
 	 */

@@ -3,13 +3,14 @@ package io.github.vhoyon.bot.commands;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
+import io.github.vhoyon.vramework.exceptions.BadContentException;
+import io.github.vhoyon.vramework.interfaces.Stoppable;
+import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.utilities.MessageManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
-import io.github.vhoyon.vramework.exceptions.BadContentException;
-import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,86 +26,153 @@ import java.util.function.Predicate;
  */
 public class CommandClear extends BotCommand implements Stoppable {
 	
+	protected ArrayList<Predicate<Message>> conditions;
+	protected int messageWeight = 0;
+	
+	protected MessageManager confManager;
+	protected MessageManager notifyManager;
+	
+	protected void addReplacement(String key, Object value){
+		
+		if(confManager == null){
+			confManager = new MessageManager();
+			notifyManager = new MessageManager();
+		}
+		
+		confManager.addReplacement(key, value);
+		notifyManager.addReplacement(key, value);
+		
+	}
+	
+	protected void addCondition(String parameterUsed,
+			Predicate<Message> condition){
+		
+		if(this.conditions == null)
+			this.conditions = new ArrayList<>();
+		
+		this.conditions.add(condition);
+		
+		onParameterPresent(parameterUsed, param -> {
+			
+			this.messageWeight += param.getWeight();
+			
+		});
+		
+	}
+	
 	@Override
 	public void action(){
 		
-		String confirmationMessage;
-		String notifyMessage;
+		boolean shouldDoClear = true;
 		
-		if(!hasParameter("u", "s", "b")){
-			
-			doClearLogic(lang("ConfirmMessage"), "Cleared everything!");
-			
-		}
-		else{
+		if(hasParameter("u", "s", "b")){
 			
 			try{
+				
+				String paramUsed;
 				
 				final Member usr;
 				
 				if(hasParameter("u")){
 					usr = getParameterAsMention("u");
+					paramUsed = "u";
 				}
 				else if(hasParameter("s")){
 					usr = getMember();
+					paramUsed = "s";
 				}
 				else{
 					usr = getBotMember();
+					paramUsed = "b";
 				}
 				
-				confirmationMessage = lang("ConfUsrClear",
-						code(usr.getEffectiveName()));
-				notifyMessage = "Cleared " + usr.getAsMention()
-						+ "'s messages!";
+				addReplacement("user", usr.getAsMention());
 				
-				doClearLogic(confirmationMessage, notifyMessage,
+				addCondition(paramUsed,
 						message -> usr.equals(message.getMember()));
 				
 			}
 			catch(BadContentException e){
 				sendMessage(lang("MentionError", code("@[username]")));
+				
+				shouldDoClear = false;
 			}
 			
 		}
 		
+		if(shouldDoClear)
+			doClearLogic(hasParameter("i"));
+		
+	}
+	
+	protected void setupConfMessages(){
+		
+		if(this.confManager == null)
+			this.confManager = new MessageManager();
+		
+		this.confManager.addMessage(-4, "ConfBotInv");
+		this.confManager.addMessage(-2, "ConfSelfInv", "user");
+		this.confManager.addMessage(-1, "ConfUsrInv", "user");
+		this.confManager.addMessage(0, "ConfAll");
+		this.confManager.addMessage(1, "ConfUsr", "user");
+		this.confManager.addMessage(2, "ConfSelf", "user");
+		this.confManager.addMessage(4, "ConfBot");
+		
+	}
+	
+	protected void setupNotifyMessages(){
+		
+		if(this.notifyManager == null)
+			this.notifyManager = new MessageManager();
+		
+		this.notifyManager.addMessage(-4, "NotifBotInv");
+		this.notifyManager.addMessage(-2, "NotifSelfInv", "user");
+		this.notifyManager.addMessage(-1, "NotifUsrInv", "user");
+		this.notifyManager.addMessage(0, "NotifAll");
+		this.notifyManager.addMessage(1, "NotifUsr", "user");
+		this.notifyManager.addMessage(2, "NotifSelf", "user");
+		this.notifyManager.addMessage(4, "NotifBot");
+		
 	}
 	
 	/**
-	 * Executes the logic to clear the messages without any conditions. This is
-	 * a way to call {@link #deleteAllMessages()} and still handle the
-	 * confirmation/notification behavior, for example.
+	 * Executes the logic to clear the messages with the conditions present in
+	 * the value of CommandClear's conditions array. This method resolves the
+	 * confirmation and notification messages based on the weight of the current
+	 * conditions status.
 	 * 
-	 * @param confMessage
-	 *            The message to send as confirmation if necessary
-	 * @param notifyMessage
-	 *            The message to send to notify that every message has been
-	 *            deleted
-	 * @since v0.10.0
+	 * @see #doClearLogic(String, String, boolean)
 	 */
-	protected void doClearLogic(final String confMessage,
-			final String notifyMessage){
-		this.doClearLogic(confMessage, notifyMessage, null);
+	protected void doClearLogic(boolean shouldInvert){
+		
+		if(shouldInvert)
+			this.messageWeight *= -1;
+		
+		setupConfMessages();
+		setupNotifyMessages();
+		
+		String confMessage = confManager.getMessage(this.messageWeight,
+				this.getDictionary(), this);
+		String notifMessage = notifyManager.getMessage(this.messageWeight,
+				this.getDictionary(), this);
+		
+		doClearLogic(confMessage, notifMessage, shouldInvert);
+		
 	}
 	
 	/**
-	 * Executes the logic to clear the messages with a condition (given by the
-	 * parameter {@code messageCondition}. This is a way to call
-	 * {@link #deleteAllMessages()} and still handle the
-	 * confirmation/notification behavior, for example.
+	 * Executes the logic to clear the messages with the conditions present in
+	 * the value of CommandClear's conditions array.
 	 *
 	 * @param confMessage
 	 *            The message to send as confirmation if necessary
 	 * @param notifyMessage
 	 *            The message to send to notify that every message has been
 	 *            deleted
-	 * @param messageCondition
-	 *            The condition applied to each message individually. Can be
-	 *            {@code null} to not do any condition management.
 	 * @since v0.10.0
 	 */
 	protected void doClearLogic(final String confMessage,
-			final String notifyMessage,
-			final Predicate<Message> messageCondition){
+			final String notifyMessage, boolean shouldInvert){
 		
 		new CommandConfirmed(this){
 			
@@ -118,10 +186,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 				
 				try{
 					
-					if(messageCondition == null)
-						deleteAllMessages();
-					else
-						deleteMessagesIf(messageCondition);
+					deleteMessages(CommandClear.this.conditions, shouldInvert);
 					
 					if(notifyMessage != null && isAlive() && hasParameter("n"))
 						sendInfoMessage(notifyMessage);
@@ -139,25 +204,6 @@ public class CommandClear extends BotCommand implements Stoppable {
 	
 	/**
 	 * Deletes all the messages in the TextChannel where this command was called
-	 * from.
-	 * <p>
-	 * This deletion is done by batch of 100 messages until it can't anymore
-	 * (Discord doesn't allow do batch delete messages older than 2 weeks old,
-	 * so we batch delete all we can and delete individually the rest).
-	 * </p>
-	 * 
-	 * @throws PermissionException
-	 *             Thrown if the bot does not have the sufficient permissions to
-	 *             delete a message in the list.
-	 * @since v0.10.0
-	 * @see #deleteMessagesIf(Predicate)
-	 */
-	protected void deleteAllMessages() throws PermissionException{
-		this.deleteMessagesIf(null);
-	}
-	
-	/**
-	 * Deletes all the messages in the TextChannel where this command was called
 	 * from and applies the condition supplied by the predicate as a parameter
 	 * (view {@code messageCondition}).
 	 * <p>
@@ -166,27 +212,27 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * so we batch delete all we can and delete individually the rest).
 	 * </p>
 	 * 
-	 * @param messageCondition
-	 *            This parameter is used to run arbitrary code to make a
-	 *            condition on the message itself. You could use this to only
+	 * @param messageConditions
+	 *            This parameter is used to run arbitrary code to make
+	 *            conditions on the message itself. You could use this to only
 	 *            delete the messages of certain users, for example. Can be
-	 *            {@code null} (or see {@link #deleteAllMessages()}) to not have
-	 *            any condition and delete all messages.
+	 *            {@code null} to not have any condition and delete all
+	 *            messages.
 	 * @throws PermissionException
 	 *             Thrown if the bot does not have the sufficient permissions to
 	 *             delete a message in the list.
 	 * @since v0.10.0
-	 * @see #deleteAllMessages()
 	 */
-	protected void deleteMessagesIf(Predicate<Message> messageCondition)
-			throws PermissionException{
+	protected void deleteMessages(
+			final ArrayList<Predicate<Message>> messageConditions,
+			boolean shouldInvert) throws PermissionException{
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
 		
 		boolean shouldCompleteBeforeNext = hasParameter("w");
 		
 		final List<Message> fullMessageHistory = this.getFullMessageList(
-				messageHistory, messageCondition);
+				messageHistory, messageConditions, shouldInvert);
 		
 		boolean deletingIndividually = fullMessageHistory.size() < 2;
 		
@@ -194,7 +240,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		for(int i = 0; i < fullMessageHistory.size() && isAlive(); i += batchSize){
 			
-			List<Message> currentMessageList = null;
+			List<Message> currentMessageList;
 			
 			try{
 				currentMessageList = fullMessageHistory.subList(i, i
@@ -253,10 +299,12 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @return A {@link List} of of all {@link Message} that is present in the
 	 *         TextChannel where this command was invoked.
 	 * @since v0.10.0
-	 * @see #getFullMessageList(MessageHistory, Predicate)
+	 * @see #getFullMessageList(MessageHistory, Predicate, boolean)
 	 */
-	protected List<Message> getFullMessageList(MessageHistory messageHistory){
-		return this.getFullMessageList(messageHistory, null);
+	protected List<Message> getFullMessageList(MessageHistory messageHistory,
+			boolean shouldInvert){
+		return this.getFullMessageList(messageHistory,
+				(ArrayList<Predicate<Message>>)null, shouldInvert);
 	}
 	
 	/**
@@ -272,15 +320,49 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 *            condition on the message itself. You could use this to only
 	 *            find the messages of certain users, for example. Can be
 	 *            {@code null} (or see
-	 *            {@link #getFullMessageList(MessageHistory)}) to not have any
-	 *            condition and find all messages.
+	 *            {@link #getFullMessageList(MessageHistory, boolean)}) to not
+	 *            have any condition and find all messages.
 	 * @return A {@link List} of of all {@link Message} that is present in the
 	 *         TextChannel where this command was invoked.
 	 * @since v0.10.0
-	 * @see #getFullMessageList(MessageHistory)
+	 * @see #getFullMessageList(MessageHistory, boolean)
+	 * @see #getFullMessageList(MessageHistory, ArrayList, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
-			Predicate<Message> messageCondition){
+			Predicate<Message> messageCondition, boolean shouldInvert){
+		
+		ArrayList<Predicate<Message>> singleCondition = new ArrayList<>();
+		singleCondition.add(messageCondition);
+		
+		return getFullMessageList(messageHistory, singleCondition, shouldInvert);
+		
+	}
+	
+	/**
+	 * Gets the full message list that matches the conditions supplied by the
+	 * {@code messageCondition} parameter out of the {@code messageHistory}
+	 * parameter.
+	 *
+	 * @param messageHistory
+	 *            The {@link MessageHistory} object used by this TextChannel to
+	 *            reference which history should be searched for.
+	 * @param messageConditions
+	 *            This parameter is used to run arbitrary code to make
+	 *            conditions on the message itself. You could use this to only
+	 *            find the messages of certain users, for example. Can be
+	 *            {@code null} (or see
+	 *            {@link #getFullMessageList(MessageHistory, boolean)}) to not
+	 *            have any condition and find all messages.
+	 * @return A {@link List} of of all {@link Message} that is present in the
+	 *         TextChannel where this command was invoked with the conditions
+	 *         applied.
+	 * @since v0.10.0
+	 * @see #getFullMessageList(MessageHistory, boolean)
+	 * @see #getFullMessageList(MessageHistory, Predicate, boolean)
+	 */
+	protected List<Message> getFullMessageList(MessageHistory messageHistory,
+			ArrayList<Predicate<Message>> messageConditions,
+			boolean shouldInvert){
 		
 		boolean isEmpty;
 		
@@ -292,20 +374,36 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		List<Message> fullHistory = messageHistory.getRetrievedHistory();
 		
-		if(messageCondition == null)
+		if(messageConditions == null)
 			return fullHistory;
 		
 		ArrayList<Message> messagesWithCondition = new ArrayList<>();
 		
-		boolean invert = hasParameter("i");
+		boolean conditionsGateIsAnd = !hasParameter("or");
 		
+		//@formatter:off
 		fullHistory.forEach(message -> {
 			
-			// If inverting, the condition must be false to clear this message
-				if(messageCondition.test(message) != invert)
-					messagesWithCondition.add(message);
+			boolean shouldDelete = conditionsGateIsAnd;
+			
+			// Acts as a AND gate, so if any of the conditions is false, the message is not deleted
+			for(Predicate<Message> messageCondition : messageConditions){
 				
-			});
+				// Determine Gate logic and invert the logic if it's an OR
+				if(messageCondition.test(message) != conditionsGateIsAnd){
+					shouldDelete = !conditionsGateIsAnd;
+					
+					break;
+				}
+				
+			}
+			
+			// If inverting, the condition must be false to clear this message
+			if(shouldDelete != shouldInvert)
+				messagesWithCondition.add(message);
+			
+		});
+		//@formatter:on
 		
 		return messagesWithCondition;
 		
@@ -327,11 +425,11 @@ public class CommandClear extends BotCommand implements Stoppable {
 		{
 			new ParametersHelp(
 					"Allows you to delete the messages of a user you specify.",
-					"u", "user"),
+					1, "u", "user"),
 			new ParametersHelp("Allows you to delete your own messages.",
-					false, "s", "self"),
+					false, 2, "s", "self"),
 			new ParametersHelp(
-					"Allows you to delete all of the bots messages.", false,
+					"Allows you to delete all of the bots messages.", false, 3,
 					"b", "bot"),
 			new ParametersHelp(
 					"Inverts the condition applied to the command (example : using this in combination with "
@@ -344,6 +442,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 			new ParametersHelp(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
 					false, "w", "wait"),
+			new ParametersHelp(
+					"Allows the conditions parser to use an OR logic gate instead of an AND for all conditions.",
+					false, "or"),
 		};
 	}
 	
