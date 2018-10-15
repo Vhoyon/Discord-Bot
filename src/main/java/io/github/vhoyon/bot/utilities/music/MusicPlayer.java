@@ -115,6 +115,8 @@ public class MusicPlayer {
 	 */
 	public synchronized void playTrack(AudioTrack track){
 		this.getListener().queue(track);
+		if(this.getListener().noTrackThread != null)
+			this.getListener().noTrackThread.interrupt();
 	}
 	
 	/**
