@@ -5,7 +5,9 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import io.github.vhoyon.bot.utilities.interfaces.Commands;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 
+import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -95,7 +97,15 @@ public class AudioListener extends AudioEventAdapter {
 					nextTrack();
 				}
 				else{
-					dealWithTimer();
+					TimerTask task = new TimerTask() {
+						@Override
+						public void run() {
+							MusicManager.get().emptyPlayer(AudioListener.this.player.getCommand());
+							AudioListener.this.player.getCommand().sendInfoMessage(
+								"Disconnected due to inactivity");
+						}
+					};
+					TimerManager.manage("noMusicDelay",5000,task );
 				}
 			}
 		}
