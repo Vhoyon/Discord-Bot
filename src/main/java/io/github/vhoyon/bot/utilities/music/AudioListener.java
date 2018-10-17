@@ -97,7 +97,8 @@ public class AudioListener extends AudioEventAdapter {
 					nextTrack();
 				}
 				else{
-					TimerTask task = new TimerTask() {
+					
+					Runnable task = new Runnable() {
 						@Override
 						public void run() {
 							MusicManager.get().emptyPlayer(AudioListener.this.player.getCommand());
@@ -105,31 +106,14 @@ public class AudioListener extends AudioEventAdapter {
 								"Disconnected due to inactivity");
 						}
 					};
-					TimerManager.manage("noMusicDelay",5000,task );
+					TimerManager.schedule("noMusicDelay",5000, task);
 				}
 			}
 		}
 		
 	}
 	
-	public synchronized void dealWithTimer(){
-		noTrackThread = new Thread(() -> {
-			try{
-				Thread.currentThread().sleep(10000);
-				MusicManager.get().emptyPlayer(this.player.getCommand());
-				this.player.getCommand().sendInfoMessage(
-						"Disconnected due to inactivity");
-			}
-			catch(InterruptedException e){
-				
-			}
-			finally{
-				noTrackThread = null;
-			}
-		});
-		noTrackThread.start();
-		
-	}
+	
 	
 	/**
 	 * @param track
