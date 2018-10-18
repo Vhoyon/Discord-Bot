@@ -270,6 +270,17 @@ public class CommandSetting extends BotCommand {
 						+ "!");
 			}
 		};
+		new SettingChanger<Integer>("empty_drop_delay"){
+			@Override
+			public void onSuccess(Integer delay){
+				if(MusicManager.get().hasPlayer(this.getGuild())){
+					MusicManager.get().getPlayer(this).setVolume(delay);
+				}
+
+				sendMessage("The default disconnect delay for the bot when the music player is empty is now " + code(delay)
+					+ "!");
+			}
+		};
 		
 	}
 	
@@ -314,6 +325,10 @@ public class CommandSetting extends BotCommand {
 					"Changes the bot's default volume when playing some music. The default value is "
 							+ code(getSettings().getField("volume")
 									.getDefaultValue()) + ".", "volume"),
+			new ParametersHelp(
+				"Changes the bot's default disconnect time when the music player is empty. The default is "
+					+ code(getSettings().getField("empty_drop_delay")
+					.getDefaultValue()) + "ms.", "empty_drop_delay"),
 			new ParametersHelp(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
 					false, "d", "default")
