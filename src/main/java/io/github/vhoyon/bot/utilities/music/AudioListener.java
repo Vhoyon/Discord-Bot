@@ -95,14 +95,16 @@ public class AudioListener extends AudioEventAdapter {
 				}
 				else{
 					
-					Runnable task = () -> {
-						MusicManager.get().emptyPlayer(
-								AudioListener.this.player.getCommand());
-						AudioListener.this.player.getCommand().sendInfoMessage(
-								"Disconnected due to inactivity");
-					};
-					TimerManager.schedule("noMusicDelay", this.player
-							.getCommand().setting("empty_drop_delay"), task);
+					TimerManager.schedule(
+							"noMusicDelay",
+							this.player.getCommand()
+									.setting("empty_drop_delay"),
+							() -> {
+								MusicManager.get().emptyPlayer(
+										this.player.getCommand());
+								this.player.getCommand().sendInfoMessage(
+										"Disconnected due to inactivity");
+							});
 				}
 			}
 		}
