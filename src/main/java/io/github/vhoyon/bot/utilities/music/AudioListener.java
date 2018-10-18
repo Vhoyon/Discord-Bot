@@ -26,7 +26,6 @@ public class AudioListener extends AudioEventAdapter {
 	
 	private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue<>();
 	private final MusicPlayer player;
-	public Thread noTrackThread;
 	
 	public AudioListener(MusicPlayer player){
 		this.player = player;
