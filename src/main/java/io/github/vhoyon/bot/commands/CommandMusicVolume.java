@@ -3,6 +3,7 @@ package io.github.vhoyon.bot.commands;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.errorHandling.BotError;
+import io.github.vhoyon.vramework.utilities.sanitizers.IntegerSanitizer;
 
 /**
  * Command to change the general volume of the MusicPlayer so that everyone's
@@ -30,22 +31,18 @@ public class CommandMusicVolume extends MusicCommands {
 		
 		try{
 			
-			int volume = Integer.valueOf(content);
+			int volume = IntegerSanitizer.sanitizeValue(content, 0, 100);
 			
-			if(volume < 0 || volume > 100){
-				new BotError(this, lang("NumberNotBetweenRange", 0, 100));
-			}
-			else{
-				
-				MusicManager.get().getPlayer(this).setVolume(volume);
-				
-				sendMessage(lang("ChangedSuccess", volume));
-				
-			}
+			MusicManager.get().getPlayer(this).setVolume(volume);
+			
+			sendMessage(lang("ChangedSuccess", volume));
 			
 		}
 		catch(NumberFormatException e){
 			new BotError(this, lang("NumberNotANumber"));
+		}
+		catch(IllegalArgumentException e){
+			new BotError(this, lang("NumberNotBetweenRange", 0, 100));
 		}
 		
 	}
