@@ -40,7 +40,7 @@ public abstract class UIConsole extends AbstractUIConsole {
 	}
 	
 	@Override
-	public void initialize(){
+	public void initialize(boolean startImmediately){
 		
 		setSize(500, 300);
 		
