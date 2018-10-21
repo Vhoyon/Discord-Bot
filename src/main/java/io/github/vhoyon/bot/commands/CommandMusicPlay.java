@@ -274,6 +274,7 @@ public class CommandMusicPlay extends MusicCommands {
 		search.setMaxResults((long)1);
 		search.setQ(getContent());
 		search.setKey(env("YOUTUBE_TOKEN"));
+		search.setType("video");
 		
 		SearchListResponse response = search.execute();
 		
