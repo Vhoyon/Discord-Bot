@@ -26,6 +26,10 @@ public class Main {
 			
 			Request programRequest = new Request(args);
 			
+			programRequest.setParamLink("d", "debug");
+			programRequest.setParamLink("i", "instant");
+			programRequest.setParamLink("t", "terminal");
+			
 			if(programRequest.hasError()){
 				System.out.println(programRequest.getDefaultErrorMessage());
 			}
@@ -39,7 +43,7 @@ public class Main {
 			
 			Console console;
 			
-			if(programRequest.hasParameter("t", "terminal")){
+			if(programRequest.hasParameter("t")){
 				
 				console = new TerminalConsole(){
 					@Override
