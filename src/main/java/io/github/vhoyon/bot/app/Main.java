@@ -82,8 +82,10 @@ public class Main {
 			
 			Logger.setSeparator(null);
 			
+			boolean startImmediately = programRequest.hasParameter("i");
+			
 			// CAREFUL : This call blocks the main thread!
-			console.initialize();
+			console.initialize(startImmediately);
 			
 		}
 		catch(Exception e){
