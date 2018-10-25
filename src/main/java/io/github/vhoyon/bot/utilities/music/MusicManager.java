@@ -97,23 +97,25 @@ public class MusicManager {
 	 * @since v0.4.0
 	 */
 	public synchronized void emptyPlayer(BotCommand command){
-		
+		emptyPlayer(command, true);
+	}
+	
+	public synchronized void emptyPlayer(BotCommand command, boolean disconnect){
 		if(this.hasPlayer(command.getGuild())){
-			
+
 			MusicPlayer player = this.getPlayer(command);
-			
+
 			player.getAudioPlayer().destroy();
-			
-			if(player.isConnectedToVoiceChannel()){
+
+			if(player.isConnectedToVoiceChannel() && disconnect){
 				player.closeConnection();
 			}
-			
+
 			players.remove(command.getGuildId());
-			
-			command.disconnect();
-			
+
+//			command.disconnect();
+
 		}
-		
 	}
 	
 	/**
