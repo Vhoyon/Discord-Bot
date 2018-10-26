@@ -16,7 +16,6 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
-import net.dv8tion.jda.client.entities.Application;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
