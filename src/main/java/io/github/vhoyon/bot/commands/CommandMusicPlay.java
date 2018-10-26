@@ -73,8 +73,8 @@ public class CommandMusicPlay extends MusicCommands {
 			new BotError(this, lang("NotConnected"), true);
 		}
 		else if(this.isPlaying()
-				&& this.getConnectedVoiceChannelBot() != this
-						.getConnectedVoiceChannelMember()){
+				&& !this.getConnectedVoiceChannelBot().equals(
+						this.getConnectedVoiceChannelMember())){
 			sendInfoMessage("The bot is already playing in "
 					+ code(this.getConnectedVoiceChannelBot().getName())
 					+ ". Join that voice channel to listen to music");
