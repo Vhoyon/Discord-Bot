@@ -71,24 +71,32 @@ public class CommandMusicPlay extends MusicCommands {
 		if(!isConnectedToVoiceChannelMember()){
 			new BotError(this, lang("NotConnected"), true);
 		}
+		else if(this.isPlaying()
+				&& !this.getConnectedVoiceChannelBot().equals(
+						this.getConnectedVoiceChannelMember())){
+			sendInfoMessage("The bot is already playing in "
+					+ code(this.getConnectedVoiceChannelBot().getName())
+					+ ". Join that voice channel to listen to music");
+		}
 		else{
 			
 			if(hasParameter("r")){
-				if (this.isPlaying()) {
-					new CommandConfirmed(this) {
-
+				if(this.isPlaying()){
+					new CommandConfirmed(this){
+						
 						@Override
-						public String getConfMessage() {
+						public String getConfMessage(){
 							return "There are already songs in the queue. Would you like to overwrite it?";
 						}
-
+						
 						@Override
-						public void confirmed() {
+						public void confirmed(){
 							emptyQueue();
 							playRandom();
 						}
 					};
-				}else{
+				}
+				else{
 					playRandom();
 				}
 			}
@@ -332,24 +340,23 @@ public class CommandMusicPlay extends MusicCommands {
 			return false;
 		}
 	}
-
 	
 	/**
 	 * empties the Music queue
 	 */
 	public void emptyQueue(){
-		MusicManager.get().emptyPlayer(this,false);
+		MusicManager.get().emptyPlayer(this, false);
 	}
-
+	
 	/**
 	 * Chooses a random playlist and add's it to the queue
 	 */
 	public void playRandom(){
 		SourceTrack playlistFound = getRandomTrack();
-
+		
 		sendInfoMessage(lang("Rand", code(playlistFound.name)));
-
+		
 		MusicManager.get().loadTrack(this, playlistFound.source,
-			this::connectIfNotPlaying);
+				this::connectIfNotPlaying);
 	}
 }
