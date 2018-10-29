@@ -188,6 +188,24 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	@Override
+	public Command commandWhenBotMention(){
+		return new SimpleTextCommand(){
+			@Override
+			public String getTextToSend(){
+				String userMention = getUser().getAsMention();
+				String botNickname = bold(getBotMember().getNickname());
+				String formattedHelp = buildVCommand(HELP);
+				String formattedHelpCommand = buildVCommand(HELP + " [command]");
+				
+				return format(
+						"Hi {1}, I'm {2}! Enter {3} to know more about the available commands, or type {4} to get the help of a command in particular!",
+						userMention, botNickname, formattedHelp,
+						formattedHelpCommand);
+			}
+		};
+	}
+	
+	@Override
 	public Command commandWhenFromPrivate(){
 		return new BotErrorPrivate(
 				ital(lang("MessageReceivedFromPrivateResponse")), true);
