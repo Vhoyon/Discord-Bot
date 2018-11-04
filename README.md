@@ -4,8 +4,6 @@
 
 In this repository we host the source code of our Discord Bot, based of [DV8FromTheWorld's JDA library](https://github.com/DV8FromTheWorld/JDA). This bot is made to be self-hosted and has no particular goal - we do it to learn more about Discord and have fun while coding it!
 
-Currently, this repo also holds the code for the framework we are building to facilitate the creation of bots, which we will move in another repository shortly.
-
 ## Getting Started
 
 These instructions will get you a copy of our project up and running on your local machine for you to self-host your own fork of this bot.
@@ -20,7 +18,7 @@ Maven could be installed through most Java IDE : your mileage may vary.
 
 You can clone this repo and import the project in any Java IDE that you may want to use. We created this project in Eclipse but we are now using IntelliJ IDEA - as long as you can run a Maven project, you are good to go.
 
-Make sure that you have imported the plugins required via Maven (look up how to do that for your own environment) and that your IDE recognize the root folders `framework`, `res` and `src` as Source folders.
+Make sure that you have imported the plugins required via Maven (look up how to do that for your own environment) and that your IDE recognize the folder `java` as Source folder and `resources` as Resources folder.
 
 If you have trouble getting the bot up and running, feel free to [create an issue](https://github.com/Vhoyon/Discord-Bot/issues).
 
@@ -30,7 +28,7 @@ Since this is a self-hosted solution, you will need to provide your own Bot Toke
 
 If you don't know how to get your own bot token, you can follow [these instructions](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token) to create yourself one.
 
-Once you have your bot token, you can run the program for the first time. It will detect if there is a `.env` file near the java executable path and if non-existant, will ask and create it for you. All you have to do now is open the `.env` file that was just created, and enter your Bot Token at the required place.
+Once you have your bot token, you can run the program for the first time. It will detect if there is a `.env` file near the java executable path and if non-existent, will ask and create it for you. All you have to do now is open the `.env` file that was just created, and enter your Bot Token at the required place.
 
 Your `.env` file should look like this :
 
@@ -52,7 +50,7 @@ Once started, if you followed [these instructions](https://github.com/reactiflux
 
 - [JDA](https://github.com/DV8FromTheWorld/JDA) - The Java Discord APIs to allow a bot to run in Java
 - [Maven](https://maven.apache.org/) - Dependency Management
-- [FastClasspathScanner](https://github.com/lukehutch/fast-classpath-scanner) - Used to find Commands without declaring them
+- [Vramework](https://github.com/Vhoyon/Vramework) - Our framework to ease bot creation while still allowing full control to the underlying DV8 components
 
 ## GitFlow
 
