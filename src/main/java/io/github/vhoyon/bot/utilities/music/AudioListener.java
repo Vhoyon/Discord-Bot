@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,27 +30,32 @@ public class AudioListener extends AudioEventAdapter {
 	public AudioListener(MusicPlayer player){
 		this.player = player;
 	}
-
+	
 	/**
-	 * @return The current tracks as a {@link BlockingQueue} of {@link AudioTrack}. The track playing will not be in this list.
+	 * @return The current tracks as a {@link BlockingQueue} of
+	 *         {@link AudioTrack}. The track playing will not be in this list.
 	 * @since v0.4.0
 	 */
 	public BlockingQueue<AudioTrack> getTracks(){
 		return tracks;
 	}
-
+	
 	/**
-	 * @return The playlist's size in terms of how many tracks there is remaining in this playlist.
+	 * @return The playlist's size in terms of how many tracks there is
+	 *         remaining in this playlist.
 	 * @since v0.4.0
 	 */
 	public int getTrackSize(){
 		return tracks.size();
 	}
-
+	
 	/**
-	 * Starts the next track in the playlist immediately if there is remaining tracks.
+	 * Starts the next track in the playlist immediately if there is remaining
+	 * tracks.
 	 * 
-	 * @return {@code false} if there is no remaining track to be played or if the next track couldn't start for some reason, or {@code true} otherwise.
+	 * @return {@code false} if there is no remaining track to be played or if
+	 *         the next track couldn't start for some reason, or {@code true}
+	 *         otherwise.
 	 * @since v0.4.0
 	 */
 	public boolean nextTrack(){
@@ -70,26 +76,45 @@ public class AudioListener extends AudioEventAdapter {
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track,
 			AudioTrackEndReason endReason){
-
-			this.player.getCommand().remember(track.getInfo().uri, "LATEST_SONG");
-
-		if(this.player.getCommand().hasMemory("LOOP_ONCE") && (boolean) this.player.getCommand().getMemory("LOOP_ONCE") ){
+		
+		this.player.getCommand().remember(track.getInfo().uri, "LATEST_SONG");
+		
+		if(this.player.getCommand().hasMemory("LOOP_ONCE")
+				&& (boolean)this.player.getCommand().getMemory("LOOP_ONCE")){
 			player.playTrack(track.makeClone());
-		}else if(endReason.mayStartNext){
-			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean) this.player.getCommand().getMemory("MUSIC_LOOP"))) {
+		}
+		else if(endReason.mayStartNext){
+			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean)this.player
+					.getCommand().getMemory("MUSIC_LOOP"))){
 				tracks.add(track.makeClone());
 				nextTrack();
-			}else{
-				if (!tracks.isEmpty()) {
+			}
+			else{
+				if(!tracks.isEmpty()){
 					nextTrack();
+				}
+				else{
+					
+					TimerManager.schedule(
+							"noMusicDelay",
+							this.player.getCommand()
+									.setting("empty_drop_delay"),
+							() -> {
+								MusicManager.get().emptyPlayer(
+										this.player.getCommand());
+								this.player.getCommand().sendInfoMessage(
+										"Disconnected due to inactivity");
+							});
 				}
 			}
 		}
-
+		
 	}
-
+	
 	/**
-	 * @param track {@link AudioTrack} to be queued for a future play. If nothing is playing, the track will start playing immediately.
+	 * @param track
+	 *            {@link AudioTrack} to be queued for a future play. If nothing
+	 *            is playing, the track will start playing immediately.
 	 * @since v0.4.0
 	 */
 	public void queue(AudioTrack track){
@@ -104,8 +129,8 @@ public class AudioListener extends AudioEventAdapter {
 	 * 
 	 * @since v0.4.0
 	 */
-	public void purgeQueue() {
-        tracks.clear();
-    }
+	public void purgeQueue(){
+		tracks.clear();
+	}
 	
 }

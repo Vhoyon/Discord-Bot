@@ -146,6 +146,15 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 										.getParam());
 							}
 							
+							if(commandParamHelp.getWeight() != 0){
+								try{
+									getRequest().setParameterWeight(
+											commandParamHelp.getParam(),
+											commandParamHelp.getWeight());
+								}
+								catch(IllegalArgumentException e){}
+							}
+							
 						}
 						
 						getRequest().setParamLinkMap(paramsHelpMap);
@@ -176,6 +185,24 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				Logger.log(e);
 		}
 		
+	}
+	
+	@Override
+	public Command commandWhenBotMention(){
+		return new SimpleTextCommand(){
+			@Override
+			public String getTextToSend(){
+				String userMention = getUser().getAsMention();
+				String botNickname = bold(getBotMember().getNickname());
+				String formattedHelp = buildVCommand(HELP);
+				String formattedHelpCommand = buildVCommand(HELP + " [command]");
+				
+				return format(
+						"Hi {1}, I'm {2}! Enter {3} to know more about the available commands, or type {4} to get the help of a command in particular!",
+						userMention, botNickname, formattedHelp,
+						formattedHelpCommand);
+			}
+		};
 	}
 	
 	@Override
@@ -233,11 +260,13 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting
+	 * Setting} object from
 	 * the Buffer for the TextChannel of this Router or create it if there is
 	 * currently none in the Buffer.
 	 *
-	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting Setting} object from
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting
+	 *         Setting} object from
 	 *         the associated buffer.
 	 * @since 0.9.0
 	 */

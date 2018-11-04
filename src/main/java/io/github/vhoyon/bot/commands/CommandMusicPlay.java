@@ -10,6 +10,7 @@ import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.utilities.music.MusicPlayer;
+import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
@@ -70,17 +71,34 @@ public class CommandMusicPlay extends MusicCommands {
 		if(!isConnectedToVoiceChannelMember()){
 			new BotError(this, lang("NotConnected"), true);
 		}
+		else if(this.isPlaying()
+				&& !this.getConnectedVoiceChannelBot().equals(
+						this.getConnectedVoiceChannelMember())){
+			sendInfoMessage("The bot is already playing in "
+					+ code(this.getConnectedVoiceChannelBot().getName())
+					+ ". Join that voice channel to listen to music");
+		}
 		else{
 			
 			if(hasParameter("r")){
-				
-				SourceTrack playlistFound = getRandomTrack();
-				
-				sendInfoMessage(lang("Rand", code(playlistFound.name)));
-				
-				MusicManager.get().loadTrack(this, playlistFound.source,
-						this::connectIfNotPlaying);
-				
+				if(this.isPlaying()){
+					new CommandConfirmed(this){
+						
+						@Override
+						public String getConfMessage(){
+							return "There are already songs in the queue. Would you like to overwrite it?";
+						}
+						
+						@Override
+						public void confirmed(){
+							emptyQueue();
+							playRandom();
+						}
+					};
+				}
+				else{
+					playRandom();
+				}
 			}
 			else{
 				
@@ -274,6 +292,7 @@ public class CommandMusicPlay extends MusicCommands {
 		search.setMaxResults((long)1);
 		search.setQ(getContent());
 		search.setKey(env("YOUTUBE_TOKEN"));
+		search.setType("video");
 		
 		SearchListResponse response = search.execute();
 		
@@ -322,4 +341,22 @@ public class CommandMusicPlay extends MusicCommands {
 		}
 	}
 	
+	/**
+	 * empties the Music queue
+	 */
+	public void emptyQueue(){
+		MusicManager.get().emptyPlayer(this, false);
+	}
+	
+	/**
+	 * Chooses a random playlist and add's it to the queue
+	 */
+	public void playRandom(){
+		SourceTrack playlistFound = getRandomTrack();
+		
+		sendInfoMessage(lang("Rand", code(playlistFound.name)));
+		
+		MusicManager.get().loadTrack(this, playlistFound.source,
+				this::connectIfNotPlaying);
+	}
 }

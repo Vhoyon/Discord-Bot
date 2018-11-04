@@ -2,6 +2,7 @@ package io.github.vhoyon.bot.utilities.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import io.github.vhoyon.bot.utilities.BotCommand;
@@ -115,6 +116,7 @@ public class MusicPlayer {
 	 */
 	public synchronized void playTrack(AudioTrack track){
 		this.getListener().queue(track);
+		TimerManager.stopTimer("noMusicDelay");
 	}
 	
 	/**

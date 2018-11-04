@@ -7,7 +7,8 @@ import java.io.IOException;
 
 /**
  * Vhoyon's custom implementation of the
- * {@link io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole AbstractTerminalConsole} that
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole
+ * AbstractTerminalConsole} that
  * allows us to get commands to start, stop, exit, etc our bot from the
  * Terminal.
  *
@@ -29,7 +30,7 @@ public abstract class TerminalConsole extends AbstractTerminalConsole {
 	}
 	
 	@Override
-	public void initialize(){
+	public void initialize(boolean startImmediately){
 		
 		Logger.setOutputs(this);
 		
@@ -63,9 +64,20 @@ public abstract class TerminalConsole extends AbstractTerminalConsole {
 			
 			boolean shouldStop;
 			
+			boolean isFirstInput = true;
+			
 			do{
 				
-				String input = getInput();
+				String input;
+				
+				if(startImmediately && isFirstInput){
+					sendLog("");
+					input = "start";
+					isFirstInput = false;
+				}
+				else{
+					input = getInput();
+				}
 				
 				shouldStop = handleInput(input);
 				
