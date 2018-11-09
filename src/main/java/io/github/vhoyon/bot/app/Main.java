@@ -39,8 +39,6 @@ public class Main {
 			Audit.setOutputs(new AuditableFile("audit.txt", Framework
 					.runnableSystemPath()));
 			
-			FrameworkTemplate.botToken = Environment.getVar("BOT_TOKEN");
-			
 			Console console;
 			
 			if(programRequest.hasParameter("t")){
@@ -49,6 +47,9 @@ public class Main {
 					@Override
 					public void onStart() throws Exception{
 						Environment.refresh();
+						
+						FrameworkTemplate.botToken = Environment
+								.getVar("BOT_TOKEN");
 						
 						FrameworkTemplate.startBot(this, new MessageListener());
 					}
@@ -71,6 +72,9 @@ public class Main {
 					@Override
 					public void onStart() throws Exception{
 						Environment.refresh();
+						
+						FrameworkTemplate.botToken = Environment
+								.getVar("BOT_TOKEN");
 						
 						FrameworkTemplate.startBot(this, new MessageListener());
 					}
