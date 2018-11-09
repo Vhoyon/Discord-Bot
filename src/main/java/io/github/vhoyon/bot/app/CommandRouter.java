@@ -119,10 +119,10 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						
 						boolean notDuplicateCommand = command == null;
 						
-						setCommand(getLinkableCommand(commandName));
-						
 						if(!notDuplicateCommand
 								&& command instanceof PartiallyParallelRunnable){
+							
+							setCommand(getLinkableCommand(commandName));
 							
 							AbstractBotCommand currentCommand = getAbstractBotCommand();
 							
@@ -137,6 +137,9 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 							setCommand(new BotError(lang(
 									"CommandIsRunningError", code(commandName))));
 							
+						}
+						else if(getCommand() == null){
+							setCommand(getLinkableCommand(commandName));
 						}
 						
 					}
