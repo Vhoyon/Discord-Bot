@@ -48,6 +48,8 @@ public class Main {
 				console = new TerminalConsole(){
 					@Override
 					public void onStart() throws Exception{
+						Environment.refresh();
+						
 						FrameworkTemplate.startBot(this, new MessageListener());
 					}
 					
@@ -68,6 +70,8 @@ public class Main {
 				console = new UIConsole(){
 					@Override
 					public void onStart() throws Exception{
+						Environment.refresh();
+						
 						FrameworkTemplate.startBot(this, new MessageListener());
 					}
 					
