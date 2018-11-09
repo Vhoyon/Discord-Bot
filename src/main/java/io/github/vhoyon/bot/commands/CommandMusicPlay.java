@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -195,7 +196,7 @@ public class CommandMusicPlay extends MusicCommands {
 		try{
 			
 			if(hasEnv("PLAYLISTS_PLAY_RANDOM")){
-				ArrayList<String> envPlaylists = EnumSanitizer
+				List<String> envPlaylists = EnumSanitizer
 						.formatEnvironment("PLAYLISTS_PLAY_RANDOM");
 				
 				// Define format to get the data we want
@@ -359,4 +360,5 @@ public class CommandMusicPlay extends MusicCommands {
 		MusicManager.get().loadTrack(this, playlistFound.source,
 				this::connectIfNotPlaying);
 	}
+	
 }

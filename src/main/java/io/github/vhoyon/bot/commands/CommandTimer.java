@@ -118,7 +118,7 @@ public class CommandTimer extends BotCommand implements Stoppable {
 	 * @since v0.4.0
 	 */
 	private String formatDate(int hours, int minutes, int seconds){
-		return formatS("%02d:%02d:%02d", hours, minutes, seconds);
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 	
 	@Override
