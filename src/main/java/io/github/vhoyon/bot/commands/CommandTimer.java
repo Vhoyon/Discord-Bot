@@ -8,7 +8,7 @@ import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.TimerManager;
-import io.github.vhoyon.vramework.utilities.sanitizers.IntegerSanitizer;
+import io.github.ved.jsanitizers.IntegerSanitizer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
