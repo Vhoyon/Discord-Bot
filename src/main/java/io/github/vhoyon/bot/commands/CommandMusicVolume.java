@@ -3,7 +3,7 @@ package io.github.vhoyon.bot.commands;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.errorHandling.BotError;
-import io.github.vhoyon.vramework.utilities.sanitizers.IntegerSanitizer;
+import io.github.ved.jsanitizers.IntegerSanitizer;
 
 /**
  * Command to change the general volume of the MusicPlayer so that everyone's
