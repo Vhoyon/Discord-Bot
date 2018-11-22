@@ -32,6 +32,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: com.squareup.okio:okio:1.13.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.slf4j:slf4j-simple:1.7.25"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: io.github.classgraph:classgraph:4.4.12"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: io.github.v-ed:jsanitizers:1.0.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: com.sedmelluq:lavaplayer:1.2.56"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: com.sedmelluq:lavaplayer-common:1.0.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: com.sedmelluq:lavaplayer-natives:1.2.55"/>
