@@ -7,6 +7,7 @@ import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.TimerManager;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 
@@ -128,9 +129,54 @@ public class CommandTimer extends BotCommand implements Stoppable,
 			
 			if(!shouldShowTimer.get()){
 				
-				sendInfoMessage(format(
-						"A timer is set for {1} hour - use the {2} command without arguments / parameters to see the current progress!",
-						hours, buildVCommand(TIMER)));
+				MessageManager manager = new MessageManager();
+				
+				manager.addMessage(
+						1,
+						"A timer is set for {1} hours - use the {2} command without arguments / parameters to see the current progress!",
+						"hours", "timer");
+				manager.addMessage(
+						2,
+						"A timer is set for {1} minutes - use the {2} command without arguments / parameters to see the current progress!",
+						"minutes", "timer");
+				manager.addMessage(
+						3,
+						"A timer is set for {1} hours and {2} minutes - use the {3} command without arguments / parameters to see the current progress!",
+						"hours", "minutes", "timer");
+				manager.addMessage(
+						4,
+						"A timer is set for {1} seconds - use the {2} command without arguments / parameters to see the current progress!",
+						"seconds", "timer");
+				manager.addMessage(
+						5,
+						"A timer is set for {1} hours and {2} seconds - use the {3} command without arguments / parameters to see the current progress!",
+						"hours", "seconds", "timer");
+				manager.addMessage(
+						6,
+						"A timer is set for {1} minutes and {2} seconds - use the {3} command without arguments / parameters to see the current progress!",
+						"minutes", "seconds", "timer");
+				manager.addMessage(
+						7,
+						"A timer is set for {1} hours, {2} minutes and {3} seconds - use the {3} command without arguments / parameters to see the current progress!",
+						"hours", "minutes", "seconds", "timer");
+				
+				int indice = 0;
+				
+				if(hours > 0){
+					indice += 1;
+					manager.addReplacement("hours", hours);
+				}
+				if(minutes > 0){
+					indice += 2;
+					manager.addReplacement("minutes", minutes);
+				}
+				if(seconds > 0){
+					indice += 4;
+					manager.addReplacement("seconds", seconds);
+				}
+				manager.addReplacement("timer", buildVCommand(TIMER));
+				
+				sendInfoMessage(manager.getMessageRaw(indice).toString());
 				
 				Object handler = new Object();
 				
