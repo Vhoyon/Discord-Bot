@@ -239,11 +239,13 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		ThreadPool deletePool = new ThreadPool();
 		
+		final int numberOfMessagesToHandle = 1000;
+		
 		do{
 			
 			final List<Message> subMessageHistory = this.getMessageListMax(
-					messageHistory, 10, messageProcessed, messageConditions,
-					shouldInvert);
+					messageHistory, numberOfMessagesToHandle, messageProcessed,
+					messageConditions, shouldInvert);
 			
 			if(subMessageHistory == null)
 				break;
@@ -258,7 +260,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 							shouldCompleteBeforeNext));
 				}
 				
-				messageProcessed += subMessageHistory.size();
+				messageProcessed += numberOfMessagesToHandle;
 				
 			}
 			
@@ -401,13 +403,12 @@ public class CommandClear extends BotCommand implements Stoppable {
 	}
 	
 	protected List<Message> getMessageListMax(MessageHistory messageHistory,
-			int maxIterations, int startRetrievingAt,
+			int numberOfMessageToHandle, int startRetrievingAt,
 			List<Predicate<Message>> messageConditions, boolean shouldInvert){
 		
 		boolean isEmpty;
 		
 		int numberOfMessages = 0;
-		int maxAmount = maxIterations * 100;
 		
 		do{
 			
@@ -418,14 +419,25 @@ public class CommandClear extends BotCommand implements Stoppable {
 			
 			numberOfMessages += subMessageList.size();
 			
-		}while(!isEmpty && numberOfMessages < maxAmount && isAlive());
+		}while(!isEmpty
+				&& (numberOfMessageToHandle < 0 || numberOfMessages < numberOfMessageToHandle)
+				&& isAlive());
 		
 		List<Message> fullHistory = messageHistory.getRetrievedHistory();
 		
-		List<Message> subHistory = fullHistory.subList(startRetrievingAt,
-				fullHistory.size());
+		if(startRetrievingAt > fullHistory.size()){
+			return null;
+		}
 		
-		if(subHistory.size() == 0)
+		List<Message> subHistory = null;
+		
+		try{
+			subHistory = fullHistory.subList(startRetrievingAt,
+					fullHistory.size());
+		}
+		catch(IndexOutOfBoundsException e){}
+		
+		if(subHistory == null || subHistory.size() == 0)
 			return null;
 		
 		return getMessagesWithConditions(subHistory, messageConditions,
