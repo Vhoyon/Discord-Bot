@@ -7,6 +7,7 @@ import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.MessageManager;
+import io.github.vhoyon.vramework.utilities.ThreadPool;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
@@ -234,24 +235,49 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		boolean shouldCompleteBeforeNext = hasParameter("w");
 		
-		final List<Message> fullMessageHistory = this.getFullMessageList(
-				messageHistory, messageConditions, shouldInvert);
+		int at = 0;
 		
-		doDeleteLogic(fullMessageHistory, 100, shouldCompleteBeforeNext);
+		ThreadPool deletePool = new ThreadPool();
+		
+		do{
+			
+			final List<Message> subMessageHistory = this.getMessageListMax(
+					messageHistory, 10, at, messageConditions, shouldInvert);
+			
+			if(subMessageHistory == null)
+				break;
+			
+			if(subMessageHistory.size() != 0){
+				
+				if(at == 0){
+					doDeleteLogic(subMessageHistory, shouldCompleteBeforeNext);
+				}
+				else{
+					deletePool.execute(() -> doDeleteLogic(subMessageHistory,
+							shouldCompleteBeforeNext));
+				}
+				
+				at += subMessageHistory.size();
+				
+			}
+			
+		}while(true);
+		
+		deletePool.stopWorkers();
 		
 	}
 	
 	protected void doDeleteLogic(final List<Message> messagesToDelete,
-			int batchSize, boolean shouldCompleteBeforeNext){
+			boolean shouldCompleteBeforeNext) throws PermissionException{
 		
 		boolean deletingIndividually = messagesToDelete.size() < 2;
 		
-		for(int i = 0; i < messagesToDelete.size() && isAlive(); i += batchSize){
+		for(int i = 0; i < messagesToDelete.size() && isAlive(); i += 100){
 			
 			List<Message> currentMessageList;
 			
 			try{
-				currentMessageList = messagesToDelete.subList(i, i + batchSize);
+				currentMessageList = messagesToDelete.subList(i, i + 100);
 			}
 			catch(IndexOutOfBoundsException e){
 				currentMessageList = messagesToDelete.subList(i,
