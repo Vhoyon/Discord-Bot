@@ -369,18 +369,39 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
 			List<Predicate<Message>> messageConditions, boolean shouldInvert){
+		return getMessageListMax(messageHistory, -1, 0, messageConditions,
+				shouldInvert);
+	}
+	
+	protected List<Message> getMessageListMax(MessageHistory messageHistory,
+			int maxIterations, int startRetrievingAt,
+			List<Predicate<Message>> messageConditions, boolean shouldInvert){
 		
 		boolean isEmpty;
 		
+		int numberOfMessages = 0;
+		int maxAmount = maxIterations * 100;
+		
 		do{
 			
-			isEmpty = messageHistory.retrievePast(100).complete().isEmpty();
+			List<Message> subMessageList = messageHistory.retrievePast(100)
+					.complete();
 			
-		}while(!isEmpty && isAlive());
+			isEmpty = subMessageList.isEmpty();
+			
+			numberOfMessages += subMessageList.size();
+			
+		}while(!isEmpty && numberOfMessages < maxAmount && isAlive());
 		
 		List<Message> fullHistory = messageHistory.getRetrievedHistory();
 		
-		return getMessagesWithConditions(fullHistory, messageConditions,
+		List<Message> subHistory = fullHistory.subList(startRetrievingAt,
+				fullHistory.size());
+		
+		if(subHistory.size() == 0)
+			return null;
+		
+		return getMessagesWithConditions(subHistory, messageConditions,
 				shouldInvert);
 		
 	}
