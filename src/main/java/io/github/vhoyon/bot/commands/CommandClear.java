@@ -183,23 +183,26 @@ public class CommandClear extends BotCommand implements Stoppable {
 			
 			@Override
 			public void confirmed(){
-				
-				try{
-					
-					deleteMessages(CommandClear.this.conditions, shouldInvert);
-					
-					if(notifyMessage != null && isAlive() && hasParameter("n"))
-						sendInfoMessage(notifyMessage);
-					
-				}
-				catch(PermissionException e){
-					new BotError(CommandClear.this, lang("NoPermission"));
-				}
-				
+				callDeleteMessages(notifyMessage, shouldInvert);
 			}
 			
 		};
 		
+	}
+	
+	protected void callDeleteMessages(final String notifyMessage,
+			boolean shouldInvert){
+		try{
+			
+			deleteMessages(CommandClear.this.conditions, shouldInvert);
+			
+			if(notifyMessage != null && isAlive() && hasParameter("n"))
+				sendInfoMessage(notifyMessage);
+			
+		}
+		catch(PermissionException e){
+			new BotError(CommandClear.this, lang("NoPermission"));
+		}
 	}
 	
 	/**
@@ -224,7 +227,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @since v0.10.0
 	 */
 	protected void deleteMessages(
-			final ArrayList<Predicate<Message>> messageConditions,
+			final List<Predicate<Message>> messageConditions,
 			boolean shouldInvert) throws PermissionException{
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
@@ -326,7 +329,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 *         TextChannel where this command was invoked.
 	 * @since v0.10.0
 	 * @see #getFullMessageList(MessageHistory, boolean)
-	 * @see #getFullMessageList(MessageHistory, ArrayList, boolean)
+	 * @see #getFullMessageList(MessageHistory, List, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
 			Predicate<Message> messageCondition, boolean shouldInvert){
@@ -361,8 +364,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @see #getFullMessageList(MessageHistory, Predicate, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
-			ArrayList<Predicate<Message>> messageConditions,
-			boolean shouldInvert){
+			List<Predicate<Message>> messageConditions, boolean shouldInvert){
 		
 		boolean isEmpty;
 		
@@ -374,15 +376,24 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		List<Message> fullHistory = messageHistory.getRetrievedHistory();
 		
+		return getMessagesWithConditions(fullHistory, messageConditions,
+				shouldInvert);
+		
+	}
+	
+	private List<Message> getMessagesWithConditions(
+			List<Message> messageHistory,
+			List<Predicate<Message>> messageConditions, boolean shouldInvert){
+		
 		if(messageConditions == null)
-			return fullHistory;
+			return messageHistory;
 		
 		ArrayList<Message> messagesWithCondition = new ArrayList<>();
 		
 		boolean conditionsGateIsAnd = !hasParameter("or");
 		
 		//@formatter:off
-		fullHistory.forEach(message -> {
+		messageHistory.forEach(message -> {
 			
 			boolean shouldDelete = conditionsGateIsAnd;
 			
