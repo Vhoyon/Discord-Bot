@@ -237,21 +237,25 @@ public class CommandClear extends BotCommand implements Stoppable {
 		final List<Message> fullMessageHistory = this.getFullMessageList(
 				messageHistory, messageConditions, shouldInvert);
 		
-		boolean deletingIndividually = fullMessageHistory.size() < 2;
+		doDeleteLogic(fullMessageHistory, 100, shouldCompleteBeforeNext);
 		
-		final int batchSize = 100;
+	}
+	
+	protected void doDeleteLogic(final List<Message> messagesToDelete,
+			int batchSize, boolean shouldCompleteBeforeNext){
 		
-		for(int i = 0; i < fullMessageHistory.size() && isAlive(); i += batchSize){
+		boolean deletingIndividually = messagesToDelete.size() < 2;
+		
+		for(int i = 0; i < messagesToDelete.size() && isAlive(); i += batchSize){
 			
 			List<Message> currentMessageList;
 			
 			try{
-				currentMessageList = fullMessageHistory.subList(i, i
-						+ batchSize);
+				currentMessageList = messagesToDelete.subList(i, i + batchSize);
 			}
 			catch(IndexOutOfBoundsException e){
-				currentMessageList = fullMessageHistory.subList(i,
-						fullMessageHistory.size());
+				currentMessageList = messagesToDelete.subList(i,
+						messagesToDelete.size());
 			}
 			
 			if(!deletingIndividually){
