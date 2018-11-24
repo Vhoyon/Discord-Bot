@@ -235,21 +235,22 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		boolean shouldCompleteBeforeNext = hasParameter("w");
 		
-		int at = 0;
+		int messageProcessed = 0;
 		
 		ThreadPool deletePool = new ThreadPool();
 		
 		do{
 			
 			final List<Message> subMessageHistory = this.getMessageListMax(
-					messageHistory, 10, at, messageConditions, shouldInvert);
+					messageHistory, 10, messageProcessed, messageConditions,
+					shouldInvert);
 			
 			if(subMessageHistory == null)
 				break;
 			
 			if(subMessageHistory.size() != 0){
 				
-				if(at == 0){
+				if(messageProcessed == 0){
 					doDeleteLogic(subMessageHistory, shouldCompleteBeforeNext);
 				}
 				else{
@@ -257,7 +258,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 							shouldCompleteBeforeNext));
 				}
 				
-				at += subMessageHistory.size();
+				messageProcessed += subMessageHistory.size();
 				
 			}
 			
