@@ -1,5 +1,6 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
@@ -66,7 +67,44 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		boolean shouldDoClear = true;
 		
-		if(hasParameter("u", "s", "b")){
+		if(hasParameter("c")){
+			String content = getParameter("c").getContent();
+			
+			if(content == null){
+				addReplacement("Prefixes", code(getRequest().getCommandPrefix()));
+				addCondition(
+						"c",
+						message -> message.getContentStripped()
+								.replaceAll("\\\\\\\\", "")
+								.startsWith(getRequest().getCommandPrefix()));
+			}
+			else{
+				List<String> prefixes = EnumSanitizer
+						.extractEnumFromString(content);
+				StringBuilder builder = new StringBuilder();
+				for(String prefix : prefixes){
+					builder.append(code(prefix)).append(", ");			
+				}
+				builder.delete(builder.length() - 2, builder.length() );
+				
+				addReplacement("Prefixes", builder.toString());
+				
+				addCondition(
+						"c",
+						message -> {
+							
+							for(String prefix : prefixes){
+								
+								if(message.getContentStripped()
+										.replaceAll("\\\\\\\\", "")
+										.startsWith(prefix))
+									return true;
+							}
+							return false;
+						});
+			}
+		}
+		else if(hasParameter("u", "s", "b")){
 			
 			try{
 				
@@ -110,7 +148,8 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		if(this.confManager == null)
 			this.confManager = new MessageManager();
-		
+
+		this.confManager.addMessage(-8, "ConfPrefInv","Prefixes");
 		this.confManager.addMessage(-4, "ConfBotInv");
 		this.confManager.addMessage(-2, "ConfSelfInv", "user");
 		this.confManager.addMessage(-1, "ConfUsrInv", "user");
@@ -118,6 +157,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		this.confManager.addMessage(1, "ConfUsr", "user");
 		this.confManager.addMessage(2, "ConfSelf", "user");
 		this.confManager.addMessage(4, "ConfBot");
+		this.confManager.addMessage(8, "ConfPref","Prefixes");
 		
 	}
 	
@@ -125,7 +165,8 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		if(this.notifyManager == null)
 			this.notifyManager = new MessageManager();
-		
+
+		this.notifyManager.addMessage(-8, "ConfPrefInv","Prefixes");
 		this.notifyManager.addMessage(-4, "NotifBotInv");
 		this.notifyManager.addMessage(-2, "NotifSelfInv", "user");
 		this.notifyManager.addMessage(-1, "NotifUsrInv", "user");
@@ -133,6 +174,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		this.notifyManager.addMessage(1, "NotifUsr", "user");
 		this.notifyManager.addMessage(2, "NotifSelf", "user");
 		this.notifyManager.addMessage(4, "NotifBot");
+		this.notifyManager.addMessage(8, "ConfPref","Prefixes");
 		
 	}
 	
@@ -507,6 +549,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 					"Allows you to delete all of the bots messages.", false, 3,
 					"b", "bot"),
 			new ParametersHelp(
+				"Clears the commands issued to the bot. By default it clears the commands with the current prefix unless it is given a specific prefix to clear.",
+				true, 4 , "c"),
+			new ParametersHelp(
 					"Inverts the condition applied to the command (example : using this in combination with "
 							+ formatParameter("s")
 							+ " would clear messages of everyone but yourself).",
@@ -520,6 +565,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 			new ParametersHelp(
 					"Allows the conditions parser to use an OR logic gate instead of an AND for all conditions.",
 					false, "or"),
+			
 		};
 	}
 	
