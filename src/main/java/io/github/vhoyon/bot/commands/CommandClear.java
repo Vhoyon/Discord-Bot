@@ -71,14 +71,19 @@ public class CommandClear extends BotCommand implements Stoppable {
 			String content = getParameter("c").getContent();
 			
 			if(content == null){
-				addReplacement("Prefixes", code(getRequest().getCommandPrefix()));
+				
+				final String commandPrefix = getRequest().getCommandPrefix();
+				
+				addReplacement("Prefixes", code(commandPrefix));
 				addCondition(
 						"c",
 						message -> message.getContentStripped()
 								.replaceAll("\\\\\\\\", "")
-								.startsWith(getRequest().getCommandPrefix()));
+								.startsWith(commandPrefix));
+				
 			}
 			else{
+				
 				List<String> prefixes = EnumSanitizer
 						.extractEnumFromString(content);
 				StringBuilder builder = new StringBuilder();
@@ -102,6 +107,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 							}
 							return false;
 						});
+				
 			}
 		}
 		else if(hasParameter("u", "s", "b")){
