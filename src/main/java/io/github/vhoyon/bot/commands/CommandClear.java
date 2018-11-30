@@ -110,7 +110,8 @@ public class CommandClear extends BotCommand implements Stoppable {
 			}
 			
 		}
-		else if(hasParameter("u", "s", "b")){
+		
+		if(hasParameter("u", "s", "b")){
 			
 			try{
 				
@@ -155,6 +156,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 		if(this.confManager == null)
 			this.confManager = new MessageManager();
 		
+		this.confManager.addMessage(-12, "ConfPrefBotInv", "Prefixes");
+		this.confManager.addMessage(-10, "ConfPrefSelfInv", "Prefixes", "user");
+		this.confManager.addMessage(-9, "ConfPrefUsrInv", "Prefixes", "user");
 		this.confManager.addMessage(-8, "ConfPrefInv", "Prefixes");
 		this.confManager.addMessage(-4, "ConfBotInv");
 		this.confManager.addMessage(-2, "ConfSelfInv", "user");
@@ -164,6 +168,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 		this.confManager.addMessage(2, "ConfSelf", "user");
 		this.confManager.addMessage(4, "ConfBot");
 		this.confManager.addMessage(8, "ConfPref", "Prefixes");
+		this.confManager.addMessage(9, "ConfPrefUsr", "Prefixes", "user");
+		this.confManager.addMessage(10, "ConfPrefSelf", "Prefixes", "user");
+		this.confManager.addMessage(12, "ConfPrefBot", "Prefixes");
 		
 	}
 	
@@ -172,7 +179,12 @@ public class CommandClear extends BotCommand implements Stoppable {
 		if(this.notifyManager == null)
 			this.notifyManager = new MessageManager();
 		
-		this.notifyManager.addMessage(-8, "ConfPrefInv", "Prefixes");
+		this.notifyManager.addMessage(-12, "NotifPrefBotInv", "Prefixes");
+		this.notifyManager.addMessage(-10, "NotifPrefSelfInv", "Prefixes",
+				"user");
+		this.notifyManager
+				.addMessage(-9, "NotifPrefUsrInv", "Prefixes", "user");
+		this.notifyManager.addMessage(-8, "NotifPrefInv", "Prefixes");
 		this.notifyManager.addMessage(-4, "NotifBotInv");
 		this.notifyManager.addMessage(-2, "NotifSelfInv", "user");
 		this.notifyManager.addMessage(-1, "NotifUsrInv", "user");
@@ -180,7 +192,10 @@ public class CommandClear extends BotCommand implements Stoppable {
 		this.notifyManager.addMessage(1, "NotifUsr", "user");
 		this.notifyManager.addMessage(2, "NotifSelf", "user");
 		this.notifyManager.addMessage(4, "NotifBot");
-		this.notifyManager.addMessage(8, "ConfPref", "Prefixes");
+		this.notifyManager.addMessage(8, "NotifPref", "Prefixes");
+		this.notifyManager.addMessage(9, "NotifPrefUsr", "Prefixes", "user");
+		this.notifyManager.addMessage(10, "NotifPrefSelf", "Prefixes", "user");
+		this.notifyManager.addMessage(12, "NotifPrefBot", "Prefixes");
 		
 	}
 	
