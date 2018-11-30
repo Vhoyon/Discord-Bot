@@ -223,19 +223,24 @@ public class CommandClear extends BotCommand implements Stoppable {
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage, boolean shouldInvert){
 		
-		new CommandConfirmed(this){
-			
-			@Override
-			public String getConfMessage(){
-				return confMessage;
-			}
-			
-			@Override
-			public void confirmed(){
-				callDeleteMessages(notifyMessage, shouldInvert);
-			}
-			
-		};
+		if(hasParameter("f")){
+			callDeleteMessages(notifyMessage, shouldInvert);
+		}
+		else{
+			new CommandConfirmed(this){
+				
+				@Override
+				public String getConfMessage(){
+					return confMessage;
+				}
+				
+				@Override
+				public void confirmed(){
+					callDeleteMessages(notifyMessage, shouldInvert);
+				}
+				
+			};
+		}
 		
 	}
 	
@@ -287,13 +292,11 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		ThreadPool deletePool = new ThreadPool();
 		
-		final int numberOfMessagesToHandle = 1000;
-		
 		do{
 			
 			final List<Message> subMessageHistory = this.getMessageListMax(
-					messageHistory, numberOfMessagesToHandle, messageProcessed,
-					messageConditions, shouldInvert);
+					messageHistory, 1000, messageProcessed, messageConditions,
+					shouldInvert);
 			
 			if(subMessageHistory == null)
 				break;
@@ -308,9 +311,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 							shouldCompleteBeforeNext));
 				}
 				
-				messageProcessed += numberOfMessagesToHandle;
-				
 			}
+			
+			messageProcessed += messageHistory.size();
 			
 		}while(true);
 		
@@ -565,6 +568,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 			new ParametersHelp(
 					"This makes the bot notify the text channel of what it cleared.",
 					false, "n", "notify"),
+			new ParametersHelp(
+					"Skips the confirmation and execute the clear command immediately.",
+					"f", "force"),
 			new ParametersHelp(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
 					false, "w", "wait"),
