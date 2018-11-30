@@ -244,13 +244,11 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		ThreadPool deletePool = new ThreadPool();
 		
-		final int numberOfMessagesToHandle = 1000;
-		
 		do{
 			
 			final List<Message> subMessageHistory = this.getMessageListMax(
-					messageHistory, numberOfMessagesToHandle, messageProcessed,
-					messageConditions, shouldInvert);
+					messageHistory, 1000, messageProcessed, messageConditions,
+					shouldInvert);
 			
 			if(subMessageHistory == null)
 				break;
@@ -265,9 +263,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 							shouldCompleteBeforeNext));
 				}
 				
-				messageProcessed += numberOfMessagesToHandle;
-				
 			}
+			
+			messageProcessed += messageHistory.size();
 			
 		}while(true);
 		
