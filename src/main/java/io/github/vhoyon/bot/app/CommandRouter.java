@@ -112,7 +112,6 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						
 						String commandName = request.getCommand();
 						
-						// Exception for Timer
 						AbstractBotCommand command = CommandsThreadManager
 								.getCommandRunning(commandName, eventDigger,
 										this);
