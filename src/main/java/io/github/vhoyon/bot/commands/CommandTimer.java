@@ -186,7 +186,7 @@ public class CommandTimer extends BotCommand implements Stoppable,
 		}
 		manager.addReplacement("timer", buildVCommand(TIMER));
 		
-		sendInfoMessage(manager.getMessageRaw(indice).toString());
+		sendInfoMessage(manager.getMessage(indice, getDictionary(), this));
 		
 		Object handler = new Object();
 		
@@ -203,34 +203,15 @@ public class CommandTimer extends BotCommand implements Stoppable,
 		
 		MessageManager manager = new MessageManager();
 		
-		manager.addMessage(
-				1,
-				"A timer is set for {1} hours - use the {2} command without arguments / parameters to see the current progress!",
-				"hours", "timer");
-		manager.addMessage(
-				2,
-				"A timer is set for {1} minutes - use the {2} command without arguments / parameters to see the current progress!",
-				"minutes", "timer");
-		manager.addMessage(
-				3,
-				"A timer is set for {1} hours and {2} minutes - use the {3} command without arguments / parameters to see the current progress!",
-				"hours", "minutes", "timer");
-		manager.addMessage(
-				4,
-				"A timer is set for {1} seconds - use the {2} command without arguments / parameters to see the current progress!",
+		manager.addMessage(1, "BackHours", "hours", "timer");
+		manager.addMessage(2, "BackMinutes", "minutes", "timer");
+		manager.addMessage(3, "BackHoursMinutes", "hours", "minutes", "timer");
+		manager.addMessage(4, "BackSeconds", "seconds", "timer");
+		manager.addMessage(5, "BackHoursSeconds", "hours", "seconds", "timer");
+		manager.addMessage(6, "BackMinutesSeconds", "minutes", "seconds",
+				"timer");
+		manager.addMessage(7, "BackHoursMinutesSeconds", "hours", "minutes",
 				"seconds", "timer");
-		manager.addMessage(
-				5,
-				"A timer is set for {1} hours and {2} seconds - use the {3} command without arguments / parameters to see the current progress!",
-				"hours", "seconds", "timer");
-		manager.addMessage(
-				6,
-				"A timer is set for {1} minutes and {2} seconds - use the {3} command without arguments / parameters to see the current progress!",
-				"minutes", "seconds", "timer");
-		manager.addMessage(
-				7,
-				"A timer is set for {1} hours, {2} minutes and {3} seconds - use the {3} command without arguments / parameters to see the current progress!",
-				"hours", "minutes", "seconds", "timer");
 		
 		return manager;
 		
