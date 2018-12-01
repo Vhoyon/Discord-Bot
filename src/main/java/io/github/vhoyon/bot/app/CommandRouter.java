@@ -1,10 +1,10 @@
 package io.github.vhoyon.bot.app;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.errorHandling.BotErrorPrivate;
 import io.github.vhoyon.bot.utilities.abstracts.SimpleTextCommand;
 import io.github.vhoyon.bot.utilities.interfaces.Commands;
+import io.github.vhoyon.bot.utilities.interfaces.PartiallyParallelRunnable;
 import io.github.vhoyon.bot.utilities.interfaces.Resources;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
@@ -19,6 +19,7 @@ import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
 
@@ -111,17 +112,33 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						
 						String commandName = request.getCommand();
 						
-						if(CommandsThreadManager.isCommandRunning(commandName,
-								eventDigger, this)){
+						AbstractBotCommand command = CommandsThreadManager
+								.getCommandRunning(commandName, eventDigger,
+										this);
+						
+						boolean notDuplicateCommand = command == null;
+						
+						if(!notDuplicateCommand
+								&& command instanceof PartiallyParallelRunnable){
+							
+							setCommand(getLinkableCommand(commandName));
+							
+							AbstractBotCommand currentCommand = getAbstractBotCommand();
+							
+							notDuplicateCommand = ((PartiallyParallelRunnable)command)
+									.duplicatedRunnableCondition(
+											currentCommand, command);
+							
+						}
+						
+						if(!notDuplicateCommand){
 							
 							setCommand(new BotError(lang(
 									"CommandIsRunningError", code(commandName))));
 							
 						}
-						else{
-							
+						else if(getCommand() == null){
 							setCommand(getLinkableCommand(commandName));
-							
 						}
 						
 					}

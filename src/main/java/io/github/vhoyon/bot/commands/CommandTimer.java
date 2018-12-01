@@ -2,8 +2,17 @@ package io.github.vhoyon.bot.commands;
 
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.bot.utilities.interfaces.PartiallyParallelRunnable;
+import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.utilities.MessageManager;
+import io.github.vhoyon.vramework.utilities.TimerManager;
+import io.github.ved.jsanitizers.IntegerSanitizer;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Command to create a timer in the TextChannel where this command was called
@@ -13,7 +22,8 @@ import io.github.vhoyon.vramework.objects.ParametersHelp;
  * @since v0.4.0
  * @author V-ed (Guillaume Marcoux)
  */
-public class CommandTimer extends BotCommand implements Stoppable {
+public class CommandTimer extends BotCommand implements Stoppable,
+		PartiallyParallelRunnable {
 	
 	private int seconds;
 	private int hours;
@@ -21,6 +31,25 @@ public class CommandTimer extends BotCommand implements Stoppable {
 	
 	@Override
 	public void action(){
+		
+		if(!hasContent() && !getRequest().hasParameters()){
+			
+			try{
+				
+				int timeRemaining = TimerManager
+						.getTimeRemaining("CommandTimer" + getKey()) / 1000;
+				
+				timeConstruct(timeRemaining);
+				
+				sendMessage("Time remaining : "
+						+ formatDate(hours, minutes, seconds));
+				
+				return;
+				
+			}
+			catch(NullPointerException e){}
+			
+		}
 		
 		seconds = 0;
 		hours = 0;
@@ -32,7 +61,6 @@ public class CommandTimer extends BotCommand implements Stoppable {
 				throw new NullPointerException();
 			}
 			
-			// seconds = Integer.parseInt(constraints[0]);
 			if(hasParameter("h")){
 				hours = Integer.parseInt(getParameter("h").getContent());
 			}
@@ -44,34 +72,148 @@ public class CommandTimer extends BotCommand implements Stoppable {
 			}
 			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
-			String timerMessageId = null;
-			timeConstruct(totalTime);
-			timerMessageId = sendMessage(formatDate(hours, minutes, seconds));
 			
-			for(int i = totalTime; i >= 0 && isAlive(); i--){
+			timeConstruct(totalTime);
+			
+			AtomicBoolean shouldShowTimer = new AtomicBoolean(hasParameter("v",
+					"r"));
+			
+			if(shouldShowTimer.get()){
 				
-				if(i < totalTime){
-					Thread.sleep(1000);
+				AtomicInteger refreshRateRef = new AtomicInteger(1);
+				
+				onParameterPresent(
+						"r",
+						parameter -> {
+							try{
+								
+								int refreshRate = IntegerSanitizer
+										.sanitizeValue(parameter.getContent(),
+												1, totalTime);
+								
+								refreshRateRef.set(refreshRate);
+								
+							}
+							catch(BadFormatException e){
+								if(e.getErrorCode() != 4)
+									throw e;
+								
+								shouldShowTimer.set(false);
+							}
+						});
+				
+				if(shouldShowTimer.get()){
 					
-					timeConstruct(i);
-					editMessageQueue(timerMessageId,
-							formatDate(hours, minutes, seconds));
+					String timerMessageId = null;
+					timerMessageId = sendMessage(formatDate(hours, minutes,
+							seconds));
+					
+					int refreshRate = refreshRateRef.get();
+					
+					for(int i = totalTime; i >= 0 && isAlive(); i -= refreshRate){
+						
+						if(i < totalTime){
+							Thread.sleep(1000 * refreshRate);
+							
+							timeConstruct(i);
+							
+							editMessageQueue(timerMessageId,
+									formatDate(hours, minutes, seconds));
+						}
+						
+					}
+					
 				}
 				
+			}
+			
+			if(!shouldShowTimer.get()){
+				createTimerBackground(totalTime);
 			}
 			
 			if(isAlive())
 				sendMessage("TimerEnded");
 			
 		}
-		catch(InterruptedException | IllegalStateException e){}
+		catch(InterruptedException | IllegalStateException e){
+			TimerManager.stopTimer("CommandTimer" + getKey());
+		}
 		catch(NullPointerException e){
-			sendMessage("You must give an amount of time to the "
-					+ buildVCommand("timer") + " command for it to count");
+			new BotError(this, "You must give an amount of time to the "
+					+ buildVCommand("timer") + " command for it to count.");
 		}
 		catch(NumberFormatException e){
 			new BotError(this, "One of the value provided isn't a number!");
 		}
+		catch(BadFormatException e){
+			
+			switch(e.getErrorCode()){
+			case 1:
+				new BotError(this, "Refresh rate's parameter cannot be empty!");
+				break;
+			case 2:
+				new BotError(this,
+						"The value given to the refresh rate parameter isn't a number!");
+				break;
+			case 3:
+				new BotError(this,
+						"The number given to the refresh rate parameter needs to be 1 or more!");
+				break;
+			}
+			
+		}
+		
+	}
+	
+	private void createTimerBackground(int totalTime)
+			throws InterruptedException{
+		
+		MessageManager manager = setupMessageManager();
+		
+		int indice = 0;
+		
+		if(hours > 0){
+			indice += 1;
+			manager.addReplacement("hours", hours);
+		}
+		if(minutes > 0){
+			indice += 2;
+			manager.addReplacement("minutes", minutes);
+		}
+		if(seconds > 0){
+			indice += 4;
+			manager.addReplacement("seconds", seconds);
+		}
+		manager.addReplacement("timer", buildVCommand(TIMER));
+		
+		sendInfoMessage(manager.getMessage(indice, getDictionary(), this));
+		
+		Object handler = new Object();
+		
+		TimerManager.schedule("CommandTimer" + getKey(), totalTime * 1000,
+				() -> {}, handler);
+		
+		synchronized(handler){
+			handler.wait();
+		}
+		
+	}
+	
+	private MessageManager setupMessageManager(){
+		
+		MessageManager manager = new MessageManager();
+		
+		manager.addMessage(1, "BackHours", "hours", "timer");
+		manager.addMessage(2, "BackMinutes", "minutes", "timer");
+		manager.addMessage(3, "BackHoursMinutes", "hours", "minutes", "timer");
+		manager.addMessage(4, "BackSeconds", "seconds", "timer");
+		manager.addMessage(5, "BackHoursSeconds", "hours", "seconds", "timer");
+		manager.addMessage(6, "BackMinutesSeconds", "minutes", "seconds",
+				"timer");
+		manager.addMessage(7, "BackHoursMinutesSeconds", "hours", "minutes",
+				"seconds", "timer");
+		
+		return manager;
 		
 	}
 	
@@ -141,7 +283,22 @@ public class CommandTimer extends BotCommand implements Stoppable {
 					"minutes"),
 			new ParametersHelp("Sets the seconds of the timer.", "s", "second",
 					"seconds"),
+			new ParametersHelp("Displays the timer in real time.", "v",
+					"visual"),
+			new ParametersHelp(
+					"Sets the rate (in seconds) at which the visual timer should be updated. This parameter implies the use of the parameter "
+							+ buildVParameter("v")
+							+ ", therefore making the latter redundant when this is used.",
+					"r", "rate", "refresh_rate"),
 		};
+	}
+	
+	@Override
+	public boolean duplicatedRunnableCondition(AbstractBotCommand thisCommand,
+			AbstractBotCommand runningCommand){
+		return thisCommand.getCommandName().equals(TIMER)
+				&& !thisCommand.hasContent()
+				&& !thisCommand.getRequest().hasParameters();
 	}
 	
 }
