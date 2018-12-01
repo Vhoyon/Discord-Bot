@@ -1,6 +1,7 @@
 package io.github.vhoyon.bot.utilities;
 
 import io.github.vhoyon.bot.app.CommandRouter;
+import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
-class BotCommandTest {
+class BotCommandTest implements DiscordFormatter {
 	
 	@Mock
 	BotCommand mockCommand;
@@ -44,7 +45,7 @@ class BotCommandTest {
 		
 		doReturn(request).when(mockCommand).getRequest();
 		
-		String expected = "`" + prefix + testParameterName + "`";
+		String expected = code(prefix + testParameterName);
 		
 		assertEquals(expected, mockCommand.formatParameter(testParameterName));
 	}
@@ -58,7 +59,8 @@ class BotCommandTest {
 		
 		doReturn(mockRequest).when(mockCommand).getRequest();
 		
-		String expected = "`" + prefix + prefix + testParameterName + "`";
+		String expected = code(String.valueOf(prefix) + String.valueOf(prefix)
+				+ testParameterName);
 		
 		assertEquals(expected, mockCommand.formatParameter(testParameterName));
 	}
@@ -72,7 +74,7 @@ class BotCommandTest {
 		doReturn(prefix + testCommandName).when(mockCommand).buildCommand(
 				testCommandName);
 		
-		String expected = "`" + prefix + testCommandName + "`";
+		String expected = code(prefix + testCommandName);
 		
 		assertEquals(expected, mockCommand.getUsage());
 	}
