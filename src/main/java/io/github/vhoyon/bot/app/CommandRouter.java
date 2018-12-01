@@ -199,7 +199,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		}
 		catch(NoCommandException e){
 			if(isDebugging())
-				Logger.log(e);
+				Logger.log(e.getMessage(), Logger.LogType.INFO);
 		}
 		
 	}
