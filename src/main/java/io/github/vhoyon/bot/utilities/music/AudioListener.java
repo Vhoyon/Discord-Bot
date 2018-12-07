@@ -84,12 +84,14 @@ public class AudioListener extends AudioEventAdapter {
 			player.playTrack(track.makeClone());
 		}
 		else if(endReason.mayStartNext){
+			
 			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean)this.player
 					.getCommand().getMemory("MUSIC_LOOP"))){
 				tracks.add(track.makeClone());
 				nextTrack();
 			}
 			else{
+				
 				if(!tracks.isEmpty()){
 					nextTrack();
 				}
@@ -100,13 +102,21 @@ public class AudioListener extends AudioEventAdapter {
 							this.player.getCommand()
 									.setting("empty_drop_delay"),
 							() -> {
+								
+								if(this.player.getCommand()
+										.hasHumansLeftConnected())
+									this.player.getCommand().sendInfoMessage(
+											"Disconnected due to inactivity");
+								
 								MusicManager.get().emptyPlayer(
 										this.player.getCommand());
-								this.player.getCommand().sendInfoMessage(
-										"Disconnected due to inactivity");
+								
 							});
+					
 				}
+				
 			}
+			
 		}
 		
 	}
