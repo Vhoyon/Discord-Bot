@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import io.github.vhoyon.vramework.utilities.TimerManager;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -85,30 +84,39 @@ public class AudioListener extends AudioEventAdapter {
 			player.playTrack(track.makeClone());
 		}
 		else if(endReason.mayStartNext){
+			
 			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean)this.player
 					.getCommand().getMemory("MUSIC_LOOP"))){
 				tracks.add(track.makeClone());
 				nextTrack();
 			}
-			else{	
+			else{
+				
 				if(!tracks.isEmpty()){
 					nextTrack();
 				}
 				else{
+					
 					TimerManager.schedule(
 							"noMusicDelay",
 							this.player.getCommand()
 									.setting("empty_drop_delay"),
 							() -> {
-								VoiceChannel connectedChannel = this.player.getGuild().getAudioManager().getConnectedChannel();
+								
+								if(this.player.getCommand()
+										.hasHumansLeftConnected())
+									this.player.getCommand().sendInfoMessage(
+											"Disconnected due to inactivity");
+								
 								MusicManager.get().emptyPlayer(
 										this.player.getCommand());
-								if (connectedChannel.getMembers().size()> 1)
-									this.player.getCommand().sendInfoMessage(
-										"Disconnected due to inactivity");
+								
 							});
+					
 				}
+				
 			}
+			
 		}
 		
 	}
