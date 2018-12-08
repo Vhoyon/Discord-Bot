@@ -34,7 +34,7 @@ public class Main {
 				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
-			Framework.build(Main.class, programRequest.hasParameter("d"));
+			Framework.build(programRequest.hasParameter("d"));
 			
 			Audit.setOutputs(new AuditableFile("audit.txt", Framework
 					.runnableSystemPath()));
