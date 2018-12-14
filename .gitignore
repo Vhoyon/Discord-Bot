@@ -2,12 +2,14 @@
 /target/
 /out/
 
-/res/.env
-
 /.vscode/
 /.idea/
+/.settings/
 
-Bot.iml
 Bot.eml
-DiscordBot.iml
-/src/META-INF/MANIFEST.MF
+Bot.iml
+/src/main/*/META-INF/MANIFEST.MF
+
+/.classpath
+
+/.project
