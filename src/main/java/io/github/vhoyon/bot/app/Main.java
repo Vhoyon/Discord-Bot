@@ -34,12 +34,10 @@ public class Main {
 				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
-			Framework.build(Main.class, programRequest.hasParameter("d"));
+			Framework.build(programRequest.hasParameter("d"));
 			
 			Audit.setOutputs(new AuditableFile("audit.txt", Framework
 					.runnableSystemPath()));
-			
-			FrameworkTemplate.botToken = Environment.getVar("BOT_TOKEN");
 			
 			Console console;
 			
@@ -48,6 +46,11 @@ public class Main {
 				console = new TerminalConsole(){
 					@Override
 					public void onStart() throws Exception{
+						Environment.refresh();
+						
+						FrameworkTemplate.botToken = Environment
+								.getVar("BOT_TOKEN");
+						
 						FrameworkTemplate.startBot(this, new MessageListener());
 					}
 					
@@ -68,6 +71,11 @@ public class Main {
 				console = new UIConsole(){
 					@Override
 					public void onStart() throws Exception{
+						Environment.refresh();
+						
+						FrameworkTemplate.botToken = Environment
+								.getVar("BOT_TOKEN");
+						
 						FrameworkTemplate.startBot(this, new MessageListener());
 					}
 					

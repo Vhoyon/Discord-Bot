@@ -6,6 +6,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
+import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
@@ -15,12 +16,12 @@ import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
-import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -195,12 +196,12 @@ public class CommandMusicPlay extends MusicCommands {
 		try{
 			
 			if(hasEnv("PLAYLISTS_PLAY_RANDOM")){
-				ArrayList<String> envPlaylists = EnumSanitizer
-						.formatEnvironment("PLAYLISTS_PLAY_RANDOM");
+				List<String> envPlaylists = EnumSanitizer
+						.extractEnumFromString(env("PLAYLISTS_PLAY_RANDOM"));
 				
 				// Define format to get the data we want
 				// This is done using the particularity of replacing regex capturing groups
-				String dataRegex = "^(\\S.*)\\s*\\{(\\S.*)\\}$";
+				String dataRegex = "^(\\S.*)\\s*\\{\\s*(\\S.*)\\s*\\}$";
 				for(String envPlaylist : envPlaylists){
 					String envPlaylistName = envPlaylist.replaceAll(dataRegex,
 							"$1"); // return first capturing group
@@ -359,4 +360,5 @@ public class CommandMusicPlay extends MusicCommands {
 		MusicManager.get().loadTrack(this, playlistFound.source,
 				this::connectIfNotPlaying);
 	}
+	
 }

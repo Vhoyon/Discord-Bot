@@ -2,6 +2,7 @@ package io.github.vhoyon.bot.commands;
 
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.exceptions.CommandNotFoundException;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
@@ -44,7 +45,7 @@ public class CommandHelp extends BotCommand {
 			
 			try{
 				
-				BotCommand commandToExplain = (BotCommand)getRouter()
+				AbstractBotCommand commandToExplain = (AbstractBotCommand)getRouter()
 						.getCommandsRepo().getContainer().findCommand(content);
 				
 				commandToExplain.putStateFromCommand(this);

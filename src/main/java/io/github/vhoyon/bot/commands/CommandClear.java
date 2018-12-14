@@ -1,5 +1,6 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
@@ -7,6 +8,7 @@ import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.MessageManager;
+import io.github.vhoyon.vramework.utilities.ThreadPool;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
@@ -65,6 +67,50 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		boolean shouldDoClear = true;
 		
+		if(hasParameter("c")){
+			
+			String content = getParameter("c").getContent();
+			
+			if(content == null){
+				
+				final String commandPrefix = getRequest().getCommandPrefix();
+				
+				addReplacement("Prefixes", code(commandPrefix));
+				addCondition("c", message -> message.getContentStripped()
+						.replaceAll("\\\\\\\\", "").startsWith(commandPrefix));
+				
+			}
+			else{
+				
+				List<String> prefixes = EnumSanitizer
+						.extractEnumFromString(content);
+				
+				StringBuilder builder = new StringBuilder();
+				for(String prefix : prefixes){
+					builder.append(code(prefix)).append(", ");
+				}
+				builder.delete(builder.length() - 2, builder.length());
+				
+				addReplacement("Prefixes", builder.toString());
+				
+				addCondition(
+						"c",
+						message -> {
+							
+							for(String prefix : prefixes){
+								
+								if(message.getContentStripped()
+										.replaceAll("\\\\\\\\", "")
+										.startsWith(prefix))
+									return true;
+							}
+							return false;
+						});
+				
+			}
+			
+		}
+		
 		if(hasParameter("u", "s", "b")){
 			
 			try{
@@ -110,6 +156,10 @@ public class CommandClear extends BotCommand implements Stoppable {
 		if(this.confManager == null)
 			this.confManager = new MessageManager();
 		
+		this.confManager.addMessage(-12, "ConfPrefBotInv", "Prefixes");
+		this.confManager.addMessage(-10, "ConfPrefSelfInv", "Prefixes", "user");
+		this.confManager.addMessage(-9, "ConfPrefUsrInv", "Prefixes", "user");
+		this.confManager.addMessage(-8, "ConfPrefInv", "Prefixes");
 		this.confManager.addMessage(-4, "ConfBotInv");
 		this.confManager.addMessage(-2, "ConfSelfInv", "user");
 		this.confManager.addMessage(-1, "ConfUsrInv", "user");
@@ -117,6 +167,10 @@ public class CommandClear extends BotCommand implements Stoppable {
 		this.confManager.addMessage(1, "ConfUsr", "user");
 		this.confManager.addMessage(2, "ConfSelf", "user");
 		this.confManager.addMessage(4, "ConfBot");
+		this.confManager.addMessage(8, "ConfPref", "Prefixes");
+		this.confManager.addMessage(9, "ConfPrefUsr", "Prefixes", "user");
+		this.confManager.addMessage(10, "ConfPrefSelf", "Prefixes", "user");
+		this.confManager.addMessage(12, "ConfPrefBot", "Prefixes");
 		
 	}
 	
@@ -125,6 +179,12 @@ public class CommandClear extends BotCommand implements Stoppable {
 		if(this.notifyManager == null)
 			this.notifyManager = new MessageManager();
 		
+		this.notifyManager.addMessage(-12, "NotifPrefBotInv", "Prefixes");
+		this.notifyManager.addMessage(-10, "NotifPrefSelfInv", "Prefixes",
+				"user");
+		this.notifyManager
+				.addMessage(-9, "NotifPrefUsrInv", "Prefixes", "user");
+		this.notifyManager.addMessage(-8, "NotifPrefInv", "Prefixes");
 		this.notifyManager.addMessage(-4, "NotifBotInv");
 		this.notifyManager.addMessage(-2, "NotifSelfInv", "user");
 		this.notifyManager.addMessage(-1, "NotifUsrInv", "user");
@@ -132,6 +192,10 @@ public class CommandClear extends BotCommand implements Stoppable {
 		this.notifyManager.addMessage(1, "NotifUsr", "user");
 		this.notifyManager.addMessage(2, "NotifSelf", "user");
 		this.notifyManager.addMessage(4, "NotifBot");
+		this.notifyManager.addMessage(8, "NotifPref", "Prefixes");
+		this.notifyManager.addMessage(9, "NotifPrefUsr", "Prefixes", "user");
+		this.notifyManager.addMessage(10, "NotifPrefSelf", "Prefixes", "user");
+		this.notifyManager.addMessage(12, "NotifPrefBot", "Prefixes");
 		
 	}
 	
@@ -174,32 +238,40 @@ public class CommandClear extends BotCommand implements Stoppable {
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage, boolean shouldInvert){
 		
-		new CommandConfirmed(this){
-			
-			@Override
-			public String getConfMessage(){
-				return confMessage;
-			}
-			
-			@Override
-			public void confirmed(){
+		if(hasParameter("f")){
+			callDeleteMessages(notifyMessage, shouldInvert);
+		}
+		else{
+			new CommandConfirmed(this){
 				
-				try{
-					
-					deleteMessages(CommandClear.this.conditions, shouldInvert);
-					
-					if(notifyMessage != null && isAlive() && hasParameter("n"))
-						sendInfoMessage(notifyMessage);
-					
-				}
-				catch(PermissionException e){
-					new BotError(CommandClear.this, lang("NoPermission"));
+				@Override
+				public String getConfMessage(){
+					return confMessage;
 				}
 				
-			}
-			
-		};
+				@Override
+				public void confirmed(){
+					callDeleteMessages(notifyMessage, shouldInvert);
+				}
+				
+			};
+		}
 		
+	}
+	
+	protected void callDeleteMessages(final String notifyMessage,
+			boolean shouldInvert){
+		try{
+			
+			deleteMessages(CommandClear.this.conditions, shouldInvert);
+			
+			if(notifyMessage != null && isAlive() && hasParameter("n"))
+				sendInfoMessage(notifyMessage);
+			
+		}
+		catch(PermissionException e){
+			new BotError(CommandClear.this, lang("NoPermission"));
+		}
 	}
 	
 	/**
@@ -224,31 +296,61 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @since v0.10.0
 	 */
 	protected void deleteMessages(
-			final ArrayList<Predicate<Message>> messageConditions,
+			final List<Predicate<Message>> messageConditions,
 			boolean shouldInvert) throws PermissionException{
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
 		
 		boolean shouldCompleteBeforeNext = hasParameter("w");
 		
-		final List<Message> fullMessageHistory = this.getFullMessageList(
-				messageHistory, messageConditions, shouldInvert);
+		int messageProcessed = 0;
 		
-		boolean deletingIndividually = fullMessageHistory.size() < 2;
+		ThreadPool deletePool = new ThreadPool();
 		
-		final int batchSize = 100;
+		do{
+			
+			final List<Message> subMessageHistory = this.getMessageListMax(
+					messageHistory, 1000, messageProcessed, messageConditions,
+					shouldInvert);
+			
+			if(subMessageHistory == null)
+				break;
+			
+			if(subMessageHistory.size() != 0){
+				
+				if(messageProcessed == 0){
+					doDeleteLogic(subMessageHistory, shouldCompleteBeforeNext);
+				}
+				else{
+					deletePool.execute(() -> doDeleteLogic(subMessageHistory,
+							shouldCompleteBeforeNext));
+				}
+				
+			}
+			
+			messageProcessed += messageHistory.size();
+			
+		}while(true);
 		
-		for(int i = 0; i < fullMessageHistory.size() && isAlive(); i += batchSize){
+		deletePool.stopWorkers();
+		
+	}
+	
+	protected void doDeleteLogic(final List<Message> messagesToDelete,
+			boolean shouldCompleteBeforeNext) throws PermissionException{
+		
+		boolean deletingIndividually = messagesToDelete.size() < 2;
+		
+		for(int i = 0; i < messagesToDelete.size() && isAlive(); i += 100){
 			
 			List<Message> currentMessageList;
 			
 			try{
-				currentMessageList = fullMessageHistory.subList(i, i
-						+ batchSize);
+				currentMessageList = messagesToDelete.subList(i, i + 100);
 			}
 			catch(IndexOutOfBoundsException e){
-				currentMessageList = fullMessageHistory.subList(i,
-						fullMessageHistory.size());
+				currentMessageList = messagesToDelete.subList(i,
+						messagesToDelete.size());
 			}
 			
 			if(!deletingIndividually){
@@ -326,7 +428,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 *         TextChannel where this command was invoked.
 	 * @since v0.10.0
 	 * @see #getFullMessageList(MessageHistory, boolean)
-	 * @see #getFullMessageList(MessageHistory, ArrayList, boolean)
+	 * @see #getFullMessageList(MessageHistory, List, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
 			Predicate<Message> messageCondition, boolean shouldInvert){
@@ -361,28 +463,67 @@ public class CommandClear extends BotCommand implements Stoppable {
 	 * @see #getFullMessageList(MessageHistory, Predicate, boolean)
 	 */
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
-			ArrayList<Predicate<Message>> messageConditions,
-			boolean shouldInvert){
+			List<Predicate<Message>> messageConditions, boolean shouldInvert){
+		return getMessageListMax(messageHistory, -1, 0, messageConditions,
+				shouldInvert);
+	}
+	
+	protected List<Message> getMessageListMax(MessageHistory messageHistory,
+			int numberOfMessageToHandle, int startRetrievingAt,
+			List<Predicate<Message>> messageConditions, boolean shouldInvert){
 		
 		boolean isEmpty;
 		
+		int numberOfMessages = 0;
+		
 		do{
 			
-			isEmpty = messageHistory.retrievePast(100).complete().isEmpty();
+			List<Message> subMessageList = messageHistory.retrievePast(100)
+					.complete();
 			
-		}while(!isEmpty && isAlive());
+			isEmpty = subMessageList.isEmpty();
+			
+			numberOfMessages += subMessageList.size();
+			
+		}while(!isEmpty
+				&& (numberOfMessageToHandle < 0 || numberOfMessages < numberOfMessageToHandle)
+				&& isAlive());
 		
 		List<Message> fullHistory = messageHistory.getRetrievedHistory();
 		
+		if(startRetrievingAt > fullHistory.size()){
+			return null;
+		}
+		
+		List<Message> subHistory = null;
+		
+		try{
+			subHistory = fullHistory.subList(startRetrievingAt,
+					fullHistory.size());
+		}
+		catch(IndexOutOfBoundsException e){}
+		
+		if(subHistory == null || subHistory.size() == 0)
+			return null;
+		
+		return getMessagesWithConditions(subHistory, messageConditions,
+				shouldInvert);
+		
+	}
+	
+	private List<Message> getMessagesWithConditions(
+			List<Message> messageHistory,
+			List<Predicate<Message>> messageConditions, boolean shouldInvert){
+		
 		if(messageConditions == null)
-			return fullHistory;
+			return messageHistory;
 		
 		ArrayList<Message> messagesWithCondition = new ArrayList<>();
 		
 		boolean conditionsGateIsAnd = !hasParameter("or");
 		
 		//@formatter:off
-		fullHistory.forEach(message -> {
+		messageHistory.forEach(message -> {
 			
 			boolean shouldDelete = conditionsGateIsAnd;
 			
@@ -432,6 +573,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 					"Allows you to delete all of the bots messages.", false, 3,
 					"b", "bot"),
 			new ParametersHelp(
+					"Clears the commands issued to the bot. By default it clears the commands with the current prefix unless it is given a specific prefix to clear.",
+					true, 4, "c"),
+			new ParametersHelp(
 					"Inverts the condition applied to the command (example : using this in combination with "
 							+ formatParameter("s")
 							+ " would clear messages of everyone but yourself).",
@@ -439,6 +583,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 			new ParametersHelp(
 					"This makes the bot notify the text channel of what it cleared.",
 					false, "n", "notify"),
+			new ParametersHelp(
+					"Skips the confirmation and execute the clear command immediately.",
+					"f", "force"),
 			new ParametersHelp(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
 					false, "w", "wait"),
