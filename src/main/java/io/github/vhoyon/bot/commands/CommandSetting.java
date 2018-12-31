@@ -7,7 +7,7 @@ import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
-import io.github.vhoyon.vramework.utilities.settings.SettingField;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -95,7 +95,7 @@ public class CommandSetting extends BotCommand {
 			
 			if(parameterContent == null){
 				
-				SettingField<Object> settingField = getSettings().getField(
+				Setting<Object> settingField = getSettings().getField(
 						this.settingName);
 				
 				if(CommandSetting.this.shouldSwitchToDefault){

@@ -5,6 +5,7 @@ import io.github.vhoyon.bot.utilities.interfaces.*;
 import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
 
 import java.util.function.Consumer;
 
@@ -58,7 +59,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 *         {@link io.github.vhoyon.bot.app.CommandRouter
 	 *         Router}.
 	 */
-	public Setting getSettings(){
+	public SettingRepository getSettings(){
 		return getRouter().getSettings();
 	}
 	
@@ -73,7 +74,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 */
 	public <SettingValue> SettingValue setting(String settingName){
 		
-		Setting settings = this.getSettings();
+		SettingRepository settings = this.getSettings();
 		
 		Object value = settings.getField(settingName).getValue();
 		
@@ -132,7 +133,7 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	public void setSetting(String settingName, Object value,
 			Consumer<Object> onChange) throws BadFormatException{
 		
-		Setting settings = this.getSettings();
+		SettingRepository settings = this.getSettings();
 		
 		settings.save(settingName, value, onChange);
 		

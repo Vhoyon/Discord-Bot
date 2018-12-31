@@ -27,14 +27,15 @@ public interface Resources {
 		new Language("fr", "CA", "francais", "français", "fra", "french", "fr"),
 	};
 	
-	SettingField[] SETTINGS =
+	Setting[] SETTINGS =
 	{
 		new TextNotEmptyField("prefix", "PREFIX", PREFIX),
 		new CharField("param_prefix", "PARAMETER_PREFIX", PARAMETER_PREFIX),
 		new TextNotEmptyField("nickname", "NICKNAME", "Vhoyon"),
 		new BooleanField("confirm_stop", "SHOULD_CONFIRM_STOP", true),
 		new IntegerField("volume", "DEFAULT_VOLUME", 60, 0, 100),
-		new IntegerField("empty_drop_delay", "MUSIC_EMPTY_DISCONNECT_DELAY", 30000,0,Integer.MAX_VALUE)
+		new IntegerField("empty_drop_delay", "MUSIC_EMPTY_DISCONNECT_DELAY",
+				30000, 0, Integer.MAX_VALUE)
 	};
 	
 }

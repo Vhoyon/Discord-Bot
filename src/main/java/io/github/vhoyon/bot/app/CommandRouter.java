@@ -12,13 +12,12 @@ import io.github.vhoyon.vramework.abstracts.AbstractCommandRouter;
 import io.github.vhoyon.vramework.exceptions.NoCommandException;
 import io.github.vhoyon.vramework.interfaces.Command;
 import io.github.vhoyon.vramework.interfaces.Emojis;
-import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.modules.Audit;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -287,25 +286,23 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	 *         the associated buffer.
 	 * @since 0.9.0
 	 */
-	public Setting getSettings(){
+	public SettingRepository getSettings(){
 		
-		String textChannelKey = getEventDigger().getChannelKey();
-		
-		String settingsKey = Utils.buildKey(textChannelKey, BUFFER_SETTINGS);
+		String settingsKey = getEventDigger().getChannelKey(BUFFER_SETTINGS);
 		
 		boolean hasSettings = getBuffer().has(settingsKey);
 		
-		Setting settings;
+		SettingRepository settings;
 		
 		if(!hasSettings){
 			
-			settings = new Setting(getDictionary(), SETTINGS);
+			settings = new SettingRepository(getDictionary(), SETTINGS);
 			
 			getBuffer().push(settings, settingsKey);
 			
 		}
 		else{
-			settings = (Setting)getBuffer().get(settingsKey);
+			settings = (SettingRepository)getBuffer().get(settingsKey);
 		}
 		
 		return settings;
