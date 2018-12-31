@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Vhoyon/Discord-Bot.svg?branch=dev)](https://travis-ci.org/Vhoyon/Discord-Bot)
+[![Build Status](https://travis-ci.com/Vhoyon/Discord-Bot.svg?branch=dev)](https://travis-ci.com/Vhoyon/Discord-Bot)
 
 # Vhoyon's Discord Bot
 
