@@ -1,6 +1,6 @@
 package io.github.vhoyon.bot.commands;
 
-import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
+import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.errorHandling.BotError;
 
@@ -15,10 +15,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
  * @since v0.5.0
  * @author V-ed (Guillaume Marcoux)
  */
-public class CommandMusicList extends MusicCommands {
+public class CommandMusicList extends MusicCommand {
 	
 	@Override
-	public void action(){
+	public void musicAction(){
 		
 		if(!isPlaying()){
 			new BotError(this, lang("NoList", buildVCommand(MUSIC_PLAY

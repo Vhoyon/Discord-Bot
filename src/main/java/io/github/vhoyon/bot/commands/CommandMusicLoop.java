@@ -1,7 +1,7 @@
 package io.github.vhoyon.bot.commands;
 
 import io.github.vhoyon.bot.errorHandling.BotError;
-import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
+import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
@@ -17,10 +17,10 @@ import io.github.vhoyon.vramework.objects.ParametersHelp;
  * @since v0.6.0
  * @author Stephano Mehawej
  */
-public class CommandMusicLoop extends MusicCommands {
+public class CommandMusicLoop extends MusicCommand {
 	
 	@Override
-	public void action(){
+	public void musicAction(){
 		
 		if(!isPlaying()){
 			new BotError(this, lang("CommandMusicLoopNotPlaying"));

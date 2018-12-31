@@ -7,11 +7,13 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.entities.Guild;
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.vramework.interfaces.Utils;
+import net.dv8tion.jda.core.entities.Guild;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Handles all the {@link MusicPlayer} players that this bot has opened so far
@@ -22,12 +24,14 @@ import java.util.Map;
  * @since v0.4.0
  * @author Stephano Mehawej
  */
-public class MusicManager {
+public class MusicManager implements Utils {
 	
 	private static MusicManager musicManager;
 	
 	private final AudioPlayerManager manager = new DefaultAudioPlayerManager();
 	private final Map<String, MusicPlayer> players = new HashMap<>();
+	
+	private static Runnable onTracksEmpty;
 	
 	private MusicManager(){
 		AudioSourceManagers.registerRemoteSources(manager);
@@ -49,6 +53,14 @@ public class MusicManager {
 		
 		return musicManager;
 		
+	}
+	
+	public static boolean hasPlayersOnTracksEmptyLogic(){
+		return MusicManager.onTracksEmpty != null;
+	}
+	
+	public static void setPlayersOnTrackEmptyLogic(Runnable onTracksEmpty){
+		MusicManager.onTracksEmpty = onTracksEmpty;
 	}
 	
 	/**

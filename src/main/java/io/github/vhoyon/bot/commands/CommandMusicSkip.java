@@ -1,6 +1,6 @@
 package io.github.vhoyon.bot.commands;
 
-import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
+import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.utilities.music.MusicPlayer;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
@@ -29,10 +29,10 @@ import io.github.vhoyon.vramework.objects.ParametersHelp;
  * @since v0.5.0
  * @author V-ed (Guillaume Marcoux)
  */
-public class CommandMusicSkip extends MusicCommands {
+public class CommandMusicSkip extends MusicCommand {
 	
 	@Override
-	public void action(){
+	public void musicAction(){
 		
 		if(!isPlaying()){
 			new BotError(this, lang("NotPlaying"));

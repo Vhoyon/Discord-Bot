@@ -8,7 +8,7 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
-import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
+import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.utilities.music.MusicPlayer;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
@@ -47,7 +47,7 @@ import java.util.Random;
  * @since v0.5.0
  * @author V-ed (Guillaume Marcoux)
  */
-public class CommandMusicPlay extends MusicCommands {
+public class CommandMusicPlay extends MusicCommand {
 	
 	/**
 	 * Class that holds the values of a track to be played, tracking its name
@@ -67,7 +67,7 @@ public class CommandMusicPlay extends MusicCommands {
 	}
 	
 	@Override
-	public void action(){
+	public void musicAction(){
 		
 		if(!isConnectedToVoiceChannelMember()){
 			new BotError(this, lang("NotConnected"), true);

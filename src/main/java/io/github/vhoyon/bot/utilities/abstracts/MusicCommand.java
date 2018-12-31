@@ -2,9 +2,11 @@ package io.github.vhoyon.bot.utilities.abstracts;
 
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.bot.utilities.music.MusicManager;
 
 /**
- * Class that extends {@link io.github.vhoyon.bot.utilities.BotCommand BotCommand} that is used to
+ * Class that extends {@link io.github.vhoyon.bot.utilities.BotCommand
+ * BotCommand} that is used to
  * categorize all music commands. It adds few utilities that all music commands
  * might use.
  *
@@ -12,7 +14,27 @@ import io.github.vhoyon.bot.utilities.BotCommand;
  * @since v0.5.0
  * @author V-ed (Guillaume Marcoux)
  */
-public abstract class MusicCommands extends BotCommand {
+public abstract class MusicCommand extends BotCommand {
+	
+	@Override
+	public void action(){
+		
+		if(MusicManager.hasPlayersOnTracksEmptyLogic()){
+			
+			MusicManager.setPlayersOnTrackEmptyLogic(() -> {
+				
+				if(this.hasHumansLeftConnected())
+					this.sendInfoMessage("Disconnected due to inactivity");
+				
+			});
+			
+		}
+		
+		musicAction();
+		
+	}
+	
+	public abstract void musicAction();
 	
 	/**
 	 * Determines if the bot is connected or trying to connect to a
