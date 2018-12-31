@@ -2,6 +2,8 @@ package io.github.vhoyon.bot.commands;
 
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
+import io.github.vhoyon.bot.utilities.music.MusicManager;
+import io.github.vhoyon.bot.utilities.music.MusicPlayer;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
@@ -27,17 +29,11 @@ public class CommandMusicLoop extends MusicCommand {
 		}
 		else{
 			
-			if(this.hasMemory("MUSIC_LOOP")
-					&& (boolean)this.getMemory("MUSIC_LOOP")){
+			MusicPlayer player = MusicManager.get().getPlayer(this);
+			
+			if(player.isLooping()){
 				
-				forget("MUSIC_LOOP");
-				sendMessage("The loop has been stopped");
-				
-			}
-			else if(this.hasMemory("LOOP_ONCE")
-					&& (boolean)this.getMemory("LOOP_ONCE")){
-				
-				forget("LOOP_ONCE");
+				player.stopLooping();
 				sendMessage("The loop has been stopped");
 				
 			}
@@ -45,13 +41,13 @@ public class CommandMusicLoop extends MusicCommand {
 				
 				if(hasParameter("o", "one")){
 					
-					remember(true, "LOOP_ONCE");
+					player.setLoopingOne();
 					sendMessage("A Loop on the current song has been started.");
 					
 				}
 				else{
 					
-					remember(true, "MUSIC_LOOP");
+					player.setLoopingAll();
 					sendMessage("A loop on all the songs of the playlist has been started.");
 					
 				}
@@ -63,11 +59,8 @@ public class CommandMusicLoop extends MusicCommand {
 	}
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			MUSIC_LOOP
-		};
+	public Object getCalls(){
+		return MUSIC_LOOP;
 	}
 	
 	@Override

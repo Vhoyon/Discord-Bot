@@ -75,13 +75,16 @@ public class CommandMusicPlay extends MusicCommand {
 		else if(this.isPlaying()
 				&& !this.getConnectedVoiceChannelBot().equals(
 						this.getConnectedVoiceChannelMember())){
+			
 			sendInfoMessage("The bot is already playing in "
 					+ code(this.getConnectedVoiceChannelBot().getName())
 					+ ". Join that voice channel to listen to music");
+			
 		}
 		else{
 			
 			if(hasParameter("r")){
+				
 				if(this.isPlaying()){
 					new CommandConfirmed(this){
 						
@@ -100,6 +103,7 @@ public class CommandMusicPlay extends MusicCommand {
 				else{
 					playRandom();
 				}
+				
 			}
 			else{
 				
@@ -144,13 +148,15 @@ public class CommandMusicPlay extends MusicCommand {
 								
 							}
 							catch(IOException e){
-								sendMessage(lang("SongByStringFail"));
+								new BotError(this, lang("SongByStringFail"));
 							}
 							catch(IllegalStateException e){
 								Logger.log(
 										"Please setup your environment variable \"YOUTUBE_TOKEN\" to give users the ability to search using raw text!",
 										LogType.WARNING);
-								sendMessage("The owner of this bot did not setup his tokens correctly, please try again using a link!");
+								new BotError(
+										this,
+										"The owner of this bot did not setup his tokens correctly, please try again using a link!");
 							}
 							
 						}

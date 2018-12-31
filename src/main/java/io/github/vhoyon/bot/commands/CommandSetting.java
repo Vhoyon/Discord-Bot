@@ -262,20 +262,22 @@ public class CommandSetting extends BotCommand {
 		new SettingChanger<Integer>("volume"){
 			@Override
 			public void onSuccess(Integer volume){
-				if(MusicManager.get().hasPlayer(this.getGuild())){
-					MusicManager.get().getPlayer(this).setVolume(volume);
-				}
+				MusicManager.get().onPlayerPresent(this.getGuild(),
+						(player) -> player.setVolume(volume));
 				
 				sendMessage("The default volume will now be " + code(volume)
 						+ "!");
 			}
 		};
+		
 		new SettingChanger<Integer>("empty_drop_delay"){
 			@Override
 			public void onSuccess(Integer delay){
+				MusicManager.get().onPlayerPresent(this.getGuild(),
+						(player) -> player.setEmptyDropDelay(delay));
 				
-				sendMessage("The default disconnect delay for the bot when the music player is empty is now " + code(delay)
-					+ "!");
+				sendMessage("The default disconnect delay for the bot when the music player is empty is now "
+						+ code(delay) + "!");
 			}
 		};
 		
@@ -323,9 +325,10 @@ public class CommandSetting extends BotCommand {
 							+ code(getSettings().getField("volume")
 									.getDefaultValue()) + ".", "volume"),
 			new ParametersHelp(
-				"Changes the bot's default disconnect time when the music player is empty. The default is "
-					+ code(getSettings().getField("empty_drop_delay")
-					.getDefaultValue()) + "ms.", "empty_drop_delay"),
+					"Changes the bot's default disconnect time when the music player is empty. The default is "
+							+ code(getSettings().getField("empty_drop_delay")
+									.getDefaultValue()) + "ms.",
+					"empty_drop_delay"),
 			new ParametersHelp(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
 					false, "d", "default")
