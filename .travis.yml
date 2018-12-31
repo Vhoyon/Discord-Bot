@@ -2,19 +2,20 @@ language: java
 
 jdk:
   - oraclejdk8
-  
+
 sudo: false
 
-script: mvn clean verify
+env:
+  global:
+    - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+install:
+  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+script:
+  - mvn clean verify -B
 
 notifications:
   email:
     on_success: never
     on_failure: change
-    
-branches:
-  only:
-    - master
-    - dev
-    - /^release.*$/
-    - /^hotfix.*$/
