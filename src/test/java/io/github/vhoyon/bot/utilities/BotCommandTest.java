@@ -1,7 +1,12 @@
 package io.github.vhoyon.bot.utilities;
 
 import io.github.vhoyon.bot.app.CommandRouter;
+import io.github.vhoyon.vramework.objects.Request;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.utilities.settings.IntegerField;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
+import io.github.vhoyon.vramework.utilities.settings.TextField;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,11 +14,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import utils.MockFactory;
-import io.github.vhoyon.vramework.objects.Request;
-import io.github.vhoyon.vramework.utilities.settings.IntegerField;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
-import io.github.vhoyon.vramework.utilities.settings.SettingField;
-import io.github.vhoyon.vramework.utilities.settings.TextField;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -83,8 +83,8 @@ class BotCommandTest implements DiscordFormatter {
 	void testGetSettingsNotChanged(){
 		String defValue = "defValue";
 		
-		SettingField testField = new TextField("test", "ENV_TEST", defValue);
-		Setting settings = new Setting(testField);
+		Setting testField = new TextField("test", "ENV_TEST", defValue);
+		SettingRepository settings = new SettingRepository(testField);
 		
 		CommandRouter mockRouter = MockFactory.createRouter(settings);
 		
@@ -95,8 +95,8 @@ class BotCommandTest implements DiscordFormatter {
 	
 	@Test
 	void testGetSettingsChanged(){
-		SettingField testField = new TextField("test", "ENV_TEST", "testValue");
-		Setting settings = new Setting(testField);
+		Setting testField = new TextField("test", "ENV_TEST", "testValue");
+		SettingRepository settings = new SettingRepository(testField);
 		
 		CommandRouter mockRouter = MockFactory.createRouter(settings);
 		
@@ -111,8 +111,8 @@ class BotCommandTest implements DiscordFormatter {
 	
 	@Test
 	void testGetSettingsChangedCallback(){
-		SettingField testField = new TextField("test", "ENV_TEST", "testValue");
-		Setting settings = new Setting(testField);
+		Setting testField = new TextField("test", "ENV_TEST", "testValue");
+		SettingRepository settings = new SettingRepository(testField);
 		
 		CommandRouter mockRouter = MockFactory.createRouter(settings);
 		
@@ -132,11 +132,11 @@ class BotCommandTest implements DiscordFormatter {
 	
 	@Test
 	void testGetSettingsAutoCast(){
-		SettingField testFieldText = new TextField("testText", "ENV_TEST_TEXT",
+		Setting testFieldText = new TextField("testText", "ENV_TEST_TEXT",
 				"testValue");
-		SettingField testFieldInt = new IntegerField("testInt", "ENV_TEST_INT",
+		Setting testFieldInt = new IntegerField("testInt", "ENV_TEST_INT",
 				2);
-		Setting settings = new Setting(testFieldText, testFieldInt);
+		SettingRepository settings = new SettingRepository(testFieldText, testFieldInt);
 		
 		CommandRouter mockRouter = MockFactory.createRouter(settings);
 		

@@ -2,7 +2,7 @@ package utils;
 
 import io.github.vhoyon.bot.app.CommandRouter;
 import io.github.vhoyon.vramework.objects.Request;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
 
 import static org.mockito.Mockito.*;
 
@@ -15,7 +15,7 @@ public class MockFactory {
 		return request;
 	}
 	
-	public static CommandRouter createRouter(Setting settings){
+	public static CommandRouter createRouter(SettingRepository settings){
 		CommandRouter router = mock(CommandRouter.class);
 		
 		doReturn(settings).when(router).getSettings();
