@@ -1,7 +1,8 @@
 package io.github.vhoyon.bot.utilities;
 
 import io.github.vhoyon.bot.app.CommandRouter;
-import io.github.vhoyon.bot.utilities.interfaces.*;
+import io.github.vhoyon.bot.utilities.interfaces.Commands;
+import io.github.vhoyon.bot.utilities.interfaces.Resources;
 import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
@@ -65,9 +66,8 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	
 	/**
 	 * Gets the value of the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingField
-	 * SettingField} associated to the name of the parameter {@code settingName}
-	 * .
+	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * to the name of the parameter {@code settingName} .
 	 *
 	 * @version 1.0
 	 * @since v0.8.0
