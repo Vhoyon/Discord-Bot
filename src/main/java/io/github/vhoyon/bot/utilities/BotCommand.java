@@ -50,18 +50,36 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting
-	 * Setting} object from
-	 * this command's router.
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from this command's router.
 	 *
-	 * @since v0.8.0
-	 * @see io.github.vhoyon.bot.app.CommandRouter#getSettings()
 	 * @return The {@link Setting} object of this
 	 *         {@link io.github.vhoyon.bot.app.CommandRouter
 	 *         Router}.
+	 * @since v0.8.0
+	 * @see io.github.vhoyon.bot.app.CommandRouter#getSettings()
 	 */
 	public SettingRepository getSettings(){
 		return getRouter().getSettings();
+	}
+	
+	/**
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * object from this router.
+	 * 
+	 * @param settingName
+	 *            The name of the setting to get from the SettingRepository of
+	 *            this Router.
+	 * @return The Setting object, generalized to Object to include all Fields
+	 *         possible. The burden of casting to the right type goes to you.<br>
+	 *         If you want to get the value and have it casted automatically to
+	 *         your own return value, please see {@link #setting(String)}.
+	 * @since v0.14.0
+	 * @see #setting(String)
+	 */
+	public Setting<Object> getSetting(String settingName){
+		return this.getSettings().getField(settingName);
 	}
 	
 	/**
@@ -69,17 +87,16 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
 	 * to the name of the parameter {@code settingName} .
 	 *
-	 * @version 1.0
+	 * @param settingName
+	 *            The name of the Setting to get the value from.
+	 * @param <SettingValue>
+	 *            The type of the value to be casted automatically to.
+	 * @return The value of the Setting with the name {@code settingName}.
 	 * @since v0.8.0
 	 */
 	public <SettingValue> SettingValue setting(String settingName){
-		
-		SettingRepository settings = this.getSettings();
-		
-		Object value = settings.getField(settingName).getValue();
-		
+		Object value = this.getSetting(settingName).getValue();
 		return (SettingValue)value;
-		
 	}
 	
 	/**
