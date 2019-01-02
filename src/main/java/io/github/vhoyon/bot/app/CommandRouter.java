@@ -17,8 +17,7 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -276,38 +275,9 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 		
 	}
 	
-	/**
-	 * Gets the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
-	 * object from the Buffer for the TextChannel of this Router or create it if
-	 * there is currently none in the Buffer.
-	 *
-	 * @return The
-	 *         {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
-	 *         object from the associated buffer.
-	 * @since 0.9.0
-	 */
-	public SettingRepository getSettings(){
-		return getSettings(AbstractBotCommand.BufferLevel.CHANNEL);
-	}
-	
-	public SettingRepository getSettings(AbstractBotCommand.BufferLevel level){
-		
-		SettingRepository repo;
-		
-		switch(level){
-		default:
-		case USER:
-		case CHANNEL:
-			repo = SettingRepositoryRepository.getSettingRepository(
-					getEventDigger().getChannel(), SETTINGS);
-		case SERVER:
-			repo = SettingRepositoryRepository.getSettingRepository(
-					getEventDigger().getGuild(), SETTINGS);
-		}
-		
-		return repo;
-		
+	@Override
+	protected Setting<Object>[] getDefaultSettings(){
+		return SETTINGS;
 	}
 	
 }
