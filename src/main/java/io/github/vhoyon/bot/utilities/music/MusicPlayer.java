@@ -1,11 +1,13 @@
 package io.github.vhoyon.bot.utilities.music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import io.github.vhoyon.vramework.utilities.TimerManager;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 
 /**
  * Handles the playback of tracks added to the {@link AudioListener} object.
@@ -23,9 +25,17 @@ public class MusicPlayer {
 	 */
 	public final static int MAX_VOLUME = 20;
 	
+	public final static int DEFAULT_VOLUME = 60;
+	
 	private final AudioPlayer audioPlayer;
 	private final AudioListener listener;
-	private final BotCommand command;
+	private final Guild guild;
+	
+	private String lastTrackURI;
+	private boolean shouldLoopOne;
+	private boolean shouldLoopAll;
+	
+	private int emptyDropDelay;
 	
 	/**
 	 * Creates a MusicPlayer that sets its initial volume to the setting "
@@ -40,14 +50,30 @@ public class MusicPlayer {
 	 * @since v0.4.0
 	 */
 	public MusicPlayer(AudioPlayer audioPlayer, BotCommand command){
+		this(audioPlayer, command.getGuild(), command.setting("volume"));
+	}
+	
+	public MusicPlayer(AudioPlayer audioPlayer, Guild guild){
+		this(audioPlayer, guild, null);
+	}
+	
+	public MusicPlayer(AudioPlayer audioPlayer, Guild guild,
+			Runnable onTracksEmpty){
+		this(audioPlayer, guild, DEFAULT_VOLUME, onTracksEmpty);
+	}
+	
+	public MusicPlayer(AudioPlayer audioPlayer, Guild guild, int defaultVolume){
+		this(audioPlayer, guild, defaultVolume, null);
+	}
+	
+	public MusicPlayer(AudioPlayer audioPlayer, Guild guild, int defaultVolume,
+			Runnable onTracksEmpty){
 		this.audioPlayer = audioPlayer;
-		this.command = command;
-		
-		int defaultVolume = command.setting("volume");
+		this.guild = guild;
 		
 		this.setVolume(defaultVolume);
 		
-		this.listener = new AudioListener(this);
+		this.listener = new AudioListener(this, onTracksEmpty);
 		this.audioPlayer.addListener(this.listener);
 	}
 	
@@ -76,23 +102,58 @@ public class MusicPlayer {
 	 * Gets the Guild of this command.
 	 *
 	 * @return This command's {@link net.dv8tion.jda.core.entities.Guild Guild}
-	 *         (using {@link utilities.BotCommand#getGuild()
-	 *         BotCommand.getGuild()}).
+	 *         (using {@link BotCommand#getGuild()}).
 	 * @since v0.4.0
 	 */
 	public Guild getGuild(){
-		return this.getCommand().getGuild();
+		return this.guild;
 	}
 	
-	/**
-	 * Gets the command associated with this player
-	 *
-	 * @return The {@link utilities.BotCommand BotCommand} associated with this
-	 *         player.
-	 * @since v0.4.0
-	 */
-	public BotCommand getCommand(){
-		return this.command;
+	public String getLatestTrackURI(){
+		return this.lastTrackURI;
+	}
+	
+	public void setLatestTrackURI(String uri){
+		this.lastTrackURI = uri;
+	}
+	
+	public boolean isLooping(){
+		return this.isLoopingOne() || this.isLoopingAll();
+	}
+	
+	public boolean isLoopingOne(){
+		return this.shouldLoopOne;
+	}
+	
+	public void setLoopingOne(){
+		this.shouldLoopOne = true;
+		this.shouldLoopAll = false;
+	}
+	
+	public boolean isLoopingAll(){
+		return this.shouldLoopAll;
+	}
+	
+	public void setLoopingAll(){
+		this.shouldLoopOne = false;
+		this.shouldLoopAll = true;
+	}
+	
+	public void stopLooping(){
+		this.shouldLoopOne = false;
+		this.shouldLoopAll = false;
+	}
+	
+	public int getEmptyDropDelay(){
+		return this.emptyDropDelay;
+	}
+	
+	public void setEmptyDropDelay(int emptyDropDelay){
+		this.emptyDropDelay = emptyDropDelay;
+	}
+	
+	public void setOnTracksEmpty(Runnable onTracksEmpty){
+		this.getListener().setOnTracksEmpty(onTracksEmpty);
 	}
 	
 	/**
@@ -110,8 +171,8 @@ public class MusicPlayer {
 	 * called automatically.
 	 *
 	 * @param track
-	 *            An {@link com.sedmelluq.discord.lavaplayer.track.AudioTrack
-	 *            AudioTrack} to play from.
+	 *            An {@link com.sedmelluq.discord.lavaplayer.track.AudioTrack}
+	 *            to play from.
 	 * @since v0.4.0
 	 */
 	public synchronized void playTrack(AudioTrack track){
@@ -180,8 +241,8 @@ public class MusicPlayer {
 	/**
 	 * Get the connected VoiceChannel of this player.
 	 *
-	 * @return The {@link net.dv8tion.jda.core.entities.VoiceChannel
-	 *         VoiceChannel} that is being sent music to.
+	 * @return The {@link net.dv8tion.jda.core.entities.VoiceChannel} that is
+	 *         being sent music to.
 	 * @since v0.4.0
 	 */
 	public VoiceChannel getConnectedChannel(){
@@ -192,8 +253,8 @@ public class MusicPlayer {
 	 * Gets the status of wheter the player (bot) is connected to a VoiceChannel
 	 *
 	 * @return {@code true} if the player (bot) is connected to a
-	 *         {@link net.dv8tion.jda.core.entities.VoiceChannel VoiceChannel},
-	 *         {@code false} otherwise.
+	 *         {@link net.dv8tion.jda.core.entities.VoiceChannel}, {@code false}
+	 *         otherwise.
 	 * @since v0.4.0
 	 */
 	public boolean isConnectedToVoiceChannel(){
@@ -215,7 +276,7 @@ public class MusicPlayer {
 	 * There is a formula applied to it where the volume is transformed to
 	 * behave like a percentage : therefore, the volume is divided by <i><u>100
 	 * / {@value #MAX_VOLUME}</u></i> ({@value #MAX_VOLUME} being taken from the
-	 * static variable {@code MusicPlayer.MAX_VOLUME}).
+	 * static variable {@link MusicPlayer#MAX_VOLUME}).
 	 *
 	 * @param volume
 	 *            Integer that represents the volume in percentage of

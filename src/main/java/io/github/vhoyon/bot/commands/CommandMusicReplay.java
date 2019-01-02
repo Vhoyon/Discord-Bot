@@ -1,6 +1,6 @@
 package io.github.vhoyon.bot.commands;
 
-import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
+import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 
 /**
@@ -11,10 +11,10 @@ import io.github.vhoyon.bot.utilities.music.MusicManager;
  * @since v0.9.0
  * @author Stephano Mehawej
  */
-public class CommandMusicReplay extends MusicCommands {
+public class CommandMusicReplay extends MusicCommand {
 	
 	@Override
-	public void action(){
+	public void musicAction(){
 		
 		if(!hasMemory("LATEST_SONG")){
 			sendMessage(lang("NoPreviousSong"));

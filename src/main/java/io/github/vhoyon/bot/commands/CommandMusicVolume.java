@@ -3,7 +3,7 @@ package io.github.vhoyon.bot.commands;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.bot.errorHandling.BotError;
-import io.github.vhoyon.bot.utilities.abstracts.MusicCommands;
+import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 
 /**
@@ -23,10 +23,10 @@ import io.github.vhoyon.bot.utilities.music.MusicManager;
  * @since v0.5.0
  * @author V-ed (Guillaume Marcoux)
  */
-public class CommandMusicVolume extends MusicCommands {
+public class CommandMusicVolume extends MusicCommand {
 	
 	@Override
-	public void action(){
+	public void musicAction(){
 		
 		String content = getContent();
 		

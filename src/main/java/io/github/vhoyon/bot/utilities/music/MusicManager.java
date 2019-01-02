@@ -7,11 +7,13 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.entities.Guild;
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.vramework.interfaces.Utils;
+import net.dv8tion.jda.core.entities.Guild;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Handles all the {@link MusicPlayer} players that this bot has opened so far
@@ -22,12 +24,14 @@ import java.util.Map;
  * @since v0.4.0
  * @author Stephano Mehawej
  */
-public class MusicManager {
+public class MusicManager implements Utils {
 	
 	private static MusicManager musicManager;
 	
 	private final AudioPlayerManager manager = new DefaultAudioPlayerManager();
 	private final Map<String, MusicPlayer> players = new HashMap<>();
+	
+	private static Runnable onTracksEmpty;
 	
 	private MusicManager(){
 		AudioSourceManagers.registerRemoteSources(manager);
@@ -51,6 +55,18 @@ public class MusicManager {
 		
 	}
 	
+	public static void destroy(){
+		musicManager = null;
+	}
+	
+	public static boolean hasPlayersOnTracksEmptyLogic(){
+		return MusicManager.onTracksEmpty != null;
+	}
+	
+	public static void setPlayersOnTrackEmptyLogic(Runnable onTracksEmpty){
+		MusicManager.onTracksEmpty = onTracksEmpty;
+	}
+	
 	/**
 	 * Determines if the MusicManager has a player for the Guild given in the
 	 * parameters.
@@ -66,6 +82,12 @@ public class MusicManager {
 		return players.containsKey(guild.getId());
 	}
 	
+	public synchronized void onPlayerPresent(Guild guild,
+			Consumer<MusicPlayer> onPlayerPresent){
+		if(hasPlayer(guild))
+			onPlayerPresent.accept(getPlayer(guild));
+	}
+	
 	/**
 	 * Search for a player given the context of the BotCommand added a
 	 * parameter.
@@ -78,12 +100,41 @@ public class MusicManager {
 	 * @since v0.4.0
 	 */
 	public synchronized MusicPlayer getPlayer(BotCommand command){
+		return this.getPlayer(command.getGuild(),
+				command.setting("empty_drop_delay"));
+	}
+	
+	/**
+	 * Search for a player given the context of the Guild added a
+	 * parameter.
+	 * 
+	 * @param guild
+	 *            The Guild to get the context from.
+	 * @return The {@link MusicPlayer} that is associated with the context of
+	 *         the Guild (mostly the VoiceChannel) and if there is none,
+	 *         creates a new MusicPlayer, store this new player and return it.
+	 * @since v0.13.0
+	 */
+	public synchronized MusicPlayer getPlayer(Guild guild){
+		return this.getPlayer(guild, 0);
+	}
+	
+	public synchronized MusicPlayer getPlayer(Guild guild,
+			int defaultEmptyDropDelay){
 		
-		if(!hasPlayer(command.getGuild()))
-			players.put(command.getGuild().getId(),
-					new MusicPlayer(manager.createPlayer(), command));
+		if(!hasPlayer(guild)){
+			
+			MusicPlayer newPLayer = new MusicPlayer(manager.createPlayer(),
+					guild);
+			
+			newPLayer.setEmptyDropDelay(defaultEmptyDropDelay);
+			newPLayer.setOnTracksEmpty(onTracksEmpty);
+			
+			players.put(guild.getId(), newPLayer);
+			
+		}
 		
-		return players.get(command.getGuild().getId());
+		return players.get(guild.getId());
 		
 	}
 	
@@ -97,25 +148,47 @@ public class MusicManager {
 	 * @since v0.4.0
 	 */
 	public synchronized void emptyPlayer(BotCommand command){
-		emptyPlayer(command, true);
+		this.emptyPlayer(command, true);
 	}
 	
 	public synchronized void emptyPlayer(BotCommand command, boolean disconnect){
+		
 		if(this.hasPlayer(command.getGuild())){
-
+			
 			MusicPlayer player = this.getPlayer(command);
-
+			
 			player.getAudioPlayer().destroy();
-
-			if(player.isConnectedToVoiceChannel() && disconnect){
+			
+			if(disconnect && player.isConnectedToVoiceChannel()){
 				player.closeConnection();
 			}
-
+			
 			players.remove(command.getGuildId());
-
-//			command.disconnect();
-
+			
 		}
+		
+	}
+	
+	public synchronized void emptyPlayer(Guild guild){
+		emptyPlayer(guild, true);
+	}
+	
+	public synchronized void emptyPlayer(Guild guild, boolean disconnect){
+		
+		if(this.hasPlayer(guild)){
+			
+			MusicPlayer player = this.getPlayer(guild);
+			
+			player.getAudioPlayer().destroy();
+			
+			if(disconnect && player.isConnectedToVoiceChannel()){
+				player.closeConnection();
+			}
+			
+			players.remove(guild.getId());
+			
+		}
+		
 	}
 	
 	/**
@@ -151,6 +224,10 @@ public class MusicManager {
 	 */
 	public void loadTrack(final BotCommand command, final String source){
 		this.loadTrack(command, source, null);
+	}
+	
+	public void loadTrack(final Guild guild, final String source){
+		this.loadTrack(guild, source, null, null, null, null, null);
 	}
 	
 	/**
@@ -197,22 +274,79 @@ public class MusicManager {
 	public void loadTrack(final BotCommand command, final String source,
 			Runnable onSuccessLoadBeforePlay){
 		
-		MusicPlayer player = getPlayer(command);
+		this.loadTrack(
+				command.getGuild(),
+				source,
+				command.setting("empty_drop_delay"),
+				onSuccessLoadBeforePlay,
+				(track) -> {
+					command.sendMessage(command.lang("MusicManagerTrackLoaded",
+							command.code(track.getInfo().title)));
+				},
+				(playlist) -> {
+					
+					StringBuilder builder = new StringBuilder();
+					
+					builder.append(
+							command.lang("MusicManagerPlaylistLoaded",
+									command.code(playlist.getName()))).append(
+							"\n");
+					
+					String playlistLine = command
+							.lang("MusicManagerPlaylistAddedTrackInfo");
+					
+					playlist.getTracks()
+							.forEach(
+									(track) -> builder.append("\n").append(
+											format(playlistLine, track
+													.getPosition(),
+													command.code(track
+															.getInfo().title))));
+					
+					command.sendMessage(builder.toString());
+					
+				}, () -> {
+					command.sendMessage(command.lang("MusicManagerNoMatch",
+							command.code(source)));
+				}, (exception) -> {
+					command.sendMessage(command.lang("MusicManagerLoadFailed",
+							command.code(exception.getMessage())));
+				});
 		
-		command.getGuild().getAudioManager()
-				.setSendingHandler(player.getAudioHandler());
+	}
+	
+	public void loadTrack(final Guild guild, final String source,
+			Runnable onSuccessLoadBeforePlay,
+			Consumer<AudioTrack> onTrackLoaded,
+			Consumer<AudioPlaylist> onPlaylistLoaded, Runnable onNoMatch,
+			Consumer<FriendlyException> onLoadFailed){
+		this.loadTrack(guild, source, 0, onSuccessLoadBeforePlay,
+				onTrackLoaded, onPlaylistLoaded, onNoMatch, onLoadFailed);
+	}
+	
+	public void loadTrack(final Guild guild, final String source,
+			int defaultEmptyDropDelay, Runnable onSuccessLoadBeforePlay,
+			Consumer<AudioTrack> onTrackLoaded,
+			Consumer<AudioPlaylist> onPlaylistLoaded, Runnable onNoMatch,
+			Consumer<FriendlyException> onLoadFailed){
+		
+		MusicPlayer player = getPlayer(guild, defaultEmptyDropDelay);
+		
+		guild.getAudioManager().setSendingHandler(player.getAudioHandler());
 		
 		manager.loadItemOrdered(player, source, new AudioLoadResultHandler(){
 			
 			@Override
 			public void trackLoaded(AudioTrack track){
+				
 				if(onSuccessLoadBeforePlay != null)
 					onSuccessLoadBeforePlay.run();
 				
-				command.sendMessage(command.lang("MusicManagerTrackLoaded",
-						command.code(track.getInfo().title)));
-				
 				player.playTrack(track);
+				
+				if(onTrackLoaded != null)
+					onTrackLoaded.accept(track);
+				
 			}
 			
 			@Override
@@ -221,37 +355,23 @@ public class MusicManager {
 				if(onSuccessLoadBeforePlay != null)
 					onSuccessLoadBeforePlay.run();
 				
-				StringBuilder builder = new StringBuilder();
+				playlist.getTracks().forEach(player::playTrack);
 				
-				builder.append(
-						command.lang("MusicManagerPlaylistLoaded",
-								command.code(playlist.getName()))).append("\n");
-				
-				for(int i = 0; i < playlist.getTracks().size(); i++){
-					AudioTrack track = playlist.getTracks().get(i);
-					
-					builder.append("\n").append(
-							command.lang("MusicManagerPlaylistAddedTrackInfo",
-									(i + 1),
-									command.code(track.getInfo().title)));
-					
-					player.playTrack(track);
-				}
-				
-				command.sendMessage(builder.toString());
+				if(onPlaylistLoaded != null)
+					onPlaylistLoaded.accept(playlist);
 				
 			}
 			
 			@Override
 			public void noMatches(){
-				command.sendMessage(command.lang("MusicManagerNoMatch",
-						command.code(source)));
+				if(onNoMatch != null)
+					onNoMatch.run();
 			}
 			
 			@Override
 			public void loadFailed(FriendlyException exception){
-				command.sendMessage(command.lang("MusicManagerLoadFailed",
-						command.code(exception.getMessage())));
+				if(onLoadFailed != null)
+					onLoadFailed.accept(exception);
 			}
 			
 		});

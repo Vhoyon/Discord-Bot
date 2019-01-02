@@ -27,8 +27,19 @@ public class AudioListener extends AudioEventAdapter {
 	private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue<>();
 	private final MusicPlayer player;
 	
+	private Runnable onTracksEmpty;
+	
 	public AudioListener(MusicPlayer player){
+		this(player, null);
+	}
+	
+	public AudioListener(MusicPlayer player, Runnable onTracksEmpty){
 		this.player = player;
+		this.setOnTracksEmpty(onTracksEmpty);
+	}
+	
+	public void setOnTracksEmpty(Runnable onTracksEmpty){
+		this.onTracksEmpty = onTracksEmpty;
 	}
 	
 	/**
@@ -77,16 +88,14 @@ public class AudioListener extends AudioEventAdapter {
 	public void onTrackEnd(AudioPlayer player, AudioTrack track,
 			AudioTrackEndReason endReason){
 		
-		this.player.getCommand().remember(track.getInfo().uri, "LATEST_SONG");
+		this.player.setLatestTrackURI(track.getInfo().uri);
 		
-		if(this.player.getCommand().hasMemory("LOOP_ONCE")
-				&& (boolean)this.player.getCommand().getMemory("LOOP_ONCE")){
+		if(this.player.isLoopingOne()){
 			player.playTrack(track.makeClone());
 		}
 		else if(endReason.mayStartNext){
 			
-			if((this.player.getCommand().hasMemory("MUSIC_LOOP") && (boolean)this.player
-					.getCommand().getMemory("MUSIC_LOOP"))){
+			if(this.player.isLoopingAll()){
 				tracks.add(track.makeClone());
 				nextTrack();
 			}
@@ -97,21 +106,26 @@ public class AudioListener extends AudioEventAdapter {
 				}
 				else{
 					
-					TimerManager.schedule(
-							"noMusicDelay",
-							this.player.getCommand()
-									.setting("empty_drop_delay"),
-							() -> {
-								
-								if(this.player.getCommand()
-										.hasHumansLeftConnected())
-									this.player.getCommand().sendInfoMessage(
-											"Disconnected due to inactivity");
-								
-								MusicManager.get().emptyPlayer(
-										this.player.getCommand());
-								
-							});
+					int emptyDropDelay = this.player.getEmptyDropDelay();
+					
+					Runnable actionsWhenEmpty = () -> {
+						
+						if(onTracksEmpty != null)
+							onTracksEmpty.run();
+						
+						MusicManager.get().emptyPlayer(this.player.getGuild());
+						
+					};
+					
+					if(emptyDropDelay <= 0){
+						actionsWhenEmpty.run();
+					}
+					else{
+						
+						TimerManager.schedule("noMusicDelay", emptyDropDelay,
+								actionsWhenEmpty);
+						
+					}
 					
 				}
 				
