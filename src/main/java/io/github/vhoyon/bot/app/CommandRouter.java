@@ -18,6 +18,7 @@ import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -276,36 +277,36 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting
-	 * Setting} object from
-	 * the Buffer for the TextChannel of this Router or create it if there is
-	 * currently none in the Buffer.
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from the Buffer for the TextChannel of this Router or create it if
+	 * there is currently none in the Buffer.
 	 *
-	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting
-	 *         Setting} object from
-	 *         the associated buffer.
+	 * @return The
+	 *         {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 *         object from the associated buffer.
 	 * @since 0.9.0
 	 */
 	public SettingRepository getSettings(){
+		return getSettings(AbstractBotCommand.BufferLevel.CHANNEL);
+	}
+	
+	public SettingRepository getSettings(AbstractBotCommand.BufferLevel level){
 		
-		String settingsKey = getEventDigger().getChannelKey(BUFFER_SETTINGS);
+		SettingRepository repo;
 		
-		boolean hasSettings = getBuffer().has(settingsKey);
-		
-		SettingRepository settings;
-		
-		if(!hasSettings){
-			
-			settings = new SettingRepository(getDictionary(), SETTINGS);
-			
-			getBuffer().push(settings, settingsKey);
-			
+		switch(level){
+		default:
+		case USER:
+		case CHANNEL:
+			repo = SettingRepositoryRepository.getSettingRepository(
+					getEventDigger().getChannel(), SETTINGS);
+		case SERVER:
+			repo = SettingRepositoryRepository.getSettingRepository(
+					getEventDigger().getGuild(), SETTINGS);
 		}
-		else{
-			settings = (SettingRepository)getBuffer().get(settingsKey);
-		}
 		
-		return settings;
+		return repo;
 		
 	}
 	
