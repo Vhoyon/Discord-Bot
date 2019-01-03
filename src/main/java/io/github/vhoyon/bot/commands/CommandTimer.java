@@ -1,5 +1,6 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.interfaces.PartiallyParallelRunnable;
@@ -9,7 +10,6 @@ import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.TimerManager;
-import io.github.ved.jsanitizers.IntegerSanitizer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -191,7 +191,11 @@ public class CommandTimer extends BotCommand implements Stoppable,
 		Object handler = new Object();
 		
 		TimerManager.schedule("CommandTimer" + getKey(), totalTime * 1000,
-				() -> {}, handler);
+				null, () -> {
+					synchronized(handler){
+						handler.notifyAll();
+					}
+				});
 		
 		synchronized(handler){
 			handler.wait();
