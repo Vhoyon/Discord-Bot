@@ -281,6 +281,14 @@ public class CommandSetting extends BotCommand {
 			}
 		};
 		
+		new SettingChanger<Integer>("alone_drop_delay"){
+			@Override
+			public void onSuccess(Integer delay){
+				sendMessage("The default disconnect delay for the bot when he gets alone is now "
+						+ code(delay) + "!");
+			}
+		};
+		
 	}
 	
 	@Override
@@ -329,6 +337,11 @@ public class CommandSetting extends BotCommand {
 							+ code(getSettings().getField("empty_drop_delay")
 									.getDefaultValue()) + "ms.",
 					"empty_drop_delay"),
+			new ParametersHelp(
+					"Changes the bot's default disconnect time when the bot is not with humans anymore. The default is "
+							+ code(getSettings().getField("alone_drop_delay")
+									.getDefaultValue()) + "ms.",
+					"alone_drop_delay"),
 			new ParametersHelp(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
 					false, "d", "default")

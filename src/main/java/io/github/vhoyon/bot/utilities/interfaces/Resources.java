@@ -35,7 +35,9 @@ public interface Resources {
 		new BooleanField("confirm_stop", "SHOULD_CONFIRM_STOP", true),
 		new IntegerField("volume", "DEFAULT_VOLUME", 60, 0, 100),
 		new IntegerField("empty_drop_delay", "MUSIC_EMPTY_DISCONNECT_DELAY",
-				30000, 0, Integer.MAX_VALUE)
+				30000, 0, Integer.MAX_VALUE),
+		new IntegerField("alone_drop_delay", "MUSIC_ALONE_DISCONNECT_DELAY",
+				15000, 0, Integer.MAX_VALUE),
 	};
 	
 }
