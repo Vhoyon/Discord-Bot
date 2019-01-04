@@ -182,20 +182,9 @@ public class CommandSetting extends BotCommand {
 		
 		this.setupSettings();
 		
-		boolean hasAtLeastOneSetting = false;
-		
-		for(SettingChanger<?> setting : settings){
-			
-			if(setting.isPresent()){
-				
-				setting.action();
-				
-				if(!hasAtLeastOneSetting)
-					hasAtLeastOneSetting = true;
-				
-			}
-			
-		}
+		boolean hasAtLeastOneSetting = settings.stream()
+				.filter(SettingChanger::isPresent).peek(SettingChanger::action)
+				.count() > 0;
 		
 		if(!hasAtLeastOneSetting){
 			new BotError(
