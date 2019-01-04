@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.objects.Buffer;
 import net.dv8tion.jda.core.entities.Guild;
 
 import java.util.HashMap;
@@ -25,8 +26,6 @@ import java.util.function.Consumer;
  * @author Stephano Mehawej
  */
 public class MusicManager implements Utils {
-	
-	private static MusicManager musicManager;
 	
 	private final AudioPlayerManager manager = new DefaultAudioPlayerManager();
 	private final Map<String, MusicPlayer> players = new HashMap<>();
@@ -46,17 +45,11 @@ public class MusicManager implements Utils {
 	 * @since v0.4.0
 	 */
 	public static MusicManager get(){
-		
-		if(musicManager == null){
-			musicManager = new MusicManager();
-		}
-		
-		return musicManager;
-		
+		return Buffer.getSingleton(MusicManager.class, MusicManager::new);
 	}
 	
 	public static void destroy(){
-		musicManager = null;
+		Buffer.removeSingleton(MusicManager.class);
 	}
 	
 	public static boolean hasPlayersOnTracksEmptyLogic(){
