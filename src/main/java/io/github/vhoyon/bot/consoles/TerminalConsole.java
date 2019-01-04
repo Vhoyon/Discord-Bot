@@ -99,6 +99,7 @@ public abstract class TerminalConsole extends AbstractTerminalConsole {
 	
 	@Override
 	public void onExit(){
+		super.onExit();
 		Logger.log("\nThanks for using the bot!", false);
 	}
 	
