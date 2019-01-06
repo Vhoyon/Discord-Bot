@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.github.vhoyon.bot.utilities.BotCommand;
+import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.objects.Buffer;
 import net.dv8tion.jda.core.entities.Guild;
@@ -94,7 +95,7 @@ public class MusicManager implements Utils {
 	 */
 	public synchronized MusicPlayer getPlayer(BotCommand command){
 		return this.getPlayer(command.getGuild(),
-				command.setting("empty_drop_delay"));
+				command.setting("empty_drop_delay", BufferLevel.SERVER));
 	}
 	
 	/**

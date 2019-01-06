@@ -4,6 +4,7 @@ import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
@@ -95,7 +96,9 @@ public class CommandSetting extends BotCommand {
 			
 			if(parameterContent == null){
 				
-				Setting<Object> settingField = getSettings().getField(
+				BufferLevel level = isForGuild() ? BufferLevel.SERVER : null;
+				
+				Setting<Object> settingField = getSettings(level).getField(
 						this.settingName);
 				
 				if(CommandSetting.this.shouldSwitchToDefault){
@@ -128,7 +131,12 @@ public class CommandSetting extends BotCommand {
 			else{
 				
 				try{
-					setSetting(settingName, parameterContent, onSuccess);
+					
+					BufferLevel level = isForGuild() ? BufferLevel.SERVER
+							: null;
+					
+					setSetting(settingName, parameterContent, level, onSuccess);
+					
 				}
 				catch(BadFormatException e){
 					new BotError(this, e.getMessage());
@@ -139,6 +147,10 @@ public class CommandSetting extends BotCommand {
 		}
 		
 		public abstract void onSuccess(T value);
+		
+		public boolean isForGuild(){
+			return hasParameter("g");
+		}
 		
 		public boolean isPresent(){
 			return this.isPresent;
@@ -268,6 +280,24 @@ public class CommandSetting extends BotCommand {
 				sendMessage("The default disconnect delay for the bot when the music player is empty is now "
 						+ code(delay) + "!");
 			}
+			
+			@Override
+			public boolean isForGuild(){
+				return true;
+			}
+		};
+		
+		new SettingChanger<Integer>("alone_drop_delay"){
+			@Override
+			public void onSuccess(Integer delay){
+				sendMessage("The default disconnect delay for the bot when he gets alone is now "
+						+ code(delay) + "!");
+			}
+			
+			@Override
+			public boolean isForGuild(){
+				return true;
+			}
 		};
 		
 	}
@@ -319,8 +349,16 @@ public class CommandSetting extends BotCommand {
 									.getDefaultValue()) + "ms.",
 					"empty_drop_delay"),
 			new ParametersHelp(
+					"Changes the bot's default disconnect time when the bot is not with humans anymore. The default is "
+							+ code(getSettings().getField("alone_drop_delay")
+									.getDefaultValue()) + "ms.",
+					"alone_drop_delay"),
+			new ParametersHelp(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
-					false, "d", "default")
+					false, "d", "default"),
+			new ParametersHelp(
+					"Switch to allow for setting the values to the Guild level instead of the TextChannel.",
+					false, "g", "guild"),
 		};
 	}
 	
