@@ -31,7 +31,7 @@ public class CommandMusicReplay extends MusicCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return MUSIC_REPLAY;
 	}
 	

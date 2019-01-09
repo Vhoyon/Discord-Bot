@@ -1,8 +1,8 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
-import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
@@ -16,13 +16,12 @@ import io.github.vhoyon.vramework.objects.ParametersHelp;
 public class CommandGameRemove extends GameInteractionCommands {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasContent()){
-			new BotError(this, lang("ErrorUsage",
-					buildVCommand(getDefaultCall() + " [game name]"),
-					buildVCommand(getDefaultCall() + " "
-							+ buildParameter("all"))), false);
+			new BotError(this, lang("ErrorUsage", buildVCommand(getCall()
+					+ " [game name]"), buildVCommand(getCall() + " "
+					+ buildParameter("all"))), false);
 		}
 		else{
 			
@@ -61,7 +60,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return GAME_REMOVE;
 	}
 	

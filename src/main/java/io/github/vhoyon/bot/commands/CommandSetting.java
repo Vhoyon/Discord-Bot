@@ -76,7 +76,7 @@ public class CommandSetting extends BotCommand {
 		}
 		
 		@Override
-		public void action(){
+		public void actions(){
 			
 			@SuppressWarnings("unchecked")
 			Consumer<Object> onSuccess = (value) -> {
@@ -161,7 +161,7 @@ public class CommandSetting extends BotCommand {
 		}
 		
 		@Override
-		public Object getCalls(){
+		public String getCall(){
 			return null;
 		}
 		
@@ -188,7 +188,7 @@ public class CommandSetting extends BotCommand {
 	private ArrayList<SettingChanger<?>> settings = new ArrayList<>();
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		this.shouldSwitchToDefault = hasParameter("d");
 		
@@ -303,10 +303,15 @@ public class CommandSetting extends BotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
+		return "setting";
+	}
+	
+	@Override
+	public String[] getAliases(){
 		return new String[]
 		{
-			"setting", "settings"
+			"settings"
 		};
 	}
 	

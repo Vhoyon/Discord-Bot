@@ -58,7 +58,7 @@ public class CommandMusicVolume extends MusicCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return MUSIC_VOLUME;
 	}
 	

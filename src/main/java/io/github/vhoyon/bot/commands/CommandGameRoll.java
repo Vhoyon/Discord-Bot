@@ -21,7 +21,7 @@ import java.util.Random;
 public class CommandGameRoll extends GameInteractionCommands {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		try{
 			
@@ -78,10 +78,15 @@ public class CommandGameRoll extends GameInteractionCommands {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
+		return GAME_ROLL;
+	}
+	
+	@Override
+	public String[] getAliases(){
 		return new String[]
 		{
-			GAME_ROLL, GAME_ROLL_ALT
+			GAME_ROLL_ALT
 		};
 	}
 	

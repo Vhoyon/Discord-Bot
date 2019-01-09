@@ -30,7 +30,7 @@ public class CommandTimer extends BotCommand implements Stoppable,
 	private int minutes;
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasContent() && !getRequest().hasParameters()){
 			
@@ -268,7 +268,7 @@ public class CommandTimer extends BotCommand implements Stoppable,
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return TIMER;
 	}
 	

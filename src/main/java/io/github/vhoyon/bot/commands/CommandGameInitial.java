@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class CommandGameInitial extends GameInteractionCommands {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage",
-					buildVCommand(getDefaultCall()
+					buildVCommand(getActualCall()
 							+ " [game 1],[game 2],[game 3],[...]")), false);
 		}
 		else{
@@ -52,7 +52,7 @@ public class CommandGameInitial extends GameInteractionCommands {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return GAME;
 	}
 	

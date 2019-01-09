@@ -1,7 +1,7 @@
 package io.github.vhoyon.bot.commands;
 
-import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.errorHandling.BotError;
+import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.objects.Dictionary;
 import io.github.vhoyon.vramework.objects.Language;
 
@@ -17,7 +17,7 @@ import io.github.vhoyon.vramework.objects.Language;
 public class CommandLanguage extends BotCommand {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasContent()){
 			sendMessage(lang("NullContent", buildVCommand(LANGUAGE + " ["
@@ -67,10 +67,15 @@ public class CommandLanguage extends BotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
+		return LANG;
+	}
+	
+	@Override
+	public String[] getAliases(){
 		return new String[]
 		{
-			LANG, LANGUAGE
+			LANGUAGE
 		};
 	}
 	

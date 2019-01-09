@@ -23,7 +23,7 @@ public class CommandHello extends SimpleTextCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return HELLO;
 	}
 	

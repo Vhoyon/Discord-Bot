@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CommandSpam extends BotCommand implements Stoppable {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		boolean canSpam = true;
 		
@@ -176,7 +176,7 @@ public class CommandSpam extends BotCommand implements Stoppable {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return SPAM;
 	}
 	

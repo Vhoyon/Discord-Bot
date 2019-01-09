@@ -57,7 +57,7 @@ public class CommandMusicList extends MusicCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return MUSIC_LIST;
 	}
 	

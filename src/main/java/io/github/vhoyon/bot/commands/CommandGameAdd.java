@@ -15,11 +15,11 @@ import io.github.vhoyon.bot.utilities.specifics.GamePool;
 public class CommandGameAdd extends GameInteractionCommands {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage",
-					buildVCommand(getDefaultCall() + " [game name]")));
+					buildVCommand(getActualCall() + " [game name]")));
 		}
 		else{
 			
@@ -45,7 +45,7 @@ public class CommandGameAdd extends GameInteractionCommands {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return GAME_ADD;
 	}
 	

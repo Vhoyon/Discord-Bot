@@ -21,7 +21,7 @@ import io.github.vhoyon.vramework.objects.ParametersHelp;
 public class CommandHelp extends BotCommand {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		String content = getContent();
 		
@@ -52,9 +52,9 @@ public class CommandHelp extends BotCommand {
 				
 				StringBuilder builder = new StringBuilder();
 				
-				String helpString = commandToExplain.getHelp(
-						"*Available parameters :*", "Usage : "
-								+ commandToExplain.getUsage() + ".", null);
+				String helpString = commandToExplain.getHelp("Usage : "
+						+ commandToExplain.getUsage() + ".",
+						ital("Available parameters :"), null);
 				
 				builder.append(helpString);
 				
@@ -80,7 +80,7 @@ public class CommandHelp extends BotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return HELP;
 	}
 	

@@ -18,7 +18,7 @@ public class CommandTerminate extends SimpleTextCommand implements Hidden {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return TERMINATE;
 	}
 	

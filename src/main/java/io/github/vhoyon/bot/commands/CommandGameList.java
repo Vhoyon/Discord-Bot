@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class CommandGameList extends GameInteractionCommands {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		GamePool gamepool = null;
 		
@@ -44,7 +44,7 @@ public class CommandGameList extends GameInteractionCommands {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return GAME_LIST;
 	}
 	

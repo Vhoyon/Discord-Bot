@@ -43,7 +43,7 @@ public class CommandMusicPause extends MusicCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return MUSIC_PAUSE;
 	}
 	

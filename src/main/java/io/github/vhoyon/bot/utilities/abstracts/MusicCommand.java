@@ -17,7 +17,7 @@ import io.github.vhoyon.bot.utilities.music.MusicManager;
 public abstract class MusicCommand extends BotCommand {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(MusicManager.hasPlayersOnTracksEmptyLogic()){
 			

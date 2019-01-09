@@ -136,7 +136,7 @@ public class CommandMusicSkip extends MusicCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return MUSIC_SKIP;
 	}
 	

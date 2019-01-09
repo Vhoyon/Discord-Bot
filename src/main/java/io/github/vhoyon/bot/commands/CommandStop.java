@@ -25,7 +25,7 @@ import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 public class CommandStop extends BotCommand {
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasContent()){
 			
@@ -99,7 +99,7 @@ public class CommandStop extends BotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return STOP;
 	}
 	
