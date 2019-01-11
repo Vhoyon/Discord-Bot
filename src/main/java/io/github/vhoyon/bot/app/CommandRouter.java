@@ -1,5 +1,8 @@
 package io.github.vhoyon.bot.app;
 
+import java.util.ArrayList;
+
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.errorHandling.BotErrorPrivate;
 import io.github.vhoyon.bot.utilities.abstracts.SimpleTextCommand;
@@ -18,9 +21,6 @@ import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-
-import java.util.ArrayList;
 
 /**
  * This is the custom Router for Vhoyon's bot that routes common commands to

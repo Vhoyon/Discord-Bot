@@ -1,9 +1,9 @@
 package io.github.vhoyon.bot.utilities.music;
 
+import net.dv8tion.jda.core.audio.AudioSendHandler;
+
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-
-import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 /**
  * Handles individual tracks codec parameters.

@@ -1,9 +1,9 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.utilities.music.MusicPlayer;
-import io.github.vhoyon.bot.errorHandling.BotError;
 
 /**
  * Pauses the music only if the bot is already playing some music in a

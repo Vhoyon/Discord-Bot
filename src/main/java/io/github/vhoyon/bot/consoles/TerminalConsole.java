@@ -1,9 +1,9 @@
 package io.github.vhoyon.bot.consoles;
 
+import java.io.IOException;
+
 import io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole;
 import io.github.vhoyon.vramework.modules.Logger;
-
-import java.io.IOException;
 
 /**
  * Vhoyon's custom implementation of the

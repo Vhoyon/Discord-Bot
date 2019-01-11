@@ -1,13 +1,14 @@
 package io.github.vhoyon.bot.utilities.music;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import io.github.vhoyon.vramework.utilities.TimerManager;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 
 /**
  * Handles all the tracks inside of a {@link MusicPlayer} and gives utility

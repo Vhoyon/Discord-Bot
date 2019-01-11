@@ -1,5 +1,8 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
@@ -9,9 +12,6 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
-
-import java.util.ArrayList;
-import java.util.function.Consumer;
 
 /**
  * Command to interact with the settings of this bot. There's quite a few things

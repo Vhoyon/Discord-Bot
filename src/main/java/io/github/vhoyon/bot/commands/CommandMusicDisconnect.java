@@ -1,8 +1,8 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
-import io.github.vhoyon.bot.errorHandling.BotError;
 
 /**
  * Command that disconnects the bot from the connected VoiceChannel and empties

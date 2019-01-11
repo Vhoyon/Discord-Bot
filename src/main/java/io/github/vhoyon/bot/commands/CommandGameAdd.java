@@ -18,8 +18,8 @@ public class CommandGameAdd extends GameInteractionCommands {
 	public void actions(){
 		
 		if(!hasContent()){
-			new BotError(this, lang("ErrorUsage",
-					buildVCommand(getActualCall() + " [game name]")));
+			new BotError(this, lang("ErrorUsage", buildVCommand(getActualCall()
+					+ " [game name]")));
 		}
 		else{
 			

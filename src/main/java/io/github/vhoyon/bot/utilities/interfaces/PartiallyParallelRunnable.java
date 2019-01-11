@@ -4,6 +4,7 @@ import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 
 public interface PartiallyParallelRunnable {
 	
-	boolean duplicatedRunnableCondition(AbstractBotCommand thisCommand, AbstractBotCommand runningCommand);
+	boolean duplicatedRunnableCondition(AbstractBotCommand thisCommand,
+			AbstractBotCommand runningCommand);
 	
 }

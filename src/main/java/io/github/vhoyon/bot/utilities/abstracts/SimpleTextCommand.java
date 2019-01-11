@@ -6,7 +6,8 @@ import io.github.vhoyon.vramework.abstracts.AbstractTextCommand;
 
 /**
  * Simple class that implements the logic of
- * {@link io.github.vhoyon.vramework.abstracts.AbstractTextCommand AbstractTextCommand} so that a
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractTextCommand
+ * AbstractTextCommand} so that a
  * simple message can be sent to the TextChannel where the original command has
  * been sent from.
  *

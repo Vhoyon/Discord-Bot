@@ -1,10 +1,10 @@
 package io.github.vhoyon.bot.commands;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
-import io.github.vhoyon.bot.errorHandling.BotError;
-
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 /**
  * Command that sends a message containing a list of the tracks that are

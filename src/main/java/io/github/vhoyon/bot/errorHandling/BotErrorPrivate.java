@@ -56,7 +56,8 @@ public class BotErrorPrivate extends AbstractBotError {
 	}
 	
 	/**
-	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(String, boolean)
+	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(String,
+	 *      boolean)
 	 *      AbstractBotError(String errorMessage, boolean isErrorOneLiner)
 	 */
 	public BotErrorPrivate(String errorMessage, boolean isErrorOneLiner){
@@ -72,8 +73,9 @@ public class BotErrorPrivate extends AbstractBotError {
 	}
 	
 	/**
-	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(String, String,
-	 *      boolean) AbstractBotError(String errorMessage, String errorEmoji,
+	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(String,
+	 *      String, boolean) AbstractBotError(String errorMessage, String
+	 *      errorEmoji,
 	 *      boolean isErrorOneLiner)
 	 */
 	public BotErrorPrivate(String errorMessage, String errorEmoji,

@@ -1,19 +1,21 @@
 package io.github.vhoyon.bot.consoles;
 
-import io.github.vhoyon.vramework.abstracts.AbstractUIConsole;
-import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.objects.LoggableJTextArea;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+import io.github.vhoyon.vramework.abstracts.AbstractUIConsole;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.objects.LoggableJTextArea;
+
 /**
  * Vhoyon's custom implementation of the
- * {@link io.github.vhoyon.vramework.abstracts.AbstractUIConsole AbstractUIConsole} that allows us
+ * {@link io.github.vhoyon.vramework.abstracts.AbstractUIConsole
+ * AbstractUIConsole} that allows us
  * to get a visual console for managing our bot's state.
  *
  * @version 1.0

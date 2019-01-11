@@ -1,5 +1,11 @@
 package io.github.vhoyon.bot.utilities.music;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import net.dv8tion.jda.core.entities.Guild;
+
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -7,15 +13,11 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.objects.Buffer;
-import net.dv8tion.jda.core.entities.Guild;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Handles all the {@link MusicPlayer} players that this bot has opened so far
