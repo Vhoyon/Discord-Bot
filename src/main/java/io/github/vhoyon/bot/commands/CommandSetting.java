@@ -1,8 +1,5 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
@@ -12,6 +9,10 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Command to interact with the settings of this bot. There's quite a few things
@@ -94,9 +95,9 @@ public class CommandSetting extends BotCommand {
 			
 			String parameterContent = param.getContent();
 			
+			BufferLevel level = isForGuild() ? BufferLevel.SERVER : null;
+			
 			if(parameterContent == null){
-				
-				BufferLevel level = isForGuild() ? BufferLevel.SERVER : null;
 				
 				Setting<Object> settingField = getSettings(level).getSetting(
 						this.settingName);
@@ -106,6 +107,17 @@ public class CommandSetting extends BotCommand {
 					this.setSendable(false);
 					
 					settingField.setToDefaultValue(onSuccess);
+					
+					if(level == BufferLevel.SERVER && hasTextSettings()){
+						
+						SettingRepositoryRepository
+								.getReposOfGuildTextChannels(getGuild())
+								.forEach(
+										repo -> repo.getSetting(
+												this.settingName)
+												.setToDefaultValue());
+						
+					}
 					
 					this.setSendable(true);
 					
@@ -132,10 +144,17 @@ public class CommandSetting extends BotCommand {
 				
 				try{
 					
-					BufferLevel level = isForGuild() ? BufferLevel.SERVER
-							: null;
-					
 					setSetting(settingName, parameterContent, level, onSuccess);
+					
+					if(level == BufferLevel.SERVER && hasTextSettings()){
+						
+						SettingRepositoryRepository
+								.getReposOfGuildTextChannels(getGuild())
+								.forEach(
+										repo -> repo.save(settingName,
+												parameterContent));
+						
+					}
 					
 				}
 				catch(BadFormatException e){
@@ -149,7 +168,15 @@ public class CommandSetting extends BotCommand {
 		public abstract void onSuccess(T value);
 		
 		public boolean isForGuild(){
-			return hasParameter("g");
+			return isOnlyForGuild() || hasParameter("g");
+		}
+		
+		public boolean isOnlyForGuild(){
+			return false;
+		}
+		
+		public boolean hasTextSettings(){
+			return !isOnlyForGuild();
 		}
 		
 		public boolean isPresent(){
@@ -282,7 +309,7 @@ public class CommandSetting extends BotCommand {
 			}
 			
 			@Override
-			public boolean isForGuild(){
+			public boolean isOnlyForGuild(){
 				return true;
 			}
 		};
@@ -295,7 +322,7 @@ public class CommandSetting extends BotCommand {
 			}
 			
 			@Override
-			public boolean isForGuild(){
+			public boolean isOnlyForGuild(){
 				return true;
 			}
 		};
