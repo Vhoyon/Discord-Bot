@@ -296,6 +296,11 @@ public class CommandSetting extends BotCommand {
 				sendMessage("The default volume will now be " + code(volume)
 						+ "!");
 			}
+			
+			@Override
+			public boolean isOnlyForGuild(){
+				return true;
+			}
 		};
 		
 		new SettingChanger<Integer>("empty_drop_delay"){
