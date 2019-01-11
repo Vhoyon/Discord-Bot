@@ -98,7 +98,7 @@ public class CommandSetting extends BotCommand {
 				
 				BufferLevel level = isForGuild() ? BufferLevel.SERVER : null;
 				
-				Setting<Object> settingField = getSettings(level).getField(
+				Setting<Object> settingField = getSettings(level).getSetting(
 						this.settingName);
 				
 				if(CommandSetting.this.shouldSwitchToDefault){
@@ -326,15 +326,15 @@ public class CommandSetting extends BotCommand {
 		{
 			new ParametersHelp(
 					"Changes the prefix used for each command. Default is "
-							+ code(getSettings().getField("prefix")
+							+ code(getSettings().getSetting("prefix")
 									.getDefaultValue()) + ".", "prefix"),
 			new ParametersHelp(
 					"Changes the parameters prefix used for each command. Default is "
-							+ code(getSettings().getField("param_prefix")
+							+ code(getSettings().getSetting("param_prefix")
 									.getDefaultValue()) + ".", "param_prefix"),
 			new ParametersHelp(
 					"Changes the bot's nickname. His default name is "
-							+ code(getSettings().getField("nickname")
+							+ code(getSettings().getSetting("nickname")
 									.getDefaultValue()) + ".", "nickname"),
 			new ParametersHelp(
 					"Determine the behavior of stopping the most recent running command. "
@@ -342,20 +342,20 @@ public class CommandSetting extends BotCommand {
 							+ " to ask for a confirmation, "
 							+ code("false")
 							+ " to stop the most recent command without confirming. Default is set to "
-							+ code(getSettings().getField("nickname")
+							+ code(getSettings().getSetting("nickname")
 									.getDefaultValue()) + ".", "confirm_stop"),
 			new ParametersHelp(
 					"Changes the bot's default volume when playing some music. The default value is "
-							+ code(getSettings().getField("volume")
+							+ code(getSettings().getSetting("volume")
 									.getDefaultValue()) + ".", "volume"),
 			new ParametersHelp(
 					"Changes the bot's default disconnect time when the music player is empty. The default is "
-							+ code(getSettings().getField("empty_drop_delay")
+							+ code(getSettings().getSetting("empty_drop_delay")
 									.getDefaultValue()) + "ms.",
 					"empty_drop_delay"),
 			new ParametersHelp(
 					"Changes the bot's default disconnect time when the bot is not with humans anymore. The default is "
-							+ code(getSettings().getField("alone_drop_delay")
+							+ code(getSettings().getSetting("alone_drop_delay")
 									.getDefaultValue()) + "ms.",
 					"alone_drop_delay"),
 			new ParametersHelp(

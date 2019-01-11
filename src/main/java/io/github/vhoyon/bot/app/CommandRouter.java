@@ -245,7 +245,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			if(getRequest() != null && getRequest().getCommandPrefix() != null)
 				return getRequest().getCommandPrefix();
 			
-			String prefix = getSettings().getFieldValue("prefix");
+			String prefix = getSettings().getSettingValue("prefix");
 			
 			return prefix;
 			
@@ -264,7 +264,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			if(getRequest() != null && getRequest().getParametersPrefix() != 0)
 				return getRequest().getParametersPrefix();
 			
-			char paramPrefix = getSettings().getFieldValue("param_prefix");
+			char paramPrefix = getSettings().getSettingValue("param_prefix");
 			
 			return paramPrefix;
 			

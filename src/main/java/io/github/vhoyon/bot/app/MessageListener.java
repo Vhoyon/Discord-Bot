@@ -91,7 +91,7 @@ public class MessageListener extends AbstractMessageListener implements
 			SettingRepository settings = SettingRepositoryRepository
 					.getSettingRepository(guild, SETTINGS);
 			
-			int aloneDropDelay = settings.getFieldValue("alone_drop_delay");
+			int aloneDropDelay = settings.getSettingValue("alone_drop_delay");
 			
 			TimerManager.schedule("noPlayerDisconnect", aloneDropDelay, () -> {
 				
