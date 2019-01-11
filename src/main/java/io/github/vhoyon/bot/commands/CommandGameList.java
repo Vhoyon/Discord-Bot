@@ -21,7 +21,7 @@ public class CommandGameList extends GameInteractionCommands {
 		GamePool gamepool = null;
 		
 		try{
-			gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
+			gamepool = getMemory(BUFFER_GAMEPOOL);
 		}
 		catch(NullPointerException e){}
 		

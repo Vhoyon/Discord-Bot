@@ -25,7 +25,7 @@ public class CommandGameAdd extends GameInteractionCommands {
 			
 			try{
 				
-				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
+				GamePool gamepool = getMemory(BUFFER_GAMEPOOL);
 				
 				gamepool.add(getContent());
 				

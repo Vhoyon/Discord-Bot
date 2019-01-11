@@ -27,7 +27,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 			
 			try{
 				
-				GamePool gamepool = (GamePool)getMemory(BUFFER_GAMEPOOL);
+				GamePool gamepool = getMemory(BUFFER_GAMEPOOL);
 				
 				if(hasParameter("all")){
 					gamepool.clear();

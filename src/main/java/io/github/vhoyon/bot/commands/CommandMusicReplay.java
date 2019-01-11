@@ -21,7 +21,7 @@ public class CommandMusicReplay extends MusicCommand {
 		}
 		else{
 			
-			String trackSource = (String)getMemory("LATEST_SONG");
+			String trackSource = getMemory("LATEST_SONG");
 			
 			MusicManager.get().loadTrack(this, trackSource,
 					this::connectIfNotPlaying);

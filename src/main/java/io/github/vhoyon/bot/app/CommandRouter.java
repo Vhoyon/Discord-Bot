@@ -97,7 +97,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						getBuffer().remove(BUFFER_CONFIRMATION, textChannelKey);
 						
 					}
-					catch(NullPointerException e){}
+					catch(IllegalStateException e){}
 					
 					if(request.hasError()){
 						setCommand(new BotError(
