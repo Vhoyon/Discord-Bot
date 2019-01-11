@@ -43,9 +43,8 @@ public class MessageListener extends AbstractMessageListener implements
 	
 	@Override
 	protected AbstractCommandRouter createRouter(MessageReceivedEvent event,
-			String receivedMessage, Buffer buffer,
-			CommandsRepository commandsRepo){
-		return new CommandRouter(event, receivedMessage, buffer, commandsRepo);
+			Buffer buffer, CommandsRepository commandsRepo){
+		return new CommandRouter(event, buffer, commandsRepo);
 	}
 	
 	@Override

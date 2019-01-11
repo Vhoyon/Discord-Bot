@@ -1,8 +1,5 @@
 package io.github.vhoyon.bot.app;
 
-import java.util.ArrayList;
-
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.errorHandling.BotErrorPrivate;
 import io.github.vhoyon.bot.utilities.abstracts.SimpleTextCommand;
@@ -21,6 +18,9 @@ import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+
+import java.util.ArrayList;
 
 /**
  * This is the custom Router for Vhoyon's bot that routes common commands to
@@ -38,9 +38,9 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	/**
 	 * @see io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
 	 */
-	public CommandRouter(MessageReceivedEvent event, String receivedMessage,
-			Buffer buffer, CommandsRepository commandsRepo){
-		super(event, receivedMessage, buffer, commandsRepo);
+	public CommandRouter(MessageReceivedEvent event, Buffer buffer,
+			CommandsRepository commandsRepo){
+		super(event, buffer, commandsRepo);
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	@Override
-	public void run(){
+	public void route(){
 		
 		Request request = getRequest();
 		MessageEventDigger eventDigger = getEventDigger();
@@ -245,9 +245,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 			if(getRequest() != null && getRequest().getCommandPrefix() != null)
 				return getRequest().getCommandPrefix();
 			
-			String prefix = getSettings().getSettingValue("prefix");
-			
-			return prefix;
+			return getSettings().getSettingValue("prefix");
 			
 		}
 		catch(Exception e){
