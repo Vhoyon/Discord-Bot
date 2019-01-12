@@ -95,7 +95,7 @@ public class CommandSetting extends BotCommand {
 			
 			String parameterContent = param.getContent();
 			
-			BufferLevel level = isForGuild() ? BufferLevel.SERVER : null;
+			BufferLevel level = isForGuild() ? BufferLevel.GUILD : null;
 			
 			if(parameterContent == null){
 				
@@ -108,7 +108,7 @@ public class CommandSetting extends BotCommand {
 					
 					settingField.setToDefaultValue(onSuccess);
 					
-					if(level == BufferLevel.SERVER && hasTextSettings()){
+					if(level == BufferLevel.GUILD && hasTextSettings()){
 						
 						SettingRepositoryRepository
 								.getReposOfGuildTextChannels(getGuild())
@@ -146,7 +146,7 @@ public class CommandSetting extends BotCommand {
 					
 					setSetting(settingName, parameterContent, level, onSuccess);
 					
-					if(level == BufferLevel.SERVER && hasTextSettings()){
+					if(level == BufferLevel.GUILD && hasTextSettings()){
 						
 						SettingRepositoryRepository
 								.getReposOfGuildTextChannels(getGuild())

@@ -97,7 +97,7 @@ public class MusicManager implements Utils {
 	 */
 	public synchronized MusicPlayer getPlayer(BotCommand command){
 		return this.getPlayer(command.getGuild(),
-				command.setting("empty_drop_delay", BufferLevel.SERVER));
+				command.setting("empty_drop_delay", BufferLevel.GUILD));
 	}
 	
 	/**
