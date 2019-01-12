@@ -77,10 +77,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 						String textChannelKey = eventDigger
 								.getChannelKey(BUFFER_CONFIRMATION);
 						
-						Object needsConfirmation = getBuffer().get(
+						CommandConfirmed confirmationObject = getBuffer().get(
 								textChannelKey);
-						
-						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 						
 						if(request.getCommand().equals(CONFIRM)){
 							confirmationObject.confirmed();
