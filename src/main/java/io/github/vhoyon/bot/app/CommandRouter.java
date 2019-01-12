@@ -74,10 +74,11 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 					
 					try{
 						
-						String textChannelKey = eventDigger.getChannelKey();
+						String textChannelKey = eventDigger
+								.getChannelKey(BUFFER_CONFIRMATION);
 						
 						Object needsConfirmation = getBuffer().get(
-								BUFFER_CONFIRMATION, textChannelKey);
+								textChannelKey);
 						
 						CommandConfirmed confirmationObject = (CommandConfirmed)needsConfirmation;
 						
@@ -94,7 +95,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 							
 						}
 						
-						getBuffer().remove(BUFFER_CONFIRMATION, textChannelKey);
+						getBuffer().remove(textChannelKey);
 						
 					}
 					catch(IllegalStateException e){}
