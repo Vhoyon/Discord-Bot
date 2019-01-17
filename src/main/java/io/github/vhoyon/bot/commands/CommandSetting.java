@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 
 import io.github.ved.jrequester.Option;
 import io.github.ved.jrequester.OptionData;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.utilities.settings.Setting;

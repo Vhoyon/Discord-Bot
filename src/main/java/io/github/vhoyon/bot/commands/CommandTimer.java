@@ -1,18 +1,18 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.IntegerSanitizer;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.interfaces.PartiallyParallelRunnable;
 import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.TimerManager;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Command to create a timer in the TextChannel where this command was called
@@ -82,14 +82,14 @@ public class CommandTimer extends BotCommand implements Stoppable,
 				
 				AtomicInteger refreshRateRef = new AtomicInteger(1);
 				
-				onParameterPresent(
+				onOptionPresent(
 						"r",
-						parameter -> {
+						option -> {
 							try{
 								
 								int refreshRate = IntegerSanitizer
-										.sanitizeValue(parameter.getContent(),
-												1, totalTime);
+										.sanitizeValue(option.getContent(), 1,
+												totalTime);
 								
 								refreshRateRef.set(refreshRate);
 								

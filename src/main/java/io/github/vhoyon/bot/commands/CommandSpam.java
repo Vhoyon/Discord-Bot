@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import io.github.ved.jrequester.Option;
+import io.github.ved.jsanitizers.IntegerSanitizer;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
@@ -90,13 +92,14 @@ public class CommandSpam extends BotCommand implements Stoppable {
 			// Defaults to 10 messages.
 			AtomicInteger numberOfSpam = new AtomicInteger(10);
 			
-			onParameterPresent("c", param -> {
+			onOptionPresent("c", option -> {
 				try{
 					
-					numberOfSpam.set(Integer.parseInt(param.getContent()));
+					numberOfSpam.set(IntegerSanitizer.sanitizeValue(option
+							.getContent()));
 					
 				}
-				catch(NumberFormatException e){
+				catch(BadFormatException e){
 					
 				}
 			});
@@ -157,7 +160,8 @@ public class CommandSpam extends BotCommand implements Stoppable {
 						else if(membersToSpam != null){
 							
 							for(Member member : membersToSpam){
-								if(!member.getUser().isBot())
+								if(!(member.getUser().isBot() || member
+										.getUser().isFake()))
 									new Thread(() -> sendMessageToMember(
 											member, messageToSend)).start();
 							}

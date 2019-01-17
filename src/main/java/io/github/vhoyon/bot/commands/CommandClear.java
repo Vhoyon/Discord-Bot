@@ -54,10 +54,8 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		this.conditions.add(condition);
 		
-		onParameterPresent(parameterUsed, param -> {
-			
-			this.messageWeight += param.getWeight();
-			
+		onOptionPresent(parameterUsed, option -> {
+			this.messageWeight += option.getWeight();
 		});
 		
 	}
