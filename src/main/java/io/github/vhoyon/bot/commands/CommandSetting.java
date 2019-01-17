@@ -1,18 +1,18 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import io.github.ved.jrequester.Option;
+import io.github.ved.jrequester.OptionData;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
-import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
-
-import java.util.ArrayList;
-import java.util.function.Consumer;
 
 /**
  * Command to interact with the settings of this bot. There's quite a few things
@@ -71,7 +71,7 @@ public class CommandSetting extends BotCommand {
 			this.shouldSendMessages = true;
 			this.settingName = settingName;
 			this.parameterName = parameterName;
-			this.isPresent = this.hasParameter(this.parameterName);
+			this.isPresent = this.hasOption(this.parameterName);
 			
 			CommandSetting.this.settings.add(this);
 		}
@@ -91,7 +91,7 @@ public class CommandSetting extends BotCommand {
 				}
 			};
 			
-			Parameter param = getParameter(this.parameterName);
+			OptionData param = getOption(this.parameterName);
 			
 			String parameterContent = param.getContent();
 			
@@ -168,7 +168,7 @@ public class CommandSetting extends BotCommand {
 		public abstract void onSuccess(T value);
 		
 		public boolean isForGuild(){
-			return isOnlyForGuild() || hasParameter("g");
+			return isOnlyForGuild() || hasOption("g");
 		}
 		
 		public boolean isOnlyForGuild(){
@@ -217,7 +217,7 @@ public class CommandSetting extends BotCommand {
 	@Override
 	public void actions(){
 		
-		this.shouldSwitchToDefault = hasParameter("d");
+		this.shouldSwitchToDefault = hasOption("d");
 		
 		this.setupSettings();
 		
@@ -353,22 +353,21 @@ public class CommandSetting extends BotCommand {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp(
+			new Option(
 					"Changes the prefix used for each command. Default is "
 							+ code(getSettings().getSetting("prefix")
 									.getDefaultValue()) + ".", "prefix"),
-			new ParametersHelp(
+			new Option(
 					"Changes the parameters prefix used for each command. Default is "
 							+ code(getSettings().getSetting("param_prefix")
 									.getDefaultValue()) + ".", "param_prefix"),
-			new ParametersHelp(
-					"Changes the bot's nickname. His default name is "
-							+ code(getSettings().getSetting("nickname")
-									.getDefaultValue()) + ".", "nickname"),
-			new ParametersHelp(
+			new Option("Changes the bot's nickname. His default name is "
+					+ code(getSettings().getSetting("nickname")
+							.getDefaultValue()) + ".", "nickname"),
+			new Option(
 					"Determine the behavior of stopping the most recent running command. "
 							+ code("true")
 							+ " to ask for a confirmation, "
@@ -376,24 +375,24 @@ public class CommandSetting extends BotCommand {
 							+ " to stop the most recent command without confirming. Default is set to "
 							+ code(getSettings().getSetting("nickname")
 									.getDefaultValue()) + ".", "confirm_stop"),
-			new ParametersHelp(
+			new Option(
 					"Changes the bot's default volume when playing some music. The default value is "
 							+ code(getSettings().getSetting("volume")
 									.getDefaultValue()) + ".", "volume"),
-			new ParametersHelp(
+			new Option(
 					"Changes the bot's default disconnect time when the music player is empty. The default is "
 							+ code(getSettings().getSetting("empty_drop_delay")
 									.getDefaultValue()) + "ms.",
 					"empty_drop_delay"),
-			new ParametersHelp(
+			new Option(
 					"Changes the bot's default disconnect time when the bot is not with humans anymore. The default is "
 							+ code(getSettings().getSetting("alone_drop_delay")
 									.getDefaultValue()) + "ms.",
 					"alone_drop_delay"),
-			new ParametersHelp(
+			new Option(
 					"Switch to allow for putting back the default value for each settings as parameters quickly.",
 					false, "d", "default"),
-			new ParametersHelp(
+			new Option(
 					"Switch to allow for setting the values to the Guild level instead of the TextChannel.",
 					false, "g", "guild"),
 		};

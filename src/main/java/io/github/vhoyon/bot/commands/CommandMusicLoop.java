@@ -1,10 +1,10 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.ved.jrequester.Option;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.utilities.music.MusicPlayer;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that tells the associated MusicPlayer to loop songs. Two loop modes
@@ -39,7 +39,7 @@ public class CommandMusicLoop extends MusicCommand {
 			}
 			else{
 				
-				if(hasParameter("o", "one")){
+				if(hasOption("o", "one")){
 					
 					player.setLoopingOne();
 					sendMessage("A Loop on the current song has been started.");
@@ -69,10 +69,10 @@ public class CommandMusicLoop extends MusicCommand {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp(
+			new Option(
 					"This makes the looping of a single song instead of the whole track playlist.",
 					false, "o", "one")
 		};

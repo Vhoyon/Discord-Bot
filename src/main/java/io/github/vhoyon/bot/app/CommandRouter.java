@@ -1,5 +1,8 @@
 package io.github.vhoyon.bot.app;
 
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import io.github.ved.jrequester.Option;
+import io.github.ved.jrequester.Request;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.errorHandling.BotErrorPrivate;
 import io.github.vhoyon.bot.utilities.abstracts.SimpleTextCommand;
@@ -14,13 +17,12 @@ import io.github.vhoyon.vramework.interfaces.Command;
 import io.github.vhoyon.vramework.interfaces.Emojis;
 import io.github.vhoyon.vramework.modules.Audit;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.objects.*;
+import io.github.vhoyon.vramework.objects.Buffer;
+import io.github.vhoyon.vramework.objects.CommandsRepository;
+import io.github.vhoyon.vramework.objects.MessageEventDigger;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-
-import java.util.ArrayList;
 
 /**
  * This is the custom Router for Vhoyon's bot that routes common commands to
@@ -46,7 +48,7 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	@Override
 	protected Request createRequest(String receivedMessage){
 		return new Request(receivedMessage, getCommandPrefix(),
-				getCommandParameterPrefix());
+				getCommandOptionPrefix());
 	}
 	
 	@Override
@@ -145,35 +147,13 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				
 				try{
 					
-					ParametersHelp[] commandParamsHelp = getAbstractBotCommand()
-							.getParametersDescriptions();
+					Option[] commandOptions = getAbstractBotCommand()
+							.getOptions();
 					
-					if(commandParamsHelp != null){
-						ArrayList<ArrayList<String>> paramsHelpMap = new ArrayList<>();
-						ArrayList<String> contentLessParams = new ArrayList<>();
+					if(commandOptions != null){
 						
-						for(ParametersHelp commandParamHelp : commandParamsHelp){
-							
-							paramsHelpMap.add(commandParamHelp.getAllParams());
-							
-							if(!commandParamHelp.doesAcceptsContent()){
-								contentLessParams.add(commandParamHelp
-										.getParam());
-							}
-							
-							if(commandParamHelp.getWeight() != 0){
-								try{
-									getRequest().setParameterWeight(
-											commandParamHelp.getParam(),
-											commandParamHelp.getWeight());
-								}
-								catch(IllegalArgumentException e){}
-							}
-							
-						}
+						getRequest().setOptions(commandOptions);
 						
-						getRequest().setParamLinkMap(paramsHelpMap);
-						getRequest().setParamsAsContentLess(contentLessParams);
 					}
 					
 				}
@@ -254,20 +234,18 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 	}
 	
 	@Override
-	public char getCommandParameterPrefix(){
+	public char getCommandOptionPrefix(){
 		
 		try{
 			
-			if(getRequest() != null && getRequest().getParametersPrefix() != 0)
-				return getRequest().getParametersPrefix();
+			if(getRequest() != null && getRequest().getOptionsPrefix() != 0)
+				return getRequest().getOptionsPrefix();
 			
-			char paramPrefix = getSettings().getSettingValue("param_prefix");
-			
-			return paramPrefix;
+			return getSettings().getSettingValue("param_prefix");
 			
 		}
 		catch(Exception e){
-			return Request.DEFAULT_PARAMETER_PREFIX;
+			return Request.DEFAULT_OPTION_PREFIX;
 		}
 		
 	}

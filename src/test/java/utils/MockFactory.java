@@ -1,16 +1,16 @@
 package utils;
 
-import io.github.vhoyon.bot.app.CommandRouter;
-import io.github.vhoyon.vramework.objects.Request;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
-
 import static org.mockito.Mockito.*;
+
+import io.github.ved.jrequester.Request;
+import io.github.vhoyon.bot.app.CommandRouter;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
 
 public class MockFactory {
 	
 	public static Request createRequest(char paramPrefix){
 		Request request = spy(new Request(""));
-		doReturn(paramPrefix).when(request).getParametersPrefix();
+		doReturn(paramPrefix).when(request).getOptionsPrefix();
 		
 		return request;
 	}

@@ -14,6 +14,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 
+import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
@@ -23,7 +24,6 @@ import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command to play a track into the VoiceChannel of the user that used this
@@ -84,7 +84,7 @@ public class CommandMusicPlay extends MusicCommand {
 		}
 		else{
 			
-			if(hasParameter("r")){
+			if(hasOption("r")){
 				
 				if(this.isPlaying()){
 					new CommandConfirmed(this){
@@ -108,7 +108,7 @@ public class CommandMusicPlay extends MusicCommand {
 			}
 			else{
 				
-				if(hasParameter("l")){
+				if(hasOption("l")){
 					callCommand(MUSIC_REPLAY);
 				}
 				else{
@@ -321,12 +321,11 @@ public class CommandMusicPlay extends MusicCommand {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp(lang("ReplayDescription"), false, "l", "latest"),
-			new ParametersHelp(lang("AnythingDescription"), false, "r",
-					"random")
+			new Option(lang("ReplayDescription"), false, "l", "latest"),
+			new Option(lang("AnythingDescription"), false, "r", "random")
 		};
 	}
 	

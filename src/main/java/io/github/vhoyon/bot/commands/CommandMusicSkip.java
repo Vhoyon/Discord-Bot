@@ -1,12 +1,12 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.ved.jrequester.Option;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.MusicCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.bot.utilities.music.MusicPlayer;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that skips tracks on demand. If there is no song that is playing
@@ -40,7 +40,7 @@ public class CommandMusicSkip extends MusicCommand {
 		else{
 			
 			// Skip all songs if has appropriate parameter or content is "all"
-			if(hasParameter("a") || ("all".equals(getContent()))){
+			if(hasOption("a") || ("all".equals(getContent()))){
 				
 				MusicManager.get().emptyPlayer(this);
 				
@@ -146,12 +146,11 @@ public class CommandMusicSkip extends MusicCommand {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp(
-					"Skips all the songs added and disconnect the bot.", false,
-					"a", "all")
+			new Option("Skips all the songs added and disconnect the bot.",
+					false, "a", "all")
 		};
 	}
 	

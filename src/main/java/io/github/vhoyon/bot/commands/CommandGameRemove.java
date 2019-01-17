@@ -1,9 +1,9 @@
 package io.github.vhoyon.bot.commands;
 
+import io.github.ved.jrequester.Option;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command that removes a game from the game pool using its name as a search
@@ -21,7 +21,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 		if(!hasContent()){
 			new BotError(this, lang("ErrorUsage", buildVCommand(getCall()
 					+ " [game name]"), buildVCommand(getCall() + " "
-					+ buildParameter("all"))), false);
+					+ buildOption("all"))), false);
 		}
 		else{
 			
@@ -29,7 +29,7 @@ public class CommandGameRemove extends GameInteractionCommands {
 				
 				GamePool gamepool = getMemory(BUFFER_GAMEPOOL);
 				
-				if(hasParameter("all")){
+				if(hasOption("all")){
 					gamepool.clear();
 				}
 				else{
@@ -70,10 +70,10 @@ public class CommandGameRemove extends GameInteractionCommands {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp("Removes all games from the list.", "a", "all"),
+			new Option("Removes all games from the list.", "a", "all"),
 		};
 	}
 	

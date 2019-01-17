@@ -3,6 +3,7 @@ package io.github.vhoyon.bot.commands;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
@@ -10,7 +11,6 @@ import io.github.vhoyon.bot.utilities.interfaces.PartiallyParallelRunnable;
 import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.TimerManager;
 
@@ -32,7 +32,7 @@ public class CommandTimer extends BotCommand implements Stoppable,
 	@Override
 	public void actions(){
 		
-		if(!hasContent() && !getRequest().hasParameters()){
+		if(!hasContent() && !getRequest().hasOptions()){
 			
 			try{
 				
@@ -57,25 +57,25 @@ public class CommandTimer extends BotCommand implements Stoppable,
 		
 		try{
 			
-			if(!hasParameter("h", "m", "s")){
+			if(!hasOption("h", "m", "s")){
 				throw new NullPointerException();
 			}
 			
-			if(hasParameter("h")){
-				hours = Integer.parseInt(getParameter("h").getContent());
+			if(hasOption("h")){
+				hours = Integer.parseInt(getOption("h").getContent());
 			}
-			if(hasParameter("m")){
-				minutes = Integer.parseInt(getParameter("m").getContent());
+			if(hasOption("m")){
+				minutes = Integer.parseInt(getOption("m").getContent());
 			}
-			if(hasParameter("s")){
-				seconds = Integer.parseInt(getParameter("s").getContent());
+			if(hasOption("s")){
+				seconds = Integer.parseInt(getOption("s").getContent());
 			}
 			
 			int totalTime = (hours * 3600) + (minutes * 60) + seconds;
 			
 			timeConstruct(totalTime);
 			
-			AtomicBoolean shouldShowTimer = new AtomicBoolean(hasParameter("v",
+			AtomicBoolean shouldShowTimer = new AtomicBoolean(hasOption("v",
 					"r"));
 			
 			if(shouldShowTimer.get()){
@@ -278,20 +278,18 @@ public class CommandTimer extends BotCommand implements Stoppable,
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp("Sets the hours of the timer.", "h", "hour",
-					"hours"),
-			new ParametersHelp("Sets the minutes of the timer.", "m", "minute",
+			new Option("Sets the hours of the timer.", "h", "hour", "hours"),
+			new Option("Sets the minutes of the timer.", "m", "minute",
 					"minutes"),
-			new ParametersHelp("Sets the seconds of the timer.", "s", "second",
+			new Option("Sets the seconds of the timer.", "s", "second",
 					"seconds"),
-			new ParametersHelp("Displays the timer in real time.", "v",
-					"visual"),
-			new ParametersHelp(
+			new Option("Displays the timer in real time.", "v", "visual"),
+			new Option(
 					"Sets the rate (in seconds) at which the visual timer should be updated. This parameter implies the use of the parameter "
-							+ buildVParameter("v")
+							+ buildVOption("v")
 							+ ", therefore making the latter redundant when this is used.",
 					"r", "rate", "refresh_rate"),
 		};
@@ -302,7 +300,7 @@ public class CommandTimer extends BotCommand implements Stoppable,
 			AbstractBotCommand runningCommand){
 		return thisCommand.getCommandName().equals(TIMER)
 				&& !thisCommand.hasContent()
-				&& !thisCommand.getRequest().hasParameters();
+				&& !thisCommand.getRequest().hasOptions();
 	}
 	
 }

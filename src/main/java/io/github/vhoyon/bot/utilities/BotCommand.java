@@ -40,8 +40,8 @@ public abstract class BotCommand extends AbstractBotCommand implements
 	}
 	
 	@Override
-	public String formatParameter(String parameterToFormat){
-		return buildVParameter(parameterToFormat);
+	public String formatOption(String optionToFormat){
+		return buildVOption(optionToFormat);
 	}
 	
 }

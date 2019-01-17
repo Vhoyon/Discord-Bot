@@ -1,5 +1,6 @@
 package io.github.vhoyon.bot.app;
 
+import io.github.ved.jrequester.Request;
 import io.github.vhoyon.bot.consoles.TerminalConsole;
 import io.github.vhoyon.bot.consoles.UIConsole;
 import io.github.vhoyon.vramework.Framework;
@@ -8,7 +9,6 @@ import io.github.vhoyon.vramework.modules.Audit;
 import io.github.vhoyon.vramework.modules.Environment;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.AuditableFile;
-import io.github.vhoyon.vramework.objects.Request;
 import io.github.vhoyon.vramework.utilities.FrameworkTemplate;
 
 /**
@@ -26,22 +26,22 @@ public class Main {
 			
 			Request programRequest = new Request(args);
 			
-			programRequest.setParamLink("d", "debug");
-			programRequest.setParamLink("i", "instant");
-			programRequest.setParamLink("t", "terminal");
+			programRequest.setOptionLink("d", "debug");
+			programRequest.setOptionLink("i", "instant");
+			programRequest.setOptionLink("t", "terminal");
 			
 			if(programRequest.hasError()){
 				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
-			Framework.build(programRequest.hasParameter("d"));
+			Framework.build(programRequest.hasOption("d"));
 			
 			Audit.setOutputs(new AuditableFile("audit.txt", Framework
 					.runnableSystemPath()));
 			
 			Console console;
 			
-			if(programRequest.hasParameter("t")){
+			if(programRequest.hasOption("t")){
 				
 				console = new TerminalConsole(){
 					@Override
@@ -94,7 +94,7 @@ public class Main {
 			
 			Logger.setSeparator(null);
 			
-			boolean startImmediately = programRequest.hasParameter("i");
+			boolean startImmediately = programRequest.hasOption("i");
 			
 			// CAREFUL : This call blocks the main thread!
 			console.initialize(startImmediately);

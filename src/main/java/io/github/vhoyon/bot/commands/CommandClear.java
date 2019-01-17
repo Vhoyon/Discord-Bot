@@ -8,13 +8,13 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.ThreadPool;
 
@@ -67,9 +67,9 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		boolean shouldDoClear = true;
 		
-		if(hasParameter("c")){
+		if(hasOption("c")){
 			
-			String content = getParameter("c").getContent();
+			String content = getOption("c").getContent();
 			
 			if(content == null){
 				
@@ -111,7 +111,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 			
 		}
 		
-		if(hasParameter("u", "s", "b")){
+		if(hasOption("u", "s", "b")){
 			
 			try{
 				
@@ -119,11 +119,11 @@ public class CommandClear extends BotCommand implements Stoppable {
 				
 				final Member usr;
 				
-				if(hasParameter("u")){
-					usr = getParameterAsMention("u");
+				if(hasOption("u")){
+					usr = getOptionAsMention("u");
 					paramUsed = "u";
 				}
-				else if(hasParameter("s")){
+				else if(hasOption("s")){
 					usr = getMember();
 					paramUsed = "s";
 				}
@@ -147,7 +147,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		}
 		
 		if(shouldDoClear)
-			doClearLogic(hasParameter("i"));
+			doClearLogic(hasOption("i"));
 		
 	}
 	
@@ -238,7 +238,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	protected void doClearLogic(final String confMessage,
 			final String notifyMessage, boolean shouldInvert){
 		
-		if(hasParameter("f")){
+		if(hasOption("f")){
 			callDeleteMessages(notifyMessage, shouldInvert);
 		}
 		else{
@@ -265,7 +265,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 			
 			deleteMessages(CommandClear.this.conditions, shouldInvert);
 			
-			if(notifyMessage != null && isAlive() && hasParameter("n"))
+			if(notifyMessage != null && isAlive() && hasOption("n"))
 				sendInfoMessage(notifyMessage);
 			
 		}
@@ -301,7 +301,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		MessageHistory messageHistory = getTextContext().getHistory();
 		
-		boolean shouldCompleteBeforeNext = hasParameter("w");
+		boolean shouldCompleteBeforeNext = hasOption("w");
 		
 		int messageProcessed = 0;
 		
@@ -520,7 +520,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 		
 		ArrayList<Message> messagesWithCondition = new ArrayList<>();
 		
-		boolean conditionsGateIsAnd = !hasParameter("or");
+		boolean conditionsGateIsAnd = !hasOption("or");
 		
 		//@formatter:off
 		messageHistory.forEach(message -> {
@@ -561,35 +561,34 @@ public class CommandClear extends BotCommand implements Stoppable {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp(
+			new Option(
 					"Allows you to delete the messages of a user you specify.",
 					1, "u", "user"),
-			new ParametersHelp("Allows you to delete your own messages.",
-					false, 2, "s", "self"),
-			new ParametersHelp(
-					"Allows you to delete all of the bots messages.", false, 3,
-					"b", "bot"),
-			new ParametersHelp(
+			new Option("Allows you to delete your own messages.", false, 2,
+					"s", "self"),
+			new Option("Allows you to delete all of the bots messages.", false,
+					3, "b", "bot"),
+			new Option(
 					"Clears the commands issued to the bot. By default it clears the commands with the current prefix unless it is given a specific prefix to clear.",
 					true, 4, "c"),
-			new ParametersHelp(
+			new Option(
 					"Inverts the condition applied to the command (example : using this in combination with "
-							+ formatParameter("s")
+							+ formatOption("s")
 							+ " would clear messages of everyone but yourself).",
 					false, "i", "invert"),
-			new ParametersHelp(
+			new Option(
 					"This makes the bot notify the text channel of what it cleared.",
 					false, "n", "notify"),
-			new ParametersHelp(
+			new Option(
 					"Skips the confirmation and execute the clear command immediately.",
 					"f", "force"),
-			new ParametersHelp(
+			new Option(
 					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
 					false, "w", "wait"),
-			new ParametersHelp(
+			new Option(
 					"Allows the conditions parser to use an OR logic gate instead of an AND for all conditions.",
 					false, "or"),
 		};

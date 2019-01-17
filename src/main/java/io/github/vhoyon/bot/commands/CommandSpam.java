@@ -5,12 +5,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
+import io.github.ved.jrequester.Option;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.Mention;
-import io.github.vhoyon.vramework.objects.ParametersHelp;
 
 /**
  * Command to spam people. Thus its name. It's a fun command.
@@ -42,7 +42,7 @@ public class CommandSpam extends BotCommand implements Stoppable {
 		
 		boolean canSpam = true;
 		
-		boolean shouldSendToMember = hasParameter("u");
+		boolean shouldSendToMember = hasOption("u");
 		
 		Mention memberToSpam = null;
 		List<Member> membersToSpam = null;
@@ -50,10 +50,10 @@ public class CommandSpam extends BotCommand implements Stoppable {
 		if(shouldSendToMember){
 			try{
 				
-				String possibleMention = getParameter("u").getContent();
+				String possibleMention = getOption("u").getContent();
 				
 				if(isStringMention(possibleMention)){
-					memberToSpam = getParameterAsMention("u");
+					memberToSpam = getOptionAsMention("u");
 					
 					if(getBotMember().equals(memberToSpam))
 						throw new BadContentException(
@@ -128,7 +128,7 @@ public class CommandSpam extends BotCommand implements Stoppable {
 				
 			}
 			
-			boolean shouldAppendNumber = hasParameter("n");
+			boolean shouldAppendNumber = hasOption("n");
 			
 			try{
 				
@@ -186,15 +186,15 @@ public class CommandSpam extends BotCommand implements Stoppable {
 	}
 	
 	@Override
-	public ParametersHelp[] getParametersDescriptions(){
-		return new ParametersHelp[]
+	public Option[] getOptions(){
+		return new Option[]
 		{
-			new ParametersHelp("Specifies how many messages will be sent.",
-					"c", "count"),
-			new ParametersHelp(
+			new Option("Specifies how many messages will be sent.", "c",
+					"count"),
+			new Option(
 					"Specifies a user to send the messages to. Mention the user you want to spam using the "
 							+ code("@[username]") + " notation.", "u", "user"),
-			new ParametersHelp(
+			new Option(
 					"Specifies if the message should have its number appended at the end. This parameter will add "
 							+ code("#1")
 							+ " after the first message, for example.", false,
