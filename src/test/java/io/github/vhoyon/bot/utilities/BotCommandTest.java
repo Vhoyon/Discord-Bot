@@ -1,16 +1,17 @@
 package io.github.vhoyon.bot.utilities;
 
-import io.github.ved.jrequester.Request;
-import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import utils.MockFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
+import utils.MockFactory;
+import io.github.ved.jrequester.Request;
+import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 
 class BotCommandTest implements DiscordFormatter {
 	
