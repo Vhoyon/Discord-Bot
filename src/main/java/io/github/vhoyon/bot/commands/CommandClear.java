@@ -397,7 +397,7 @@ public class CommandClear extends BotCommand implements Stoppable {
 	protected List<Message> getFullMessageList(MessageHistory messageHistory,
 			boolean shouldInvert){
 		return this.getFullMessageList(messageHistory,
-				(ArrayList<Predicate<Message>>)null, shouldInvert);
+				(List<Predicate<Message>>)null, shouldInvert);
 	}
 	
 	/**
