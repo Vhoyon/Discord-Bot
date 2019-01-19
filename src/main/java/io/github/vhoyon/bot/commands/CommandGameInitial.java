@@ -1,10 +1,10 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.ArrayList;
-
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
+
+import java.util.ArrayList;
 
 /**
  * Command that initializes the game pool and is required for other game
@@ -39,7 +39,7 @@ public class CommandGameInitial extends GameInteractionCommands {
 			messages.add(lang("GamesReadyToBeRolledMessage"));
 			
 			for(int i = 1; i <= gamepool.size(); i++)
-				messages.add(i + ". `" + gamepool.get(i - 1) + "`");
+				messages.add(i + ". " + code(gamepool.get(i - 1)));
 			
 			groupAndSendMessages(messages);
 			
@@ -57,7 +57,7 @@ public class CommandGameInitial extends GameInteractionCommands {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Create a list of games that you usually play!";
+		return lang("Description");
 	}
 	
 }

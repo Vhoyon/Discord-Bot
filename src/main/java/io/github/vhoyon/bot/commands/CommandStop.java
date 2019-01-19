@@ -46,9 +46,9 @@ public class CommandStop extends BotCommand {
 					new CommandConfirmed(this){
 						@Override
 						public String getConfMessage(){
-							return "Please confirm that you want to stop the "
-									+ buildVCommand(commandToStop
-											.getCommandName()) + " command.";
+							return lang("ConfirmStopCommand",
+									buildVCommand(commandToStop
+											.getCommandName()));
 						}
 						
 						@Override
@@ -105,7 +105,7 @@ public class CommandStop extends BotCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "This command stops the specified command";
+		return lang("Description");
 	}
 	
 }

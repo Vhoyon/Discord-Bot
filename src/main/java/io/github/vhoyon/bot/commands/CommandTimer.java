@@ -1,8 +1,5 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -13,6 +10,9 @@ import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.TimerManager;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Command to create a timer in the TextChannel where this command was called
@@ -41,8 +41,8 @@ public class CommandTimer extends BotCommand implements Stoppable,
 				
 				timeConstruct(timeRemaining);
 				
-				sendMessage("Time remaining : "
-						+ formatDate(hours, minutes, seconds));
+				sendMessage(lang("RemainingTime",
+						formatDate(hours, minutes, seconds)));
 				
 				return;
 				
@@ -139,25 +139,23 @@ public class CommandTimer extends BotCommand implements Stoppable,
 			TimerManager.stopTimer("CommandTimer" + getKey());
 		}
 		catch(NullPointerException e){
-			new BotError(this, "You must give an amount of time to the "
-					+ buildVCommand("timer") + " command for it to count.");
+			new BotError(this, lang("ErrorAmountNotGiven",
+					buildVCommand("timer")));
 		}
 		catch(NumberFormatException e){
-			new BotError(this, "One of the value provided isn't a number!");
+			new BotError(this, lang("ErrorValueNotANumber"));
 		}
 		catch(BadFormatException e){
 			
 			switch(e.getErrorCode()){
 			case 1:
-				new BotError(this, "Refresh rate's parameter cannot be empty!");
+				new BotError(this, lang("ErrorRateOptionEmpty"));
 				break;
 			case 2:
-				new BotError(this,
-						"The value given to the refresh rate parameter isn't a number!");
+				new BotError(this, lang("ErrorRateValueNotANumber"));
 				break;
 			case 3:
-				new BotError(this,
-						"The number given to the refresh rate parameter needs to be 1 or more!");
+				new BotError(this, lang("ErrorRateValueTooLow"));
 				break;
 			}
 			
@@ -274,24 +272,19 @@ public class CommandTimer extends BotCommand implements Stoppable,
 	
 	@Override
 	public String getCommandDescription(){
-		return "Setup a timer and the bot will send a message when it's over!";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option("Sets the hours of the timer.", "h", "hour", "hours"),
-			new Option("Sets the minutes of the timer.", "m", "minute",
-					"minutes"),
-			new Option("Sets the seconds of the timer.", "s", "second",
-					"seconds"),
-			new Option("Displays the timer in real time.", "v", "visual"),
-			new Option(
-					"Sets the rate (in seconds) at which the visual timer should be updated. This parameter implies the use of the parameter "
-							+ buildVOption("v")
-							+ ", therefore making the latter redundant when this is used.",
-					"r", "rate", "refresh_rate"),
+			new Option(lang("OptionHour"), "h", "hour", "hours"),
+			new Option(lang("OptionMinute"), "m", "minute", "minutes"),
+			new Option(lang("OptionSecond"), "s", "second", "seconds"),
+			new Option(lang("OptionVisual"), "v", "visual"),
+			new Option(lang("OptionRate", buildVOption("v")), "r", "rate",
+					"refresh_rate"),
 		};
 	}
 	

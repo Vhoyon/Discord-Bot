@@ -51,7 +51,7 @@ public class CommandGameAdd extends GameInteractionCommands {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Add a game to the list of game!";
+		return lang("Description");
 	}
 	
 }

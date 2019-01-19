@@ -37,7 +37,7 @@ public class CommandMusicReplay extends MusicCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return super.getCommandDescription(); // TODO : Write description for CommandMusicReplay
+		return lang("Description");
 	}
 	
 }

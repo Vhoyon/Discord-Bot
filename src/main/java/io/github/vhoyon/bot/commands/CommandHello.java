@@ -14,7 +14,7 @@ public class CommandHello extends SimpleTextCommand {
 	
 	@Override
 	public String getTextToSend(){
-		return lang("HelloResponse", getUserName());
+		return lang("Response", getUserName());
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class CommandHello extends SimpleTextCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Being polite is my top priority!";
+		return lang("Description");
 	}
 	
 }

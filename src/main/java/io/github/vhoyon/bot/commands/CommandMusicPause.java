@@ -49,7 +49,7 @@ public class CommandMusicPause extends MusicCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Stop the music until you start it back up";
+		return lang("Description");
 	}
 	
 }

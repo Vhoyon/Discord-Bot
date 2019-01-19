@@ -1,9 +1,9 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.ArrayList;
-
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
+
+import java.util.ArrayList;
 
 /**
  * Command that lists the games that are in the game pool and sends a message
@@ -35,7 +35,7 @@ public class CommandGameList extends GameInteractionCommands {
 			messages.add(lang("TitleOfList"));
 			
 			for(int i = 0; i < gamepool.size(); i++)
-				messages.add((i + 1) + ". `" + gamepool.get(i) + "`");
+				messages.add((i + 1) + ". " + code(gamepool.get(i)));
 			
 			groupAndSendMessages(messages);
 			
@@ -50,7 +50,7 @@ public class CommandGameList extends GameInteractionCommands {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Display a list of all the games that you have in the games list";
+		return lang("Description");
 	}
 	
 }

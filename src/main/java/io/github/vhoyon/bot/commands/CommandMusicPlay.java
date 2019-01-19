@@ -1,19 +1,11 @@
 package io.github.vhoyon.bot.commands;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
-
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -24,6 +16,13 @@ import io.github.vhoyon.bot.utilities.music.MusicPlayer;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Command to play a track into the VoiceChannel of the user that used this
@@ -77,9 +76,8 @@ public class CommandMusicPlay extends MusicCommand {
 				&& !this.getConnectedVoiceChannelBot().equals(
 						this.getConnectedVoiceChannelMember())){
 			
-			sendInfoMessage("The bot is already playing in "
-					+ code(this.getConnectedVoiceChannelBot().getName())
-					+ ". Join that voice channel to listen to music");
+			sendInfoMessage(lang("AlreadyPlayingOnOtherVoiceChannel", code(this
+					.getConnectedVoiceChannelBot().getName())));
 			
 		}
 		else{
@@ -91,7 +89,7 @@ public class CommandMusicPlay extends MusicCommand {
 						
 						@Override
 						public String getConfMessage(){
-							return "There are already songs in the queue. Would you like to overwrite it?";
+							return lang("ConfOverride");
 						}
 						
 						@Override
@@ -127,8 +125,9 @@ public class CommandMusicPlay extends MusicCommand {
 								
 								if(isUrl(getContent())){
 									
-									sendInfoMessage("Getting data from "
-											+ ital(code(getContent())) + "...",
+									sendInfoMessage(
+											lang("LoadingDataFromSource",
+													ital(code(getContent()))),
 											true);
 									
 									source = getContent();
@@ -136,8 +135,9 @@ public class CommandMusicPlay extends MusicCommand {
 								}
 								else{
 									
-									sendInfoMessage("Searching Youtube for "
-											+ ital(code(getContent())) + "!",
+									sendInfoMessage(
+											lang("LoadingDataFromYoutube",
+													ital(code(getContent()))),
 											true);
 									
 									source = getSourceFromYoutube(getContent());
@@ -155,9 +155,7 @@ public class CommandMusicPlay extends MusicCommand {
 								Logger.log(
 										"Please setup your environment variable \"YOUTUBE_TOKEN\" to give users the ability to search using raw text!",
 										LogType.WARNING);
-								new BotError(
-										this,
-										"The owner of this bot did not setup his tokens correctly, please try again using a link!");
+								new BotError(this, lang("ErrorTokenNotSetup"));
 							}
 							
 						}
@@ -317,15 +315,15 @@ public class CommandMusicPlay extends MusicCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Start a song by giving a youtube link or restart a paused song by not giving a link";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option(lang("ReplayDescription"), false, "l", "latest"),
-			new Option(lang("AnythingDescription"), false, "r", "random")
+			new Option(lang("OptionLatest"), false, "l", "latest"),
+			new Option(lang("OptionRandom"), false, "r", "random")
 		};
 	}
 	

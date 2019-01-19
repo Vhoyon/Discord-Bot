@@ -34,7 +34,7 @@ public class CommandMusicLoop extends MusicCommand {
 			if(player.isLooping()){
 				
 				player.stopLooping();
-				sendMessage("The loop has been stopped");
+				sendMessage(lang("LoopStopped"));
 				
 			}
 			else{
@@ -42,13 +42,13 @@ public class CommandMusicLoop extends MusicCommand {
 				if(hasOption("o", "one")){
 					
 					player.setLoopingOne();
-					sendMessage("A Loop on the current song has been started.");
+					sendMessage(lang("SingleLoop"));
 					
 				}
 				else{
 					
 					player.setLoopingAll();
-					sendMessage("A loop on all the songs of the playlist has been started.");
+					sendMessage(lang("AllLoop"));
 					
 				}
 				
@@ -65,16 +65,14 @@ public class CommandMusicLoop extends MusicCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Skip the song that is currently playing";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option(
-					"This makes the looping of a single song instead of the whole track playlist.",
-					false, "o", "one")
+			new Option(lang("OptionOne"), false, "o", "one")
 		};
 	}
 	

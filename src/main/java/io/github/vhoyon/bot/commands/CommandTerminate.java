@@ -24,7 +24,7 @@ public class CommandTerminate extends SimpleTextCommand implements Hidden {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Terminate the bot";
+		return lang("Description");
 	}
 	
 }

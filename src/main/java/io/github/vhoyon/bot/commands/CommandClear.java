@@ -548,40 +548,23 @@ public class CommandClear extends BotCommand implements Stoppable {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Clear all the messages that in the text channel you execute the command!";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option(
-					"Allows you to delete the messages of a user you specify.",
-					1, "u", "user"),
-			new Option("Allows you to delete your own messages.", false, 2,
-					"s", "self"),
-			new Option("Allows you to delete all of the bots messages.", false,
-					3, "b", "bot"),
-			new Option(
-					"Clears the commands issued to the bot. By default it clears the commands with the current prefix unless it is given a specific prefix to clear.",
-					true, 4, "c"),
-			new Option(
-					"Inverts the condition applied to the command (example : using this in combination with "
-							+ formatOption("s")
-							+ " would clear messages of everyone but yourself).",
-					false, "i", "invert"),
-			new Option(
-					"This makes the bot notify the text channel of what it cleared.",
-					false, "n", "notify"),
-			new Option(
-					"Skips the confirmation and execute the clear command immediately.",
-					"f", "force"),
-			new Option(
-					"Waits that the message has been successfully deleted before deleting the others. Useful if you are not sure if you should delete all the messages as you can stop the command.",
-					false, "w", "wait"),
-			new Option(
-					"Allows the conditions parser to use an OR logic gate instead of an AND for all conditions.",
-					false, "or"),
+			new Option(lang("OptionUser"), 1, "u", "user"),
+			new Option(lang("OptionSelf"), false, 2, "s", "self"),
+			new Option(lang("OptionBot"), false, 3, "b", "bot"),
+			new Option("OptionCommand", true, 4, "c", "command"),
+			new Option(lang("OptionInvert", formatOption("s")), false, "i",
+					"invert"),
+			new Option(lang("OptionNotify"), false, "n", "notify"),
+			new Option(lang("OptionForce"), "f", "force"),
+			new Option(lang("OptionWait"), false, "w", "wait"),
+			new Option(lang("OptionOr"), false, "or"),
 		};
 	}
 	

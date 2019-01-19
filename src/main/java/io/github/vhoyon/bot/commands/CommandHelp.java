@@ -30,7 +30,7 @@ public class CommandHelp extends BotCommand {
 			boolean isFull = hasOption("f");
 			
 			String fullHelpString = getRouter().getCommandsRepo()
-					.getFullHelpString("Available commands :", isFull);
+					.getFullHelpString(lang("TextAvailableCommands"), isFull);
 			
 			if(hasOption("p")){
 				sendPrivateMessage(fullHelpString);
@@ -52,9 +52,9 @@ public class CommandHelp extends BotCommand {
 				
 				StringBuilder builder = new StringBuilder();
 				
-				String helpString = commandToExplain.getHelp("Usage : "
-						+ commandToExplain.getUsage() + ".",
-						ital("Available parameters :"), null);
+				String helpString = commandToExplain.getHelp(
+						lang("TextUsage", commandToExplain.getUsage()),
+						ital(lang("TextWhenOptionsAvailable")), null);
 				
 				builder.append(helpString);
 				
@@ -68,8 +68,8 @@ public class CommandHelp extends BotCommand {
 				
 			}
 			catch(CommandNotFoundException e){
-				new BotError(this, "The command " + buildVCommand(content)
-						+ "does not exist!");
+				new BotError(this, lang("ErrorCommandDoesNotExists",
+						buildVCommand(content)));
 			}
 			catch(Exception e){
 				Logger.log(e);
@@ -86,18 +86,15 @@ public class CommandHelp extends BotCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Well you just used this command.So ;)";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option(
-					"Send the requested help string to your private channel.",
-					false, "p", "private"),
-			new Option("Shows the full descriptions of each commands inline.",
-					false, "f", "full")
+			new Option(lang("OptionPrivate"), false, "p", "private"),
+			new Option(lang("OptionFull"), false, "f", "full")
 		};
 	}
 	

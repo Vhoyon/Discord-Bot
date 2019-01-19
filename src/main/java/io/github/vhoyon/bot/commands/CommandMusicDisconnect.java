@@ -35,7 +35,7 @@ public class CommandMusicDisconnect extends MusicCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Disconnect the bot from the voice channel";
+		return lang("Description");
 	}
 	
 }

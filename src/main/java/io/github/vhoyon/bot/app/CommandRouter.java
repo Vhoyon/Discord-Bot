@@ -192,10 +192,8 @@ public class CommandRouter extends AbstractCommandRouter implements Resources,
 				String formattedHelp = buildVCommand(HELP);
 				String formattedHelpCommand = buildVCommand(HELP + " [command]");
 				
-				return format(
-						"Hi {1}, I'm {2}! Enter {3} to know more about the available commands, or type {4} to get the help of a command in particular!",
-						userMention, botNickname, formattedHelp,
-						formattedHelpCommand);
+				return lang("MessageWhenOnlyMention", userMention, botNickname,
+						formattedHelp, formattedHelpCommand);
 			}
 		};
 	}

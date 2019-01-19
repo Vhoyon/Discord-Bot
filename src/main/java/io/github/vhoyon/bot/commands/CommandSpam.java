@@ -1,10 +1,5 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -13,6 +8,11 @@ import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.Mention;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Command to spam people. Thus its name. It's a fun command.
@@ -58,11 +58,9 @@ public class CommandSpam extends BotCommand implements Stoppable {
 					memberToSpam = getOptionAsMention("u");
 					
 					if(getBotMember().equals(memberToSpam))
-						throw new BadContentException(
-								"You think I'll spam myself? C'mon, I'm better than that...");
+						throw new BadContentException(lang("ErrorSpamSelf"));
 					else if(memberToSpam.getUser().isBot())
-						throw new BadContentException(
-								"I won't spam my fellow bots!");
+						throw new BadContentException(lang("ErrorSpamBots"));
 				}
 				else if(isStringMentionRole(possibleMention)){
 					Role role = getGuild().getRoleById(
@@ -71,13 +69,11 @@ public class CommandSpam extends BotCommand implements Stoppable {
 					membersToSpam = getGuild().getMembersWithRoles(role);
 					
 					if(membersToSpam.size() == 0)
-						throw new BadContentException(
-								"The role you mentionned has no member in it, nobody was spammed!");
+						throw new BadContentException(lang("ErrorEmptyRole"));
 				}
 				else{
-					throw new BadContentException(
-							"Your mention is not valid. Tag a user (or a role!) with "
-									+ code("@[username|role]") + "!");
+					throw new BadContentException(lang("ErrorInvalidMention",
+							code("@[username|role]")));
 				}
 				
 			}
@@ -109,9 +105,8 @@ public class CommandSpam extends BotCommand implements Stoppable {
 			if(hasContent()){
 				
 				if(shouldSendToMember){
-					message = ital(getMember().getAsMention()
-							+ " is spamming you this :")
-							+ " " + getContent();
+					message = lang("PrivateSpamFromMemberWithContent",
+							ital(getMember().getAsMention()), getContent());
 				}
 				else{
 					message = getContent();
@@ -121,12 +116,12 @@ public class CommandSpam extends BotCommand implements Stoppable {
 			else{
 				
 				if(shouldSendToMember){
-					message = ital(getMember().getAsMention()
-							+ " is spamming you!");
+					message = lang("PrivateSpamFromMember", ital(getMember()
+							.getAsMention()));
 				}
 				else{
-					message = ital(bold(getMember().getAsMention()))
-							+ " is spamming y'all!";
+					message = lang("SpamAllFromMember", ital(bold(getMember()
+							.getAsMention())));
 				}
 				
 			}
@@ -152,7 +147,7 @@ public class CommandSpam extends BotCommand implements Stoppable {
 						
 						if(memberToSpam != null){
 							if(i == 0 && memberToSpam.isMentionningSelf()){
-								sendMessage("I like how you are spamming yourself. Good job.");
+								sendMessage(lang("SpammingAuthor"));
 							}
 							
 							sendMessageToMember(memberToSpam, messageToSend);
@@ -186,23 +181,16 @@ public class CommandSpam extends BotCommand implements Stoppable {
 	
 	@Override
 	public String getCommandDescription(){
-		return "This command sends the specified amount of the specified message in a text channel";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option("Specifies how many messages will be sent.", "c",
-					"count"),
-			new Option(
-					"Specifies a user to send the messages to. Mention the user you want to spam using the "
-							+ code("@[username]") + " notation.", "u", "user"),
-			new Option(
-					"Specifies if the message should have its number appended at the end. This parameter will add "
-							+ code("#1")
-							+ " after the first message, for example.", false,
-					"n", "number")
+			new Option(lang("OptionCount"), "c", "count"),
+			new Option(lang("OptionUser", code("@[username]")), "u", "user"),
+			new Option(lang("OptionNumber", code("#1")), false, "n", "number")
 		};
 	}
 	

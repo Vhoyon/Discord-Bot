@@ -66,14 +66,14 @@ public class CommandGameRemove extends GameInteractionCommands {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Remove a game form the game list";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option("Removes all games from the list.", "a", "all"),
+			new Option(lang("OptionAll"), "a", "all"),
 		};
 	}
 	

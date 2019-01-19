@@ -1,8 +1,5 @@
 package io.github.vhoyon.bot.commands;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import io.github.ved.jrequester.Option;
 import io.github.ved.jrequester.OptionData;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -13,6 +10,10 @@ import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Command to interact with the settings of this bot. There's quite a few things
@@ -121,9 +122,8 @@ public class CommandSetting extends BotCommand {
 					
 					this.setSendable(true);
 					
-					sendMessage("The setting " + code(settingName)
-							+ " has been set back to its default ("
-							+ ital(code(settingField.getDefaultValue())) + ")!");
+					sendMessage(lang("WasSetToDefault", code(settingName),
+							ital(code(settingField.getDefaultValue()))));
 					
 				}
 				else{
@@ -131,11 +131,9 @@ public class CommandSetting extends BotCommand {
 					Object defaultSettingValue = settingField.getDefaultValue();
 					Object currentSettingValue = settingField.getValue();
 					
-					sendMessage("The default value for the setting "
-							+ code(settingName) + " is : "
-							+ ital(code(defaultSettingValue))
-							+ ". Current value : " + code(currentSettingValue)
-							+ ".");
+					sendMessage(lang("TellDefaultValue", code(settingName),
+							ital(code(defaultSettingValue)),
+							code(currentSettingValue)));
 					
 				}
 				
@@ -200,19 +198,20 @@ public class CommandSetting extends BotCommand {
 		
 		@Override
 		public String lang(String key){
-			return this.shouldSendMessages ? super.lang(key) : null;
+			return this.shouldSendMessages ? CommandSetting.this.lang(key)
+					: null;
 		}
 		
 		@Override
 		public String lang(String key, Object... replacements){
-			return this.shouldSendMessages ? super.lang(key, replacements)
-					: null;
+			return this.shouldSendMessages ? CommandSetting.this.lang(key,
+					replacements) : null;
 		}
 		
 	}
 	
 	private boolean shouldSwitchToDefault;
-	private ArrayList<SettingChanger<?>> settings = new ArrayList<>();
+	private List<SettingChanger<?>> settings = new ArrayList<>();
 	
 	@Override
 	public void actions(){
@@ -226,10 +225,8 @@ public class CommandSetting extends BotCommand {
 				.count() > 0;
 		
 		if(!hasAtLeastOneSetting){
-			new BotError(
-					this,
-					"You haven't entered a single setting parameter to change - get to know which ones are available using "
-							+ buildVCommand(HELP + " " + "setting") + "!");
+			new BotError(this, lang("ErrorNoSettingEntered", buildVCommand(HELP
+					+ " " + "setting")));
 		}
 		
 	}
@@ -248,20 +245,18 @@ public class CommandSetting extends BotCommand {
 		new SettingChanger<String>("prefix"){
 			@Override
 			public void onSuccess(String newPrefix){
-				sendMessage("You switched the prefix to " + code(newPrefix)
-						+ "!");
+				sendMessage(lang("SuccessPrefix", code(newPrefix)));
 			}
 		};
 		
-		new SettingChanger<Character>("param_prefix"){
+		new SettingChanger<Character>("option_prefix"){
 			@Override
-			public void onSuccess(Character newParamPrefix){
-				sendMessage("You switched the parameters prefix to "
-						+ code(newParamPrefix)
-						+ " ("
-						+ ital("and of course "
-								+ code(newParamPrefix + "" + newParamPrefix))
-						+ ")!");
+			public void onSuccess(Character newOptionPrefix){
+				sendMessage(lang(
+						"SuccessOptionPrefix",
+						code(newOptionPrefix),
+						ital(lang("SuccessOptionPrefixSupp",
+								code(newOptionPrefix + "" + newOptionPrefix)))));
 			}
 		};
 		
@@ -270,8 +265,7 @@ public class CommandSetting extends BotCommand {
 			public void onSuccess(String newNickname){
 				setSelfNickname(newNickname);
 				
-				sendMessage("The nickname of the bot is now set to "
-						+ code(newNickname) + "!");
+				sendMessage(lang("SuccessNickname", code(newNickname)));
 			}
 		};
 		
@@ -279,10 +273,10 @@ public class CommandSetting extends BotCommand {
 			@Override
 			public void onSuccess(Boolean isConfirming){
 				if(isConfirming){
-					sendMessage("Stopping the most recent running command will now ask for a confirmation.");
+					sendMessage(lang("SuccessConfirmStopNowConfirms"));
 				}
 				else{
-					sendMessage("Stopping the most recent running command will not ask for a confirmation anymore.");
+					sendMessage(lang("SuccessConfirmStopNowDoesNotConfirm"));
 				}
 			}
 		};
@@ -293,8 +287,7 @@ public class CommandSetting extends BotCommand {
 				MusicManager.get().onPlayerPresent(this.getGuild(),
 						(player) -> player.setVolume(volume));
 				
-				sendMessage("The default volume will now be " + code(volume)
-						+ "!");
+				sendMessage(lang("SuccessVolume", code(volume)));
 			}
 			
 			@Override
@@ -309,8 +302,7 @@ public class CommandSetting extends BotCommand {
 				MusicManager.get().onPlayerPresent(this.getGuild(),
 						(player) -> player.setEmptyDropDelay(delay));
 				
-				sendMessage("The default disconnect delay for the bot when the music player is empty is now "
-						+ code(delay) + "!");
+				sendMessage(lang("SuccessEmptyDropDelay", code(delay)));
 			}
 			
 			@Override
@@ -322,8 +314,7 @@ public class CommandSetting extends BotCommand {
 		new SettingChanger<Integer>("alone_drop_delay"){
 			@Override
 			public void onSuccess(Integer delay){
-				sendMessage("The default disconnect delay for the bot when he gets alone is now "
-						+ code(delay) + "!");
+				sendMessage(lang("SuccessAloneDropDelay", code(delay)));
 			}
 			
 			@Override
@@ -349,52 +340,33 @@ public class CommandSetting extends BotCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "This command changes settings for the bot. Use the parameters below to change what you want to change!";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option(
-					"Changes the prefix used for each command. Default is "
-							+ code(getSettings().getSetting("prefix")
-									.getDefaultValue()) + ".", "prefix"),
-			new Option(
-					"Changes the parameters prefix used for each command. Default is "
-							+ code(getSettings().getSetting("param_prefix")
-									.getDefaultValue()) + ".", "param_prefix"),
-			new Option("Changes the bot's nickname. His default name is "
-					+ code(getSettings().getSetting("nickname")
-							.getDefaultValue()) + ".", "nickname"),
-			new Option(
-					"Determine the behavior of stopping the most recent running command. "
-							+ code("true")
-							+ " to ask for a confirmation, "
-							+ code("false")
-							+ " to stop the most recent command without confirming. Default is set to "
-							+ code(getSettings().getSetting("nickname")
-									.getDefaultValue()) + ".", "confirm_stop"),
-			new Option(
-					"Changes the bot's default volume when playing some music. The default value is "
-							+ code(getSettings().getSetting("volume")
-									.getDefaultValue()) + ".", "volume"),
-			new Option(
-					"Changes the bot's default disconnect time when the music player is empty. The default is "
-							+ code(getSettings().getSetting("empty_drop_delay")
-									.getDefaultValue()) + "ms.",
+			new Option(lang("OptionPrefix", code(getSetting("prefix")
+					.getDefaultValue())), "prefix"),
+			new Option(lang("OptionOptionPrefix",
+					code(getSetting("option_prefix").getDefaultValue())),
+					"option_prefix"),
+			new Option(lang("OptionNickname", code(getSetting("nickname")
+					.getDefaultValue())), "nickname"),
+			new Option(lang("OptionConfirmStop", code("true"), code("false"),
+					code(getSetting("nickname").getDefaultValue())),
+					"confirm_stop"),
+			new Option(lang("OptionVolume", code(getSetting("volume")
+					.getDefaultValue())), "volume"),
+			new Option(lang("OptionEmptyDropDelay",
+					code(getSetting("empty_drop_delay").getDefaultValue())),
 					"empty_drop_delay"),
-			new Option(
-					"Changes the bot's default disconnect time when the bot is not with humans anymore. The default is "
-							+ code(getSettings().getSetting("alone_drop_delay")
-									.getDefaultValue()) + "ms.",
+			new Option(lang("OptionAloneDropDelay",
+					code(getSetting("alone_drop_delay").getDefaultValue())),
 					"alone_drop_delay"),
-			new Option(
-					"Switch to allow for putting back the default value for each settings as parameters quickly.",
-					false, "d", "default"),
-			new Option(
-					"Switch to allow for setting the values to the Guild level instead of the TextChannel.",
-					false, "g", "guild"),
+			new Option(lang("OptionDefault"), false, "d", "default"),
+			new Option(lang("OptionGuild"), false, "g", "guild"),
 		};
 	}
 	

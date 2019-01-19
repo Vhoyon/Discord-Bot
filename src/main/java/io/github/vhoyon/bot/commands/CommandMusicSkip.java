@@ -142,15 +142,14 @@ public class CommandMusicSkip extends MusicCommand {
 	
 	@Override
 	public String getCommandDescription(){
-		return "Skip the song that is currently playing";
+		return lang("Description");
 	}
 	
 	@Override
 	public Option[] getOptions(){
 		return new Option[]
 		{
-			new Option("Skips all the songs added and disconnect the bot.",
-					false, "a", "all")
+			new Option(lang("OptionAll"), false, "a", "all")
 		};
 	}
 	
