@@ -4,6 +4,8 @@ import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -83,11 +85,8 @@ public class CommandGameRoll extends GameInteractionCommands {
 	}
 	
 	@Override
-	public String[] getAliases(){
-		return new String[]
-		{
-			GAME_ROLL_ALT
-		};
+	public List<String> getAliases(){
+		return Arrays.asList(GAME_ROLL_ALT);
 	}
 	
 	@Override

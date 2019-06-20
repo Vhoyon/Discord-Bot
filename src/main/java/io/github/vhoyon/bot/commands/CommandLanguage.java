@@ -1,5 +1,8 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.Arrays;
+import java.util.List;
+
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.objects.Dictionary;
@@ -72,11 +75,8 @@ public class CommandLanguage extends BotCommand {
 	}
 	
 	@Override
-	public String[] getAliases(){
-		return new String[]
-		{
-			LANGUAGE
-		};
+	public List<String> getAliases(){
+		return Arrays.asList(LANGUAGE);
 	}
 	
 	@Override

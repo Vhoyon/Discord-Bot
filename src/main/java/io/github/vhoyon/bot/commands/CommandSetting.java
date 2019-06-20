@@ -12,6 +12,7 @@ import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -331,11 +332,8 @@ public class CommandSetting extends BotCommand {
 	}
 	
 	@Override
-	public String[] getAliases(){
-		return new String[]
-		{
-			"settings"
-		};
+	public List<String> getAliases(){
+		return Arrays.asList("settings");
 	}
 	
 	@Override
