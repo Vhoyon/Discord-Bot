@@ -1,5 +1,10 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+
 import io.github.ved.jrequester.Option;
 import io.github.ved.jrequester.OptionData;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -10,11 +15,6 @@ import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Command to interact with the settings of this bot. There's quite a few things

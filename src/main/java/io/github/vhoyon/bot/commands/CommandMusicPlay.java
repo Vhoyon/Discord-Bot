@@ -1,11 +1,19 @@
 package io.github.vhoyon.bot.commands;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
+
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -16,13 +24,6 @@ import io.github.vhoyon.bot.utilities.music.MusicPlayer;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Command to play a track into the VoiceChannel of the user that used this

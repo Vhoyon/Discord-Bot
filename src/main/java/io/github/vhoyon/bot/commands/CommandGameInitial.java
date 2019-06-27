@@ -1,10 +1,10 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.ArrayList;
+
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
-
-import java.util.ArrayList;
 
 /**
  * Command that initializes the game pool and is required for other game

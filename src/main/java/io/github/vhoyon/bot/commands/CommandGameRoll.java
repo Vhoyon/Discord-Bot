@@ -1,12 +1,12 @@
 package io.github.vhoyon.bot.commands;
 
-import io.github.vhoyon.bot.errorHandling.BotError;
-import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
-import io.github.vhoyon.bot.utilities.specifics.GamePool;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import io.github.vhoyon.bot.errorHandling.BotError;
+import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
+import io.github.vhoyon.bot.utilities.specifics.GamePool;
 
 /**
  * Command that rolls a dice to get a random game out of the game pool for its

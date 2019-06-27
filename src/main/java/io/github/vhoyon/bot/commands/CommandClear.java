@@ -1,5 +1,13 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageHistory;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;
@@ -9,14 +17,6 @@ import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.utilities.MessageManager;
 import io.github.vhoyon.vramework.utilities.ThreadPool;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageHistory;
-import net.dv8tion.jda.core.exceptions.PermissionException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * This command clears every messages that matches the request's conditions in

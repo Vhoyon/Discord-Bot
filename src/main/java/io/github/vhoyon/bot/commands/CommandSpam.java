@@ -1,5 +1,10 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
@@ -8,11 +13,6 @@ import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.objects.Mention;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Command to spam people. Thus its name. It's a fun command.

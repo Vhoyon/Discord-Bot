@@ -1,9 +1,9 @@
 package io.github.vhoyon.bot.commands;
 
+import java.util.ArrayList;
+
 import io.github.vhoyon.bot.utilities.abstracts.GameInteractionCommands;
 import io.github.vhoyon.bot.utilities.specifics.GamePool;
-
-import java.util.ArrayList;
 
 /**
  * Command that lists the games that are in the game pool and sends a message
