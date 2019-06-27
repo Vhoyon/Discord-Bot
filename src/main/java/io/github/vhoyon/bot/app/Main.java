@@ -3,13 +3,13 @@ package io.github.vhoyon.bot.app;
 import io.github.ved.jrequester.Request;
 import io.github.vhoyon.bot.consoles.TerminalConsole;
 import io.github.vhoyon.bot.consoles.UIConsole;
-import io.github.vhoyon.vramework.Framework;
+import io.github.vhoyon.vramework.Vramework;
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.modules.Audit;
 import io.github.vhoyon.vramework.modules.Environment;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.AuditableFile;
-import io.github.vhoyon.vramework.utilities.FrameworkTemplate;
+import io.github.vhoyon.vramework.utilities.VrameworkTemplate;
 
 /**
  * The main class for running Vhoyon's bot.
@@ -34,9 +34,9 @@ public class Main {
 				System.out.println(programRequest.getDefaultErrorMessage());
 			}
 			
-			Framework.build(programRequest.hasOption("d"));
+			Vramework.build(programRequest.hasOption("d"));
 			
-			Audit.setOutputs(new AuditableFile("audit.txt", Framework
+			Audit.setOutputs(new AuditableFile("audit.txt", Vramework
 					.runnableSystemPath()));
 			
 			Console console;
@@ -48,15 +48,15 @@ public class Main {
 					public void onStart() throws Exception{
 						Environment.refresh();
 						
-						FrameworkTemplate.botToken = Environment
+						VrameworkTemplate.botToken = Environment
 								.getVar("BOT_TOKEN");
 						
-						FrameworkTemplate.startBot(this, new MessageListener());
+						VrameworkTemplate.startBot(this, new MessageListener());
 					}
 					
 					@Override
 					public void onStop() throws Exception{
-						FrameworkTemplate.stopBot(this);
+						VrameworkTemplate.stopBot(this);
 					}
 					
 					@Override
@@ -73,15 +73,15 @@ public class Main {
 					public void onStart() throws Exception{
 						Environment.refresh();
 						
-						FrameworkTemplate.botToken = Environment
+						VrameworkTemplate.botToken = Environment
 								.getVar("BOT_TOKEN");
 						
-						FrameworkTemplate.startBot(this, new MessageListener());
+						VrameworkTemplate.startBot(this, new MessageListener());
 					}
 					
 					@Override
 					public void onStop() throws Exception{
-						FrameworkTemplate.stopBot(this);
+						VrameworkTemplate.stopBot(this);
 					}
 					
 					@Override
