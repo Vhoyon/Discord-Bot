@@ -9,7 +9,7 @@
 			"name": "Terminal - Instant",
 			"request": "launch",
 			"cwd": "${workspaceFolder}",
-			"console": "internalConsole",
+			"console": "integratedTerminal",
 			"stopOnEntry": false,
 			"mainClass": "io.github.vhoyon.bot.app.Main",
 			"projectName": "DiscordBot",
