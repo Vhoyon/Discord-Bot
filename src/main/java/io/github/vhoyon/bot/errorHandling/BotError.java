@@ -2,6 +2,7 @@ package io.github.vhoyon.bot.errorHandling;
 
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.vramework.abstracts.AbstractBotError;
+import io.github.vhoyon.vramework.interfaces.Emoji;
 
 /**
  * Vhoyon's custom implementation of the AbstractBotError class to format error
@@ -36,22 +37,22 @@ public class BotError extends AbstractBotError {
 	
 	/**
 	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(AbstractBotCommand,
-	 *      String, String, boolean) AbstractBotError(AbstractBotCommand
-	 *      commandInError, String errorMessage, String errorEmoji, boolean
+	 *      String, Emoji, boolean) AbstractBotError(AbstractBotCommand
+	 *      commandInError, String errorMessage, Emoji errorEmoji, boolean
 	 *      isErrorOneLiner)
 	 */
 	public BotError(BotCommand commandInError, String errorMessage,
-			String errorEmoji, boolean isErrorOneLiner){
+			Emoji errorEmoji, boolean isErrorOneLiner){
 		super(commandInError, errorMessage, errorEmoji, isErrorOneLiner);
 	}
 	
 	/**
 	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(AbstractBotCommand,
-	 *      String, String) AbstractBotError(AbstractBotCommand commandInError,
-	 *      String errorMessage, String errorEmoji)
+	 *      String, Emoji) AbstractBotError(AbstractBotCommand commandInError,
+	 *      String errorMessage, Emoji errorEmoji)
 	 */
 	public BotError(BotCommand commandInError, String errorMessage,
-			String errorEmoji){
+			Emoji errorEmoji){
 		super(commandInError, errorMessage, errorEmoji);
 	}
 	
@@ -74,21 +75,20 @@ public class BotError extends AbstractBotError {
 	
 	/**
 	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(String,
-	 *      String, boolean) AbstractBotError(String errorMessage, String
-	 *      errorEmoji,
-	 *      boolean isErrorOneLiner)
+	 *      Emoji, boolean) AbstractBotError(String errorMessage, Emoji
+	 *      errorEmoji, boolean isErrorOneLiner)
 	 */
-	public BotError(String errorMessage, String errorEmoji,
+	public BotError(String errorMessage, Emoji errorEmoji,
 			boolean isErrorOneLiner){
 		super(errorMessage, errorEmoji, isErrorOneLiner);
 	}
 	
 	/**
 	 * @see io.github.vhoyon.vramework.abstracts.AbstractBotError#AbstractBotError(String
-	 *      errorMessage, String errorEmoji) AbstractBotError(String
-	 *      errorMessage, String errorEmoji)
+	 *      errorMessage, Emoji errorEmoji) AbstractBotError(String
+	 *      errorMessage, Emoji errorEmoji)
 	 */
-	public BotError(String errorMessage, String errorEmoji){
+	public BotError(String errorMessage, Emoji errorEmoji){
 		super(errorMessage, errorEmoji);
 	}
 	

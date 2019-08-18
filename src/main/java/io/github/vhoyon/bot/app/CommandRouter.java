@@ -14,7 +14,6 @@ import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.abstracts.AbstractCommandRouter;
 import io.github.vhoyon.vramework.exceptions.NoCommandException;
 import io.github.vhoyon.vramework.interfaces.Command;
-import io.github.vhoyon.vramework.interfaces.Emojis;
 import io.github.vhoyon.vramework.modules.Audit;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.Buffer;
@@ -35,7 +34,7 @@ import io.github.vhoyon.vramework.utilities.settings.Setting;
  * @see io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
  */
 public class CommandRouter extends AbstractCommandRouter implements Resources,
-		Commands, Emojis, DiscordFormatter {
+		Commands, DiscordFormatter {
 	
 	/**
 	 * @see io.github.vhoyon.vramework.abstracts.AbstractCommandRouter

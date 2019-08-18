@@ -3,6 +3,7 @@ package io.github.vhoyon.bot.commands;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
+import io.github.vhoyon.vramework.interfaces.Emoji;
 import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
 
 /**
@@ -90,7 +91,7 @@ public class CommandStop extends BotCommand {
 		
 		if(commandToStop.kill())
 			sendInfoMessage(lang("CommandFullyStoppedMessage",
-					code(commandToStop.getCommandName()), EMOJI_OK_HAND));
+					code(commandToStop.getCommandName()), Emoji.OK_HAND));
 		else{
 			new BotError(this, lang("CommandNotStoppedMessage",
 					code(commandToStop.getCommandName())), true);
