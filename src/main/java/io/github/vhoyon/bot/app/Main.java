@@ -9,7 +9,7 @@ import io.github.vhoyon.vramework.modules.Audit;
 import io.github.vhoyon.vramework.modules.Environment;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.AuditableFile;
-import io.github.vhoyon.vramework.utilities.VrameworkTemplate;
+import io.github.vhoyon.vramework.util.VrameworkTemplate;
 
 /**
  * The main class for running Vhoyon's bot.

@@ -14,10 +14,10 @@ import io.github.vhoyon.vramework.abstracts.CommandsLinker;
 import io.github.vhoyon.vramework.objects.Buffer;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.EventDigger;
-import io.github.vhoyon.vramework.utilities.KeyBuilder;
-import io.github.vhoyon.vramework.utilities.TimerManager;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
+import io.github.vhoyon.vramework.util.KeyBuilder;
+import io.github.vhoyon.vramework.util.TimerManager;
+import io.github.vhoyon.vramework.util.settings.SettingRepository;
+import io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository;
 
 /**
  * This class implements the logic used by the

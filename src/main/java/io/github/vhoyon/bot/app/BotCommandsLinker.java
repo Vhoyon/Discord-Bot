@@ -5,7 +5,7 @@ import io.github.vhoyon.bot.utilities.interfaces.Commands;
 import io.github.vhoyon.vramework.abstracts.CommandsLinker;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
-import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.util.formatting.DiscordFormatter;
 
 /**
  * Linker that links the commands package which should contain all of the

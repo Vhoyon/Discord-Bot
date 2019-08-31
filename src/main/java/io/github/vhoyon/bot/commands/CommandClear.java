@@ -15,8 +15,8 @@ import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.utilities.MessageManager;
-import io.github.vhoyon.vramework.utilities.ThreadPool;
+import io.github.vhoyon.vramework.util.MessageManager;
+import io.github.vhoyon.vramework.util.ThreadPool;
 
 /**
  * This command clears every messages that matches the request's conditions in

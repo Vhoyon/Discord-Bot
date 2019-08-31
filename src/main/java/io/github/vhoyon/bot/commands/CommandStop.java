@@ -4,7 +4,7 @@ import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.specifics.CommandConfirmed;
 import io.github.vhoyon.vramework.interfaces.Emoji;
-import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
+import io.github.vhoyon.vramework.util.CommandsThreadManager;
 
 /**
  * Command that stops a running command.

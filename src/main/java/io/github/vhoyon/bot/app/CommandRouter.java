@@ -19,9 +19,9 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.Buffer;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.MessageEventDigger;
-import io.github.vhoyon.vramework.utilities.CommandsThreadManager;
-import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.util.CommandsThreadManager;
+import io.github.vhoyon.vramework.util.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.util.settings.Setting;
 
 /**
  * This is the custom Router for Vhoyon's bot that routes common commands to

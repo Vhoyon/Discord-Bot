@@ -11,8 +11,8 @@ import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.interfaces.PartiallyParallelRunnable;
 import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.utilities.MessageManager;
-import io.github.vhoyon.vramework.utilities.TimerManager;
+import io.github.vhoyon.vramework.util.MessageManager;
+import io.github.vhoyon.vramework.util.TimerManager;
 
 /**
  * Command to create a timer in the TextChannel where this command was called

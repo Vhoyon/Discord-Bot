@@ -13,8 +13,8 @@ import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 import io.github.vhoyon.vramework.interfaces.BufferLevel;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
+import io.github.vhoyon.vramework.util.settings.Setting;
+import io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository;
 
 /**
  * Command to interact with the settings of this bot. There's quite a few things

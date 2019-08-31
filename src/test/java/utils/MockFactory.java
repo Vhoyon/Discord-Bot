@@ -4,7 +4,7 @@ import static org.mockito.Mockito.*;
 
 import io.github.ved.jrequester.Request;
 import io.github.vhoyon.bot.app.CommandRouter;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
+import io.github.vhoyon.vramework.util.settings.SettingRepository;
 
 public class MockFactory {
 	

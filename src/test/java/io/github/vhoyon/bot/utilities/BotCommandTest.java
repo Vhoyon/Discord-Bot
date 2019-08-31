@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 
 import utils.MockFactory;
 import io.github.ved.jrequester.Request;
-import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.util.formatting.DiscordFormatter;
 
 class BotCommandTest implements DiscordFormatter {
 	

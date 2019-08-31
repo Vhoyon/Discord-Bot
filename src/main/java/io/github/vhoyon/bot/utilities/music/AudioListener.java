@@ -8,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
-import io.github.vhoyon.vramework.utilities.TimerManager;
+import io.github.vhoyon.vramework.util.TimerManager;
 
 /**
  * Handles all the tracks inside of a {@link MusicPlayer} and gives utility

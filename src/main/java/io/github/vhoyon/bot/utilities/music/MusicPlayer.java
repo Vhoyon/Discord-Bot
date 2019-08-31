@@ -7,7 +7,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import io.github.vhoyon.bot.utilities.BotCommand;
-import io.github.vhoyon.vramework.utilities.TimerManager;
+import io.github.vhoyon.vramework.util.TimerManager;
 
 /**
  * Handles the playback of tracks added to the {@link AudioListener} object.
