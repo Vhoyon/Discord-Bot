@@ -36,5 +36,6 @@ public interface Commands {
 	String MUSIC_VOLUME = "volume";
 	String MUSIC_LIST = "list";
 	String MUSIC_DISCONNECT = "disconnect";
+	String SUGGESTION = "suggestion";
 	
 }

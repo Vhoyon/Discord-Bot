@@ -126,6 +126,13 @@
             <version>2.19.1</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>io.github.stephanomehawej</groupId>
+            <artifactId>gitinteractions</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        
 
     </dependencies>
 
