@@ -1,7 +1,7 @@
 package io.github.vhoyon.bot.utilities.music;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -101,7 +101,7 @@ public class MusicPlayer {
 	/**
 	 * Gets the Guild of this command.
 	 *
-	 * @return This command's {@link net.dv8tion.jda.core.entities.Guild Guild}
+	 * @return This command's {@link net.dv8tion.jda.api.entities.Guild Guild}
 	 *         (using {@link BotCommand#getGuild()}).
 	 * @since v0.4.0
 	 */
@@ -241,7 +241,7 @@ public class MusicPlayer {
 	/**
 	 * Get the connected VoiceChannel of this player.
 	 *
-	 * @return The {@link net.dv8tion.jda.core.entities.VoiceChannel} that is
+	 * @return The {@link net.dv8tion.jda.api.entities.VoiceChannel} that is
 	 *         being sent music to.
 	 * @since v0.4.0
 	 */
@@ -253,7 +253,7 @@ public class MusicPlayer {
 	 * Gets the status of wheter the player (bot) is connected to a VoiceChannel
 	 *
 	 * @return {@code true} if the player (bot) is connected to a
-	 *         {@link net.dv8tion.jda.core.entities.VoiceChannel}, {@code false}
+	 *         {@link net.dv8tion.jda.api.entities.VoiceChannel}, {@code false}
 	 *         otherwise.
 	 * @since v0.4.0
 	 */

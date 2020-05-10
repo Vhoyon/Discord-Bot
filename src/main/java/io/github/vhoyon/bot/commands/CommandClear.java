@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageHistory;
-import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.EnumSanitizer;
 import io.github.vhoyon.bot.errorHandling.BotError;

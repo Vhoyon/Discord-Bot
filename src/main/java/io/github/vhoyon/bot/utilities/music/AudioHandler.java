@@ -1,9 +1,11 @@
 package io.github.vhoyon.bot.utilities.music;
 
-import net.dv8tion.jda.core.audio.AudioSendHandler;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+
+import java.nio.ByteBuffer;
 
 /**
  * Handles individual tracks codec parameters.
@@ -29,8 +31,8 @@ public class AudioHandler implements AudioSendHandler {
 	}
 	
 	@Override
-	public byte[] provide20MsAudio(){
-		byte[] data = canProvide() ? lastFrame.getData() : null;
+	public ByteBuffer provide20MsAudio(){
+		ByteBuffer data = canProvide() ? ByteBuffer.wrap(lastFrame.getData()) : null;
 		lastFrame = null;
 		
 		return data;

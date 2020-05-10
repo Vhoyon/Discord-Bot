@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.api.entities.Guild;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -68,7 +68,7 @@ public class MusicManager implements Utils {
 	 * parameters.
 	 * 
 	 * @param guild
-	 *            The {@link net.dv8tion.jda.core.entities.Guild Guild} that
+	 *            The {@link net.dv8tion.jda.api.entities.Guild Guild} that
 	 *            links a player to a server.
 	 * @return {@code true} if there is a player for the guild provided,
 	 *         {@code false} otherwise.

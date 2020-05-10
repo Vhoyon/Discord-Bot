@@ -1,6 +1,6 @@
 package io.github.vhoyon.bot.utilities.abstracts;
 
-import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import io.github.vhoyon.bot.utilities.BotCommand;
 import io.github.vhoyon.bot.utilities.music.MusicManager;
 

@@ -1,6 +1,6 @@
 package io.github.vhoyon.bot.app;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import io.github.ved.jrequester.Option;
 import io.github.ved.jrequester.Request;
 import io.github.vhoyon.bot.errorHandling.BotError;
