@@ -3,8 +3,8 @@ package io.github.vhoyon.bot.commands;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import io.github.ved.jrequester.Option;
 import io.github.ved.jsanitizers.IntegerSanitizer;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
