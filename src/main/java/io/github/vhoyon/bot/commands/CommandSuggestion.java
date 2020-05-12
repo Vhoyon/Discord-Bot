@@ -4,6 +4,7 @@ import io.github.stephanomehawej.gitinteractions.Issue;
 import io.github.stephanomehawej.gitinteractions.Management;
 import io.github.stephanomehawej.gitinteractions.exceptions.attributeNotFoundException;
 import io.github.stephanomehawej.gitinteractions.exceptions.invalidValueException;
+import io.github.ved.jrequester.Option;
 import io.github.vhoyon.bot.errorHandling.BotError;
 import io.github.vhoyon.bot.utilities.BotCommand;
 
@@ -23,7 +24,12 @@ public class CommandSuggestion extends BotCommand {
 		}else{
 			try {
 				issue = new Issue(env("SUGGESTION_GITHUB_REPO"),env("SUGGESTION_GITHUB_LOGIN"),env("SUGGESTION_GITHUB_OAUTH"));
-				issue.setAttribue("title",lang( "Title" ,new Management().countByLabel("suggestions")+1));
+				
+				if (!hasOption("t"))
+					issue.setAttribue("title",lang( "Title" ,new Management().countByLabel("suggestions")+1,getMember().getUser().getName()));
+				else
+					issue.setAttribue("title",getOption("t") + " by " + getMember().getUser().getName() );
+					
 				issue.setAttribue("body",getContent());
 				issue.setAttribue("labels", new String[]{"suggestions"});
 				String url = issue.sendIssue();
@@ -43,6 +49,17 @@ public class CommandSuggestion extends BotCommand {
 		}
 		
 	}
+
+	@Override
+	public Option[] getOptions() {
+		return new Option[]{
+			new Option(lang("OptionTitle"), "t", "title"),
+
+
+
+		};
+	}
+
 	@Override
 	public String getCall(){
 		return SUGGESTION;
